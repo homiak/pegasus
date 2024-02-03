@@ -1,18 +1,20 @@
 local modpath = minetest.get_modpath("stoneblocks")
 
+local function initialize_dark_block(pos)
+    local timer = minetest.get_node_timer(pos)
+    timer:start(0.5) -- check half second for players
+    minetest.log("action", "Dark Glass Block initialized at " .. minetest.pos_to_string(pos))
+end
+
+-- Define your "unlit" block with the on_construct callback
 minetest.register_node("stoneblocks:turquoise_dark_glass_block", {
     description = "Unlit turquoise glass block",
     tiles = {"turquoise_dark_glass_block.png"},
     groups = {cracky = 1, oddly_breakable_by_hand = 3},
     sounds = default.node_sound_stone_defaults(),
-
-    -- When the player walks over it, change to the lit version
-    on_construct = function(pos)
-        local timer = minetest.get_node_timer(pos)
-        timer:start(1) -- check every second
-    end,
+    on_construct = initialize_dark_block,
     on_timer = function(pos)
-        local objs = minetest.get_objects_inside_radius(pos, 1) -- 1 is the radius to check for players
+        local objs = minetest.get_objects_inside_radius(pos, 2) -- 1 is the radius to check for players
         for _, obj in ipairs(objs) do
             if obj:is_player() then
                 minetest.swap_node(pos, {name = "stoneblocks:turquoise_lit_glass_block"})
@@ -27,6 +29,7 @@ minetest.register_node("stoneblocks:turquoise_dark_glass_block", {
     end,
 })
 
+-- Define your "lit" block
 minetest.register_node("stoneblocks:turquoise_lit_glass_block", {
     description = "Lit turquoise glass block",
     tiles = {"turquoise_lit_glass_block.png"},
@@ -35,15 +38,31 @@ minetest.register_node("stoneblocks:turquoise_lit_glass_block", {
     sounds = default.node_sound_stone_defaults(),
     drop = "stoneblocks:turquoise_dark_glass_block", -- Ensure it drops the unlit version
 
-    -- Timer to revert back to unlit after X seconds
-    on_timer = function(pos)
-        minetest.swap_node(pos, {name = "stoneblocks:turquoise_dark_glass_block"})
-    end,
+-- When constructed or swapped from unlit, start the timer
+on_construct = function(pos)
+    local timer = minetest.get_node_timer(pos)
+    timer:start(0.5) -- Start checking immediately
+end,
 
-    -- TODO this is not called on swap leading to block changing once only When constructed (or swapped from unlit), start the timer
-    on_construct = function(pos)
+-- Define on_timer to handle reversion or continuous check
+on_timer = function(pos)
+    local objs = minetest.get_objects_inside_radius(pos, 2) -- Adjusted radius for player detection
+    local player_nearby = false
+    for _, obj in ipairs(objs) do
+        if obj:is_player() then
+            player_nearby = true
+            break
+        end
+    end
+
+    if player_nearby then
+        -- If a player is still nearby, reset the timer to check again
         local timer = minetest.get_node_timer(pos)
-		minetest.log("action", "Unlit Light Block set at " .. minetest.pos_to_string(pos))
-		timer:start(3) -- number of seconds the block stays lit
-    end,
+        timer:start(0.5) -- Continue checking for player presence
+    else
+        -- If no players are nearby, switch back to the unlit version and reinitialize
+        minetest.swap_node(pos, {name = "stoneblocks:turquoise_dark_glass_block"})
+        initialize_dark_block(pos)
+    end
+end,
 })
