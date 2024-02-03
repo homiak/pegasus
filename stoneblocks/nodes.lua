@@ -3,14 +3,21 @@ local modpath = minetest.get_modpath("stoneblocks")
 minetest.register_node("stoneblocks:black_granite", {
 	description = "Black granite stone",
 	tiles = { "black_granite_block.png" },
-	groups = { cracky = 4, dig_stoneblocks = 1 },
+	groups = { cracky = 1, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:grey_granite", {
 	description = "Grey granite stone",
 	tiles = { "stone_grey_granite.png" },
 	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
-	groups = {  cracky = 4, dig_stoneblocks = 1, },
+	groups = {  cracky = 1, dig_stoneblocks = 1, },
+})
+
+minetest.register_node("stoneblocks:stone_with_ruby", {
+	description = "Stone with ruby",
+	tiles = { "stone_with_ruby.png" },
+	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
+	groups = {  cracky = 1, dig_stoneblocks = 1, },
 })
 
 minetest.register_node("stoneblocks:granite_block", {
@@ -24,21 +31,42 @@ minetest.register_node("stoneblocks:red_granite", {
 	description = "Red granite stone",
 	tiles = { "red_granite_block.png" },
 	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
-	groups = { cracky = 4, dig_stoneblocks = 1 },
+	groups = { cracky = 1, dig_stoneblocks = 1 },
+})
+
+minetest.register_node("stoneblocks:stone_with_emerald", {
+	description = "Stone with emerald",
+	tiles = { "stone_with_emerald.png" },
+	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
+	groups = { cracky = 1, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:rose_granite", {
 	description = "Rose granite stone",
 	tiles = { "rose_granite_block.png" },
 	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
-	groups = { cracky = 4, dig_stoneblocks = 1 },
+	groups = { cracky = 1, dig_stoneblocks = 1 },
+})
+
+minetest.register_node("stoneblocks:cats_eye", {
+	description = "Cats eye",
+	tiles = { "phoenix_stone.png" },
+	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
+	groups = { cracky = 1, dig_stoneblocks = 1 },
+})
+
+minetest.register_node("stoneblocks:emeraldblock_with_ruby", {
+	description = "Emeraldblock with ruby",
+	tiles = { "emeraldblock_with_ruby.png" },
+	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
+	groups = { cracky = 1, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:sapphire_block", {
 	description = "Sapphire stone",
 	tiles = { "sapphire_block.png" },
 	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
-	groups = { cracky = 7, dig_stoneblocks = 1 },
+	groups = { cracky = 1, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:turquoise_block", {
@@ -46,14 +74,23 @@ minetest.register_node("stoneblocks:turquoise_block", {
 	tiles = { "turquoise_block.png" },
 drawtype = "glasslike",
 	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
-	groups = { cracky = 6, dig_stoneblocks = 1 },
+	groups = { cracky = 1, dig_stoneblocks = 1 },
+})
+
+minetest.register_node("stoneblocks:rubyblock_with_emerald", {
+	description = "Rubyblock with emerald",
+	tiles = { "rubyblock_with_emerald.png" },
+	sunlight_propagates = true,
+	light_source = 15, -- This node emits light
+	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
+	groups = { cracky = 1, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:red_granite_turquoise_block", {
 	description = "Red turquoise stone",
 	tiles = { "red_granite_turquoise_block.png" },
 	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
-	groups = { cracky = 10, dig_stoneblocks = 1 },
+	groups = { cracky = 1, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:turquoise_glass", {
@@ -62,7 +99,7 @@ minetest.register_node("stoneblocks:turquoise_glass", {
 	sunlight_propagates = true,
 	light_source = 50, -- This node emits light
 	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
-	groups = { cracky = 2, dig_stoneblocks = 0 },
+	groups = { cracky = 1, dig_stoneblocks = 0 },
 })
 
 -- minetest.register_node("stoneblocks:plate_rusted", {
