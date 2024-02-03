@@ -4,20 +4,20 @@ local modpath = minetest.get_modpath("stone")
 -- Item
 minetest.register_craftitem("stone:granite_black", {
 	description = "Black granite stone",
-	inventory_image = "black_granite_stone.png",
+	inventory_image = "stone_black_granite.png",
 })
 
 -- Nodes
 minetest.register_node("stone:grey_granite", {
 	description = "Grey granite stone",
-	tiles = { "grey_granite_stone.png" },
+	tiles = { "stone_grey_granite.png" },
 	-- sounds = sound_api.node_sound_stone_defaults(),
 	groups = { cracky = 2, dig_stone = 1 },
 })
 
 minetest.register_node("stone:red_granite", {
 	description = "Red granite stone",
-	tiles = { "red_granite_stone.png" },
+	tiles = { "stone_red_granite.png" },
 	-- sounds = sound_api.node_sound_stone_defaults(),
 	groups = { cracky = 1, dig_stone = 1 },
 })
