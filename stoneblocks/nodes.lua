@@ -1,6 +1,4 @@
 local modpath = minetest.get_modpath("stoneblocks")
--- local sound_api = dofile(modpath .. "/sound_api_core/init.lua")
-
 
 minetest.register_node("stoneblocks:black_granite", {
 	description = "Black granite stone",
@@ -13,6 +11,13 @@ minetest.register_node("stoneblocks:grey_granite", {
 	tiles = { "stone_grey_granite.png" },
 	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
 	groups = {  cracky = 4, dig_stoneblocks = 1, },
+})
+
+minetest.register_node("stoneblocks:granite_block", {
+	description = "Granite stone",
+	tiles = { "granite_block.png" },
+	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
+	groups = {  cracky = 1, dig_stoneblocks = 1, },
 })
 
 minetest.register_node("stoneblocks:red_granite", {
@@ -29,7 +34,6 @@ minetest.register_node("stoneblocks:rose_granite", {
 	groups = { cracky = 4, dig_stoneblocks = 1 },
 })
 
-
 minetest.register_node("stoneblocks:sapphire_block", {
 	description = "Sapphire stone",
 	tiles = { "sapphire_block.png" },
@@ -40,7 +44,7 @@ minetest.register_node("stoneblocks:sapphire_block", {
 minetest.register_node("stoneblocks:turquoise_block", {
 	description = "Turquoise stone",
 	tiles = { "turquoise_block.png" },
-	drawtype = "glasslike",
+drawtype = "glasslike",
 	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
 	groups = { cracky = 6, dig_stoneblocks = 1 },
 })
