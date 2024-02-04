@@ -8,11 +8,66 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	type = "shapeless",
-	output = "stoneblocks:rubyblock",
-	recipe = {"stoneblocks:stone_with_ruby","stoneblocks:stone_with_ruby", "stoneblocks:stone_with_ruby"}
+	type = "shaped",
+	output = "stoneblocks:emeraldblock",
+	recipe = {
+        {"stoneblocks:stone_with_emerald","stoneblocks:stone_with_emerald", "stoneblocks:stone_with_emerald"}
+}
 })
 
+minetest.register_craft({
+	type = "shapeless",
+	output = "stoneblocks:rubyblock",
+	recipe = { "stoneblocks:stone_with_ruby","stoneblocks:stone_with_ruby", "stoneblocks:stone_with_ruby" }
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "stoneblocks:turquoise_block",
+	recipe = {
+        {"stoneblocks:stone_with_turquoise","stoneblocks:stone_with_turquoise", "stoneblocks:stone_with_turquoise"}
+}
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "stoneblocks:turquoise_glass_block",
+	recipe = {
+        {"stoneblocks:stone_with_turquoise_glass","stoneblocks:stone_with_turquoise_glass", "stoneblocks:stone_with_turquoise_glass"}
+}
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "stoneblocks:rubyblock_with_emerald",
+	recipe = {
+        {"stoneblocks:stone_with_ruby","stoneblocks:stone_with_ruby", "stoneblocks:stone_with_emerald"}
+}
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "stoneblocks:cats_eye",
+	recipe = {
+        {"stoneblocks:black_granite_block","stoneblocks:rubyblock", "stoneblocks:sapphire_block"}
+}
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "stoneblocks:emeraldblock_with_ruby",
+	recipe = {
+        {"stoneblocks:stone_with_emerald","stoneblocks:stone_with_emerald", "stoneblocks:stone_with_ruby"}
+}
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "stoneblocks:red_granite_turquoise_block",
+	recipe = {
+        {"stoneblocks:turquoise_glass_block","stoneblocks:red_granite_block", "stoneblocks:red_granite_block"}
+}
+})
 
 -- minetest.register_craft({
 -- 	type = "cooking",
