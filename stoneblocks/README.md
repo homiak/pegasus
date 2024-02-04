@@ -3,7 +3,7 @@ stoneblocksblocks
 
 A mod created by Scottii wich adds:
 
-Many different types of stoneblocks such as granite blocks or sapphire blocks
+Many different types of blocks of stone such as granite blocks or sapphire blocks
 
 
 Crafting
