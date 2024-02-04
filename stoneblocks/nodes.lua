@@ -18,7 +18,7 @@ minetest.register_node("stoneblocks:grey_granite", {
 minetest.register_node("stoneblocks:granite_block", {
 	description = "Granite stone",
 	tiles = { "granite_block.png" },
-	-- sounds = sound_api.node_sound_stoneblocks_defaults(),
+	sounds = sound_api.node_sound_stoneblocks_defaults(),
 	groups = {  cracky = 1, dig_stoneblocks = 1, },
 })
 
