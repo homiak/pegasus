@@ -1,4 +1,5 @@
 local modpath = minetest.get_modpath("stoneblocks")
+local sound_api = dofile(modpath .. "/sound_api_core/init.lua")
 
 local function initialize_dark_block(pos)
     local timer = minetest.get_node_timer(pos)
@@ -10,8 +11,8 @@ end
 minetest.register_node("stoneblocks:turquoise_dark_glass_block", {
     description = "Unlit turquoise glass block",
     tiles = {"turquoise_dark_glass_block.png"},
-    groups = {cracky = 1, oddly_breakable_by_hand = 3},
-    sounds = default.node_sound_stone_defaults(),
+    groups = {cracky = 4 },
+    sounds = sound_api.node_sound_stone_defaults(),
     on_construct = initialize_dark_block,
     on_timer = function(pos)
         local objs = minetest.get_objects_inside_radius(pos, 2) -- 1 is the radius to check for players
@@ -34,8 +35,8 @@ minetest.register_node("stoneblocks:turquoise_lit_glass_block", {
     description = "Lit turquoise glass block",
     tiles = {"turquoise_lit_glass_block.png"},
     light_source = 14, -- Max light
-    groups = {cracky = 1, oddly_breakable_by_hand = 3, not_in_creative_inventory = 1},
-    sounds = default.node_sound_stone_defaults(),
+    groups = {cracky = 4, not_in_creative_inventory = 1},
+    sounds = sound_api.node_sound_stone_defaults(),
     drop = "stoneblocks:turquoise_dark_glass_block", -- Ensure it drops the unlit version
 
 -- When constructed or swapped from unlit, start the timer
