@@ -3,7 +3,10 @@ local modpath = minetest.get_modpath("stoneblocks")
 
 dofile(modpath .. "/nodes.lua")
 dofile(modpath .. "/dynamic.lua")
-dofile(modpath .. "/crafts.lua")
+
+if minetest.get_modpath("default") then
+    dofile(modpath .. "/crafts.lua")
+end
 
 -- minetest.register_abm({
 -- 	label = "Some stoneblocks blocks near water are weathered",

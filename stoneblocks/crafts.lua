@@ -1,14 +1,17 @@
--- local stoneblocks_item = "default:stoneblocks_block"
 
--- minetest.register_craft({
--- 	type = "cooking",
--- 	output = "stoneblocks:black_granite",
--- 	recipe = "stoneblocks:bazalt",
--- })
--- minetest.register_craft({
--- 	output = "stoneblocks:pink_granite",
--- 	recipe = {{"stoneblocks:red_granite"}}
--- })
+minetest.register_craft({
+	type = "shaped",
+	output = "stoneblocks:sapphire_block",
+	recipe = {
+        {"stoneblocks:stone_with_sapphire","stoneblocks:stone_with_sapphire", "stoneblocks:stone_with_sapphire"}
+}
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "stoneblocks:rubyblock",
+	recipe = {"stoneblocks:stone_with_ruby","stoneblocks:stone_with_ruby", "stoneblocks:stone_with_ruby"}
+})
 
 
 -- minetest.register_craft({
