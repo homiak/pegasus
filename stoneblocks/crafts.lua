@@ -11,7 +11,9 @@ minetest.register_craft({
 	type = "shaped",
 	output = "stoneblocks:emeraldblock",
 	recipe = {
-        {"stoneblocks:stone_with_emerald","stoneblocks:stone_with_emerald", "stoneblocks:stone_with_emerald"}
+        {"","stoneblocks:stone_with_emerald", ""},
+    {"stoneblocks:stone_with_emerald","stoneblocks:stone_with_emerald", "stoneblocks:stone_with_emerald"},
+        {"","stoneblocks:stone_with_emerald", ""}
 }
 })
 
