@@ -3,8 +3,20 @@ minetest.register_craft({
 	type = "shaped",
 	output = "stoneblocks:sapphire_block",
 	recipe = {
-        {"stoneblocks:stone_with_sapphire","stoneblocks:stone_with_sapphire", "stoneblocks:stone_with_sapphire"}
+        {"","stoneblocks:stone_with_sapphire", ""},
+	{"stoneblocks:stone_with_sapphire", "stoneblocks:stone_with_sapphire", "stoneblocks:stone_with_sapphire"},
+	{"", "stoneblocks:stone_with_sapphire", ""}
 }
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "stoneblocks:rubyblock",
+	recipe = {
+		{"", "stoneblocks:stone_with_ruby", ""},
+		{"stoneblocks:stone_with_ruby", "stoneblocks:stone_with_ruby", "stoneblocks:stone_with_ruby"},
+		{"", "stoneblocks:stone_with_ruby", ""}
+	}
 })
 
 minetest.register_craft({
@@ -18,24 +30,12 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	type = "shapeless",
-	output = "stoneblocks:rubyblock",
-	recipe = { "stoneblocks:stone_with_ruby","stoneblocks:stone_with_ruby", "stoneblocks:stone_with_ruby" }
-})
-
-minetest.register_craft({
-	type = "shaped",
-	output = "stoneblocks:turquoise_block",
-	recipe = {
-        {"stoneblocks:stone_with_turquoise","stoneblocks:stone_with_turquoise", "stoneblocks:stone_with_turquoise"}
-}
-})
-
-minetest.register_craft({
 	type = "shaped",
 	output = "stoneblocks:turquoise_glass_block",
 	recipe = {
-        {"stoneblocks:stone_with_turquoise_glass","stoneblocks:stone_with_turquoise_glass", "stoneblocks:stone_with_turquoise_glass"}
+        {"","stoneblocks:stone_with_turquoise_glass", ""},
+	{"stoneblocks:stone_with_turquoise_glass", "stoneblocks:stone_with_turquoise_glass", "stoneblocks:stone_with_turquoise_glass"},
+		{"","stoneblocks:stone_with_turquoise_glass", ""}
 }
 })
 
@@ -51,7 +51,9 @@ minetest.register_craft({
 	type = "shaped",
 	output = "stoneblocks:cats_eye",
 	recipe = {
-        {"stoneblocks:black_granite_block","stoneblocks:rubyblock", "stoneblocks:sapphire_block"}
+        {"stoneblocks:black_granite_block","stoneblocks:rubyblock", "stoneblocks:sapphire_block"},
+		{"", "stoneblocks:grey_granite_block", ""},
+		{"", "stoneblocks:emeraldblock", ""}
 }
 })
 
