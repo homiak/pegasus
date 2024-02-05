@@ -1,4 +1,4 @@
-stoneblocksblocks
+stoneblocks
 
 
 A mod created by Scottii wich adds:
@@ -7,4 +7,4 @@ Many different types of blocks of stone such as granite blocks or sapphire block
 
 
 Crafting
-You can find the blocks all over the world. Under the ground and in some trees.
+You can find ores under the ground to create these blocks. To create these blocks you need
