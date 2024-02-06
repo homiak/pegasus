@@ -5,11 +5,11 @@ local stoneblocks_check_player_within = tonumber(minetest.settings:get('stoneblo
 local stoneblocks_stay_lit_for = tonumber(minetest.settings:get('stoneblocks_stay_lit_for')) or 2
 
 if stoneblocks_check_player_within < 1 or stoneblocks_check_player_within > 20 then
-    minetest.log("INFO", "incorrect settings for stoneblocks_check_player_within using default")
+    minetest.log("warning", "incorrect settings for stoneblocks_check_player_within using default")
     stoneblocks_check_player_within = 2
 end
 if stoneblocks_stay_lit_for < 1 or stoneblocks_stay_lit_for > 600 then
-    minetest.log("INFO", "incorrect settings for stoneblocks_stay_lit_for using default")
+    minetest.log("warning", "incorrect settings for stoneblocks_stay_lit_for using default")
     stoneblocks_stay_lit_for = 2
 end
 
