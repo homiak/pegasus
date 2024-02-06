@@ -92,3 +92,4 @@ local function register_sensitive_block(name, description)
 end
 
 register_sensitive_block("sensitive_glass_block", "Sensitive Glass Block")
+register_sensitive_block("stone_lantern", "Stone Lantern")
