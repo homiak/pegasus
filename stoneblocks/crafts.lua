@@ -11,6 +11,16 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "shaped",
+	output = "stoneblocks:mixed_stone_block",
+	recipe = {
+        {"stoneblocks:turquoise_glass_block","stoneblocks:rubyblock", "stoneblocks:emeraldblock"},
+	{"stoneblocks:sapphire_block", "stoneblocks:cats_eye", "stoneblocks:red_granite_block"},
+	{"stoneblocks:granite_block", "stoneblocks:stone_with_sapphire", "stoneblocks:emeraldblock_with_ruby"}
+}
+})
+
+minetest.register_craft({
+	type = "shaped",
 	output = "stoneblocks:rubyblock",
 	recipe = {
 		{"", "stoneblocks:stone_with_ruby", ""},
