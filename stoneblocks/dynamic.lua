@@ -92,5 +92,8 @@ local function register_sensitive_block(name, description)
 end
 
 register_sensitive_block("sensitive_glass_block", "Sensitive Glass Block")
-register_sensitive_block("stone_lantern", "Stone Lantern")
+register_sensitive_block("stone_lantern_yellow", "Stone Lantern")
 register_sensitive_block("stone_lantern_blue", "Blue Stone Lantern")
+register_sensitive_block("stone_lantern_green", "Green Stone Lantern")
+register_sensitive_block("stone_lantern_red_green_yellow", "Red and Green with Yellow Stone Lantern")
+register_sensitive_block("stone_lantern_red", "Red Stone Lantern")

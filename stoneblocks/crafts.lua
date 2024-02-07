@@ -11,6 +11,56 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "shaped",
+	output = "stoneblocks:stone_lantern_yellow",
+	recipe = {
+        {"","stoneblocks:stone_with_emerald", ""},
+	{"stoneblocks:stone_with_ruby", "stoneblocks:rubyblock", "stoneblocks:stone_with_turquoise"},
+	{"default:glass", "default:glass", "default:glass"}
+}
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "stoneblocks:stone_lantern_red",
+	recipe = {
+        {"stoneblocks:rubyblock","stoneblocks:stone_with_emerald", "stoneblocks:rubyblock"},
+	{"stoneblocks:stone_with_ruby", "stoneblocks:rubyblock", "stoneblocks:red_granite_block"},
+	{"default:glass", "default:glass", "default:glass"}
+}
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "stoneblocks:stone_lantern_blue",
+	recipe = {
+        {"","stoneblocks:stone_with_sapphire", ""},
+	{"stoneblocks:sapphire_block", "stoneblocks:sapphire_block", "stoneblocks:turquoise_glass_block"},
+	{"default:glass", "default:glass", "default:glass"}
+}
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "stoneblocks:stone_lantern_green",
+	recipe = {
+        {"","stoneblocks:stone_with_emerald", ""},
+	{"stoneblocks:emeraldblock", "stoneblocks:emeraldblock", "stoneblocks:turquoise_block"},
+	{"default:glass", "default:glass", "default:glass"}
+}
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "stoneblocks:stone_lantern_red_green_yellow",
+	recipe = {
+        {"stoneblocks:rubyblock","default:glass", "stoneblocks:rubyblock"},
+	{"stoneblocks:stone_with_emerald", "stoneblocks:emeraldblock", "stoneblocks:stone_with_emerald"},
+	{"default:glass", "default:glass", "default:glass"}
+}
+})
+
+minetest.register_craft({
+	type = "shaped",
 	output = "stoneblocks:mixed_stone_block",
 	recipe = {
         {"stoneblocks:turquoise_glass_block","stoneblocks:rubyblock", "stoneblocks:emeraldblock"},
@@ -26,6 +76,16 @@ minetest.register_craft({
 		{"", "stoneblocks:stone_with_ruby", ""},
 		{"stoneblocks:stone_with_ruby", "stoneblocks:stone_with_ruby", "stoneblocks:stone_with_ruby"},
 		{"", "stoneblocks:stone_with_ruby", ""}
+	}
+})
+
+minetest.register_craft({
+	type = "shaped",
+	output = "stoneblocks:sensitive_glass_block",
+	recipe = {
+		{"stoneblocks:turquoise_glass_block", "stoneblocks:stone_with_turquoise_glass", "stoneblocks:turquoise_glass_block"},
+		{"stoneblocks:stone_with_turquoise_glass", "default:glass", "stoneblocks:turquoise_glass_block"},
+		{"default:glass", "stoneblocks:stone_with_emerald", "default:glass"}
 	}
 })
 
