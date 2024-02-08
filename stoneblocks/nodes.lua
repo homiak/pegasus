@@ -100,9 +100,9 @@ minetest.register_node("stoneblocks:emeraldblock", {
 
 minetest.register_node("stoneblocks:mixed_stone_block", {
 	description = "Mixed stone block",
-	tiles = { "mixed-stone_block.png" },
+	tiles = { "mixed_stone_block.png" },
 	sunlight_propagates = true,
-	light_source = 20, -- This node emits light
+	light_source = 15, -- This node emits light
 	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 1, dig_stoneblocks = 1 },
 })
