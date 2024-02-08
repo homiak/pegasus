@@ -111,9 +111,7 @@ minetest.register_craft({
 minetest.register_craft({
 	type = "shapeless",
 	output = "stoneblocks:rubyblock_with_emerald",
-	recipe = {
-		{ "stoneblocks:stone_with_ruby", "stoneblocks:stone_with_ruby", "stoneblocks:stone_with_emerald" }
-	}
+	recipe = { "stoneblocks:stone_with_ruby", "stoneblocks:stone_with_ruby", "stoneblocks:stone_with_emerald" }
 })
 
 minetest.register_craft({
@@ -129,16 +127,12 @@ minetest.register_craft({
 minetest.register_craft({
 	type = "shapeless",
 	output = "stoneblocks:emeraldblock_with_ruby",
-	recipe = {
-		{ "stoneblocks:stone_with_emerald", "stoneblocks:stone_with_emerald", "stoneblocks:stone_with_ruby" }
-	}
+	recipe = { "stoneblocks:stone_with_emerald", "stoneblocks:stone_with_emerald", "stoneblocks:stone_with_ruby" }
 })
 
 minetest.register_craft({
 	type = "shapeless",
 	output = "stoneblocks:red_granite_turquoise_block",
-	recipe = {
-		{ "stoneblocks:turquoise_glass_block", "stoneblocks:red_granite_block", "stoneblocks:red_granite_block" }
-	}
+	recipe = { "stoneblocks:turquoise_glass_block", "stoneblocks:red_granite_block", "stoneblocks:red_granite_block" }
 })
 
