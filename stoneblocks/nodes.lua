@@ -4,15 +4,15 @@ local sound_api = dofile(modpath .. "/sound_api_core/init.lua")
 minetest.register_node("stoneblocks:black_granite_block", {
 	description = "Black granite stone",
 	tiles = { "black_granite_block.png" },
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 2, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:grey_granite", {
 	description = "Grey granite stone",
 	tiles = { "stone_grey_granite.png" },
-	sounds = sound_api.node_sound_stoneblocks_defaults,
-	groups = {stone = 1,  cracky = 2, dig_stoneblocks = 1, },
+	sounds = sound_api.node_sound_stone_defaults(),
+	groups = { stone = 1, cracky = 2, dig_stoneblocks = 1, },
 })
 
 minetest.register_node("stoneblocks:rubyblock_with_emerald", {
@@ -20,65 +20,66 @@ minetest.register_node("stoneblocks:rubyblock_with_emerald", {
 	tiles = { "rubyblock_with_emerald.png" },
 	sunlight_propagates = true,
 	light_source = 50, -- This node emits light
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 3, dig_stoneblocks = 1, },
 })
 
 minetest.register_node("stoneblocks:rubyblock", {
 	description = "Rubyblock",
 	tiles = { "rubyblock.png" },
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 1, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:cats_eye", {
 	description = "Cats eye",
 	tiles = { "cats_eye.png" },
-	sounds = sound_api.node_sound_stoneblocks_defaults,
-	groups = {stone = 1, cracky = 4, dig_stoneblocks = 1 },
+	sounds = sound_api.node_sound_stone_defaults(),
+	groups = { stone = 1, cracky = 4, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:stone_with_ruby", {
 	description = "Stone with ruby",
 	tiles = { "stone_with_ruby.png" },
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 3, dig_stoneblocks = 1, },
 })
 
 minetest.register_node("stoneblocks:stone_with_emerald", {
 	description = "Stone with emerald",
 	tiles = { "stone_with_emerald.png" },
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 3, dig_stoneblocks = 1, },
 })
 
 minetest.register_node("stoneblocks:emeraldblock_with_ruby", {
 	description = "Emeraldblock with ruby",
 	tiles = { "emeraldblock_with_ruby.png" },
-	sunlight_propagates = true, light_source = 50, -- This node emits light
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sunlight_propagates = true,
+	light_source = 15,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 2, dig_stoneblocks = 1, },
 })
 
 minetest.register_node("stoneblocks:granite_block", {
 	description = "Granite stone",
 	tiles = { "granite_block.png" },
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 1, dig_stoneblocks = 1, },
 })
 
 minetest.register_node("stoneblocks:red_granite_block", {
 	description = "Red granite stone",
 	tiles = { "red_granite_block.png" },
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 2, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:rose_granite_block", {
 	description = "Rose granite stone",
 	tiles = { "rose_granite_block.png" },
-	sounds = sound_api.node_sound_stoneblocks_defaults,
-	groups = {stone = 1, cracky = 2, dig_stoneblocks = 1 },
+	sounds = sound_api.node_sound_stone_defaults(),
+	groups = { stone = 1, cracky = 2, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:stone_with_turquoise_glass", {
@@ -86,52 +87,52 @@ minetest.register_node("stoneblocks:stone_with_turquoise_glass", {
 	tiles = { "stone_with_turquoise_glass.png" },
 	sunlight_propagates = true,
 	light_source = 10, -- This node emits light
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 1, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:emeraldblock", {
-	description = "Emeraldblock",
+	description = "Emerald block",
 	tiles = { "emeraldblock.png" },
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 1, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:mixed_stone_block", {
-	description = "Mixed-stone block",
+	description = "Mixed stone block",
 	tiles = { "mixed-stone_block.png" },
 	sunlight_propagates = true,
 	light_source = 20, -- This node emits light
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 1, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:stone_with_turquoise", {
 	description = "Stone with turquoise",
 	tiles = { "stone_with_turquoise.png" },
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 3, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:sapphire_block", {
 	description = "Sapphire stone",
 	tiles = { "sapphire_block.png" },
-	sounds = sound_api.node_sound_stoneblocks_defaults,
-	groups = {stone = 1, cracky = 1, dig_stoneblocks = 1 },
+	sounds = sound_api.node_sound_stone_defaults(),
+	groups = { stone = 1, cracky = 1, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:stone_with_sapphire", {
 	description = "Stone with sapphire",
 	tiles = { "stone_with_sapphire.png" },
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 3, dig_stoneblocks = 1 },
 })
 
 minetest.register_node("stoneblocks:turquoise_block", {
 	description = "Turquoise stone",
 	tiles = { "turquoise_block.png" },
-drawtype = "glasslike",
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	drawtype = "glasslike",
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 2, dig_stoneblocks = 1 },
 })
 
@@ -140,8 +141,8 @@ minetest.register_node("stoneblocks:red_granite_turquoise_block", {
 	tiles = { "red_granite_turquoise_block.png" },
 	sunlight_propagates = true,
 	light_source = 15, -- This node emits light
-	sounds = sound_api.node_sound_stoneblocks_defaults,
-	groups = {stone = 1, cracky = 2, dig_stoneblocks = 0 },
+	sounds = sound_api.node_sound_stone_defaults(),
+	groups = { stone = 1, cracky = 2, dig_stoneblocks = 0 },
 })
 
 minetest.register_node("stoneblocks:turquoise_glass", {
@@ -149,78 +150,6 @@ minetest.register_node("stoneblocks:turquoise_glass", {
 	tiles = { "turquoise_glass_block.png" },
 	sunlight_propagates = true,
 	light_source = 50, -- This node emits light
-	sounds = sound_api.node_sound_stoneblocks_defaults,
+	sounds = sound_api.node_sound_stone_defaults(),
 	groups = { stone = 1, cracky = 2, dig_stoneblocks = 0 },
 })
-
--- minetest.register_node("stoneblocks:plate_rusted", {
--- 	description = "Rusted stoneblocks plate",
--- 	tiles = { "stoneblocks_plate_rusted.png" },
--- 	sounds = sound_api.node_sound_stoneblocks_defaults(),
--- 	groups = { cracky = 1, choppy = 1, dig_stoneblocks = 1 },
--- })
-
--- minetest.register_node("stoneblocks:grate_soft", {
--- 	description = "Soft stoneblocks Grate",
--- 	drawtype = "fencelike",
--- 	tiles = { "stoneblocks_grate_soft.png" },
--- 	inventory_image = "stoneblocks_grate_soft_inventory.png",
--- 	wield_image = "stoneblocks_grate_soft_inventory.png",
--- 	paramtype = "light",
--- 	selection_box = {
--- 		type = "fixed",
--- 		fixed = { -1 / 7, -1 / 2, -1 / 7, 1 / 7, 1 / 2, 1 / 7 },
--- 	},
--- 	sounds = sound_api.node_sound_wood_defaults(),
--- 	groups = { cracky = 2, choppy = 2, dig_stoneblocks = 1 },
--- })
-
--- minetest.register_node("stoneblocks:grate_hard", {
--- 	description = "Hardened stoneblocks Grate",
--- 	drawtype = "fencelike",
--- 	tiles = { "stoneblocks_grate_hard.png" },
--- 	inventory_image = "stoneblocks_grate_hard_inventory.png",
--- 	wield_image = "stoneblocks_grate_hard_inventory.png",
--- 	paramtype = "light",
--- 	selection_box = {
--- 		type = "fixed",
--- 		fixed = { -1 / 7, -1 / 2, -1 / 7, 1 / 7, 1 / 2, 1 / 7 },
--- 	},
--- 	sounds = sound_api.node_sound_wood_defaults(),
--- 	groups = { cracky = 1, choppy = 1, dig_stoneblocks = 1 },
--- })
-
--- minetest.register_node("stoneblocks:roofing", {
--- 	description = "Corrugated stoneblocks roofing",
--- 	drawtype = "raillike",
--- 	tiles = { "stoneblocks_corrugated_stoneblocks.png" },
--- 	inventory_image = "stoneblocks_corrugated_stoneblocks.png",
--- 	wield_image = "stoneblocks_corrugated_stoneblocks.png",
--- 	paramtype = "light",
--- 	walkable = true,
--- 	selection_box = {
--- 		type = "fixed",
--- 		fixed = { -1 / 2, -1 / 2, -1 / 2, 1 / 2, -1 / 2 + 1 / 16, 1 / 2 },
--- 	},
--- 	groups = { bendy = 2, snappy = 1, dig_immediate = 2, dig_generic = 1 },
--- })
-
-
--- minetest.register_node("stoneblocks:strut_mount", {
--- 	description = "Strut with mount",
--- 	drawtype = "mesh",
--- 	mesh = "stoneblocks_cube.obj",
--- 	tiles = {
--- 		base_tex,
--- 		base_tex,
--- 		base_tex .. "^stoneblocks_strut_overlay.png",
--- 		base_tex .. "^stoneblocks_strut_overlay.png",
--- 		base_tex .. "^stoneblocks_strut_overlay.png",
--- 		base_tex .. "^stoneblocks_strut_overlay.png",
--- 	},
--- 	use_texture_alpha = "clip",
--- 	paramtype = "light",
--- 	paramtype2 = "wallmounted",
--- 	sounds = sound_api.node_sound_stoneblocks_defaults(),
--- 	groups = { choppy = 1, cracky = 1, dig_stoneblocks = 1 },
--- })

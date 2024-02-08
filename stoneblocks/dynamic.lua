@@ -25,7 +25,7 @@ local function register_stoneblock(name, description)
         description = description,
         tiles = { name .. ".png" },
         groups = { stone = 1, cracky = 2, dig_stoneblocks = 0 },
-        sounds = sound_api.node_sound_stone_defaults(),
+        sounds = sound_api.node_sound_glass_defaults(),
         on_construct = initialize_dark_block,
         on_timer = function(pos)
             local objs = minetest.get_objects_inside_radius(pos, stoneblocks_check_player_within) -- is the radius to check for players
@@ -50,7 +50,7 @@ local function register_lit_stoneblock(name, description)
         tiles = { name .. "_lit.png" },
         light_source = 14, -- Max light
         groups = { stone = 1, cracky = 2, dig_stoneblocks = 0, not_in_creative_inventory = 1 },
-        sounds = sound_api.node_sound_stone_defaults(),
+        sounds = sound_api.node_sound_glass_defaults(),
         drop = "stoneblocks:" .. name, -- Ensure it drops the unlit version
         
     
@@ -95,5 +95,5 @@ register_sensitive_block("sensitive_glass_block", "Sensitive Glass Block")
 register_sensitive_block("stone_lantern_yellow", "Stone Lantern")
 register_sensitive_block("stone_lantern_blue", "Blue Stone Lantern")
 register_sensitive_block("stone_lantern_green", "Green Stone Lantern")
-register_sensitive_block("stone_lantern_red_green_yellow", "Red and Green with Yellow Stone Lantern")
+register_sensitive_block("stone_lantern_red_green_yellow", "Red/Green with Yellow Stone Lantern")
 register_sensitive_block("stone_lantern_red", "Red Stone Lantern")
