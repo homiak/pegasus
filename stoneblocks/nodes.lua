@@ -103,7 +103,15 @@ minetest.register_node("stoneblocks:mixed_stone_block", {
 	tiles = { "mixed_stone_block.png" },
 	sunlight_propagates = true,
 	light_source = 15, -- This node emits light
-	sounds = sound_api.node_sound_stone_defaults(),
+	sounds = {
+        footstep = {name = "stoneblocks_step"},
+		dig = {name = "stoneblocks_hit"},
+		place = {name = "stoneblocks_hit_crush"},
+		-- place_failed https://api.minetest.net/definition-tables/
+		-- failed
+    },
+	glasslike = 1, -- glasslike_framed
+
 	groups = { stone = 1, cracky = 1, dig_stoneblocks = 1 },
 })
 
