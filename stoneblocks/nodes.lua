@@ -104,7 +104,7 @@ minetest.register_node("stoneblocks:mixed_stone_block", {
 	sunlight_propagates = true,
 	light_source = 15, -- This node emits light
 	sounds = {
-        footstep = {name = "stoneblocks_step"},
+        footstep = {name = "stoneblocks_2bstep"},
 		dig = {name = "stoneblocks_hit"},
 		place = {name = "stoneblocks_hit_crush"},
 		-- place_failed https://api.minetest.net/definition-tables/
