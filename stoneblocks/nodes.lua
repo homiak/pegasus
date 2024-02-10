@@ -157,7 +157,15 @@ minetest.register_node("stoneblocks:turquoise_glass", {
 	description = "Turquoise glass stone",
 	tiles = { "turquoise_glass_block.png" },
 	sunlight_propagates = true,
-	light_source = 50, -- This node emits light
-	sounds = sound_api.node_sound_stone_defaults(),
+	light_source = 15, -- This node emits light
+	sounds = {
+        footstep = {name = "stoneblocks_hit_glass"},
+		dig = {name = "stoneblocks_hit_glass"},
+		place = {name = "stoneblocks_hit_crush"},
+		-- place_failed https://api.minetest.net/definition-tables/
+		-- failed
+    },
+	glasslike = 1, -- glasslike_framed
+
 	groups = { stone = 1, cracky = 2, dig_stoneblocks = 0 },
 })
