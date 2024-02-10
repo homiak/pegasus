@@ -24,7 +24,7 @@ local function register_stoneblock(name, description)
     minetest.register_node("stoneblocks:" .. name, {
         description = description,
         tiles = { name .. ".png" },
-        groups = { stone = 1, cracky = 2, dig_stoneblocks = 0 },
+        groups = { stone = 1, cracky = 2, oddly_breakable_by_hand = 1},
         sounds = sound_api.node_sound_glass_defaults(),
         on_construct = initialize_dark_block,
         on_timer = function(pos)
@@ -48,8 +48,8 @@ local function register_lit_stoneblock(name, description)
     minetest.register_node("stoneblocks:" .. name .. "_lit", {
         description = description,
         tiles = { name .. "_lit.png" },
-        light_source = 14, -- Max light
-        groups = { stone = 1, cracky = 2, dig_stoneblocks = 0, not_in_creative_inventory = 1 },
+        light_source = minetest.LIGHT_MAX, -- Max light
+        groups = { stone = 1, cracky = 2,  oddly_breakable_by_hand = 1, not_in_creative_inventory = 1 },
         sounds = sound_api.node_sound_glass_defaults(),
         drop = "stoneblocks:" .. name, -- Ensure it drops the unlit version
         

@@ -1,4 +1,4 @@
-# StoneBlocks Mod for minetest based games (most functionality works in multicraft as well)
+# StoneBlocks Mod for minetest based games (most functionality works in other minetest based games like kawaii and multicraft)
 
 ## Overview
 StoneBlocks adds a variety of stone-based blocks with unique properties, including light-emitting stones and decorative blocks. Some block reacts to player proximity, creating a dynamic and immersive environment.
@@ -38,7 +38,6 @@ StoneBlocks adds a variety of stone-based blocks with unique properties, includi
 - Stone with Sapphire: stoneblocks:stone_with_sapphire
 - Turquoise Stone: stoneblocks:turquoise_block
 
-
 ## Installation
 - Standard installation via contentDB 
 
@@ -59,5 +58,73 @@ StoneBlocks adds a variety of stone-based blocks with unique properties, includi
 ## Configuration
 - `stoneblocks_check_player_within`: Range (in blocks) to detect player proximity. Default is 2. Valid values 1 - 20. 
 - `stoneblocks_stay_lit_for`: Duration (in seconds) the blocks remain lit after activation. Default is 2. Valid range 1 - 600.
+
+
+## Ores (only in minetest)
+
+The StoneBlocks mod introduces several unique ores into the Minetest world, enriching the mining and exploration experience. Below are the details of these ores, including their generation parameters and where they can be found:
+
+### Sapphire Stone
+- **Ore ID**: `stoneblocks:stone_with_sapphire`
+- **Generation Depth**: Between -500 and -60
+- **Cluster Scarcity**: 1 ore per approximately 3,584 nodes
+- **Cluster Size**: 8 ores per cluster
+- **Location**: Within default stone
+
+### Ruby Stone
+- **Ore ID**: `stoneblocks:stone_with_ruby`
+- **Generation Depth**: Between -600 and -70
+- **Cluster Scarcity**: 1 ore per approximately 3,584 nodes
+- **Cluster Size**: 8 ores per cluster
+- **Location**: Within default stone
+
+### Emerald Stone
+- **Ore ID**: `stoneblocks:stone_with_emerald`
+- **Generation Depth**: Between -500 and -60
+- **Cluster Scarcity**: 1 ore per approximately 4,096 nodes (Blob)
+- **Cluster Size**: 8 ores per cluster
+- **Location**: Within default stone
+
+### Turquoise Glass Stone
+- **Ore ID**: `stoneblocks:stone_with_turquoise_glass`
+- **Generation Depth**: Between -600 and -50
+- **Cluster Scarcity**: 1 ore per approximately 2,100 nodes (Blob)
+- **Cluster Size**: 8 ores per cluster
+- **Location**: Within default stone
+
+### Turquoise Stone
+- **Ore ID**: `stoneblocks:stone_with_turquoise`
+- **Generation Depth**: Between -600 and -50
+- **Cluster Scarcity**: 1 ore per approximately 3,380 nodes
+- **Cluster Size**: 8 ores per cluster
+- **Location**: Within default stone
+
+### Granite Variants
+- **Ores ID**: `stoneblocks:black_granite_block`, `stoneblocks:grey_granite`, `stoneblocks:rose_granite_block`, `stoneblocks:granite_block`
+- **Generation Depth**: Up to 100 for some, extending to -700 for others, including above ground for `stoneblocks:red_granite_block`
+- **Cluster Scarcity**: Varies, with 1 ore per approximately 455 nodes for some
+- **Cluster Size**: 8 ores per cluster
+- **Location**: Within default stone, with specific depth ranges detailed above
+
+These ores are designed to blend seamlessly with the Minetest world, offering both aesthetic value and utility for crafting and building. Players are encouraged to explore various biomes and depths to discover these valuable resources.
+
+## Crafting Recipes (only minetest)
+
+The StoneBlocks mod enriches Minetest with a variety of crafting recipes, allowing players to transform natural resources into a range of decorative and functional blocks. Below is an overview of what can be crafted:
+
+- **Sapphire Block**: Crafted from Stone with Sapphire.
+- **Ruby Block**: Made using Stone with Ruby.
+- **Emerald Block**: Created from Stone with Emerald.
+- **Turquoise Glass and Turquoise Block**: Derived from Stone with Turquoise and Stone with Turquoise Glass.
+- **Stone Lanterns**: A series of decorative lanterns in various colors (Yellow, Red, Blue, Green, and Red/Green/Yellow) can be crafted using combinations of Ruby Blocks, Sapphire Blocks, Emerald Blocks, Turquoise Glass, and basic stones.
+- **Mixed Stone Block**: A special block combining Turquoise Glass, Ruby Blocks, Emerald Blocks, and other stones.
+- **Sensitive Glass Block**: Utilizes Turquoise Glass and Stone with Turquoise Glass.
+- **Ruby Block with Emerald**: A unique combination of Ruby and Emerald stones.
+- **Emerald Block with Ruby**: Another unique combination, emphasizing the versatility of Ruby and Emerald stones.
+- **Red Granite Turquoise Block and Cats Eye**: Special blocks that utilize the mod's unique stones for crafting.
+
+These recipes encourage exploration and mining, as players collect the necessary resources to craft these unique blocks. For the exact crafting patterns, players are encouraged to explore the crafting guide within the game.
+
+Enjoy creating and decorating with StoneBlocks' diverse range of materials and colors!
 
 Created by Scottii & homiak
