@@ -13,7 +13,7 @@ minetest.register_ore({ -- https://api.minetest.net/ores/
     ore_type       = "scatter",
     ore            = "stoneblocks:stone_with_ruby",
     wherein        = "default:stone", --  Node in which the ore generates.
-    clust_scarcity = 10 * 27 * 10, --  How rare each cluster is; lower values = more common.  Means one ore per 512 nodes on average, which is relatively scarce
+    clust_scarcity = 16 * 13 * 17, --  How rare each cluster is; lower values = more common.  Means one ore per 512 nodes on average, which is relatively scarce
     clust_num_ores = 8, --  Number of ores in a cluster.
     clust_size     = 3,
     y_max          = -70, --  Maximum and minimum Y-coordinates for the ore's generation.
@@ -24,7 +24,7 @@ minetest.register_ore({ -- https://api.minetest.net/ores/
     ore_type       = "blob",
     ore            = "stoneblocks:stone_with_emerald",
     wherein        = "default:stone", --  Node in which the ore generates.
-    clust_scarcity = 18 * 19 * 17, --  How rare each cluster is; lower values = more common.  Means one ore per 512 nodes on average, which is relatively scarce
+    clust_scarcity = 16 * 16 * 15, --  How rare each cluster is; lower values = more common.  Means one ore per 512 nodes on average, which is relatively scarce
     clust_num_ores = 8, --  Number of ores in a cluster.
     clust_size     = 3,
     y_max          = -60, --  Maximum and minimum Y-coordinates for the ore's generation.
