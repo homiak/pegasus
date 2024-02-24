@@ -163,5 +163,5 @@ minetest.override_item("fire:flint_and_steel", {
 		return old_on_use(itemstack, user, pointed_thing)
 	end,
 })
-minetest.log("action", "register flint")
+
 minetest.register_alias_force("flint", "fire:flint_and_steel")
