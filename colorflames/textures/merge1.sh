@@ -21,12 +21,12 @@ def merge_images_vertically_with_top_spacer(images_paths, spacer_height):
     return merged_image
 
 # Paths to the images generated previously
-images_paths = [f'yellow_fire_{i+1}.png' for i in range(20)]  # Ensure these paths are correct
+images_paths = [f'black_fire_image_{i+1}.png' for i in range(5)]  # Ensure these paths are correct
 spacer_height = 0  # Height of the transparent spacer in pixels, including top spacer
 
 # Merge the images with a top spacer and save the result
 merged_image_with_top_spacer = merge_images_vertically_with_top_spacer(images_paths, spacer_height)
-merged_image_path_with_top_spacer = 'merged_yellow_fire.png'  # Adjust path as needed
+merged_image_path_with_top_spacer = 'merged_fire.png'  # Adjust path as needed
 merged_image_with_top_spacer.save(merged_image_path_with_top_spacer)
 
 print(f"Merged image saved to: {merged_image_path_with_top_spacer}")
