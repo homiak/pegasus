@@ -37,7 +37,7 @@ local function smoke(pos, node, clicker, enable)
 
 	handler = minetest.sound_play("fire_small", {
 		pos = pos,
-		max_hear_distance = 5,
+		max_hear_distance = 20,
 		loop = true
 	})
 
@@ -48,20 +48,17 @@ end
 
 -- flame types
 local flame_types = {
-	-- "green", "yellow", 
-	"black" 
-	-- "orange", "cyan",
-	-- "magenta", "purple", "blue", "red", "frosted"
+	"green", "yellow", "black" 
 }
 
 for _, f in pairs(flame_types) do
-	minetest.register_node("abriflame:" .. f .. "_fire", {
+	minetest.register_node("colorflames:" .. f .. "_fire", {
 		inventory_image = f .. "_fire_inv.png",
 		wield_image = f .. "_fire_inv.png",
-		description = f .. " fire",
+		description = f .. " Fire",
 		drawtype = "firelike",
 		paramtype = "light",
-		groups = {dig_immediate = 3, not_in_creative_inventory = 0, abriflame_fire = 1},
+		groups = {dig_immediate = 3, not_in_creative_inventory = 0, colorflames_fire = 1},
 		sunlight_propagates = true,
 		buildable_to = true,
 		walkable = false,
@@ -86,7 +83,7 @@ for _, f in pairs(flame_types) do
 			smoke(pos, nil, nil, false)
 			minetest.sound_play("fire_extinguish_flame", {
 				pos = pos,
-				max_hear_distance = 5,
+				max_hear_distance = 20,
 				gain = 0.25
 			})
 		end,
@@ -95,7 +92,7 @@ end
 
 if minetest.features.particlespawner_tweenable then
 	minetest.register_abm({
-		nodenames = { "group:abriflame_fire" },
+		nodenames = { "group:colorflames_fire" },
 		interval = 1,
 		chance = 1,
 		catch_up = false,
@@ -127,43 +124,4 @@ if minetest.features.particlespawner_tweenable then
 		end
 	})
 end
-
-local old_on_use = minetest.registered_items["fire:flint_and_steel"].on_use
--- fire starter tool
-minetest.override_item("fire:flint_and_steel", {
-	on_use = function(itemstack, user, pointed_thing)
-		if pointed_thing.type ~= "node" then
-			return itemstack
-		end
-
-		local pos = ({x = pointed_thing.under.x,
-			y = pointed_thing.under.y + 1,
-			z = pointed_thing.under.z})
-
-		if minetest.get_node(pos).name ~= "air" or
-				minetest.is_protected(pos, user:get_player_name()) or
-				minetest.is_protected(pointed_thing.above, user:get_player_name()) then
-			return itemstack
-		end
-
-		local node = minetest.get_node(pointed_thing.under).name
-		local param2 = minetest.get_node(pointed_thing.under).param2
-		local nodesplit, namesplit = node:split(":"), {}
-		if #nodesplit == 2 then
-			namesplit = nodesplit[2]:split("_")
-		end
-
-		if nodesplit[1] == "abriglass" and #namesplit == 3 and namesplit[1] == "stained" and namesplit[3] ~= "hardware" then
-			minetest.set_node(pos, {name = "abriflame:" .. namesplit[3] .. "_fire"})
-		end
-
-		if abriglass.glass_list and node=="abriglass:stained_glass_hardware" and param2 < #abriglass.glass_list then
-			minetest.set_node(pos, {name = "abriflame:" .. abriglass.glass_list[param2+1][1] .. "_fire"})
-		end
-
-		return old_on_use(itemstack, user, pointed_thing)
-	end,
-})
-minetest.register_alias("abriflame:flint", "fire:flint_and_steel")
-
 
