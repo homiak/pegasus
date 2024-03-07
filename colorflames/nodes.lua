@@ -48,7 +48,7 @@ end
 
 -- flame types
 local flame_types = {
-	"green", "yellow", "black" 
+	"green", "yellow", "black", "orange", "cyan", "purple", "blue", "red", "magenta"
 }
 
 for _, f in pairs(flame_types) do
