@@ -1,6 +1,6 @@
 
 local flint_colors = {
-	"green", "yellow", "black", "orange", "cyan", "blue", "red"
+	"green", "yellow", "black", "orange", "cyan", "blue", "red", "violet", "frosted"
 }
 
 local function register_flint_craft(color) 
