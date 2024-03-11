@@ -48,7 +48,7 @@ end
 
 -- flame types
 local flame_types = {
-	"green", "yellow", "black", "orange", "cyan", "violet", "blue", "red", "magenta", "grey", "healinggreen", "healingcyan", "healingblack"
+	"green", "yellow", "black", "orange", "cyan", "violet", "blue", "red", "magenta", "grey", "healing_green", "healing_cyan", "healing_black"
 }
 
 for _, f in pairs(flame_types) do
@@ -58,7 +58,7 @@ for _, f in pairs(flame_types) do
 		description = f .. " Fire",
 		drawtype = "firelike",
 		paramtype = "light",
-		groups = {dig_immediate = 3, not_in_creative_inventory = 0, colorflames_fire = 1},
+		groups = {dig_immediate = 3, not_in_creative_inventory = 1, colorflames_fire = 1},
 		sunlight_propagates = true,
 		buildable_to = true,
 		walkable = false,
@@ -66,7 +66,7 @@ for _, f in pairs(flame_types) do
 		waving = 1,
 		drop = "",
 		tiles = {{
-			name = f .. "_fire_animated_orig.png",
+			name = f .. "_fire_animated.png",
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 32,

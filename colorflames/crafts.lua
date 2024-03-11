@@ -1,6 +1,6 @@
 
 local flint_colors = {
-	"green", "yellow", "black", "orange", "cyan", "blue", "red", "violet", "grey"
+	"green", "yellow", "black", "orange", "cyan", "blue", "red", "violet", "grey", "healing_cyan", "healing_green", "healing_black"
 }
 
 local function register_flint_craft(color) 
@@ -36,3 +36,21 @@ end
 for _, color in pairs(flint_colors) do
     register_flint_craft(color)
 end
+
+minetest.register_craft({
+type = "shapeless",
+output = "colorflames:healing_green_fire_starter_tool",
+recipe = { "fire:flint_and_steel", "dye:green", "ethereal:yellow_tree_sapling" }
+})
+
+minetest.register_craft({
+    type = "shapeless",
+    output = "colorflames:healing_cyan_fire_starter_tool",
+    recipe = { "fire:flint_and_steel", "dye:cyan", "ethereal:yellow_tree_sapling" }
+    })
+
+    minetest.register_craft({
+        type = "shapeless",
+        output = "colorflames:healing_black_fire_starter_tool",
+        recipe = { "fire:flint_and_steel", "dye:black", "ethereal:yellow_tree_sapling" }
+        })
