@@ -48,7 +48,7 @@ end
 
 -- flame types
 local flame_types = {
-	"green", "yellow", "black", "orange", "cyan", "violet", "blue", "red", "magenta", "frosted"
+	"green", "yellow", "black", "orange", "cyan", "violet", "blue", "red", "magenta", "grey", "healinggreen", "healingcyan", "healingblack"
 }
 
 for _, f in pairs(flame_types) do
@@ -66,7 +66,7 @@ for _, f in pairs(flame_types) do
 		waving = 1,
 		drop = "",
 		tiles = {{
-			name = f .. "_fire_animated.png",
+			name = f .. "_fire_animated_orig.png",
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 32,
