@@ -48,7 +48,7 @@ end
 
 -- flame types
 local flame_types = {
-	"green", "yellow", "black", "orange", "cyan", "violet", "blue", "red", "magenta", "grey", "healing_green", "healing_cyan", "healing_black"
+	"green", "yellow", "black", "orange", "cyan", "violet", "blue", "red", "magenta", "grey", "healinggreen", "healingcyan", "healingblack"
 }
 
 for _, f in pairs(flame_types) do
@@ -98,7 +98,7 @@ if minetest.features.particlespawner_tweenable then
 		catch_up = false,
 		action = function(pos, node)
 			local color = node.name:split(":")[2]:split("_")[1]
-			if color=="frosted" then
+			if color=="frosted" or string.find(color, "healing", 1) == 1 then
 				color = "white"
 			end
 			minetest.add_particlespawner({
