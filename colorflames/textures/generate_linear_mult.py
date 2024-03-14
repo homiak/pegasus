@@ -48,7 +48,7 @@ def create_image_series_with_variations(image_path, output_size, transparency_he
     return images_paths
 
 # Parameters for generation
-image_path = 'yellow_fire.png'  # Update this path
+image_path = 'yellow_fire_inv.png'  # Update this path
 num_images = 20
 images_series_paths = create_image_series_with_variations(image_path, (64, 64), 0.25, num_images)
 

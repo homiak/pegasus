@@ -21,7 +21,7 @@ def merge_images_vertically_with_top_spacer(images_paths, spacer_height):
     return merged_image
 
 # Paths to the images generated previously
-images_paths = [f'healingcyan_fire_inv_{i+1}.png' for i in range(5)]  # Ensure these paths are correct
+images_paths = [f'green_fire_{i+1}.png' for i in range(20)]  # Ensure these paths are correct
 spacer_height = 0  # Height of the transparent spacer in pixels, including top spacer
 
 # Merge the images with a top spacer and save the result

@@ -78,7 +78,7 @@ local function register_healing_flint_craft(color)
                 if obj:is_player() then
                     local hp = obj:get_hp()
                     if hp > 0 and hp < 20 then  -- Assuming max HP is 20
-                        obj:set_hp(hp + 5)  -- Heal by 1 HP; adjust as needed
+                        obj:set_hp(hp + 6)  -- Heal by 6 HP; adjust as needed
                     end
                 end
             end
@@ -86,7 +86,7 @@ local function register_healing_flint_craft(color)
     })
 end
 
-local flint_colors = {"green", "black", "cyan"}
+local flint_colors = {"green", "black", "cyan", "wavegreen"}
 
 for _, color in pairs(flint_colors) do
     register_healing_flint_craft(color)

@@ -8,7 +8,7 @@ def calculate_frequency(image_idx, num_images):
 
     if image_idx < 5:
         # Gradually increase frequency from 1 to 5 up to the midpoint
-        return (image_idx - 1) / (mid_point - 1))
+        return (image_idx - 1) / (mid_point - 1)
     else:
         # Gradually decrease frequency from 5 back to 1 after the midpoint
         return 5 - (4 * (image_idx - mid_point - 1) / (mid_point - 1))
@@ -54,7 +54,7 @@ def create_image_series_with_gradient_frequencies(image_path, output_size, trans
     return images_paths
 
 # Parameters for generation
-image_path = 'yellow_fire.png'  # Update this path to your original image
+image_path = 'yellow_fire_inv.png'  # Update this path to your original image
 num_images = 20
 
 images_series_paths = create_image_series_with_gradient_frequencies(image_path, (32, 32), 0.25, num_images)

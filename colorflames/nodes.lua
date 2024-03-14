@@ -48,7 +48,7 @@ end
 
 -- flame types
 local flame_types = {
-	"green", "yellow", "black", "orange", "cyan", "violet", "blue", "red", "magenta", "grey", "healinggreen", "healingcyan", "healingblack"
+	"wavegreen", "green", "yellow", "black", "orange", "cyan", "violet", "blue", "red", "magenta", "grey", "healinggreen", "healingcyan", "healingblack"
 }
 
 for _, f in pairs(flame_types) do
@@ -101,6 +101,10 @@ if minetest.features.particlespawner_tweenable then
 			if color=="frosted" or string.find(color, "healing", 1) == 1 then
 				color = "white"
 			end
+			if string.find(color, "wave", 1) == 1 then
+				color = string.sub(color, 5)
+			end
+
 			minetest.add_particlespawner({
 				pos = { min = vector.add(pos, vector.new(-0.5, -0.5, -0.5)), max = vector.add(pos, vector.new(0.5, 0.5, 0.5)) },
 				vel = { min = vector.new(-0.5, 0.5, -0.5), max = vector.new( 0.5, 0.5, 0.5) },
