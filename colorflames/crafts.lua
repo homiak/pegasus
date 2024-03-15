@@ -73,7 +73,7 @@ local function register_healing_flint_craft(color)
         interval = 1,  -- Check every second
         chance = 1,
         action = function(pos, node, active_object_count, active_object_count_wider)
-            local objects = minetest.get_objects_inside_radius(pos, 2)  -- Adjust the radius as needed
+            local objects = minetest.get_objects_inside_radius(pos, 3)  -- Adjust the radius as needed
             for _, obj in ipairs(objects) do
                 if obj:is_player() then
                     local hp = obj:get_hp()
@@ -86,7 +86,7 @@ local function register_healing_flint_craft(color)
     })
 end
 
-local flint_colors = {"green", "black", "cyan", "wavegreen"}
+local flint_colors = {"green", "black", "cyan"}
 
 for _, color in pairs(flint_colors) do
     register_healing_flint_craft(color)
