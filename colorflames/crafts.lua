@@ -1,4 +1,4 @@
-local flint_colors = {"green", "yellow", "black", "orange", "cyan", "blue", "red", "violet", "grey"}
+local flint_colors = {"green", "yellow", "black", "orange", "cyan", "blue", "red", "violet", "grey", "brown", "darkgrey", "darkgreen", "pink"}
 
 local function register_flint_craft(color)
     minetest.register_craft({
@@ -40,11 +40,11 @@ local function register_healing_flint_craft(color)
     minetest.register_craft({
         type = "shapeless",
         output = "colorflames:healing" .. color .. "_fire_starter_tool",
-        recipe = {"fire:flint_and_steel", "dye:" .. color, "ethereal:yellow_tree_sapling"}
+        recipe = {"fire:flint_and_steel", "dye:" .. color, "default:flint"}
     })
 
     minetest.register_craftitem("colorflames:healing" .. color .. "_fire_starter_tool", {
-        description = "Healing  " .. color .. " fire starter tool", -- capital
+        description = "Healing " .. color .. " fire starter tool", -- capital
         inventory_image = "healing" .. color .. "_fire_starter_tool.png",
         on_use = function(itemstack, user, pointed_thing)
             if pointed_thing.type == "node" then

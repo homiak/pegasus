@@ -9,12 +9,12 @@ def calculate_frequency():
     then reverses back down to 0.5 in steps of 0.5, and repeats.
     """
     direction = 1  # Start by incrementing
-    frequency = 0.5
+    frequency = 0.3
     while True:
         yield frequency
-        if frequency >= 1.5 and direction == 1:
+        if frequency >= 0.8 and direction == 1:
             direction = -1  # Start decrementing
-        elif frequency <= 0.5 and direction == -1:
+        elif frequency <= 0.3 and direction == -1:
             direction = 1  # Start incrementing again
         frequency += 0.05 * direction
 
@@ -58,10 +58,10 @@ def create_image_series_with_step_frequencies(image_path, output_size, transpare
     return images_paths
 
 # Parameters for generation
-image_path = 'black_fire_inv.png'  # Ensure this path points to your original image
-num_images = 40  # Total number of images to generate
+image_path = 'pink_fire_inv.png'  # Ensure this path points to your original image
+num_images = 20  # Total number of images to generate
 
-images_series_paths = create_image_series_with_step_frequencies(image_path, (64, 64), 0.45, num_images)
+images_series_paths = create_image_series_with_step_frequencies(image_path, (64, 64), 0.55, num_images)
 
 # Print the paths of the generated images
 for path in images_series_paths:
