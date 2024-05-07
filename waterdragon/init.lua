@@ -3,7 +3,6 @@
 --------------
 
 waterdragon = {
-	wyverns = {},
 	force_storage_save = false
 }
 
@@ -99,7 +98,6 @@ dofile(path.."/api/mount.lua")
 dofile(path.."/api/behaviors.lua")
 dofile(path.."/mobs/rare_water_dragon.lua")
 dofile(path.."/mobs/pure_water_dragon.lua")
-dofile(path.."/mobs/jungle_wyvern.lua")
 dofile(path.."/nodes.lua")
 dofile(path.."/craftitems.lua")
 dofile(path.."/api/libri.lua")

@@ -151,13 +151,6 @@ local pages = {
 			offset = {x = 15, y = 9},
 			size = {x = 1, y = 1},
 			text = "waterdragon_libri_icon_next.png;btn_next;;true;false"
-		},
-		{ -- Last Page
-			unlock_key = "wyverns",
-			element_type = "image_button",
-			offset = {x = 1, y = 9},
-			size = {x = 1, y = 1},
-			text = "waterdragon_libri_icon_last.png;btn_last;;true;false"
 		}
 	},
 	{ -- Steel Page 2
@@ -402,10 +395,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 	if fields.btn_dragons then
 		minetest.show_formspec(plyr_name, "waterdragon:libri_page_" .. 2, get_page(2, meta, plyr_name))
-		return true
-	end
-	if fields.btn_wyverns then
-		minetest.show_formspec(plyr_name, "waterdragon:libri_page_" .. 5, get_page(5, meta, plyr_name))
 		return true
 	end
 	if fields.btn_draconic_steel then

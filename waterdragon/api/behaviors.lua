@@ -6,8 +6,6 @@ waterdragon.pure_water_dragon_targets = {}
 
 waterdragon.rare_water_dragon_targets = {}
 
-waterdragon.wyvern_targets = {}
-
 minetest.register_on_mods_loaded(function()
 	for name, def in pairs(minetest.registered_entities) do
 		local is_mobkit = (def.logic ~= nil or def.brainfuc ~= nil)
@@ -22,9 +20,7 @@ minetest.register_on_mods_loaded(function()
 				table.insert(waterdragon.rare_water_dragon_targets, name)
 			end
 			local hp = def.max_health or def.max_hp or 21
-			if hp < 21 then
-				table.insert(waterdragon.wyvern_targets, name)
-			end
+		
 		end
 	end
 end)
@@ -639,12 +635,6 @@ function waterdragon.action_punch(self)
 					end
 				end
 			end
-			minetest.sound_play("waterdragon_jungle_wyvern_bite", {
-				object = _self.object,
-				gain = 1.0,
-				max_hear_distance = 16,
-				loop = false,
-			})
 			damage_init = true
 		end
 		if timeout <= 0 then self:animate("stand") return true end
@@ -844,100 +834,6 @@ creatura.register_utility("waterdragon:fly_to_land", function(self)
 	self:set_utility(func)
 end)
 
--- Wyvern Breaking
-
-creatura.register_utility("waterdragon:wyvern_breaking", function(self, player)
-	local center = self.object:get_pos()
-	if not center then return end
-	local taming = 0
-	local feed_timer = 10
-	local height_tick = 0
-	local function func(_self)
-		if not player
-		or not player:get_pos() then
-			return true
-		end
-		local pos = _self.object:get_pos()
-		if not pos then return end
-		-- Update Center
-		height_tick = height_tick - 1
-		if height_tick <= 0 then
-			local dist2floor = creatura.sensor_floor(_self, 10, true)
-			center.y = center.y + (10 - dist2floor)
-			height_tick = 30
-		end
-		-- Player Interaction
-		if player:get_player_control().sneak then
-			waterdragon.detach_player(_self, player)
-			return true
-		end
-		feed_timer = feed_timer - _self.dtime
-		if feed_timer <= 0 then
-			local inv = player:get_inventory()
-			local stack = inv:get_stack("main", 1)
-			local _, item_name = _self:follow_item(stack)
-			if item_name then
-				stack:take_item(1)
-				inv:set_stack("main", 1, stack)
-				taming = taming + 10
-				local move_dir = vec_normal(_self.object:get_velocity())
-				local part_pos = vec_add(pos, vec_multi(move_dir, 12))
-				local def = minetest.registered_items[item_name]
-				local texture = def.inventory_image
-				if not texture or texture == "" then
-					texture = def.wield_image
-				end
-				minetest.add_particlespawner({
-					amount = 8,
-					time = 0.1,
-					minpos = part_pos,
-					maxpos = part_pos,
-					minvel = {x=-1, y=1, z=-1},
-					maxvel = {x=1, y=2, z=1},
-					minacc = {x=0, y=-5, z=0},
-					maxacc = {x=0, y=-9, z=0},
-					minexptime = 1,
-					maxexptime = 1,
-					minsize = 4,
-					maxsize = 6,
-					collisiondetection = true,
-					vertical = false,
-					texture = texture,
-				})
-				minetest.chat_send_player(player:get_player_name(),
-					"The Jungle Wyvern ate some " .. def.description .. "! Taming is at " .. taming .. "%")
-			else
-				waterdragon.detach_player(_self, player)
-				return true
-			end
-			feed_timer = 10
-		end
-		if taming >= 100 then
-			minetest.chat_send_player(player:get_player_name(), "The Jungle Wyvern has been tamed!")
-			_self.owner = _self:memorize("owner", player:get_player_name())
-			return true
-		end
-		if not _self:get_action() then
-			if _self.touching_ground then
-				if not can_takeoff(_self, pos) then
-					waterdragon.detach_player(_self, player)
-					return true
-				end
-				waterdragon.action_takeoff(_self)
-			else
-				local move_dir = (vec_dist(pos, center) > 16 and vec_dir(pos, center)) or nil
-				local pos2 = _self:get_wander_pos_3d(6, 9, move_dir)
-				waterdragon.action_fly(_self, pos2, 3, "waterdragon:fly_simple", 0.6)
-				if pos.y - pos2.y > 1 then
-					_self:animate("dive")
-				else
-					_self:animate("fly")
-				end
-			end
-		end
-	end
-	self:set_utility(func)
-end)
 
 -- Attack
 
@@ -1027,42 +923,6 @@ creatura.register_utility("waterdragon:attack", function(self, target)
 					tgt_pos.y = tgt_pos.y + 14
 					creatura.action_move(_self, tgt_pos, 5, "waterdragon:fly_simple", 1, "fly")
 				end
-			end
-		end
-	end
-	self:set_utility(func)
-end)
-
-creatura.register_utility("waterdragon:wyvern_attack", function(self, target)
-	local hidden_timer = 1
-	local attack_init = false
-	local function func(_self)
-		local pos = _self.object:get_pos()
-		if not pos then return end
-		local target_alive, los, tgt_pos = _self:get_target(target)
-		if not target_alive then
-			_self._target = nil
-			return true
-		end
-		hidden_timer = (not los and hidden_timer + _self.dtime) or 0
-		if hidden_timer >= 5 then
-			_self._ignore_obj[target] = 30
-			local group = get_target_group(target)
-			if #group > 0 then
-				for _, v in pairs(group) do
-					_self._ignore_obj[v] = 30
-				end
-			end
-			_self._target = nil
-			return true
-		end
-		if not _self:get_action() then
-			if attack_init then return true end
-			local dist = vec_dist(pos, tgt_pos)
-			if dist > 14 then
-				creatura.action_move(_self, tgt_pos, 3, "waterdragon:fly_simple", 0.5, "fly")
-			else
-				waterdragon.action_flight_attack(_self, target, 12)
 			end
 		end
 	end
@@ -1299,134 +1159,3 @@ waterdragon.dragon_behavior = {
 	}]]
 }
 
-waterdragon.wyvern_behavior = {
-	{ -- Wander
-		utility = "waterdragon:wander",
-		step_delay = 0.3,
-		get_score = function(self)
-			return 0.1, {self}
-		end
-	},
-	{ -- Wander (Flight)
-		utility = "waterdragon:aerial_wander",
-		get_score = function(self)
-			if self.owner and not self.flight_allowed then return 0 end
-			if self.in_liquid then
-				if self._target then
-					self._ignore_obj[self._target] = true
-				end
-				self.flight_stamina = self:memorize("flight_stamina", self.flight_stamina + 200)
-				self.is_landed = self:memorize("is_landed", false)
-				return 0.4, {self, 0.3}
-			end
-			if not self.is_landed then
-				return 0.2, {self, 0.3}
-			end
-			return 0
-		end,
-	},
-	{ -- Stay (Order)
-		utility = "waterdragon:stay",
-		get_score = function(self)
-			if not self.owner then return 0 end
-			local order = self.order
-			if order == "stay" then
-				return 1, {self}
-			end
-			return 0
-		end
-	},
-	{ -- Follow (Order)
-		utility = "waterdragon:follow_player",
-		get_score = function(self)
-			local owner = self.owner and minetest.get_player_by_name(self.owner)
-			if not owner then return 0 end
-			local order = self.order
-			if order == "follow" then
-				local stance = self.stance
-				if stance == "aggressive"
-				or (stance == "neutral"
-				and self.owner_target) then
-					return 0.8, {self, owner}
-				end
-				return 1, {self, owner}
-			end
-			return 0
-		end
-	},
-	{ -- Attack
-		utility = "waterdragon:wyvern_attack",
-		get_score = function(self)
-			local pos = self.object:get_pos()
-			if not pos then return end
-			local stance = (self.owner and self.stance) or "aggressive"
-			if stance == "passive" then return 0 end
-			local target = self._target
-			if not target then
-				target = find_target(self, waterdragon.wyvern_targets)
-				if not target or not target:get_pos() then return 0 end
-				if shared_owner(self, target) then
-					self._target = nil
-					return 0
-				end
-			elseif stance == "neutral" then
-				stance = "aggressive"
-			end
-			if stance ~= "aggressive" then
-				self._target = nil
-				return 0
-			end
-			local name = target:is_player() and target:get_player_name()
-			if name then
-				local inv = minetest.get_inventory({type = "player", name = target:get_player_name()})
-				if waterdragon.contains_libri(inv) then
-					waterdragon.add_page(inv, "wyverns")
-				end
-			end
-			self._target = target
-			return 0.9, {self, target}
-		end
-	},
-	{ -- Taming
-		utility = "waterdragon:wyvern_breaking",
-		get_score = function(self)
-			if self.rider
-			and not self.owner then
-				return 0.9, {self, self.rider}
-			end
-			return 0
-		end
-	},
-	{ -- Mounted
-		utility = "waterdragon:wyvern_mount",
-		get_score = function(self)
-			if self.rider
-			and self.owner then
-				return 1, {self}
-			end
-			return 0
-		end
-	},
-	{ -- Fly to Land
-		utility = "waterdragon:fly_to_land",
-		get_score = function(self)
-			local util = self:get_utility() or ""
-			local attacking_tgt = self._target and creatura.is_alive(self._target)
-			if attacking_tgt or util == "waterdragon:wyvern_breaking" then return 0 end
-			local dist2floor = creatura.sensor_floor(self, 5, true)
-			if dist2floor > 4 then
-				local is_landed = self.is_landed or self.flight_stamina < 15
-				local is_grounded = (self.owner and not self.fly_allowed) or self.order == "stay"
-				if is_landed
-				or is_grounded then
-					if self.flight_stamina < 15 then
-						return 1, {self}
-					else
-						return 0.3, {self}
-					end
-				end
-			end
-			return 0
-		end
-	}
-}

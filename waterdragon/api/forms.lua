@@ -189,47 +189,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			form_objref[name] = nil
 		end
 	end
-	if formname == "waterdragon:wyvern_forms" then
-		if fields.btn_dragon_stance then
-			if not ent.object then return end
-			if ent.stance == "neutral" then
-				ent.stance = ent:memorize("stance", "aggressive")
-			elseif ent.stance == "aggressive" then
-				ent.stance = ent:memorize("stance", "passive")
-			elseif ent.stance == "passive" then
-				ent.stance = ent:memorize("stance", "neutral")
-			end
-			ent:show_formspec(player)
-		end
-		if fields.btn_dragon_order then
-			if not ent.object then return end
-			if ent.order == "wander" then
-				ent.order = ent:memorize("order", "follow")
-			elseif ent.order == "follow" then
-				ent.order = ent:memorize("order", "stay")
-			elseif ent.order == "stay" then
-				ent.order = ent:memorize("order", "wander")
-			else
-				ent.order = ent:memorize("order", "stay")
-			end
-			ent:show_formspec(player)
-		end
-		if fields.btn_dragon_fly then
-			if not ent.object then return end
-			if ent.fly_allowed then
-				ent.fly_allowed = ent:memorize("fly_allowed", false)
-			else
-				ent.fly_allowed = ent:memorize("fly_allowed", true)
-			end
-			ent:show_formspec(player)
-		end
-		if fields.btn_dragon_name then
-			minetest.show_formspec(name, "waterdragon:set_name", get_rename_formspec(ent))
-		end
-		if fields.quit or fields.key_enter then
-			form_objref[name] = nil
-		end
-	end
 	if formname == "waterdragon:set_name" and fields.name then
 		if string.len(fields.name) > 64 then
 			fields.name = string.sub(fields.name, 1, 64)
