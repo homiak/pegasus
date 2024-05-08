@@ -66,20 +66,24 @@ creatura.register_mob("waterdragon:pure_water_dragon", {
 	-- Misc
 	sounds = {
 		random = {
-			name = "waterdragon_water_dragon",
-			gain = 2,
-			distance = 128,
-			length = 3.5
-		},
-		slam = {
-			name = "waterdragon_slam",
-			gain = 2,
-			distance = 64
-		},
-		repel = {
-			name = "waterdragon_repel",
-			gain = 2,
-			distance = 64
+			{
+				name = "waterdragon_water_dragon_random_1",
+				gain = 1,
+				distance = 64,
+				length = 2
+			},
+			{
+				name = "waterdragon_water_dragon_random_2",
+				gain = 1,
+				distance = 64,
+				length = 2.5
+			},
+			{
+				name = "waterdragon_water_dragon_random_3",
+				gain = 1,
+				distance = 64,
+				length = 4
+			}
 		}
 	},
 	child_sounds = {

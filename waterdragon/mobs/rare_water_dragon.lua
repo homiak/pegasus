@@ -31,7 +31,7 @@ creatura.register_mob("waterdragon:rare_water_dragon", {
 	stepheight = 2.51,
 	max_fall = 0,
 	-- Visuals
-	mesh = "waterdragon_rare_water_dragon.b3d",
+	mesh = "waterdragon_water_dragon.b3d",
 	hitbox = {
 		width = 2.5,
 		height = 5
