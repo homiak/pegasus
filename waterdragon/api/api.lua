@@ -1092,9 +1092,9 @@ waterdragon.dragon_api = {
 			pitch = pitch - (random(-10, 10) * 0.005)
 			parameters.gain = spec.gain or 1
 			parameters.max_hear_distance = spec.distance or 8
-			parameters.fade = spec.fade or 1
+			parameters.fade = spec.fade or 4
 			parameters.pitch = pitch
-			self.roar_anim_length = parameters.length or 1
+			self.roar_anim_length = parameters.length or 500
 			self.time_from_last_sound = 0
 			self.jaw_init = true
 			return minetest.sound_play(name, parameters)
