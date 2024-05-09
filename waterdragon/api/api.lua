@@ -1374,13 +1374,13 @@ end)
 --------------
 
 minetest.register_privilege("waterdragon", {
-	description = "Allows Player to customize and force tame Dragons",
+	description = "Allows Player to customize and force tame Water Dragons",
 	give_to_singleplayer = false,
 	give_to_admin = true
 })
 
-minetest.register_chatcommand("tamedragon", {
-	description = "Tames pointed Dragon",
+minetest.register_chatcommand("tame_water_dragon", {
+	description = "Tames pointed Water Dragon",
 	privs = {waterdragon = true},
 	func = function(name)
 		local player = minetest.get_player_by_name(name)
@@ -1431,7 +1431,7 @@ minetest.register_chatcommand("tamedragon", {
 	end
 })
 
-minetest.register_chatcommand("set_dragon_owner", {
+minetest.register_chatcommand("set_water_dragon_owner", {
 	description = "Sets owner of pointed Water Dragon",
 	params = "<name>",
 	privs = {waterdragon = true},
@@ -1478,8 +1478,8 @@ minetest.register_chatcommand("set_dragon_owner", {
 	end
 })
 
-minetest.register_chatcommand("revive_dragon", {
-	description = "Revives pointed Dragon",
+minetest.register_chatcommand("revive_water_dragon", {
+	description = "Revives pointed Water Dragon",
 	privs = {waterdragon = true},
 	func = function(name)
 		local player = minetest.get_player_by_name(name)
@@ -1524,7 +1524,7 @@ minetest.register_chatcommand("revive_dragon", {
 	end
 })
 
-minetest.register_chatcommand("dragon_attack_blacklist_add", {
+minetest.register_chatcommand("water_dragon_attack_blacklist_add", {
 	description = "Adds player to attack blacklist",
 	params = "<name>",
 	privs = {waterdragon = true},
@@ -1533,15 +1533,15 @@ minetest.register_chatcommand("dragon_attack_blacklist_add", {
 		local param_name = params:match("%S+")
 		if not player or not param_name then return false end
 		if waterdragon.attack_blacklist[param_name] then
-			minetest.chat_send_player(name, param_name .. " is already on the Dragon attack blacklist.")
+			minetest.chat_send_player(name, param_name .. " is already on the Water Dragon attack blacklist.")
 			return false
 		end
 		waterdragon.attack_blacklist[param_name] = true
-		minetest.chat_send_player(name, param_name .. " has been added to the Dragon attack blacklist.")
+		minetest.chat_send_player(name, param_name .. " has been added to the Water Dragon attack blacklist.")
 	end
 })
 
-minetest.register_chatcommand("dragon_attack_blacklist_remove", {
+minetest.register_chatcommand("water_dragon_attack_blacklist_remove", {
 	description = "Removes player to attack blacklist",
 	params = "<name>",
 	privs = {waterdragon = true},
@@ -1550,11 +1550,11 @@ minetest.register_chatcommand("dragon_attack_blacklist_remove", {
 		local param_name = params:match("%S+")
 		if not player or not param_name then return false end
 		if not waterdragon.attack_blacklist[param_name] then
-			minetest.chat_send_player(name, param_name .. " isn't on the Dragon attack blacklist.")
+			minetest.chat_send_player(name, param_name .. " isn't on the Water Dragon attack blacklist.")
 			return false
 		end
 		waterdragon.attack_blacklist[param_name] = nil
-		minetest.chat_send_player(name, param_name .. " has been removed from the Dragon attack blacklist.")
+		minetest.chat_send_player(name, param_name .. " has been removed from the Water Dragon attack blacklist.")
 	end
 })
 
@@ -1633,7 +1633,7 @@ function waterdragon.dragon_activate(self)
 		self:memorize("growth_scale", self.growth_scale) -- This is for spawning children
 	end
 	self.growth_scale = self:recall("growth_scale") or 1
-	self.growth_timer = self:recall("growth_timer") or 1100
+	self.growth_timer = self:recall("growth_timer") or 700
 	self.age = self:recall("age") or 130
 	local age = self.age
 	if age <= 25 then
