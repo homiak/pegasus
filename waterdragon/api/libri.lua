@@ -47,11 +47,19 @@ local pages = {
 	},
 	-- Chapter 1
 	{ -- Dragons Page 1
+			
+	
 		{ -- Main Page
 			element_type = "label",
 			font_size = 24,
 			offset = {x = 0, y = 1.5},
 			file = "waterdragon_libri_dragon1.txt"
+		},
+		{ -- Pure Water Dragon Image
+			element_type = "image",
+			offset = {x = 1.5, y = 0.5},
+			size = {x = 5, y = 10},
+			text = "waterdragon_libri_img_pure_water_dragon.png"
 		},
 		{ -- pure_water Dragon Text
 			element_type = "label",
@@ -108,7 +116,7 @@ local pages = {
 			font_size = 24,
 			offset = {x = 0, y = 1.5},
 			file = "waterdragon_libri_dragon5.txt"
-		},
+		},w
 		{ -- Last Page
 			element_type = "image_button",
 			font_size = 24,
@@ -139,13 +147,13 @@ local pages = {
 			text = "waterdragon_libri_icon_next.png;btn_next;;true;false"
 		}
 	},
-	{ -- Steel Page 2
+{ -- Steel Page 2
 		{ -- Forge Instructions
 			element_type = "image",
 			offset = {x = 1.5, y = 0.5},
 			size = {x = 5, y = 10},
 			text = "waterdragon_libri_img_forge_instructions.png"
-		},
+		},	
 		{ -- Forge Label
 			element_type = "label",
 			font_size = 24,
