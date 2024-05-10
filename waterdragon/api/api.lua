@@ -561,61 +561,6 @@ minetest.register_entity("waterdragon:dragon_pure_water", {
 	end
 })
 
-local function freeze_object(object)
-	if not creatura.is_valid(object)
-	or object:get_attach()
-	or effect_cooldown[object] then return end
-	local pos = object:get_pos()
-	local box = object:get_properties().collisionbox
-	local rare_water_obj = minetest.add_entity(pos, "waterdragon:dragon_rare_water")
-	object:set_attach(rare_water_obj, nil, {z = 0, y = abs(box[2]), x = 0})
-	rare_water_obj:set_armor_groups({immortal = 1})
-	local obj_scale = object:get_properties().visual_size
-	local rare_water_scale = (box[4] or 0.5) * 30
-	rare_water_obj:get_luaentity().mob_scale = obj_scale
-	rare_water_obj:get_luaentity().child = object
-	rare_water_obj:set_properties({
-		visual_size = {
-			x = rare_water_scale,
-			y = rare_water_scale
-		}
-	})
-	local obj_yaw = object:get_yaw()
-	if object:is_player() then
-		obj_yaw = object:get_look_horizontal()
-	end
-	rare_water_obj:set_yaw(obj_yaw)
-	object:set_properties({
-		visual_size = {
-			x = obj_scale.x / rare_water_scale,
-			y = obj_scale.y / rare_water_scale
-		},
-	})
-	effect_cooldown[object] = 40
-end
-
-waterdragon.freeze_object = freeze_object
-
-local function burn_object(object)
-	if not creatura.is_valid(object)
-	or effect_cooldown[object] then return end
-	local pos = object:get_pos()
-	local box = object:get_properties().collisionbox
-	local pure_water_obj = minetest.add_entity(pos, "waterdragon:dragon_pure_water")
-	pure_water_obj:set_attach(object, nil, {z = 0, y = abs(box[2]), x = 0})
-	pure_water_obj:set_armor_groups({immortal = 1})
-	local obj_scale = object:get_properties().visual_size.x
-	pure_water_obj:get_luaentity().child = object
-	pure_water_obj:set_properties({
-		visual_size = {
-			x = (box[4] * 32) / obj_scale,
-			y = (box[4] * 32) / obj_scale
-		}
-	})
-	effect_cooldown[object] = 15
-end
-
-waterdragon.burn_object = burn_object
 
 local function do_cooldown()
 	for k, v in pairs(effect_cooldown) do
@@ -645,12 +590,6 @@ local function damage_objects(self, pos, radius)
 		if damage then
 			object:punch(self.object, 1.0, {damage_groups = {fleshy = math.ceil(self.damage * 0.33)}})
 			--self:punch_target(object, math.ceil(self.damage * 0.2))
-			if self.name == "waterdragon:rare_water_dragon" then
-				freeze_object(object)
-			end
-			if self.name == "waterdragon:pure_water_dragon" then
-				burn_object(object)
-			end
 		end
 		if ent and ent.name == "__builtin:item" then
 			local stack = ItemStack(ent.itemstring)

@@ -158,12 +158,6 @@ local pages = {
 			offset = {x = 8, y = 0.5},
 			file = "waterdragon_libri_steel3.txt"
 		},
-		{ -- Crucible Instructions
-			element_type = "image",
-			offset = {x = 10.5, y = 6.5},
-			size = {x = 4, y = 2.5},
-			text = "waterdragon_libri_img_crucible_craft.png"
-		},
 		{ -- Next Page
 			element_type = "image_button",
 			offset = {x = 15, y = 9},

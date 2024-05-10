@@ -871,11 +871,6 @@ local function draconic_step(itemstack, player, pointed_thing)
 	if pointed_thing.ref then
 		pointed_thing.ref:punch(player, nil, toolcaps)
 		if dist2dragon < 30 then
-			if name:find("pure_water") then
-				waterdragon.burn_object(pointed_thing.ref)
-			else
-				waterdragon.freeze_object(pointed_thing.ref)
-			end
 		end
 	end
 	if update then
@@ -986,7 +981,7 @@ end
 --------------
 
 minetest.register_alias_force("waterdragon:bestiary", "waterdragon:libri_waterdragon")
-minetest.register_alias_force("waterdragon:lectern", "waterdragon:log_wet") -- We do a little trolling
+minetest.register_alias_force("waterdragon:lectern", "waterdragon:log_wet") -- I do a little trolling
 
 -- Get Craft Items --
 
@@ -999,7 +994,7 @@ minetest.register_on_mods_loaded(function()
 			pure_water_block = name
 		end
 		if (name:find("steel") or name:find("iron")) and name:find("block") then
-			steel_block = name
+			rare_water_block = name
 		end
 	end
 end)
@@ -1031,7 +1026,7 @@ minetest.register_craft({
 	recipe = {
 		{"", "", ""},
 		{"group:dragon_scales", "", ""},
-		{"group:book", "group:color_red", ""},
+		{"group:book", "", ""},
 	}
 })
 
@@ -1040,7 +1035,7 @@ minetest.register_craft({
 	recipe = {
 		{"", "", ""},
 		{"group:dragon_scales", "", ""},
-		{"group:book", "group:unicolor_red", ""},
+		{"group:book", "", ""},
 	}
 })
 
