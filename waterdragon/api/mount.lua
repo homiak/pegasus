@@ -348,18 +348,18 @@ local function menu_form()
 	return table.concat(formspec, "")
 end
 
-minetest.register_chatcommand("dragon_mount_settings", {
+minetest.register_chatcommand("water_dragon_mount_settings", {
 	privs = {
 		interact = true,
 	},
 	func = function(name)
-		minetest.show_formspec(name, "waterdragon:dragon_mount_settings", menu_form())
+		minetest.show_formspec(name, "waterdragon:water_dragon_mount_settings", menu_form())
 	end,
 })
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local name = player:get_player_name()
-	if formname == "waterdragon:dragon_mount_settings" then
+	if formname == "waterdragon:water_dragon_mount_settings" then
 		if fields.btn_view_point then
 			waterdragon.aux_key_setting[name] = "pov"
 			minetest.chat_send_player(name, "Sprint key now changes point of view")

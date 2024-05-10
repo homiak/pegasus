@@ -53,13 +53,6 @@ local pages = {
 			offset = {x = 0, y = 1.5},
 			file = "waterdragon_libri_dragon1.txt"
 		},
-		{ -- pure_water Dragon
-			element_type = "image",
-			font_size = 24,
-			offset = {x = 8, y = 1},
-			size = {x = 8, y = 4},
-			text = "waterdragon_libri_img_pure_water_dragon.png"
-		},
 		{ -- pure_water Dragon Text
 			element_type = "label",
 			font_size = 24,
@@ -82,13 +75,6 @@ local pages = {
 		}
 	},
 	{ -- Dragons Page 2
-		{ -- rare_water Dragon
-			element_type = "image",
-			font_size = 24,
-			offset = {x = 0.5, y = 1},
-			size = {x = 7, y = 3.5},
-			text = "waterdragon_libri_img_rare_water_dragon.png"
-		},
 		{ -- rare_water Dragon Text
 			element_type = "label",
 			font_size = 24,
@@ -202,7 +188,7 @@ local pages = {
 			element_type = "label",
 			font_size = 24,
 			offset = {x = 11.5, y = 5.5},
-			text = "pure_water Forge:"
+			text = "Pure Water Forge:"
 		},
 		{ -- pure_water Forge Instructions
 			element_type = "image",
@@ -214,7 +200,7 @@ local pages = {
 			element_type = "label",
 			font_size = 24,
 			offset = {x = 11.5, y = 0.5},
-			text = "rare_water Forge:"
+			text = "Rare Water Forge:"
 		},
 		{ -- rare_water Forge Instructions
 			element_type = "image",
