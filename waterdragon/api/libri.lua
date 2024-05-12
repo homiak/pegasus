@@ -47,8 +47,6 @@ local pages = {
 	},
 	-- Chapter 1
 	{ -- Dragons Page 1
-			
-	
 		{ -- Main Page
 			element_type = "label",
 			font_size = 24,
@@ -57,11 +55,12 @@ local pages = {
 		},
 		{ -- Pure Water Dragon Image
 			element_type = "image",
-			offset = {x = 1.5, y = 0.5},
-			size = {x = 5, y = 10},
+			font_size = 24,
+			offset = {x = 8.5, y = 0.7},
+			size = {x = 6.7, y = 4},
 			text = "waterdragon_libri_img_pure_water_dragon.png"
 		},
-		{ -- pure_water Dragon Text
+		{ -- Pure Water Dragon Text
 			element_type = "label",
 			font_size = 24,
 			offset = {x = 8, y = 5},
@@ -83,7 +82,14 @@ local pages = {
 		}
 	},
 	{ -- Dragons Page 2
-		{ -- rare_water Dragon Text
+		{ -- Rare Water Dragon Image
+		element_type = "image",
+		font_size = 24,
+		offset = {x = 8.5, y = 0.7},
+		size = {x = 6.7, y = 4},
+		text = "waterdragon_libri_img_rare_water_dragon.png"
+		},	
+		{ -- Rare Water Dragon Text
 			element_type = "label",
 			font_size = 24,
 			offset = {x = 0, y = 5},
@@ -116,7 +122,7 @@ local pages = {
 			font_size = 24,
 			offset = {x = 0, y = 1.5},
 			file = "waterdragon_libri_dragon5.txt"
-		},w
+		},
 		{ -- Last Page
 			element_type = "image_button",
 			font_size = 24,
