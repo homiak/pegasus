@@ -53,18 +53,12 @@ local pages = {
 			offset = {x = 0, y = 1.5},
 			file = "waterdragon_libri_dragon1.txt"
 		},
-		{ -- Pure Water Dragon Image
+		{ -- Water Dragon Image
 			element_type = "image",
 			font_size = 24,
-			offset = {x = 8.5, y = 0.7},
-			size = {x = 6.7, y = 4},
-			text = "waterdragon_libri_img_pure_water_dragon.png"
-		},
-		{ -- Pure Water Dragon Text
-			element_type = "label",
-			font_size = 24,
-			offset = {x = 8, y = 5},
-			file = "waterdragon_libri_dragon2.txt"
+			offset = {x = 8, y = 1.2},
+			size = {x = 8, y = 8},
+			text = "waterdragon_libri_img_water_dragon.png"
 		},
 		{ -- Next Page
 			element_type = "image_button",
@@ -82,18 +76,12 @@ local pages = {
 		}
 	},
 	{ -- Dragons Page 2
-		{ -- Rare Water Dragon Image
+		{ -- Water Dragon Image
 		element_type = "image",
 		font_size = 24,
-		offset = {x = 8.5, y = 0.7},
-		size = {x = 6.7, y = 4},
-		text = "waterdragon_libri_img_rare_water_dragon.png"
-		},	
-		{ -- Rare Water Dragon Text
-			element_type = "label",
-			font_size = 24,
-			offset = {x = 0, y = 5},
-			file = "waterdragon_libri_dragon3.txt"
+		offset = {x = 0, y = 1.3},
+		size = {x = 8, y = 8},
+		text = "waterdragon_libri_img_water_dragon.png"
 		},
 		{ -- Combat Text
 			element_type = "label",
@@ -122,6 +110,13 @@ local pages = {
 			font_size = 24,
 			offset = {x = 0, y = 1.5},
 			file = "waterdragon_libri_dragon5.txt"
+		},
+		{ -- Water Dragon Image
+		element_type = "image",
+		font_size = 24,
+		offset = {x = 7.5, y = 0.5},
+		size = {x = 9, y = 9},
+		text = "waterdragon_libri_img_water_dragon_2.png"
 		},
 		{ -- Last Page
 			element_type = "image_button",
