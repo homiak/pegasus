@@ -154,6 +154,16 @@ register_node("waterdragon:stone_bricks_wet", {
 	sounds = waterdragon.sounds.stone
 }, true)
 
+-- A good node --
+
+register_node("waterdragon:good_node", {
+	description = "Good Node",
+	drawtype = "airlike",
+	groups = {cracky = 1, not_in_creative_inventory = 1},
+	sounds = waterdragon.sounds.stone
+}, true)
+
+
 ------------------
 -- Scale Blocks --
 ------------------

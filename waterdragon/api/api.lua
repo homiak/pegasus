@@ -1705,7 +1705,7 @@ function waterdragon.dragon_step(self, dtime)
 	self.turn_rate = 6 - 3 * clamp((self.growth_scale), 0.1, 1) -- Turning radius widens with size
 	if not is_flying
 	or self.in_liquid then
-		self.speed = self.speed * 0.3 -- Speed reduced when landed
+		self.speed = self.speed * 0.4 -- Speed reduced when landed
 		self.turn_rate = self.turn_rate * 1.5 -- Turning radius reduced when landed
 	end
 	-- Timers
