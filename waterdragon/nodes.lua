@@ -48,17 +48,7 @@ end
 -- Logs --
 
 register_node("waterdragon:log_wet", {
-	description = "wet Log",
-	tiles = {"waterdragon_log_wet_top.png", "waterdragon_log_wet_top.png", "waterdragon_log_wet.png"},
-	paramtype2 = "facedir",
-	is_ground_content = false,
-	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
-	sounds = waterdragon.sounds.wood,
-	on_place = minetest.rotate_node
-}, true)
-
-register_node("waterdragon:log_wet", {
-	description = "wet Log",
+	description = "Wet Log",
 	tiles = {"waterdragon_log_wet_top.png", "waterdragon_log_wet_top.png", "waterdragon_log_wet.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -153,16 +143,6 @@ register_node("waterdragon:stone_bricks_wet", {
 	groups = {cracky = 1, level = 3},
 	sounds = waterdragon.sounds.stone
 }, true)
-
--- A good node --
-
-register_node("waterdragon:good_node", {
-	description = "Good Node",
-	drawtype = "airlike",
-	groups = {cracky = 1, not_in_creative_inventory = 1},
-	sounds = waterdragon.sounds.stone
-}, true)
-
 
 ------------------
 -- Scale Blocks --

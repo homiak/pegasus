@@ -980,7 +980,7 @@ end
 -- Crafting --
 --------------
 
-minetest.register_alias_force("waterdragon:bestiary", "waterdragon:libri_waterdragon")
+minetest.register_alias_force("waterdragon:bestiary", "waterdragon:book_waterdragon")
 minetest.register_alias_force("waterdragon:lectern", "waterdragon:log_wet") -- I do a little trolling
 
 -- Get Craft Items --
@@ -1022,7 +1022,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "waterdragon:libri_waterdragon",
+	output = "waterdragon:book_waterdragon",
 	recipe = {
 		{"", "", ""},
 		{"group:dragon_scales", "", ""},
@@ -1031,7 +1031,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "waterdragon:libri_waterdragon",
+	output = "waterdragon:book_waterdragon",
 	recipe = {
 		{"", "", ""},
 		{"group:dragon_scales", "", ""},

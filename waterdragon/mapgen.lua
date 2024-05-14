@@ -215,7 +215,7 @@ local function generate_pure_water_dragon_nest(minp, maxp, area, data)
 		if closest_player then
 			local name = closest_player:get_player_name()
 			local inv = minetest.get_inventory({type = "player", name = name})
-			if waterdragon.contains_libri(inv) then
+			if waterdragon.contains_book(inv) then
 				waterdragon.add_page(inv, "dragons")
 			end
 		end
@@ -353,7 +353,7 @@ local function generate_rare_water_dragon_nest(minp, maxp, area, data)
 		if closest_player then
 			local name = closest_player:get_player_name()
 			local inv = minetest.get_inventory({type = "player", name = name})
-			if waterdragon.contains_libri(inv) then
+			if waterdragon.contains_book(inv) then
 				waterdragon.add_page(inv, "dragons")
 			end
 		end
@@ -447,7 +447,7 @@ local function generate_pure_water_dragon_cavern(minp, maxp, area, data)
 		if closest_player then
 			local name = closest_player:get_player_name()
 			local inv = minetest.get_inventory({type = "player", name = name})
-			if waterdragon.contains_libri(inv) then
+			if waterdragon.contains_book(inv) then
 				waterdragon.add_page(inv, "dragons")
 			end
 		end
@@ -554,7 +554,7 @@ local function generate_rare_water_dragon_cavern(minp, maxp, area, data)
 		if closest_player then
 			local name = closest_player:get_player_name()
 			local inv = minetest.get_inventory({type = "player", name = name})
-			if waterdragon.contains_libri(inv) then
+			if waterdragon.contains_book(inv) then
 				waterdragon.add_page(inv, "dragons")
 			end
 		end

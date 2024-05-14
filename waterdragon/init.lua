@@ -16,7 +16,7 @@ waterdragon.dragons = storage.dragons
 waterdragon.bonded_dragons = storage.bonded_dragons
 waterdragon.aux_key_setting = storage.aux_key_setting
 waterdragon.attack_blacklist = storage.attack_blacklist
-waterdragon.libri_font_size = storage.libri_font_size
+waterdragon.book_font_size = storage.book_font_size
 
 waterdragon.sounds = {
     wood = {},
@@ -100,7 +100,7 @@ dofile(path.."/mobs/rare_water_dragon.lua")
 dofile(path.."/mobs/pure_water_dragon.lua")
 dofile(path.."/nodes.lua")
 dofile(path.."/craftitems.lua")
-dofile(path.."/api/libri.lua")
+dofile(path.."/api/book.lua")
 
 if minetest.get_modpath("3d_armor") then
     dofile(path.."/armor.lua")

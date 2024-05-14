@@ -1793,7 +1793,7 @@ end
 function waterdragon.dragon_rightclick(self, clicker)
 	local name = clicker:get_player_name()
 	local inv = minetest.get_inventory({type = "player", name = name})
-	if waterdragon.contains_libri(inv) then
+	if waterdragon.contains_book(inv) then
 		waterdragon.add_page(inv, "dragons")
 	end
 	if self.hp <= 0 then
