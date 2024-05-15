@@ -81,13 +81,13 @@ local pages = {
 		font_size = 24,
 		offset = {x = 0, y = 1.3},
 		size = {x = 8, y = 8},
-		text = "waterdragon_book_img_water_dragon.png"
+		text = "waterdragon_book_img_water_dragon_2.png"
 		},
 		{ -- Combat Text
 			element_type = "label",
 			font_size = 24,
 			offset = {x = 8, y = 1.5},
-			file = "waterdragon_book_dragon4.txt"
+			file = "waterdragon_book_dragon2.txt"
 		},
 		{ -- Next Page
 			element_type = "image_button",
@@ -109,14 +109,14 @@ local pages = {
 			element_type = "label",
 			font_size = 24,
 			offset = {x = 0, y = 1.5},
-			file = "waterdragon_book_dragon5.txt"
+			file = "waterdragon_book_dragon3.txt"
 		},
 		{ -- Water Dragon Image
 		element_type = "image",
 		font_size = 24,
 		offset = {x = 7.5, y = 0.5},
 		size = {x = 9, y = 9},
-		text = "waterdragon_book_img_water_dragon_2.png"
+		text = "waterdragon_book_img_water_dragon_3.png"
 		},
 		{ -- Last Page
 			element_type = "image_button",
@@ -333,7 +333,7 @@ end
 ---------------
 
 minetest.register_craftitem("waterdragon:book_waterdragon", {
-	description = "Book of Waterdragon",
+	description = "Book of Dragon Uisge",
 	inventory_image = "waterdragon_book_waterdragon.png",
 	stack_max = 1,
 	on_place = function(itemstack, player)
