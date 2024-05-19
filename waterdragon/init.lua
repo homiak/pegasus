@@ -195,4 +195,4 @@ minetest.register_abm({
     end,
 })
 
-minetest.log("action", "[MOD] waterdragon [2.0] loaded")
+minetest.log("action", "[MOD] Dragon Uisge [2.0] loaded")
