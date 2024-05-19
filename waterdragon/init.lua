@@ -46,20 +46,20 @@ waterdragon.colors_rare_water = {
 
 waterdragon.global_nodes = {}
 
-waterdragon.global_nodes["flame"] = "default:water_flowing"
+waterdragon.global_nodes["pure_water"] = "default:water_flowing"
 waterdragon.global_nodes["rare_water"] = "default:water_flowing"
 waterdragon.global_nodes["steel_blockj"] = "default:water_source"
 
 minetest.register_on_mods_loaded(function()
     for name, def in pairs(minetest.registered_nodes) do
-        -- Flame
-        if not (waterdragon.global_nodes["flame"]
+        -- Pure Water
+        if not (waterdragon.global_nodes["pure_water"]
         or not minetest.registered_nodes[waterdragon.global_nodes["flame"]])
-        and (name:find("flame") or name:find("pure_water"))
+        and (name:find("pure_water") or name:find("pure_water"))
         and def.drawtype == "firelike" then
-            waterdragon.global_nodes["flame"] = name
+            waterdragon.global_nodes["pure_water"] = name
         end
-        -- rare_water
+        -- Rare Water
         if not (waterdragon.global_nodes["rare_water"]
         or not minetest.registered_nodes[waterdragon.global_nodes["rare_water"]])
         and name:find(":rare_water")

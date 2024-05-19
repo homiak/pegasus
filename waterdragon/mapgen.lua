@@ -216,7 +216,7 @@ local function generate_pure_water_dragon_nest(minp, maxp, area, data)
 			local name = closest_player:get_player_name()
 			local inv = minetest.get_inventory({type = "player", name = name})
 			if waterdragon.contains_book(inv) then
-				waterdragon.add_page(inv, "dragons")
+				waterdragon.add_page(inv, "waterdragons")
 			end
 		end
 	end)
@@ -354,7 +354,7 @@ local function generate_rare_water_dragon_nest(minp, maxp, area, data)
 			local name = closest_player:get_player_name()
 			local inv = minetest.get_inventory({type = "player", name = name})
 			if waterdragon.contains_book(inv) then
-				waterdragon.add_page(inv, "dragons")
+				waterdragon.add_page(inv, "waterdragons")
 			end
 		end
 	end)
@@ -448,7 +448,7 @@ local function generate_pure_water_dragon_cavern(minp, maxp, area, data)
 			local name = closest_player:get_player_name()
 			local inv = minetest.get_inventory({type = "player", name = name})
 			if waterdragon.contains_book(inv) then
-				waterdragon.add_page(inv, "dragons")
+				waterdragon.add_page(inv, "waterdragons")
 			end
 		end
 	end)
@@ -513,19 +513,6 @@ local function generate_rare_water_dragon_cavern(minp, maxp, area, data)
 						end
 					end
 				end
-				-- Create Eggs
-				local egg_chance = 10
-				if gender == "male" then
-					loot_chance = 5
-				end
-				if data[bi] == c_wet_stone
-				and data[vi] == c_air then
-					if random(loot_chance) < 2 then
-						data[vi] = c_steel
-					elseif random(24) < 2 then
-						data[vi] = c_eggs_rare_water
-					end
-				end
 				-- Create scattered loot
 				local loot_chance = 30
 				if gender == "male" then
@@ -555,7 +542,7 @@ local function generate_rare_water_dragon_cavern(minp, maxp, area, data)
 			local name = closest_player:get_player_name()
 			local inv = minetest.get_inventory({type = "player", name = name})
 			if waterdragon.contains_book(inv) then
-				waterdragon.add_page(inv, "dragons")
+				waterdragon.add_page(inv, "waterdragons")
 			end
 		end
 	end)

@@ -115,20 +115,20 @@ local function get_customize_formspec(self)
 		form = {
 			"formspec_version[4]",
 			"size[12,6]",
-			"dropdown[0.5,1.1;3,0.6;drp_wing;Dark Blue,Orange,Red,Yellow;1]",
-			"label[1.1,0.8;Wing Color]",
+			"dropdown[0.5,1.1;3,0.6;drp_wing;Dark Blue,Orange,Red,Yellow,Cyan;1]",
+			"label[1.1,0.8;Wing Colour]",
 			"dropdown[4.5,1.1;3,0.6;drp_eyes;Orange,Red,Blue;1]",
-			"label[5.1,0.8;Eye Color]",
+			"label[5.1,0.8;Eye Colour]",
 			"model[1.5,1.7;10,7;mob_mesh;" .. self.mesh .. ";" .. texture .. ";-10,-130;false;false;" .. frame_loop .. ";15]"
 		}
 	elseif self.name == "waterdragon:rare_water_dragon" then
 		form = {
 			"formspec_version[4]",
 			"size[12,6]",
-			"dropdown[0.5,1.1;3,0.6;drp_wing;Dark Blue,Orange,Red,Yellow;1]",
-			"label[1.1,0.8;Wing Color]",
+			"dropdown[0.5,1.1;3,0.6;drp_wing;Dark Blue,Orange,Red,Yellow,Cyan;1]",
+			"label[1.1,0.8;Wing Colour]",
 			"dropdown[4.5,1.1;3,0.6;drp_eyes;Blue,Red,Orange;1]",
-			"label[5.1,0.8;Eye Color]",
+			"label[5.1,0.8;Eye Colour]",
 			"model[1.5,1.7;10,7;mob_mesh;" .. self.mesh .. ";" .. texture .. ";-10,-130;false;false;" .. frame_loop .. ";15]"
 		}
 	end
@@ -209,13 +209,15 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				["Red"] = "#d20000",
 				["Orange"] = "#d92e00",
 				["Yellow"] = "#edad00",
-				["Dark Blue"] = "#07084f"
+				["Dark Blue"] = "#07084f",
+				["Cyan"] = "#2deded"
 			},
 			pure_water = {
 				["Red"] = "#d20000",
 				["Orange"] = "#d92e00",
 				["Yellow"] = "#edad00",
-				["Dark Blue"] = "#07084f"
+				["Dark Blue"] = "#07084f",
+				["Cyan"] = "#2deded"
 			}
 		}
 		local eyes = {

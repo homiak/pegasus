@@ -247,19 +247,21 @@ end
 waterdragon.get_head_pos = get_head_pos
 
 local wing_colors = {
-	-- pure_water
+	-- Pure Water
 	pure_water = {
 		"#d20000", -- Red
 		"#d92e00", -- Orange
 		"#edad00", -- Yellow
 		"#07084f", -- Dark Blue
+		"#2deded" -- Cyan
 	},
-	-- rare_water
+	-- Rare Water
 	rare_water = {
 		"#d20000", -- Red
 		"#d92e00", -- Orange
 		"#edad00", -- Yellow
-		"#07084f" -- Dark Blue
+		"#07084f", -- Dark Blue
+		"#2deded" -- Cyan
 	},
 }
 
@@ -517,9 +519,6 @@ minetest.register_entity("waterdragon:dragon_pure_water", {
 			if self.pure_water_frame > 6 then
 				self.pure_water_frame = 1
 			end
-			self.object:set_properties({
-				textures = {"waterdragon_fire_animated.png^[verticalframe:8:" .. self.pure_water_frame}
-			})
 		end
 		if self.active_time - math.floor(self.active_time) < 0.1
 		and (self.child:get_luaentity()
@@ -658,55 +657,6 @@ local function freeze_nodes(pos, radius)
 	end
 end
 
-local function scorch_nodes(pos, radius)
-	local h_stride = radius
-	local v_stride = math.ceil(radius * 0.5)
-	local pos1= {
-		x = pos.x - h_stride,
-		y = pos.y - v_stride,
-		z = pos.z - h_stride
-	}
-	local pos2 = {
-		x = pos.x + h_stride,
-		y = pos.y + v_stride,
-		z = pos.z + h_stride
-	}
-	local y_stride = 0
-	for z = pos1.z, pos2.z do
-		y_stride = y_stride + 1
-		for x = pos1.x, pos2.x do
-			local noise = random(5)
-			if noise < 2 then
-				local npos = {
-					x = x,
-					y = pos1.y + y_stride,
-					z = z
-				}
-				if minetest.is_protected(npos, "") then
-					return
-				end
-				local name = minetest.get_node(npos).name
-				if name
-				and not name:find("wet")
-				and name ~= "air"
-				and name ~= "ignore" then
-					local convert_to = wet_conversions[name]
-					if convert_to then
-						minetest.set_node(npos, {name = convert_to})
-					end
-					if minetest.registered_nodes[flame_node]
-					and creatura.get_node_def(name).walkable then
-						local above = {x = npos.x, y = npos.y + 1, z = npos.z}
-						if not creatura.get_node_def(above).walkable then
-							minetest.set_node(above, {name = flame_node})
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
 local function do_forge(pos, node, id)
 	local forge = minetest.find_nodes_in_area(vec_sub(pos, 4), vec_add(pos, 4), node)
 	if forge[1] then
@@ -793,7 +743,6 @@ function waterdragon.pure_water_breath(self, pos2)
 		local breath_end = vec_add(pos, vec_multi(dir, 32))
 		for i = 1, 32, floor(spread) do
 			local pure_water_pos = vec_add(pos, vec_multi(dir, i))
-			scorch_nodes(pure_water_pos, spread)
 			if random(5) < 2 then
 				damage_objects(self, pure_water_pos, spread + 2)
 			end
@@ -1312,7 +1261,7 @@ end)
 -- Commands --
 --------------
 
-minetest.register_privilege("waterdragon", {
+minetest.register_privilege("dragon_uisge", {
 	description = "Allows Player to customize and force tame Water Dragons",
 	give_to_singleplayer = false,
 	give_to_admin = true
@@ -1458,13 +1407,13 @@ minetest.register_chatcommand("revive_water_dragon", {
 				glow = 16
 			})
 		else
-			minetest.chat_send_player(name, "You must be pointing at a mob.")
+			minetest.chat_send_player(name, "You must be pointing at a Water Dragon.")
 		end
 	end
 })
 
 minetest.register_chatcommand("water_dragon_attack_blacklist_add", {
-	description = "Adds player to attack blacklist",
+	description = "Adds player to attack blacklist of Water Dragons",
 	params = "<name>",
 	privs = {waterdragon = true},
 	func = function(name, params)
@@ -1481,7 +1430,7 @@ minetest.register_chatcommand("water_dragon_attack_blacklist_add", {
 })
 
 minetest.register_chatcommand("water_dragon_attack_blacklist_remove", {
-	description = "Removes player to attack blacklist",
+	description = "Removes player from attack blacklist of the Water Dragons",
 	params = "<name>",
 	privs = {waterdragon = true},
 	func = function(name, params)
@@ -1667,8 +1616,6 @@ function waterdragon.dragon_step(self, dtime)
 	-- Animation Tracking
 	local current_anim = self._anim
 	local is_flying = current_anim and current_anim:find("fly")
-	--local is_idle = current_anim and (current_anim:find("idle") or current_anim:find("stand"))
-	--local is_walking = current_anim and current_anim:find("walk")
 	local is_firing = current_anim and current_anim:find("pure_water")
 	if current_anim then
 		local aparms = self.animations[current_anim]

@@ -12,7 +12,7 @@ local book_bg = {
 
 local book_drp_font_scale = "dropdown[17,0;0.75,0.5;drp_font_scale;0.25,0.5,0.75,1;1]"
 
-local pages = {
+local book_pages = {
 	{ -- Home
 		{ -- Main Page
 			element_type = "label",
@@ -29,12 +29,12 @@ local pages = {
 			text = "waterdragon_book_icon_next.png;btn_next;;true;false"
 		},
 		{ -- Chapter 1
-			unlock_key = "dragons",
+			unlock_key = "waterdragons",
 			element_type = "button",
 			font_size = 24,
 			offset = {x = 10.5, y = 1.5},
 			size = {x = 4, y = 1},
-			text = "btn_dragons;Chapter 1: Dragons"
+			text = "btn_dragons;Chapter 1: waterdragons"
 		},
 		{ -- Chapter 2
 			unlock_key = "draconic_steel",
@@ -42,7 +42,7 @@ local pages = {
 			font_size = 24,
 			offset = {x = 10.5, y = 5.5},
 			size = {x = 4, y = 1},
-			text = "btn_draconic_steel;Chapter 2: Draconic Steel"
+			text = "btn_draconic_steel;Chapter 2: Water-Forged Draconic Steel"
 		}
 	},
 	-- Chapter 1
@@ -259,7 +259,7 @@ function waterdragon.add_page(inv, chapter)
 	return true
 end
 
-local function render_element(def, meta, playername)
+local function prepare_element(def, meta, playername)
 	local chapters = (meta and minetest.deserialize(meta:get_string("chapters"))) or {}
 	local offset_x = def.offset.x
 	local offset_y = def.offset.y
@@ -311,12 +311,12 @@ local function render_element(def, meta, playername)
 	return form
 end
 
-local function get_page(key, meta, playername)
+local function getPage(key, meta, playername)
 	local form = table.copy(book_bg)
-	local page = pages[key]
+	local page = book_pages[key]
 	for _, element in ipairs(page) do
 		if type(element) == "table" then
-			local element_rendered = render_element(element, meta, playername)
+			local element_rendered = prepare_element(element, meta, playername)
 			table.insert(form, element_rendered)
 		else
 			table.insert(form, element)
@@ -340,11 +340,11 @@ minetest.register_craftitem("waterdragon:book_waterdragon", {
 		local meta = itemstack:get_meta()
 		local desc = meta:get_string("description")
 		if desc:find("Bestiary") then
-			meta:set_string("description", "Book of Waterdragon")
+			meta:set_string("description", "Book of Dragon Uisge")
 			meta:set_string("pages", nil)
 		end
 		local name = player:get_player_name()
-		minetest.show_formspec(name, "waterdragon:book_page_1", get_page(1, meta, name))
+		minetest.show_formspec(name, "waterdragon:book_page_1", getPage(1, meta, name))
 	end,
 	on_secondary_use = function(itemstack, player)
 		local meta = itemstack:get_meta()
@@ -354,7 +354,7 @@ minetest.register_craftitem("waterdragon:book_waterdragon", {
 			meta:set_string("pages", nil)
 		end
 		local name = player:get_player_name()
-		minetest.show_formspec(name, "waterdragon:book_page_1", get_page(1, meta, name))
+		minetest.show_formspec(name, "waterdragon:book_page_1", getPage(1, meta, name))
 	end
 })
 
@@ -366,34 +366,34 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local plyr_name = player:get_player_name()
 	local meta = player:get_wielded_item():get_meta()
 	local page_no
-	for i = 1, #pages do
+	for i = 1, #book_pages do
 		if formname == "waterdragon:book_page_" .. i then
 			page_no = i
 			if fields.btn_next
-			and pages[i + 1] then
+			and book_pages[i + 1] then
 				minetest.show_formspec(plyr_name,
-					"waterdragon:book_page_" .. i + 1, get_page(i + 1, meta, plyr_name))
+					"waterdragon:book_page_" .. i + 1, getPage(i + 1, meta, plyr_name))
 				return true
 			elseif fields.btn_last
-			and pages[i - 1] then
+			and book_pages[i - 1] then
 				minetest.show_formspec(plyr_name,
-					"waterdragon:book_page_" .. i - 1, get_page(i - 1, meta, plyr_name))
+					"waterdragon:book_page_" .. i - 1, getPage(i - 1, meta, plyr_name))
 				return true
 			end
 		end
 	end
-	if fields.btn_dragons then
-		minetest.show_formspec(plyr_name, "waterdragon:book_page_" .. 2, get_page(2, meta, plyr_name))
+	if fields.btn_waterdragons then
+		minetest.show_formspec(plyr_name, "waterdragon:book_page_" .. 2, getPage(2, meta, plyr_name))
 		return true
 	end
 	if fields.btn_draconic_steel then
-		minetest.show_formspec(plyr_name, "waterdragon:book_page_" .. 6, get_page(6, meta, plyr_name))
+		minetest.show_formspec(plyr_name, "waterdragon:book_page_" .. 6, getPage(6, meta, plyr_name))
 		return true
 	end
 	if fields.drp_font_scale
 	and page_no then
 		waterdragon.book_font_size[plyr_name] = fields.drp_font_scale
-		minetest.show_formspec(plyr_name, "waterdragon:book_page_" .. page_no, get_page(page_no, meta, plyr_name))
+		minetest.show_formspec(plyr_name, "waterdragon:book_page_" .. page_no, getPage(page_no, meta, plyr_name))
 		return true
 	end
 end)

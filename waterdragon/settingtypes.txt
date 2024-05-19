@@ -16,7 +16,7 @@ cavern_spawning (rare_water and pure_water Cavern Spawning) bool false
 #    Dragon Cavern Spawn Rate. This setting only applies when rare_water and pure_water Cavern Spawning is enabled.
 cavern_spawn_rate (I/F Cavern Spawn Rate) int 32
 
-#    If true, Dragon breath will scorch/freeze nodes and Dragons will attempt to break blocks when stuck.
+#    If true, Dragon breath will water nodes and Dragons will attempt to break blocks when stuck.
 dragon_terrain_destruction (Terrain Destruction) bool true
 
 #    Disable if stairs mod gives a crash (Exile and other games are known to cause this)

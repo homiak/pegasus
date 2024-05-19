@@ -17,7 +17,7 @@ local colors = {"rare_water"}
 
 creatura.register_mob("waterdragon:rare_water_dragon", {
 	-- Stats
-	max_health = 1510,
+	max_health = 1600,
 	max_hunger = 500,
 	max_breath = 0,
 	fire_resistance = 1,

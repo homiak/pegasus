@@ -145,7 +145,7 @@ for color in pairs(waterdragon.colors_pure_water) do
 				{-0.25, -0.5, -0.25, 0.25, 0.1, 0.25},
 			},
 		},
-		groups = {cracky = 3, level = 1},
+		groups = {cracky = 1, level = 3},
 		sounds = waterdragon.sounds.stone,
 		on_construct = function(pos)
 			local timer = minetest.get_node_timer(pos)
@@ -207,7 +207,6 @@ for color in pairs(waterdragon.colors_pure_water) do
 		activate_func = function(self)
 			self.progress = self:recall("progress") or 0
 			self.owner_name = self:recall("owner_name") or ""
-			self.color = color
 			if color == "pure_water" then
 				self.tex_no = 1
 			end
@@ -227,7 +226,11 @@ for color in pairs(waterdragon.colors_pure_water) do
 			end
 			local name = creatura.get_node_def(pos).name
 			local progress = self.progress or 0
-			if minetest.get_item_group(name, "pure_water") > 0 then
+			if minetest.get_item_group(name, "water") > 0
+			or (progress > 0 and name == rare_water_block) then
+				if minetest.get_item_group(name, "water") > 0 then
+					minetest.set_node(pos, {name = rare_water_block})
+				end
 				progress = progress + dtime
 				if not self.hatching then
 					self.hatching = true
@@ -481,10 +484,10 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 		and ent.name:match("^waterdragon:")
 		and ent.dragon_id
 		and ent.dragon_id == id
-		and not ent.rider then -- Store Dragon if linked to Horn
+		and not ent.rider then -- Store Water Dragon if linked to Horn
 			return capture(player, ent)
 		end
-		-- Teleport linked Dragon if not pointed
+		-- Teleport linked Water Dragon if not pointed
 		local last_pos = waterdragon.dragons[id].last_pos
 		ent = get_dragon_by_id(id)
 		if waterdragon.dragons[id].stored_in_item then return itemstack end
