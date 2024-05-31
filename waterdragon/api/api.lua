@@ -949,6 +949,9 @@ waterdragon.dragon_api = {
 				{name = "waterdragon:scales_" .. type .. "_dragon", min = 16, max = 24, chance = 1},
 				{name = "waterdragon:dragon_bone", min = 6, max = 10, chance = 1},
 			},
+			[3] = {
+				{name = "waterdragon:dragon_water_drop", min = 1, max = 2, chance = 2},
+			},
 		}
 		if not self.owner then
 			if type == "rare_water" then
@@ -1269,7 +1272,7 @@ minetest.register_privilege("dragon_uisge", {
 
 minetest.register_chatcommand("tame_water_dragon", {
 	description = "Tames pointed Water Dragon",
-	privs = {waterdragon = true},
+	privs = {dragon_uisge = true},
 	func = function(name)
 		local player = minetest.get_player_by_name(name)
 		if not player then return false end
@@ -1322,7 +1325,7 @@ minetest.register_chatcommand("tame_water_dragon", {
 minetest.register_chatcommand("set_water_dragon_owner", {
 	description = "Sets owner of pointed Water Dragon",
 	params = "<name>",
-	privs = {waterdragon = true},
+	privs = {dragon_uisge = true},
 	func = function(name, params)
 		local player = minetest.get_player_by_name(name)
 		local param_name = params:match("%S+")
@@ -1368,7 +1371,7 @@ minetest.register_chatcommand("set_water_dragon_owner", {
 
 minetest.register_chatcommand("revive_water_dragon", {
 	description = "Revives pointed Water Dragon",
-	privs = {waterdragon = true},
+	privs = {dragon_uisge = true},
 	func = function(name)
 		local player = minetest.get_player_by_name(name)
 		if not player then return false end
@@ -1415,7 +1418,7 @@ minetest.register_chatcommand("revive_water_dragon", {
 minetest.register_chatcommand("water_dragon_attack_blacklist_add", {
 	description = "Adds player to attack blacklist of Water Dragons",
 	params = "<name>",
-	privs = {waterdragon = true},
+	privs = {dragon_uisge = true},
 	func = function(name, params)
 		local player = minetest.get_player_by_name(name)
 		local param_name = params:match("%S+")
@@ -1432,7 +1435,7 @@ minetest.register_chatcommand("water_dragon_attack_blacklist_add", {
 minetest.register_chatcommand("water_dragon_attack_blacklist_remove", {
 	description = "Removes player from attack blacklist of the Water Dragons",
 	params = "<name>",
-	privs = {waterdragon = true},
+	privs = {dragon_uisge = true},
 	func = function(name, params)
 		local player = minetest.get_player_by_name(name)
 		local param_name = params:match("%S+")

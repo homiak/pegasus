@@ -95,7 +95,7 @@ local function get_dragon_formspec(self)
 		"tooltip[13.45,0.3;1.9,1.9;" .. fly_allowed .. "]",
 		"image_button[13.45,0.3;1.9,1.9;" .. fly_image .. ";btn_dragon_fly;;false;false;]"
 	}
-	if minetest.check_player_privs(self.owner, {waterdragon = true}) then
+	if minetest.check_player_privs(self.owner, {dragon_uisge = true}) then
 		table.insert(form, "button[9.75,8.75;2.6,0.5;btn_customize;Customize]")
 	end
 	return table.concat(form, "")

@@ -1,0 +1,45 @@
+# textdomain: waterdragon
+# Template
+Dragon Horn=
+Pure Water Dragonstone Block=
+Pure Water Dragonstone Bricks=
+Rare Water Dragonstone Block=
+Rare Water Dragonstone Bricks=
+Drop of Dragon Water=
+Rare Water Dragon Egg=
+Pure Water Dragon Egg=
+Creative Rare Water Dragon Egg=
+Creative Pure Water Dragon Egg=
+Wet Log=
+Wet Bone Pile=
+Rare Water Dragonhide Block=
+Pure Water Dragonhide Block=
+Wet Soil=
+Wet Wood Planks=
+Wet Stone=
+Wet Stone Brick=
+Pure Water-Forged Draconic Steel Helmet=
+Rare Water-Forged Draconic Steel Helmet=
+Pure Water-Forged Draconic Steel Chestplate=
+Rare Water-Forged Draconic Steel Chestplate=
+Pure Water-Forged Draconic Steel Boots=
+Rare Water-Forged Draconic Steel Boots=
+Pure Water-Forged Draconic Steel Leggings=
+Rare Water-Forged Draconic Steel Leggings=
+Pure Water-Forged Draconic Steel Ingot=
+Rare Water-Forged Draconic Steel Ingot=
+Water Dragon Bone=
+Pure Water Dragon Scales=
+Rare Water Dragon Scales=
+Water Dragonstone Crucible
+Water Dragonstone Crucible (Full)
+Pure Water Dragonhide Pickaxe
+Rare Water Dragonhide Pickaxe
+Pure Water Dragonhide Axe
+Rare Water Dragonhide Axe
+Pure Water Dragonhide Shovel
+Rare Water Dragonhide Shovel
+Pure Water Dragonhide Sword
+Rare Water Dragonhide Sword
+Book of Dragon Uisge
+

@@ -61,6 +61,14 @@ end
 -- Drops --
 -----------
 
+minetest.register_craftitem("waterdragon:dragon_water_drop", {
+	description = "Drop of Dragon Water",
+	inventory_image = "waterdragon_dragon_water_drop.png",
+	groups = {dragon_drops = 1}
+})
+
+table.insert(dragon_drops, "waterdragon:dragon_water_drop")
+
 minetest.register_craftitem("waterdragon:dragon_bone", {
 	description = "Water Dragon Bone",
 	inventory_image = "waterdragon_dragon_bone.png",
@@ -581,13 +589,13 @@ minetest.register_alias("waterdragon:dragon_flute", "waterdragon:dragon_horn")
 --------------
 
 minetest.register_craftitem("waterdragon:dragonstone_crucible", {
-	description = "Dragonstone Crucible",
+	description = "Water Dragonstone Crucible",
 	inventory_image = "waterdragon_dragonstone_crucible.png",
 	stack_max = 999
 })
 
 minetest.register_craftitem("waterdragon:dragonstone_crucible_full", {
-	description = "Dragonstone Crucible (Full)",
+	description = "Water Dragonstone Crucible (Full)",
 	inventory_image = "waterdragon_dragonstone_crucible_full.png",
 	stack_max = 1,
 	groups = {not_in_creative_inventory = 1}
@@ -1272,7 +1280,7 @@ for color in pairs(waterdragon.colors_rare_water) do
 	})
 end
 
--- pure_water-Forged Draconic Steel Tools --
+-- Pure Water-Forged Draconic Steel Tools --
 
 craft_pick({
 	handle = "waterdragon:dragon_bone",
@@ -1298,7 +1306,7 @@ craft_sword({
 	output = "waterdragon:sword_pure_water_draconic_steel"
 })
 
--- rare_water-Forged Draconic Steel Tools --
+-- Rare Water-Forged Draconic Steel Tools --
 
 craft_pick({
 	handle = "waterdragon:dragon_bone",
@@ -1328,7 +1336,7 @@ craft_sword({
 -- Armor --
 -----------
 
--- pure_water-Forged Draconic Steel Armor --
+-- Pure Water-Forged Draconic Steel Armor --
 
 craft_helmet({
 	output = "waterdragon:helmet_pure_water_draconic_steel",
