@@ -5,10 +5,10 @@
 -- Local Math --
 
 local function round(n, dec)
-	local mult = 10^(dec or 0)
+	local mult = 10 ^ (dec or 0)
 	return math.floor(n * mult + 0.5) / mult
 end
- 
+
 -- Get Craft Items --
 
 local rare_water_block = "default:water_flowing"
@@ -42,17 +42,17 @@ local function infotext(str, format)
 end
 
 local function get_binder_desc(self)
-	local info = "Dragon Horn\n"..minetest.colorize("#bdd9ff", correct_name(self.name))
+	local info = "Dragon Horn\n" .. minetest.colorize("#bdd9ff", correct_name(self.name))
 	if self.nametag == "" then
-		info = info.."\n" .. infotext("Nameless Dragon")
+		info = info .. "\n" .. infotext("Nameless Dragon")
 	else
-		info = info.."\n" .. infotext(self.nametag or "Nameless Dragon")
+		info = info .. "\n" .. infotext(self.nametag or "Nameless Dragon")
 	end
 	if self.age then
-		info = info.."\n" .. infotext(self.age)
+		info = info .. "\n" .. infotext(self.age)
 	end
 	if self.color then
-		info = info.."\n" .. infotext(self.color, true)
+		info = info .. "\n" .. infotext(self.color, true)
 	end
 	return info
 end
@@ -64,7 +64,54 @@ end
 minetest.register_craftitem("waterdragon:dragon_water_drop", {
 	description = "Drop of Dragon Water",
 	inventory_image = "waterdragon_dragon_water_drop.png",
-	groups = {dragon_drops = 1}
+	groups = { dragon_drops = 1 },
+	on_use = function(itemstack, user, pointed_thing)
+
+		if not user or not pointed_thing then return false end
+		
+		local entity 
+        if pointed_thing.type == "object" then
+            -- If the player is pointing at an object, check if it's a mob
+            local pointed_object = pointed_thing.ref
+            entity = pointed_object:get_luaentity()
+        end
+
+		if entity and entity.hp <= 0 then
+			local ent_pos = entity:get_center_pos()
+			local particle = "creatura_particle_green.png"
+			entity.hp = entity.max_health
+			entity:memorize("hp", entity.hp)
+			minetest.chat_send_player(user:get_player_name(), correct_name(entity.name) .. " has been revived!")
+			minetest.add_particlespawner({
+				amount = 16,
+				time = 0.25,
+				minpos = {
+					x = ent_pos.x - entity.width,
+					y = ent_pos.y - entity.width,
+					z = ent_pos.z - entity.width
+				},
+				maxpos = {
+					x = ent_pos.x + entity.width,
+					y = ent_pos.y + entity.width,
+					z = ent_pos.z + entity.width
+				},
+				minacc = { x = 0, y = 0.25, z = 0 },
+				maxacc = { x = 0, y = -0.25, z = 0 },
+				minexptime = 0.75,
+				maxexptime = 1,
+				minsize = 4,
+				maxsize = 4,
+				texture = particle,
+				glow = 16
+			})
+		else
+			minetest.chat_send_player(user:get_player_name(), "You must be pointing at a mob")
+		end
+
+		-- Consume the item from the player's inventory
+		itemstack:take_item()
+		return itemstack
+	end
 })
 
 table.insert(dragon_drops, "waterdragon:dragon_water_drop")
@@ -72,7 +119,7 @@ table.insert(dragon_drops, "waterdragon:dragon_water_drop")
 minetest.register_craftitem("waterdragon:dragon_bone", {
 	description = "Water Dragon Bone",
 	inventory_image = "waterdragon_dragon_bone.png",
-	groups = {bone = 1}
+	groups = { bone = 1 }
 })
 
 table.insert(dragon_drops, "waterdragon:dragon_bone")
@@ -81,7 +128,7 @@ for color, hex in pairs(waterdragon.colors_pure_water) do
 	minetest.register_craftitem("waterdragon:scales_pure_water_dragon", {
 		description = "Pure Water Dragon Scales",
 		inventory_image = "waterdragon_dragon_scales.png^[multiply:#" .. hex,
-		groups = {dragon_scales = 1}
+		groups = { dragon_scales = 1 }
 	})
 	table.insert(dragon_drops, "waterdragon:scales_pure_water_dragon")
 end
@@ -90,7 +137,7 @@ for color, hex in pairs(waterdragon.colors_rare_water) do
 	minetest.register_craftitem("waterdragon:scales_rare_water_dragon", {
 		description = "Rare Water Dragon Scales",
 		inventory_image = "waterdragon_dragon_scales.png^[multiply:#" .. hex,
-		groups = {dragon_scales = 1}
+		groups = { dragon_scales = 1 }
 	})
 	table.insert(dragon_drops, "waterdragon:scales_rare_water_dragon")
 end
@@ -118,13 +165,13 @@ minetest.register_craftitem("waterdragon:draconic_steel_ingot_rare_water", {
 local function egg_rightclick(self, clicker, item)
 	if not minetest.is_creative_enabled(clicker) then
 		local inv = clicker:get_inventory()
-		if inv:room_for_item("main", {name = item}) then
+		if inv:room_for_item("main", { name = item }) then
 			clicker:get_inventory():add_item("main", item)
 		else
 			local pos = self.object:get_pos()
 			if not pos then return end
 			pos.y = pos.y + 0.5
-			minetest.add_item(pos, {name = item})
+			minetest.add_item(pos, { name = item })
 		end
 	end
 	self.object:remove()
@@ -140,20 +187,20 @@ for color in pairs(waterdragon.colors_pure_water) do
 		sunlight_propagates = true,
 		mesh = "waterdragon_egg.obj",
 		inventory_image = "waterdragon_pure_water_dragon_egg.png",
-		tiles = {"waterdragon_pure_water_dragon_egg_mesh.png"},
+		tiles = { "waterdragon_pure_water_dragon_egg_mesh.png" },
 		collision_box = {
 			type = "fixed",
 			fixed = {
-				{-0.25, -0.5, -0.25, 0.25, 0.1, 0.25},
+				{ -0.25, -0.5, -0.25, 0.25, 0.1, 0.25 },
 			},
 		},
 		selection_box = {
 			type = "fixed",
 			fixed = {
-				{-0.25, -0.5, -0.25, 0.25, 0.1, 0.25},
+				{ -0.25, -0.5, -0.25, 0.25, 0.1, 0.25 },
 			},
 		},
-		groups = {cracky = 1, level = 3},
+		groups = { cracky = 1, level = 3 },
 		sounds = waterdragon.sounds.stone,
 		on_construct = function(pos)
 			local timer = minetest.get_node_timer(pos)
@@ -162,15 +209,15 @@ for color in pairs(waterdragon.colors_pure_water) do
 		on_timer = function(pos)
 			local nest_n = 0
 			local nest_check = {
-				vector.add(pos, {x = 0, y = -1, z = 0}),
-				vector.add(pos, {x = 1, y = -1, z = 0}),
-				vector.add(pos, {x = 1, y = -1, z = 1}),
-				vector.add(pos, {x = 0, y = -1, z = 1}),
-				vector.add(pos, {x = -1, y = -1, z = 1}),
-				vector.add(pos, {x = -1, y = -1, z = 0}),
-				vector.add(pos, {x = -1, y = -1, z = -1}),
-				vector.add(pos, {x = 0, y = -1, z = -1}),
-				vector.add(pos, {x = 1, y = -1, z = -1})
+				vector.add(pos, { x = 0, y = -1, z = 0 }),
+				vector.add(pos, { x = 1, y = -1, z = 0 }),
+				vector.add(pos, { x = 1, y = -1, z = 1 }),
+				vector.add(pos, { x = 0, y = -1, z = 1 }),
+				vector.add(pos, { x = -1, y = -1, z = 1 }),
+				vector.add(pos, { x = -1, y = -1, z = 0 }),
+				vector.add(pos, { x = -1, y = -1, z = -1 }),
+				vector.add(pos, { x = 0, y = -1, z = -1 }),
+				vector.add(pos, { x = 1, y = -1, z = -1 })
 			}
 			for i = 1, #nest_check do
 				local node = minetest.get_node(nest_check[i])
@@ -194,7 +241,7 @@ for color in pairs(waterdragon.colors_pure_water) do
 	creatura.register_mob("waterdragon:egg_pure_water_dragon", {
 		-- Stats
 		max_health = 30,
-		armor_groups = {immortal = 1},
+		armor_groups = { immortal = 1 },
 		despawn_after = false,
 		-- Entity Physics
 		stepheight = 1.1,
@@ -205,11 +252,11 @@ for color in pairs(waterdragon.colors_pure_water) do
 			width = 0.25,
 			height = 0.6
 		},
-		visual_size = {x = 10, y = 10},
-		textures = {"waterdragon_pure_water_dragon_egg_mesh.png"},
+		visual_size = { x = 10, y = 10 },
+		textures = { "waterdragon_pure_water_dragon_egg_mesh.png" },
 		animations = {
-			idle = {range = {x = 0, y = 0}, speed = 1, frame_blend = 0.3, loop = false},
-			hatching = {range = {x = 70, y = 130}, speed = 15, frame_blend = 0.3, loop = true},
+			idle = { range = { x = 0, y = 0 }, speed = 1, frame_blend = 0.3, loop = false },
+			hatching = { range = { x = 70, y = 130 }, speed = 15, frame_blend = 0.3, loop = true },
 		},
 		-- Function
 		activate_func = function(self)
@@ -223,7 +270,7 @@ for color in pairs(waterdragon.colors_pure_water) do
 			local pos = self.object:get_pos()
 			if not pos then return end
 			if not self.owner_name
-			or self:timer(10) then
+				or self:timer(10) then
 				for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 6)) do
 					if obj and obj:is_player() then
 						minetest.after(1.5, function()
@@ -235,14 +282,14 @@ for color in pairs(waterdragon.colors_pure_water) do
 			local name = creatura.get_node_def(pos).name
 			local progress = self.progress or 0
 			if minetest.get_item_group(name, "water") > 0
-			or (progress > 0 and name == rare_water_block) then
+				or (progress > 0 and name == rare_water_block) then
 				if minetest.get_item_group(name, "water") > 0 then
-					minetest.set_node(pos, {name = rare_water_block})
+					minetest.set_node(pos, { name = rare_water_block })
 				end
 				progress = progress + dtime
 				if not self.hatching then
 					self.hatching = true
-					self.object:set_animation({x = 1, y = 40}, 30, 0)
+					self.object:set_animation({ x = 1, y = 40 }, 30, 0)
 				end
 				if progress >= 1000 then
 					local object = minetest.add_entity(pos, "waterdragon:pure_water_dragon")
@@ -261,7 +308,7 @@ for color in pairs(waterdragon.colors_pure_water) do
 			else
 				progress = 0
 				self.hatching = false
-				self.object:set_animation({x = 0, y = 0}, 0, 0)
+				self.object:set_animation({ x = 0, y = 0 }, 0, 0)
 			end
 			self.progress = self:memorize("progress", progress)
 		end,
@@ -281,20 +328,20 @@ for color in pairs(waterdragon.colors_rare_water) do
 		sunlight_propagates = true,
 		mesh = "waterdragon_egg.obj",
 		inventory_image = "waterdragon_rare_water_dragon_egg.png",
-		tiles = {"waterdragon_rare_water_dragon_egg_mesh.png"},
+		tiles = { "waterdragon_rare_water_dragon_egg_mesh.png" },
 		collision_box = {
 			type = "fixed",
 			fixed = {
-				{-0.25, -0.5, -0.25, 0.25, 0.1, 0.25},
+				{ -0.25, -0.5, -0.25, 0.25, 0.1, 0.25 },
 			},
 		},
 		selection_box = {
 			type = "fixed",
 			fixed = {
-				{-0.25, -0.5, -0.25, 0.25, 0.1, 0.25},
+				{ -0.25, -0.5, -0.25, 0.25, 0.1, 0.25 },
 			},
 		},
-		groups = {cracky = 1, level = 3},
+		groups = { cracky = 1, level = 3 },
 		sounds = waterdragon.sounds.stone,
 		on_construct = function(pos)
 			local timer = minetest.get_node_timer(pos)
@@ -303,15 +350,15 @@ for color in pairs(waterdragon.colors_rare_water) do
 		on_timer = function(pos)
 			local nest_n = 0
 			local nest_check = {
-				vector.add(pos, {x = 0, y = -1, z = 0}),
-				vector.add(pos, {x = 1, y = -1, z = 0}),
-				vector.add(pos, {x = 1, y = -1, z = 1}),
-				vector.add(pos, {x = 0, y = -1, z = 1}),
-				vector.add(pos, {x = -1, y = -1, z = 1}),
-				vector.add(pos, {x = -1, y = -1, z = 0}),
-				vector.add(pos, {x = -1, y = -1, z = -1}),
-				vector.add(pos, {x = 0, y = -1, z = -1}),
-				vector.add(pos, {x = 1, y = -1, z = -1})
+				vector.add(pos, { x = 0, y = -1, z = 0 }),
+				vector.add(pos, { x = 1, y = -1, z = 0 }),
+				vector.add(pos, { x = 1, y = -1, z = 1 }),
+				vector.add(pos, { x = 0, y = -1, z = 1 }),
+				vector.add(pos, { x = -1, y = -1, z = 1 }),
+				vector.add(pos, { x = -1, y = -1, z = 0 }),
+				vector.add(pos, { x = -1, y = -1, z = -1 }),
+				vector.add(pos, { x = 0, y = -1, z = -1 }),
+				vector.add(pos, { x = 1, y = -1, z = -1 })
 			}
 			for i = 1, #nest_check do
 				local node = minetest.get_node(nest_check[i])
@@ -335,7 +382,7 @@ for color in pairs(waterdragon.colors_rare_water) do
 	creatura.register_mob("waterdragon:egg_rare_water_dragon", {
 		-- Stats
 		max_health = 30,
-		armor_groups = {immortal = 1},
+		armor_groups = { immortal = 1 },
 		despawn_after = false,
 		-- Entity Physics
 		stepheight = 1.1,
@@ -346,11 +393,11 @@ for color in pairs(waterdragon.colors_rare_water) do
 			width = 0.25,
 			height = 0.6
 		},
-		visual_size = {x = 10, y = 10},
-		textures = {"waterdragon_rare_water_dragon_egg_mesh.png"},
+		visual_size = { x = 10, y = 10 },
+		textures = { "waterdragon_rare_water_dragon_egg_mesh.png" },
 		animations = {
-			idle = {range = {x = 0, y = 0}, speed = 1, frame_blend = 0.3, loop = false},
-			hatching = {range = {x = 70, y = 130}, speed = 15, frame_blend = 0.3, loop = true},
+			idle = { range = { x = 0, y = 0 }, speed = 1, frame_blend = 0.3, loop = false },
+			hatching = { range = { x = 70, y = 130 }, speed = 15, frame_blend = 0.3, loop = true },
 		},
 		-- Function
 		activate_func = function(self)
@@ -364,7 +411,7 @@ for color in pairs(waterdragon.colors_rare_water) do
 			local pos = self.object:get_pos()
 			if not pos then return end
 			if not self.owner_name
-			or self:timer(10) then
+				or self:timer(10) then
 				for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 6)) do
 					if obj and obj:is_player() then
 						minetest.after(1.5, function()
@@ -376,14 +423,14 @@ for color in pairs(waterdragon.colors_rare_water) do
 			local name = creatura.get_node_def(pos).name
 			local progress = self.progress or 0
 			if minetest.get_item_group(name, "water") > 0
-			or (progress > 0 and name == rare_water_block) then
+				or (progress > 0 and name == rare_water_block) then
 				if minetest.get_item_group(name, "water") > 0 then
-					minetest.set_node(pos, {name = rare_water_block})
+					minetest.set_node(pos, { name = rare_water_block })
 				end
 				progress = progress + dtime
 				if not self.hatching then
 					self.hatching = true
-					self.object:set_animation({x = 1, y = 40}, 30, 0)
+					self.object:set_animation({ x = 1, y = 40 }, 30, 0)
 				end
 				if progress >= 1000 then
 					local object = minetest.add_entity(pos, "waterdragon:rare_water_dragon")
@@ -402,7 +449,7 @@ for color in pairs(waterdragon.colors_rare_water) do
 			else
 				progress = 0
 				self.hatching = false
-				self.object:set_animation({x = 0, y = 0}, 0, 0)
+				self.object:set_animation({ x = 0, y = 0 }, 0, 0)
 			end
 			self.progress = self:memorize("progress", progress)
 		end,
@@ -420,13 +467,13 @@ end
 
 local function capture(player, ent)
 	if not player:is_player()
-	or not player:get_inventory() then
+		or not player:get_inventory() then
 		return false
 	end
 	local stack = player:get_wielded_item()
 	local meta = stack:get_meta()
 	if not meta:get_string("staticdata")
-	or meta:get_string("staticdata") == "" then
+		or meta:get_string("staticdata") == "" then
 		if not ent.dragon_id then return end
 		local stored_aging = meta:get_int("stored_aging") or 0
 		waterdragon.set_color_string(ent)
@@ -452,7 +499,7 @@ end
 local function get_dragon_by_id(dragon_id)
 	for _, ent in pairs(minetest.luaentities) do
 		if ent.dragon_id
-		and ent.dragon_id == dragon_id then
+			and ent.dragon_id == dragon_id then
 			return ent
 		end
 	end
@@ -478,7 +525,7 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 		player:set_wielded_item(itemstack)
 		return itemstack
 	end
-	if id ~= "" then -- If the horn has a linked Dragon
+	if id ~= "" then                  -- If the horn has a linked Dragon
 		if not waterdragon.dragons[id] then -- Clear data if linked Dragon is dead
 			meta:set_string("mob", nil)
 			meta:set_string("dragon_id", nil)
@@ -489,10 +536,10 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 		end
 		local ent = pointed_thing.ref and pointed_thing.ref:get_luaentity()
 		if ent
-		and ent.name:match("^waterdragon:")
-		and ent.dragon_id
-		and ent.dragon_id == id
-		and not ent.rider then -- Store Water Dragon if linked to Horn
+			and ent.name:match("^waterdragon:")
+			and ent.dragon_id
+			and ent.dragon_id == id
+			and not ent.rider then -- Store Water Dragon if linked to Horn
 			return capture(player, ent)
 		end
 		-- Teleport linked Water Dragon if not pointed
@@ -509,11 +556,11 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 	else -- Link Dragon to Horn
 		local ent = pointed_thing.ref and pointed_thing.ref:get_luaentity()
 		if ent
-		and ent.name:match("^waterdragon:")
-		and ent.dragon_id
-		and ent.owner
-		and ent.owner == player:get_player_name()
-		and not ent.rider then
+			and ent.name:match("^waterdragon:")
+			and ent.dragon_id
+			and ent.owner
+			and ent.owner == player:get_player_name()
+			and not ent.rider then
 			return capture(player, ent)
 		end
 	end
@@ -529,7 +576,7 @@ local function dragon_horn_place(itemstack, player, pointed_thing)
 		return node_def.on_rightclick(under, minetest.get_node(under), player, itemstack)
 	end
 	if pos
-	and not minetest.is_protected(pos, player:get_player_name()) then
+		and not minetest.is_protected(pos, player:get_player_name()) then
 		pos.y = pos.y + 3
 		local mob = meta:get_string("mob")
 		local staticdata = meta:get_string("staticdata")
@@ -544,21 +591,21 @@ local function dragon_horn_place(itemstack, player, pointed_thing)
 			return itemstack
 		end
 		if staticdata == ""
-		and id ~= ""
-		and waterdragon.dragons[id]
-		and waterdragon.dragons[id].stored_in_item then
+			and id ~= ""
+			and waterdragon.dragons[id]
+			and waterdragon.dragons[id].stored_in_item then
 			staticdata = waterdragon.dragons[id].staticdata
 		end
 		if staticdata ~= "" then
 			local ent = minetest.add_entity(pos, mob, staticdata)
 			if id ~= ""
-			and waterdragon.dragons[id] then
+				and waterdragon.dragons[id] then
 				waterdragon.dragons[id].stored_in_item = false
 			end
 			waterdragon.force_storage_save = true
 			local desc = "Dragon Horn\n" .. minetest.colorize("#bdd9ff", correct_name(mob))
 			if nametag ~= "" then
-				desc = desc .. "\n"..infotext(nametag)
+				desc = desc .. "\n" .. infotext(nametag)
 			end
 			meta:set_string("staticdata", nil)
 			meta:set_string("description", desc)
@@ -598,7 +645,7 @@ minetest.register_craftitem("waterdragon:dragonstone_crucible_full", {
 	description = "Water Dragonstone Crucible (Full)",
 	inventory_image = "waterdragon_dragonstone_crucible_full.png",
 	stack_max = 1,
-	groups = {not_in_creative_inventory = 1}
+	groups = { not_in_creative_inventory = 1 }
 })
 
 -----------
@@ -612,98 +659,98 @@ for color in pairs(waterdragon.colors_pure_water) do
 	minetest.register_tool("waterdragon:pick_dragonhide_pure_water", {
 		description = "Pure Water Dragonhide Pickaxe",
 		inventory_image = "waterdragon_dragonhide_pick_pure_water.png",
-		wield_scale = {x = 1.5, y = 1.5, z = 1},
+		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
 			full_punch_interval = 0.6,
 			max_drop_level = 3,
 			groupcaps = {
 				cracky = {
-					times = {[1] = 1.2, [2] = 0.8, [3] = 0.6},
+					times = { [1] = 1.2, [2] = 0.8, [3] = 0.6 },
 					uses = 40,
 					maxlevel = 3
 				}
 			},
-			damage_groups = {fleshy = 4}
+			damage_groups = { fleshy = 4 }
 		},
-		sound = {breaks = "default_tool_breaks"},
-		groups = {pickaxe = 1}
+		sound = { breaks = "default_tool_breaks" },
+		groups = { pickaxe = 1 }
 	})
 	if color ~= "red" then
 		local item = "waterdragon:pick_dragonhide_pure_water"
-		minetest.registered_tools[item].groups = {pickaxe = 1, not_in_creative_inventory = 0}
+		minetest.registered_tools[item].groups = { pickaxe = 1, not_in_creative_inventory = 0 }
 	end
 	-- Shovel
 	minetest.register_tool("waterdragon:shovel_dragonhide_pure_water", {
 		description = "Pure Water Dragonhide Shovel",
 		inventory_image = "waterdragon_dragonhide_shovel_pure_water.png",
-		wield_scale = {x = 1.5, y = 1.5, z = 1},
+		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
 			full_punch_interval = 0.6,
 			max_drop_level = 1,
 			groupcaps = {
 				crumbly = {
-					times = {[1] = 0.8, [2] = 0.6, [3] = 0.4},
+					times = { [1] = 0.8, [2] = 0.6, [3] = 0.4 },
 					uses = 40,
 					maxlevel = 3
 				}
 			},
-			damage_groups = {fleshy = 4}
+			damage_groups = { fleshy = 4 }
 		},
-		sound = {breaks = "default_tool_breaks"},
-		groups = {shovel = 1}
+		sound = { breaks = "default_tool_breaks" },
+		groups = { shovel = 1 }
 	})
 	if color ~= "red" then
 		local item = "waterdragon:shovel_dragonhide_pure_water"
-		minetest.registered_tools[item].groups = {shovel = 1, not_in_creative_inventory = 0}
+		minetest.registered_tools[item].groups = { shovel = 1, not_in_creative_inventory = 0 }
 	end
 	-- Axe
 	minetest.register_tool("waterdragon:axe_dragonhide_pure_water", {
 		description = "Pure Water Dragonhide Axe",
 		inventory_image = "waterdragon_dragonhide_axe_pure_water.png",
-		wield_scale = {x = 1.5, y = 1.5, z = 1},
+		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
 			full_punch_interval = 0.6,
 			max_drop_level = 1,
 			groupcaps = {
 				choppy = {
-					times = {[1] = 1.2, [2] = 0.8, [3] = 0.6},
+					times = { [1] = 1.2, [2] = 0.8, [3] = 0.6 },
 					uses = 40,
 					maxlevel = 3
 				}
 			},
-			damage_groups = {fleshy = 6}
+			damage_groups = { fleshy = 6 }
 		},
-		sound = {breaks = "default_tool_breaks"},
-		groups = {axe = 1}
+		sound = { breaks = "default_tool_breaks" },
+		groups = { axe = 1 }
 	})
 	if color ~= "red" then
 		local item = "waterdragon:axe_dragonhide_pure_water"
-		minetest.registered_tools[item].groups = {axe = 1, not_in_creative_inventory = 0}
+		minetest.registered_tools[item].groups = { axe = 1, not_in_creative_inventory = 0 }
 	end
 	-- Sword
 	minetest.register_tool("waterdragon:sword_dragonhide_pure_water", {
 		description = "Pure Water Dragonhide Sword",
 		inventory_image = "waterdragon_dragonhide_sword_pure_water.png",
-		wield_scale = {x = 1.5, y = 1.5, z = 1},
+		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
 			full_punch_interval = 0.1,
 			max_drop_level = 1,
 			groupcaps = {
 				snappy = {
-					times = {[1] = 0.4, [2] = 0.2, [3] = 0.1},
+					times = { [1] = 0.4, [2] = 0.2, [3] = 0.1 },
 					uses = 40,
 					maxlevel = 3
 				}
 			},
-			damage_groups = {fleshy = 12}
+			damage_groups = { fleshy = 12 }
 		},
 		range = 6,
-		sound = {breaks = "default_tool_breaks"},
-		groups = {sword = 1}
+		sound = { breaks = "default_tool_breaks" },
+		groups = { sword = 1 }
 	})
 	if color ~= "red" then
 		local item = "waterdragon:sword_dragonhide_pure_water"
-		minetest.registered_tools[item].groups = {sword = 1, not_in_creative_inventory = 0}
+		minetest.registered_tools[item].groups = { sword = 1, not_in_creative_inventory = 0 }
 	end
 end
 
@@ -712,98 +759,98 @@ for color in pairs(waterdragon.colors_rare_water) do
 	minetest.register_tool("waterdragon:pick_dragonhide_rare_water", {
 		description = "Rare Water Dragonhide Pickaxe",
 		inventory_image = "waterdragon_dragonhide_pick_rare_water.png",
-		wield_scale = {x = 1.5, y = 1.5, z = 1},
+		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
 			full_punch_interval = 0.6,
 			max_drop_level = 3,
 			groupcaps = {
 				cracky = {
-					times = {[1] = 1.2, [2] = 0.8, [3] = 0.6},
+					times = { [1] = 1.2, [2] = 0.8, [3] = 0.6 },
 					uses = 40,
 					maxlevel = 3
 				}
 			},
-			damage_groups = {fleshy = 4}
+			damage_groups = { fleshy = 4 }
 		},
-		sound = {breaks = "default_tool_breaks"},
-		groups = {pickaxe = 1}
+		sound = { breaks = "default_tool_breaks" },
+		groups = { pickaxe = 1 }
 	})
 	if color ~= "sapphire" then
 		local item = "waterdragon:pick_dragonhide_rare_water"
-		minetest.registered_tools[item].groups = {pickaxe = 1, not_in_creative_inventory = 0}
+		minetest.registered_tools[item].groups = { pickaxe = 1, not_in_creative_inventory = 0 }
 	end
 	-- Shovel
 	minetest.register_tool("waterdragon:shovel_dragonhide_rare_water", {
 		description = "Rare Water Dragonhide Shovel",
 		inventory_image = "waterdragon_dragonhide_shovel_rare_water.png",
-		wield_scale = {x = 1.5, y = 1.5, z = 1},
+		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
 			full_punch_interval = 0.6,
 			max_drop_level = 1,
 			groupcaps = {
 				crumbly = {
-					times = {[1] = 0.8, [2] = 0.6, [3] = 0.4},
+					times = { [1] = 0.8, [2] = 0.6, [3] = 0.4 },
 					uses = 40,
 					maxlevel = 3
 				}
 			},
-			damage_groups = {fleshy = 4}
+			damage_groups = { fleshy = 4 }
 		},
-		sound = {breaks = "default_tool_breaks"},
-		groups = {shovel = 1}
+		sound = { breaks = "default_tool_breaks" },
+		groups = { shovel = 1 }
 	})
 	if color ~= "sapphire" then
 		local item = "waterdragon:shovel_dragonhide_rare_water"
-		minetest.registered_tools[item].groups = {shovel = 1, not_in_creative_inventory = 0}
+		minetest.registered_tools[item].groups = { shovel = 1, not_in_creative_inventory = 0 }
 	end
 	-- Axe
 	minetest.register_tool("waterdragon:axe_dragonhide_rare_water", {
 		description = "Rare Water Dragonhide Axe",
 		inventory_image = "waterdragon_dragonhide_axe_rare_water.png",
-		wield_scale = {x = 1.5, y = 1.5, z = 1},
+		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
 			full_punch_interval = 0.6,
 			max_drop_level = 1,
 			groupcaps = {
 				choppy = {
-					times = {[1] = 1.2, [2] = 0.8, [3] = 0.6},
+					times = { [1] = 1.2, [2] = 0.8, [3] = 0.6 },
 					uses = 40,
 					maxlevel = 3
 				}
 			},
-			damage_groups = {fleshy = 6}
+			damage_groups = { fleshy = 6 }
 		},
-		sound = {breaks = "default_tool_breaks"},
-		groups = {axe = 1}
+		sound = { breaks = "default_tool_breaks" },
+		groups = { axe = 1 }
 	})
 	if color ~= "sapphire" then
 		local item = "waterdragon:axe_dragonhide_rare_water"
-		minetest.registered_tools[item].groups = {axe = 1, not_in_creative_inventory = 0}
+		minetest.registered_tools[item].groups = { axe = 1, not_in_creative_inventory = 0 }
 	end
 	-- Sword
 	minetest.register_tool("waterdragon:sword_dragonhide_rare_water", {
 		description = "Rare Water Dragonhide Sword",
 		inventory_image = "waterdragon_dragonhide_sword_rare_water.png",
-		wield_scale = {x = 1.5, y = 1.5, z = 1},
+		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
 			full_punch_interval = 0.1,
 			max_drop_level = 1,
 			groupcaps = {
 				snappy = {
-					times = {[1] = 0.4, [2] = 0.2, [3] = 0.1},
+					times = { [1] = 0.4, [2] = 0.2, [3] = 0.1 },
 					uses = 40,
 					maxlevel = 3
 				}
 			},
-			damage_groups = {fleshy = 12}
+			damage_groups = { fleshy = 12 }
 		},
 		range = 6,
-		sound = {breaks = "default_tool_breaks"},
-		groups = {sword = 1}
+		sound = { breaks = "default_tool_breaks" },
+		groups = { sword = 1 }
 	})
 	if color ~= "sapphire" then
 		local item = "waterdragon:sword_dragonhide_rare_water"
-		minetest.registered_tools[item].groups = {sword = 1, not_in_creative_inventory = 0}
+		minetest.registered_tools[item].groups = { sword = 1, not_in_creative_inventory = 0 }
 	end
 end
 
@@ -824,8 +871,8 @@ local function draconic_step(itemstack, player, pointed_thing)
 	-- Play Swing
 	if name:find("sword") then
 		minetest.sound_play(
-			{name = "waterdragon_draconic_steel_swing", pitch = math.random(-3, 3) * 0.1},
-			{pos = player:get_pos(), gain = 1.0, max_hear_distance = 12}
+			{ name = "waterdragon_draconic_steel_swing", pitch = math.random(-3, 3) * 0.1 },
+			{ pos = player:get_pos(), gain = 1.0, max_hear_distance = 12 }
 		)
 		if pointed_thing.under then
 			local node = minetest.get_node(pointed_thing.under)
@@ -836,11 +883,11 @@ local function draconic_step(itemstack, player, pointed_thing)
 	end
 	-- Destroy Tool if Dragon is not alive
 	if dragon_id ~= ""
-	and not waterdragon.dragons[dragon_id] then
+		and not waterdragon.dragons[dragon_id] then
 		itemstack:set_wear(65536)
 		minetest.sound_play(
-			{name = "waterdragon_draconic_steel_shatter", pitch = math.random(-5, 5) * 0.1},
-			{pos = player:get_pos(), gain = 1.0, max_hear_distance = 48}
+			{ name = "waterdragon_draconic_steel_shatter", pitch = math.random(-5, 5) * 0.1 },
+			{ pos = player:get_pos(), gain = 1.0, max_hear_distance = 48 }
 		)
 		return itemstack
 	end
@@ -849,7 +896,7 @@ local function draconic_step(itemstack, player, pointed_thing)
 	local pos = player:get_pos()
 	local dist2dragon
 	if dragon_id ~= ""
-	and not dragon_data.stored_in_item then
+		and not dragon_data.stored_in_item then
 		local dragon_pos = dragon_data.last_pos
 		dist2dragon = vector.distance(pos, dragon_pos)
 	else
@@ -890,101 +937,101 @@ local function draconic_step(itemstack, player, pointed_thing)
 	end
 end
 
-local elements = {"rare_water", "pure_water"}
+local elements = { "rare_water", "pure_water" }
 
 for _, element in pairs(elements) do
-
-minetest.register_tool("waterdragon:pick_"..element.."_draconic_steel", {
-	description = correct_name(element).."-Forged Draconic Steel Pickaxe",
-	inventory_image = "waterdragon_"..element.."_draconic_steel_pick.png",
-	wield_scale = {x = 2, y = 2, z = 1},
-	tool_capabilities = {
-		full_punch_interval = 4,
-		max_drop_level = 3,
-		groupcaps = {
-			cracky = {
-				times={[1]=0.3, [2]=0.15, [3]=0.075},
-				uses=0,
-				maxlevel=3},
-			crumbly = {
-				times={[1]=0.5, [2]=0.25, [3]=0.2},
-				uses=0,
-				maxlevel=3
+	minetest.register_tool("waterdragon:pick_" .. element .. "_draconic_steel", {
+		description = correct_name(element) .. "-Forged Draconic Steel Pickaxe",
+		inventory_image = "waterdragon_" .. element .. "_draconic_steel_pick.png",
+		wield_scale = { x = 2, y = 2, z = 1 },
+		tool_capabilities = {
+			full_punch_interval = 4,
+			max_drop_level = 3,
+			groupcaps = {
+				cracky = {
+					times = { [1] = 0.3, [2] = 0.15, [3] = 0.075 },
+					uses = 0,
+					maxlevel = 3
+				},
+				crumbly = {
+					times = { [1] = 0.5, [2] = 0.25, [3] = 0.2 },
+					uses = 0,
+					maxlevel = 3
+				},
 			},
+			damage_groups = { fleshy = 35 }
 		},
-		damage_groups = {fleshy = 35}
-	},
-	range = 6,
-	sound = {breaks = "default_tool_breaks"},
-	groups = {pickaxe = 1},
-	after_use = draconic_step
-})
+		range = 6,
+		sound = { breaks = "default_tool_breaks" },
+		groups = { pickaxe = 1 },
+		after_use = draconic_step
+	})
 
-minetest.register_tool("waterdragon:shovel_"..element.."_draconic_steel", {
-	description = correct_name(element).."-Forged Draconic Steel Shovel",
-	inventory_image = "waterdragon_"..element.."_draconic_steel_shovel.png",
-	wield_scale = {x = 2, y = 2, z = 1},
-	tool_capabilities = {
-		full_punch_interval = 5.5,
-		max_drop_level = 1,
-		groupcaps = {
-			crumbly = {
-				times = {[1] = 0.4, [2] = 0.2, [3] = 0.1},
-				uses = 0,
-				maxlevel = 3
-			}
+	minetest.register_tool("waterdragon:shovel_" .. element .. "_draconic_steel", {
+		description = correct_name(element) .. "-Forged Draconic Steel Shovel",
+		inventory_image = "waterdragon_" .. element .. "_draconic_steel_shovel.png",
+		wield_scale = { x = 2, y = 2, z = 1 },
+		tool_capabilities = {
+			full_punch_interval = 5.5,
+			max_drop_level = 1,
+			groupcaps = {
+				crumbly = {
+					times = { [1] = 0.4, [2] = 0.2, [3] = 0.1 },
+					uses = 0,
+					maxlevel = 3
+				}
+			},
+			damage_groups = { fleshy = 30 }
 		},
-		damage_groups = {fleshy = 30}
-	},
-	range = 6,
-	sound = {breaks = "default_tool_breaks"},
-	groups = {shovel = 1},
-	after_use = draconic_step
-})
+		range = 6,
+		sound = { breaks = "default_tool_breaks" },
+		groups = { shovel = 1 },
+		after_use = draconic_step
+	})
 
-minetest.register_tool("waterdragon:axe_"..element.."_draconic_steel", {
-	description = correct_name(element).."-Forged Draconic Steel Axe",
-	inventory_image = "waterdragon_"..element.."_draconic_steel_axe.png",
-	wield_scale = {x = 2, y = 2, z = 1},
-	tool_capabilities = {
-		full_punch_interval = 3,
-		max_drop_level = 1,
-		groupcaps = {
-			choppy = {
-				times={[1]=0.3, [2]=0.15, [3]=0.075},
-				uses = 0,
-				maxlevel = 3
-			}
+	minetest.register_tool("waterdragon:axe_" .. element .. "_draconic_steel", {
+		description = correct_name(element) .. "-Forged Draconic Steel Axe",
+		inventory_image = "waterdragon_" .. element .. "_draconic_steel_axe.png",
+		wield_scale = { x = 2, y = 2, z = 1 },
+		tool_capabilities = {
+			full_punch_interval = 3,
+			max_drop_level = 1,
+			groupcaps = {
+				choppy = {
+					times = { [1] = 0.3, [2] = 0.15, [3] = 0.075 },
+					uses = 0,
+					maxlevel = 3
+				}
+			},
+			damage_groups = { fleshy = 100 }
 		},
-		damage_groups = {fleshy = 100}
-	},
-	range = 6,
-	sound = {breaks = "default_tool_breaks"},
-	groups = {axe = 1},
-	after_use = draconic_step
-})
+		range = 6,
+		sound = { breaks = "default_tool_breaks" },
+		groups = { axe = 1 },
+		after_use = draconic_step
+	})
 
-minetest.register_tool("waterdragon:sword_"..element.."_draconic_steel", {
-	description = correct_name(element).."-Forged Draconic Steel Sword",
-	inventory_image = "waterdragon_"..element.."_draconic_steel_sword.png",
-	wield_scale = {x = 2, y = 2, z = 1},
-	tool_capabilities = {
-		full_punch_interval = 1.2,
-		max_drop_level = 1,
-		groupcaps = {
-			snappy = {
-				times = {[1] = 0.05, [2] = 0.025, [3] = 0.01},
-				uses = 0,
-				maxlevel = 3
-			}
+	minetest.register_tool("waterdragon:sword_" .. element .. "_draconic_steel", {
+		description = correct_name(element) .. "-Forged Draconic Steel Sword",
+		inventory_image = "waterdragon_" .. element .. "_draconic_steel_sword.png",
+		wield_scale = { x = 2, y = 2, z = 1 },
+		tool_capabilities = {
+			full_punch_interval = 1.2,
+			max_drop_level = 1,
+			groupcaps = {
+				snappy = {
+					times = { [1] = 0.05, [2] = 0.025, [3] = 0.01 },
+					uses = 0,
+					maxlevel = 3
+				}
+			},
+			damage_groups = { fleshy = 100 }
 		},
-		damage_groups = {fleshy = 100}
-	},
-	range = 6,
-	sound = {breaks = "default_tool_breaks"},
-	groups = {sword = 1},
-	on_use = draconic_step
-})
+		range = 6,
+		sound = { breaks = "default_tool_breaks" },
+		groups = { sword = 1 },
+		on_use = draconic_step
+	})
 end
 
 --------------
@@ -1017,79 +1064,79 @@ end)
 minetest.register_craft({
 	output = "waterdragon:dragon_flute",
 	recipe = {
-		{"", "", "waterdragon:dragon_bone"},
-		{"", "waterdragon:dragon_bone", "waterdragon:dragon_bone"},
-		{rare_water_block, "waterdragon:dragon_bone", ""},
+		{ "",               "",                        "waterdragon:dragon_bone" },
+		{ "",               "waterdragon:dragon_bone", "waterdragon:dragon_bone" },
+		{ rare_water_block, "waterdragon:dragon_bone", "" },
 	}
 })
 
 minetest.register_craft({
 	output = "waterdragon:dragonstone_block_rare_water",
 	recipe = {
-		{"", "waterdragon:wet_stone", ""},
-		{"waterdragon:wet_stone", "waterdragon:wet_stone", "waterdragon:wet_stone"},
-		{"", "waterdragon:wet_stone", ""},
+		{ "",                      "waterdragon:wet_stone", "" },
+		{ "waterdragon:wet_stone", "waterdragon:wet_stone", "waterdragon:wet_stone" },
+		{ "",                      "waterdragon:wet_stone", "" },
 	}
 })
 
 minetest.register_craft({
 	output = "waterdragon:dragonstone_block_pure_water",
 	recipe = {
-		{"", "waterdragon:wet_soil", ""},
-		{"waterdragon:wet_soil", "waterdragon:wet_soil", "waterdragon:wet_soil"},
-		{"", "waterdragon:wet_soil", ""},
+		{ "",                     "waterdragon:wet_soil", "" },
+		{ "waterdragon:wet_soil", "waterdragon:wet_soil", "waterdragon:wet_soil" },
+		{ "",                     "waterdragon:wet_soil", "" },
 	}
 })
 
 minetest.register_craft({
 	output = "waterdragon:dragon_horn",
 	recipe = {
-		{"", "", pure_water_block},
-		{"", "waterdragon:dragon_bone", pure_water_block},
-		{"waterdragon:dragon_bone", "waterdragon:dragon_bone", ""},
+		{ "",                        "",                        pure_water_block },
+		{ "",                        "waterdragon:dragon_bone", pure_water_block },
+		{ "waterdragon:dragon_bone", "waterdragon:dragon_bone", "" },
 	}
 })
 
 minetest.register_craft({
 	output = "waterdragon:book_waterdragon",
 	recipe = {
-		{"", "", ""},
-		{"group:dragon_scales", "", ""},
-		{"group:book", "", ""},
+		{ "",                    "", "" },
+		{ "group:dragon_scales", "", "" },
+		{ "group:book",          "", "" },
 	}
 })
 
 minetest.register_craft({
 	output = "waterdragon:book_waterdragon",
 	recipe = {
-		{"", "", ""},
-		{"group:dragon_scales", "", ""},
-		{"group:book", "", ""},
+		{ "",                    "", "" },
+		{ "group:dragon_scales", "", "" },
+		{ "group:book",          "", "" },
 	}
 })
 
 minetest.register_craft({
 	output = "waterdragon:wood_planks_wet",
 	recipe = {
-		{"waterdragon:log_wet"}
+		{ "waterdragon:log_wet" }
 	}
 })
 
 minetest.register_craft({
 	output = "waterdragon:draconic_steel_forge_rare_water",
 	recipe = {
-		{"waterdragon:stone_wet", "waterdragon:stone_wet", "waterdragon:stone_wet"},
-		{"waterdragon:stone_wet", "default:furnace", "waterdragon:stone_wet"},
-		{"waterdragon:stone_wet", "waterdragon:stone_wet", "waterdragon:stone_wet"},
+		{ "waterdragon:stone_wet", "waterdragon:stone_wet", "waterdragon:stone_wet" },
+		{ "waterdragon:stone_wet", "default:furnace",       "waterdragon:stone_wet" },
+		{ "waterdragon:stone_wet", "waterdragon:stone_wet", "waterdragon:stone_wet" },
 	}
 })
 
 minetest.register_craft({
 	output = "waterdragon:draconic_steel_forge_pure_water",
 	recipe = {
-		{"waterdragon:stone_wet", "waterdragon:stone_wet", "waterdragon:stone_wet"},
-		{"waterdragon:stone_wet", "default:furnace", "waterdragon:stone_wet"},
-		{"waterdragon:stone_wet", "waterdragon:stone_wet", "waterdragon:stone_wet"},
+		{ "waterdragon:stone_wet", "waterdragon:stone_wet", "waterdragon:stone_wet" },
+		{ "waterdragon:stone_wet", "default:furnace",       "waterdragon:stone_wet" },
+		{ "waterdragon:stone_wet", "waterdragon:stone_wet", "waterdragon:stone_wet" },
 	}
 })
 
@@ -1097,9 +1144,9 @@ for color in pairs(waterdragon.colors_pure_water) do
 	minetest.register_craft({
 		output = "waterdragon:dragonhide_block_pure_water",
 		recipe = {
-			{"waterdragon:dragon_bone", "waterdragon:scales_pure_water_dragon", "waterdragon:dragon_bone"},
-			{"waterdragon:dragon_bone", "waterdragon:scales_pure_water_dragon", "waterdragon:dragon_bone"},
-			{"waterdragon:dragon_bone", "waterdragon:scales_pure_water_dragon", "waterdragon:dragon_bone"},
+			{ "waterdragon:dragon_bone", "waterdragon:scales_pure_water_dragon", "waterdragon:dragon_bone" },
+			{ "waterdragon:dragon_bone", "waterdragon:scales_pure_water_dragon", "waterdragon:dragon_bone" },
+			{ "waterdragon:dragon_bone", "waterdragon:scales_pure_water_dragon", "waterdragon:dragon_bone" },
 		}
 	})
 end
@@ -1108,9 +1155,9 @@ for color in pairs(waterdragon.colors_rare_water) do
 	minetest.register_craft({
 		output = "waterdragon:dragonhide_block_rare_water",
 		recipe = {
-			{"waterdragon:dragon_bone", "waterdragon:scales_rare_water_dragon", "waterdragon:dragon_bone"},
-			{"waterdragon:dragon_bone", "waterdragon:scales_rare_water_dragon", "waterdragon:dragon_bone"},
-			{"waterdragon:dragon_bone", "waterdragon:scales_rare_water_dragon", "waterdragon:dragon_bone"},
+			{ "waterdragon:dragon_bone", "waterdragon:scales_rare_water_dragon", "waterdragon:dragon_bone" },
+			{ "waterdragon:dragon_bone", "waterdragon:scales_rare_water_dragon", "waterdragon:dragon_bone" },
+			{ "waterdragon:dragon_bone", "waterdragon:scales_rare_water_dragon", "waterdragon:dragon_bone" },
 		}
 	})
 end
@@ -1118,33 +1165,33 @@ end
 minetest.register_craft({
 	output = "waterdragon:dragonstone_bricks_pure_water 4",
 	recipe = {
-		{"waterdragon:dragonstone_block_pure_water", "waterdragon:dragonstone_block_pure_water"},
-		{"waterdragon:dragonstone_block_pure_water", "waterdragon:dragonstone_block_pure_water"},
+		{ "waterdragon:dragonstone_block_pure_water", "waterdragon:dragonstone_block_pure_water" },
+		{ "waterdragon:dragonstone_block_pure_water", "waterdragon:dragonstone_block_pure_water" },
 	}
 })
 
 minetest.register_craft({
 	output = "waterdragon:dragonstone_bricks_rare_water 4",
 	recipe = {
-		{"waterdragon:dragonstone_block_rare_water", "waterdragon:dragonstone_block_rare_water"},
-		{"waterdragon:dragonstone_block_rare_water", "waterdragon:dragonstone_block_rare_water"},
+		{ "waterdragon:dragonstone_block_rare_water", "waterdragon:dragonstone_block_rare_water" },
+		{ "waterdragon:dragonstone_block_rare_water", "waterdragon:dragonstone_block_rare_water" },
 	}
 })
 
 minetest.register_craft({
 	output = "waterdragon:stone_bricks_wet 4",
 	recipe = {
-		{"waterdragon:stone_wet", "waterdragon:stone_wet"},
-		{"waterdragon:stone_wet", "waterdragon:stone_wet"}
+		{ "waterdragon:stone_wet", "waterdragon:stone_wet" },
+		{ "waterdragon:stone_wet", "waterdragon:stone_wet" }
 	}
 })
 
 minetest.register_craft({
 	output = "waterdragon:dragonstone_crucible",
 	recipe = {
-		{"waterdragon:dragonstone_block_pure_water", "", "waterdragon:dragonstone_block_pure_water"},
-		{"waterdragon:dragonstone_block_pure_water", "", "waterdragon:dragonstone_block_pure_water"},
-		{"", "waterdragon:dragonstone_block_pure_water", ""},
+		{ "waterdragon:dragonstone_block_pure_water", "",                                         "waterdragon:dragonstone_block_pure_water" },
+		{ "waterdragon:dragonstone_block_pure_water", "",                                         "waterdragon:dragonstone_block_pure_water" },
+		{ "",                                         "waterdragon:dragonstone_block_pure_water", "" },
 	}
 })
 
@@ -1156,9 +1203,9 @@ local function craft_pick(def)
 	minetest.register_craft({
 		output = def.output,
 		recipe = {
-			{def.material, def.material, def.material},
-			{"", def.handle, ""},
-			{"", def.handle, ""}
+			{ def.material, def.material, def.material },
+			{ "",           def.handle,   "" },
+			{ "",           def.handle,   "" }
 		}
 	})
 end
@@ -1167,9 +1214,9 @@ local function craft_shovel(def)
 	minetest.register_craft({
 		output = def.output,
 		recipe = {
-			{def.material},
-			{def.handle},
-			{def.handle}
+			{ def.material },
+			{ def.handle },
+			{ def.handle }
 		}
 	})
 end
@@ -1178,9 +1225,9 @@ local function craft_axe(def)
 	minetest.register_craft({
 		output = def.output,
 		recipe = {
-			{def.material, def.material},
-			{def.material, def.handle},
-			{"", def.handle}
+			{ def.material, def.material },
+			{ def.material, def.handle },
+			{ "",           def.handle }
 		}
 	})
 end
@@ -1189,9 +1236,9 @@ local function craft_sword(def)
 	minetest.register_craft({
 		output = def.output,
 		recipe = {
-			{def.material},
-			{def.material},
-			{def.handle}
+			{ def.material },
+			{ def.material },
+			{ def.handle }
 		}
 	})
 end
@@ -1200,9 +1247,9 @@ local function craft_helmet(def)
 	minetest.register_craft({
 		output = def.output,
 		recipe = {
-			{def.material, def.material, def.material},
-			{def.material, "", def.material},
-			{"", "", ""},
+			{ def.material, def.material, def.material },
+			{ def.material, "",           def.material },
+			{ "",           "",           "" },
 		},
 	})
 end
@@ -1211,9 +1258,9 @@ local function craft_chestplate(def)
 	minetest.register_craft({
 		output = def.output,
 		recipe = {
-			{def.material, "", def.material},
-			{def.material, def.material, def.material},
-			{def.material, def.material, def.material},
+			{ def.material, "",           def.material },
+			{ def.material, def.material, def.material },
+			{ def.material, def.material, def.material },
 		},
 	})
 end
@@ -1222,9 +1269,9 @@ local function craft_leggings(def)
 	minetest.register_craft({
 		output = def.output,
 		recipe = {
-			{def.material, def.material, def.material},
-			{def.material, "", def.material},
-			{def.material, "", def.material},
+			{ def.material, def.material, def.material },
+			{ def.material, "",           def.material },
+			{ def.material, "",           def.material },
 		},
 	})
 end
@@ -1233,9 +1280,9 @@ local function craft_boots(def)
 	minetest.register_craft({
 		output = def.output,
 		recipe = {
-			{"", "", ""},
-			{def.material, "", def.material},
-			{def.material, "", def.material},
+			{ "",           "", "" },
+			{ def.material, "", def.material },
+			{ def.material, "", def.material },
 		},
 	})
 end
@@ -1436,7 +1483,7 @@ minetest.register_on_craft(function(itemstack, player, old_craft_grid)
 			meta:set_string("dragon_id", last_id)
 			local dragon_name = "Nameless Dragon"
 			if waterdragon.dragons[last_id]
-			and waterdragon.dragons[last_id].name then
+				and waterdragon.dragons[last_id].name then
 				dragon_name = waterdragon.dragons[last_id].name
 			end
 			meta:set_string("description", desc .. "\n(Forged by " .. dragon_name .. ")")

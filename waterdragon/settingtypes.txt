@@ -1,29 +1,29 @@
-#    If true, Dragons will spawn randomly throughout the world
-simple_spawning (Simple Spawning) bool false
+#    If true, Water Dragons will spawn randomly throughout the world
+water_simple_spawning_dragons (Simple Spawning) bool false
 
-#    Dragon Spawn Rate. 1 in x chance per spawn tick for a Dragon to spawn. This setting only applies when Simple Spawning is enabled.
-simple_spawn_rate (Simple Spawn Rate) int 80000
+#    Water Dragon Spawn Rate. 1 in x chance per spawn tick for a Water Dragon to spawn. This setting only applies when Simple Spawning is enabled.
+water_dragon_simple_spawn_rate (Simple Spawn Rate) int 80000
 
-#    If true, Dragons will spawn in mountains with nests
-nest_spawning (Nest Spawning) bool true
+#    If true, Water Dragons will spawn in mountains with nests
+water_nest_spawning (Nest Spawning) bool true
 
-#    Dragon Nest Spawn Rate. 1 in x chance per chunk generated for a Dragon Nest to spawn. This setting only applies when Nest Spawning is enabled.
-nest_spawn_rate (Nest Spawn Rate) int 128
+#    Water Dragon Nest Spawn Rate. 1 in x chance per chunk generated for a Water Dragon Nest to spawn. This setting only applies when Nest Spawning is enabled.
+water_nest_spawn_rate (Nest Spawn Rate) int 128
 
-#    If true, Dragons will spawn in roosts and caverns like Minecrafts rare_water and pure_water mod.
-cavern_spawning (rare_water and pure_water Cavern Spawning) bool false
+#    If true, Water Dragons will spawn in roosts and caverns like Minecrafts Ice and Fire mod.
+water_cavern_spawning (Rare Water and Pure Water Cavern Spawning) bool false
 
-#    Dragon Cavern Spawn Rate. This setting only applies when rare_water and pure_water Cavern Spawning is enabled.
-cavern_spawn_rate (I/F Cavern Spawn Rate) int 32
+#    Water Dragon Cavern Spawn Rate. This setting only applies when Rare Water and Pure Water Cavern Spawning is enabled.
+water_cavern_spawn_rate (Rare/Pure Water Cavern Spawn Rate) int 32
 
-#    If true, Dragon breath will water nodes and Dragons will attempt to break blocks when stuck.
-dragon_terrain_destruction (Terrain Destruction) bool true
+#    If true, Water Dragon breath will make nodes wet and Water Dragons will attempt to break blocks when stuck.
+water_dragon_terrain_destruction (Terrain Destruction) bool true
 
 #    Disable if stairs mod gives a crash (Exile and other games are known to cause this)
-register_stairs (Register Stairs) bool true
+water_register_stairs (Register Stairs) bool true
 
-#    Chance (by percentage of 100) for a special color to occur on one of Dragons potential color regions
-unique_color_chance (Unique Color Chance) int 65
+#    Chance (by percentage of 100) for a special color to occur on one of Water Dragons potential color regions
+water_unique_color_chance (Unique Color Chance) int 65
 
 
 

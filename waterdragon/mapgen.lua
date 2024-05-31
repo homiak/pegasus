@@ -6,13 +6,13 @@
 -- Settings --
 --------------
 
-local nest_spawning = minetest.settings:get("nest_spawning") or true
+local water_nest_spawning = minetest.settings:get("water_nest_spawning") or true
 
-local cavern_spawning = minetest.settings:get("cavern_spawning") or false
+local water_cavern_spawning = minetest.settings:get("water_cavern_spawning") or false
 
-local nest_spawn_rate = tonumber(minetest.settings:get("nest_spawn_rate")) or 128
+local water_nest_spawn_rate = tonumber(minetest.settings:get("water_nest_spawn_rate")) or 128
 
-local cavern_spawn_rate = tonumber(minetest.settings:get("cavern_spawn_rate")) or 128
+local water_cavern_spawn_rate = tonumber(minetest.settings:get("water_cavern_spawn_rate")) or 128
 
 ---------------------
 -- Local Variables --
@@ -589,8 +589,8 @@ minetest.register_on_generated(function(minp, maxp)
 	local area = VoxelArea:new{MinEdge = emin, MaxEdge = emax}
 	local data = vm:get_data()
 
-	if nest_spawning
-	and random(nest_spawn_rate) < 2 then
+	if water_nest_spawning
+	and random(water_nest_spawn_rate) < 2 then
 
 		local heights = {}
 
@@ -636,8 +636,8 @@ minetest.register_on_generated(function(minp, maxp)
 				vm:write_to_map()
 			end
 		end
-	elseif cavern_spawning
-	and random(cavern_spawn_rate) < 2
+	elseif water_cavern_spawning
+	and random(water_cavern_spawn_rate) < 2
 	and max_y < 0 then
 		if is_cold_biome(pos) then
 			generate_rare_water_dragon_cavern(minp, maxp, area, data)

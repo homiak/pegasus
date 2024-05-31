@@ -1,7 +1,7 @@
 -----------
 -- Nodes --
 -----------
-
+local S = waterdragon.S
 local random = math.random
 
 -- Sounds --
@@ -22,20 +22,6 @@ end)
 
 -- Local Utilities --
 
-local function correct_name(str)
-	if str then
-		if str:match(":") then str = str:split(":")[2] end
-		return (string.gsub(" " .. str, "%W%l", string.upper):sub(2):gsub("_", " "))
-	end
-end
-
-local function infotext(str, format)
-	if format then
-		return minetest.colorize("#bdd9ff", correct_name(str))
-	end
-	return minetest.colorize("#bdd9ff", str)
-end
-
 local stair_queue = {}
 
 local function register_node(name, def, register_stair)
@@ -48,7 +34,7 @@ end
 -- Logs --
 
 register_node("waterdragon:log_wet", {
-	description = "Wet Log",
+	description = S("Wet Log"),
 	tiles = {"waterdragon_log_wet_top.png", "waterdragon_log_wet_top.png", "waterdragon_log_wet.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -60,7 +46,7 @@ register_node("waterdragon:log_wet", {
 -- Stone --
 
 register_node("waterdragon:stone_wet", {
-	description = "Wet Stone",
+	description = S("Wet Stone"),
 	tiles = {"waterdragon_stone_wet.png"},
 	paramtype2 = "facedir",
 	place_param2 = 0,
@@ -926,7 +912,7 @@ minetest.register_node("waterdragon:draconic_forge_rare_water", {
 		local cool_perc = meta:get_int("cool_perc") or 0
 		local last_perc = cool_perc
 
-		-- If cooling has reached end, freeze input
+		-- If cooling has reached end, make input wet
 		if cool_perc >= 100 then
 			cool_perc = 0
 			cool_crucible(pos, "waterdragon:draconic_steel_ingot_rare_water")
@@ -985,10 +971,10 @@ minetest.register_node("waterdragon:draconic_forge_rare_water", {
 -- Stairs --
 ------------
 
-local register_stairs = minetest.settings:get_bool("register_stairs")
+local water_register_stairs = minetest.settings:get_bool("water_register_stairs")
 
 if minetest.get_modpath("stairs")
-and register_stairs then
+and water_register_stairs then
 	for i = 1, #stair_queue do
 		local name = stair_queue[i]
 		local def = minetest.registered_nodes[name]
