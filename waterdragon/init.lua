@@ -6,6 +6,14 @@ waterdragon = {
 	force_storage_save = false
 }
 
+waterdragon.S = nil
+
+if(minetest.get_translator ~= nil) then
+    waterdragon.S = minetest.get_translator(minetest.get_current_modname())
+else
+    waterdragon.S = function ( s ) return s end
+end
+
 local path = minetest.get_modpath("waterdragon")
 
 -- Global Tables --

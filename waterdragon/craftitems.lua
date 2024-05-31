@@ -1024,6 +1024,24 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "waterdragon:dragonstone_block_rare_water",
+	recipe = {
+		{"", "waterdragon:wet_stone", ""},
+		{"waterdragon:wet_stone", "waterdragon:wet_stone", "waterdragon:wet_stone"},
+		{"", "waterdragon:wet_stone", ""},
+	}
+})
+
+minetest.register_craft({
+	output = "waterdragon:dragonstone_block_pure_water",
+	recipe = {
+		{"", "waterdragon:wet_soil", ""},
+		{"waterdragon:wet_soil", "waterdragon:wet_soil", "waterdragon:wet_soil"},
+		{"", "waterdragon:wet_soil", ""},
+	}
+})
+
+minetest.register_craft({
 	output = "waterdragon:dragon_horn",
 	recipe = {
 		{"", "", pure_water_block},

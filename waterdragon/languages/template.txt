@@ -31,15 +31,15 @@ Rare Water-Forged Draconic Steel Ingot=
 Water Dragon Bone=
 Pure Water Dragon Scales=
 Rare Water Dragon Scales=
-Water Dragonstone Crucible
-Water Dragonstone Crucible (Full)
-Pure Water Dragonhide Pickaxe
-Rare Water Dragonhide Pickaxe
-Pure Water Dragonhide Axe
-Rare Water Dragonhide Axe
-Pure Water Dragonhide Shovel
-Rare Water Dragonhide Shovel
-Pure Water Dragonhide Sword
-Rare Water Dragonhide Sword
-Book of Dragon Uisge
+Water Dragonstone Crucible=
+Water Dragonstone Crucible (Full)=
+Pure Water Dragonhide Pickaxe=
+Rare Water Dragonhide Pickaxe=
+Pure Water Dragonhide Axe=
+Rare Water Dragonhide Axe=
+Pure Water Dragonhide Shovel=
+Rare Water Dragonhide Shovel=
+Pure Water Dragonhide Sword=
+Rare Water Dragonhide Sword=
+Book of Dragon Uisge=
 
