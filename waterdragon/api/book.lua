@@ -1,7 +1,8 @@
 -----------
--- book --
+-- Book --
 -----------
 
+local S = waterdragon.S
 local color = minetest.colorize
 
 local book_bg = {
@@ -333,7 +334,7 @@ end
 ---------------
 
 minetest.register_craftitem("waterdragon:book_waterdragon", {
-	description = "Book of Dragon Uisge",
+	description = S("Book of Dragon Uisge"),
 	inventory_image = "waterdragon_book_waterdragon.png",
 	stack_max = 1,
 	on_place = function(itemstack, player)

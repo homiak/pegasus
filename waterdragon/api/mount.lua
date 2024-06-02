@@ -1,6 +1,7 @@
 ---------------
 -- Mount API --
 ---------------
+local S = waterdragon.S
 
 waterdragon.mounted_player_data = {}
 
@@ -348,7 +349,7 @@ local function menu_form()
 	return table.concat(formspec, "")
 end
 
-minetest.register_chatcommand("water_dragon_mount_settings", {
+minetest.register_chatcommand("wtd_mount_settings", {
 	privs = {
 		interact = true,
 	},
@@ -362,11 +363,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname == "waterdragon:water_dragon_mount_settings" then
 		if fields.btn_view_point then
 			waterdragon.aux_key_setting[name] = "pov"
-			minetest.chat_send_player(name, "Sprint key now changes point of view")
+			minetest.chat_send_player(name, S("Sprint key now changes point of view"))
 		end
 		if fields.btn_pitch_toggle then
 			waterdragon.aux_key_setting[name] = "vert_method"
-			minetest.chat_send_player(name, "Sprint key now changes vertical movement method")
+			minetest.chat_send_player(name, S("Sprint key now changes vertical movement method"))
 		end
 	end
 end)

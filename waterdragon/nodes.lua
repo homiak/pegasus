@@ -58,7 +58,7 @@ register_node("waterdragon:stone_wet", {
 -- Dragonstone Blocks
 
 register_node("waterdragon:dragonstone_block_rare_water", {
-	description = "Rare Water Dragonstone Block",
+	description = S("Rare Water Dragonstone Block"),
 	tiles = {"waterdragon_dragonstone_block_rare_water.png"},
 	paramtype2 = "facedir",
 	place_param2 = 0,
@@ -68,7 +68,7 @@ register_node("waterdragon:dragonstone_block_rare_water", {
 }, true)
 
 register_node("waterdragon:dragonstone_block_pure_water", {
-	description = "Pure Water Dragonstone Block",
+	description = S("Pure Water Dragonstone Block"),
 	tiles = {"waterdragon_dragonstone_block_pure_water.png"},
 	paramtype2 = "facedir",
 	place_param2 = 0,
@@ -80,7 +80,7 @@ register_node("waterdragon:dragonstone_block_pure_water", {
 -- Soil --
 
 register_node("waterdragon:soil_wet", {
-	description = "Wet Soil",
+	description = S("Wet Soil"),
 	tiles = {"waterdragon_soil_wet.png"},
 	groups = {crumbly = 3, soil = 1},
 	sounds = waterdragon.sounds.dirt
@@ -89,7 +89,7 @@ register_node("waterdragon:soil_wet", {
 -- Wood Planks
 
 register_node("waterdragon:wood_planks_wet", {
-	description = "Wet Wood Planks",
+	description = S("Wet Wood Planks"),
 	tiles = {"waterdragon_wood_planks_wet.png"},
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
@@ -100,7 +100,7 @@ register_node("waterdragon:wood_planks_wet", {
 -- Stone Bricks --
 
 register_node("waterdragon:dragonstone_bricks_pure_water", {
-	description = "Pure Water Dragonstone Bricks",
+	description = S("Pure Water Dragonstone Bricks"),
 	tiles = {"waterdragon_dragonstone_bricks_pure_water.png"},
 	paramtype2 = "facedir",
 	place_param2 = 0,
@@ -110,7 +110,7 @@ register_node("waterdragon:dragonstone_bricks_pure_water", {
 }, true)
 
 register_node("waterdragon:dragonstone_bricks_rare_water", {
-	description = "Rare Water Dragonstone Bricks",
+	description = S("Rare Water Dragonstone Bricks"),
 	tiles = {"waterdragon_dragonstone_bricks_rare_water.png"},
 	paramtype2 = "facedir",
 	place_param2 = 0,
@@ -121,7 +121,7 @@ register_node("waterdragon:dragonstone_bricks_rare_water", {
 
 
 register_node("waterdragon:stone_bricks_wet", {
-	description = "Wet Stone Brick",
+	description = S("Wet Stone Brick"),
 	tiles = {"waterdragon_stone_brick_wet.png"},
 	paramtype2 = "facedir",
 	place_param2 = 0,
@@ -136,7 +136,7 @@ register_node("waterdragon:stone_bricks_wet", {
 
 for color in pairs(waterdragon.colors_pure_water) do
 	register_node("waterdragon:dragonhide_block_pure_water", {
-		description = "Pure Water Dragonhide Block",
+		description = S("Pure Water Dragonhide Block"),
 		tiles = {
 			"waterdragon_dragonhide_block_pure_water_top.png",
 			"waterdragon_dragonhide_block_pure_water_top.png",
@@ -152,7 +152,7 @@ end
 
 for color in pairs(waterdragon.colors_rare_water) do
 	register_node("waterdragon:dragonhide_block_rare_water", {
-		description = "Pure Water Dragonhide Block",
+		description = S("Pure Water Dragonhide Block"),
 		tiles = {
 			"waterdragon_dragonhide_block_rare_water_top.png",
 			"waterdragon_dragonhide_block_rare_water_top.png",
@@ -169,7 +169,7 @@ end
 -- Bone Pile --
 
 register_node("waterdragon:bone_pile_wet", {
-	description = "Wet Bone Pile",
+	description = S("Wet Bone Pile"),
 	tiles = {
 		"waterdragon_bone_pile_wet.png",
 	},
@@ -578,7 +578,7 @@ local function cool_crucible(pos, ingot)
 end
 
 minetest.register_node("waterdragon:draconic_forge_pure_water", {
-	description = "Pure Water Draconic Steel Forge",
+	description = S("Pure Water Draconic Steel Forge"),
 	tiles = {
 		"waterdragon_dragonstone_block_pure_water.png",
 		"waterdragon_dragonstone_block_pure_water.png",
@@ -801,7 +801,7 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 })
 
 minetest.register_node("waterdragon:draconic_forge_rare_water", {
-	description = "Rare Water Draconic Steel Forge",
+	description = S("Rare Water Draconic Steel Forge"),
 	tiles = {
 		"waterdragon_dragonstone_block_rare_water.png",
 		"waterdragon_dragonstone_block_rare_water.png",

@@ -212,7 +212,6 @@ creatura.register_mob("waterdragon:rare_water_dragon", {
 	end,
 	step_func = function(self, dtime, moveresult)
 		waterdragon.dragon_step(self, dtime, moveresult)
-		--minetest.chat_send_all(self:get_utility() or "no util")
 	end,
 	on_rightclick = function(self, clicker)
 		waterdragon.dragon_rightclick(self, clicker)

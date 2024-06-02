@@ -3,6 +3,7 @@
 ----------------
 
 -- Local Math --
+local S = waterdragon.S
 
 local function round(n, dec)
 	local mult = 10 ^ (dec or 0)
@@ -78,10 +79,10 @@ minetest.register_craftitem("waterdragon:dragon_water_drop", {
 
 		if entity and entity.hp <= 0 then
 			local ent_pos = entity:get_center_pos()
-			local particle = "creatura_particle_green.png"
+			local particle = "waterdragon_dragon_water_drop.png"
 			entity.hp = entity.max_health
 			entity:memorize("hp", entity.hp)
-			minetest.chat_send_player(user:get_player_name(), correct_name(entity.name) .. " has been revived!")
+			minetest.chat_send_player(user:get_player_name(), correct_name(entity.name) .. S(" has been revived!"))
 			minetest.add_particlespawner({
 				amount = 16,
 				time = 0.25,
@@ -105,7 +106,7 @@ minetest.register_craftitem("waterdragon:dragon_water_drop", {
 				glow = 16
 			})
 		else
-			minetest.chat_send_player(user:get_player_name(), "You must be pointing at a mob")
+			minetest.chat_send_player(user:get_player_name(), S("You must be pointing at a dead mob"))
 		end
 
 		-- Consume the item from the player's inventory
@@ -181,7 +182,7 @@ local dragon_eggs = {}
 
 for color in pairs(waterdragon.colors_pure_water) do
 	minetest.register_node("waterdragon:egg_pure_water", {
-		description = "Pure Water Dragon Egg",
+		description = S("Pure Water Dragon Egg"),
 		drawtype = "mesh",
 		paramtype = "light",
 		sunlight_propagates = true,
@@ -322,7 +323,7 @@ end
 
 for color in pairs(waterdragon.colors_rare_water) do
 	minetest.register_node("waterdragon:egg_rare_water", {
-		description = "Rare Water Dragon Egg",
+		description = S("Rare Water Dragon Egg"),
 		drawtype = "mesh",
 		paramtype = "light",
 		sunlight_propagates = true,
@@ -491,7 +492,7 @@ local function capture(player, ent)
 		waterdragon.force_storage_save = true
 		return stack
 	else
-		minetest.chat_send_player(player:get_player_name(), "This Dragon Horn already contains a Dragon")
+		minetest.chat_send_player(player:get_player_name(), S("This Dragon Horn already contains a Dragon"))
 		return false
 	end
 end
@@ -517,10 +518,10 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 	if player:get_player_control().sneak then
 		if stored_aging < 1 then
 			meta:set_int("stored_aging", 1)
-			minetest.chat_send_player(player:get_player_name(), "Your Water Dragon will age while stored.")
+			minetest.chat_send_player(player:get_player_name(), S("Your Water Dragon will age while stored"))
 		else
 			meta:set_int("stored_aging", 0)
-			minetest.chat_send_player(player:get_player_name(), "Your Water Dragon will not age while stored.")
+			minetest.chat_send_player(player:get_player_name(), S("Your Water Dragon will not age while stored"))
 		end
 		player:set_wielded_item(itemstack)
 		return itemstack
@@ -552,7 +553,7 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 		else
 			ent.object:set_pos(player:get_pos())
 		end
-		minetest.chat_send_player(player:get_player_name(), "Teleporting Water Dragon")
+		minetest.chat_send_player(player:get_player_name(), S("Teleporting Water Dragon"))
 	else -- Link Dragon to Horn
 		local ent = pointed_thing.ref and pointed_thing.ref:get_luaentity()
 		if ent
@@ -657,7 +658,7 @@ minetest.register_craftitem("waterdragon:dragonstone_crucible_full", {
 for color in pairs(waterdragon.colors_pure_water) do
 	-- Pick
 	minetest.register_tool("waterdragon:pick_dragonhide_pure_water", {
-		description = "Pure Water Dragonhide Pickaxe",
+		description = S("Pure Water Dragonhide Pickaxe"),
 		inventory_image = "waterdragon_dragonhide_pick_pure_water.png",
 		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
@@ -681,7 +682,7 @@ for color in pairs(waterdragon.colors_pure_water) do
 	end
 	-- Shovel
 	minetest.register_tool("waterdragon:shovel_dragonhide_pure_water", {
-		description = "Pure Water Dragonhide Shovel",
+		description = S("Pure Water Dragonhide Shovel"),
 		inventory_image = "waterdragon_dragonhide_shovel_pure_water.png",
 		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
@@ -705,7 +706,7 @@ for color in pairs(waterdragon.colors_pure_water) do
 	end
 	-- Axe
 	minetest.register_tool("waterdragon:axe_dragonhide_pure_water", {
-		description = "Pure Water Dragonhide Axe",
+		description = S("Pure Water Dragonhide Axe"),
 		inventory_image = "waterdragon_dragonhide_axe_pure_water.png",
 		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
@@ -729,7 +730,7 @@ for color in pairs(waterdragon.colors_pure_water) do
 	end
 	-- Sword
 	minetest.register_tool("waterdragon:sword_dragonhide_pure_water", {
-		description = "Pure Water Dragonhide Sword",
+		description = S("Pure Water Dragonhide Sword"),
 		inventory_image = "waterdragon_dragonhide_sword_pure_water.png",
 		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
@@ -757,7 +758,7 @@ end
 for color in pairs(waterdragon.colors_rare_water) do
 	-- Pickaxe
 	minetest.register_tool("waterdragon:pick_dragonhide_rare_water", {
-		description = "Rare Water Dragonhide Pickaxe",
+		description = S("Rare Water Dragonhide Pickaxe"),
 		inventory_image = "waterdragon_dragonhide_pick_rare_water.png",
 		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
@@ -781,7 +782,7 @@ for color in pairs(waterdragon.colors_rare_water) do
 	end
 	-- Shovel
 	minetest.register_tool("waterdragon:shovel_dragonhide_rare_water", {
-		description = "Rare Water Dragonhide Shovel",
+		description = S("Rare Water Dragonhide Shovel"),
 		inventory_image = "waterdragon_dragonhide_shovel_rare_water.png",
 		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
@@ -805,7 +806,7 @@ for color in pairs(waterdragon.colors_rare_water) do
 	end
 	-- Axe
 	minetest.register_tool("waterdragon:axe_dragonhide_rare_water", {
-		description = "Rare Water Dragonhide Axe",
+		description = S("Rare Water Dragonhide Axe"),
 		inventory_image = "waterdragon_dragonhide_axe_rare_water.png",
 		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
@@ -829,7 +830,7 @@ for color in pairs(waterdragon.colors_rare_water) do
 	end
 	-- Sword
 	minetest.register_tool("waterdragon:sword_dragonhide_rare_water", {
-		description = "Rare Water Dragonhide Sword",
+		description = S("Rare Water Dragonhide Sword"),
 		inventory_image = "waterdragon_dragonhide_sword_rare_water.png",
 		wield_scale = { x = 1.5, y = 1.5, z = 1 },
 		tool_capabilities = {
@@ -941,7 +942,7 @@ local elements = { "rare_water", "pure_water" }
 
 for _, element in pairs(elements) do
 	minetest.register_tool("waterdragon:pick_" .. element .. "_draconic_steel", {
-		description = correct_name(element) .. "-Forged Draconic Steel Pickaxe",
+		description = S(correct_name(element) .. "-Forged Draconic Steel Pickaxe"),
 		inventory_image = "waterdragon_" .. element .. "_draconic_steel_pick.png",
 		wield_scale = { x = 2, y = 2, z = 1 },
 		tool_capabilities = {
@@ -968,7 +969,7 @@ for _, element in pairs(elements) do
 	})
 
 	minetest.register_tool("waterdragon:shovel_" .. element .. "_draconic_steel", {
-		description = correct_name(element) .. "-Forged Draconic Steel Shovel",
+		description = S(correct_name(element) .. "-Forged Draconic Steel Shovel"),
 		inventory_image = "waterdragon_" .. element .. "_draconic_steel_shovel.png",
 		wield_scale = { x = 2, y = 2, z = 1 },
 		tool_capabilities = {
@@ -990,7 +991,7 @@ for _, element in pairs(elements) do
 	})
 
 	minetest.register_tool("waterdragon:axe_" .. element .. "_draconic_steel", {
-		description = correct_name(element) .. "-Forged Draconic Steel Axe",
+		description = S(correct_name(element) .. "-Forged Draconic Steel Axe"),
 		inventory_image = "waterdragon_" .. element .. "_draconic_steel_axe.png",
 		wield_scale = { x = 2, y = 2, z = 1 },
 		tool_capabilities = {
@@ -1012,7 +1013,7 @@ for _, element in pairs(elements) do
 	})
 
 	minetest.register_tool("waterdragon:sword_" .. element .. "_draconic_steel", {
-		description = correct_name(element) .. "-Forged Draconic Steel Sword",
+		description = S(correct_name(element) .. "-Forged Draconic Steel Sword"),
 		inventory_image = "waterdragon_" .. element .. "_draconic_steel_sword.png",
 		wield_scale = { x = 2, y = 2, z = 1 },
 		tool_capabilities = {
