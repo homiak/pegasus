@@ -1,6 +1,8 @@
 -----------------
--- pure_water Dragon --
+-- Pure Water Dragon --
 -----------------
+
+local S = waterdragon.S
 
 local creative = minetest.settings:get_bool("creative_mode")
 
@@ -259,7 +261,7 @@ creatura.register_mob("waterdragon:pure_water_dragon", {
 })
 
 creatura.register_spawn_item("waterdragon:pure_water_dragon", {
-	description = "Creative Pure Water Dragon Egg",
+	description = S("Creative Pure Water Dragon Egg"),
 	inventory_image = "waterdragon_creative_egg_pure_water.png"
 })
 

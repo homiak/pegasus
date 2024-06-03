@@ -1,6 +1,8 @@
 ----------------
--- rare_water Dragon --
+-- Rare Water Dragon --
 ----------------
+
+local S = waterdragon.S
 
 local creative = minetest.settings:get_bool("creative_mode")
 
@@ -260,7 +262,7 @@ creatura.register_mob("waterdragon:rare_water_dragon", {
 })
 
 creatura.register_spawn_item("waterdragon:rare_water_dragon", {
-	description = "Creative Rare Water Dragon Egg",
+	description = S("Creative Rare Water Dragon Egg"),
 	inventory_image = "waterdragon_creative_egg_rare_water.png"
 })
 

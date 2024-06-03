@@ -2,8 +2,10 @@
 -- Craftitems --
 ----------------
 
--- Local Math --
+
 local S = waterdragon.S
+
+-- Local Math --
 
 local function round(n, dec)
 	local mult = 10 ^ (dec or 0)
@@ -43,7 +45,7 @@ local function infotext(str, format)
 end
 
 local function get_binder_desc(self)
-	local info = "Dragon Horn\n" .. minetest.colorize("#bdd9ff", correct_name(self.name))
+	local info = S("Dragon Horn\n") .. minetest.colorize("#bdd9ff", correct_name(self.name))
 	if self.nametag == "" then
 		info = info .. "\n" .. infotext("Nameless Dragon")
 	else
@@ -63,7 +65,7 @@ end
 -----------
 
 minetest.register_craftitem("waterdragon:dragon_water_drop", {
-	description = "Drop of Dragon Water",
+	description = S("Drop of Dragon Water"),
 	inventory_image = "waterdragon_dragon_water_drop.png",
 	groups = { dragon_drops = 1 },
 	on_use = function(itemstack, user, pointed_thing)
@@ -118,7 +120,7 @@ minetest.register_craftitem("waterdragon:dragon_water_drop", {
 table.insert(dragon_drops, "waterdragon:dragon_water_drop")
 
 minetest.register_craftitem("waterdragon:dragon_bone", {
-	description = "Water Dragon Bone",
+	description = S("Water Dragon Bone"),
 	inventory_image = "waterdragon_dragon_bone.png",
 	groups = { bone = 1 }
 })
@@ -127,7 +129,7 @@ table.insert(dragon_drops, "waterdragon:dragon_bone")
 
 for color, hex in pairs(waterdragon.colors_pure_water) do
 	minetest.register_craftitem("waterdragon:scales_pure_water_dragon", {
-		description = "Pure Water Dragon Scales",
+		description = S("Pure Water Dragon Scales"),
 		inventory_image = "waterdragon_dragon_scales.png^[multiply:#" .. hex,
 		groups = { dragon_scales = 1 }
 	})
@@ -136,7 +138,7 @@ end
 
 for color, hex in pairs(waterdragon.colors_rare_water) do
 	minetest.register_craftitem("waterdragon:scales_rare_water_dragon", {
-		description = "Rare Water Dragon Scales",
+		description = S("Rare Water Dragon Scales"),
 		inventory_image = "waterdragon_dragon_scales.png^[multiply:#" .. hex,
 		groups = { dragon_scales = 1 }
 	})
@@ -148,13 +150,13 @@ end
 ---------------
 
 minetest.register_craftitem("waterdragon:draconic_steel_ingot_pure_water", {
-	description = "Pure Water-Forged Draconic Steel Ingot",
+	description = S("Pure Water-Forged Draconic Steel Ingot"),
 	inventory_image = "waterdragon_draconic_steel_ingot_pure_water.png",
 	stack_max = 1
 })
 
 minetest.register_craftitem("waterdragon:draconic_steel_ingot_rare_water", {
-	description = "Rare Water-Forged Draconic Steel Ingot",
+	description = S("Rare Water-Forged Draconic Steel Ingot"),
 	inventory_image = "waterdragon_draconic_steel_ingot_rare_water.png",
 	stack_max = 1
 })
@@ -531,7 +533,7 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 			meta:set_string("mob", nil)
 			meta:set_string("dragon_id", nil)
 			meta:set_string("staticdata", nil)
-			meta:set_string("description", "Dragon Horn")
+			meta:set_string("description", S("Dragon Horn"))
 			player:set_wielded_item(itemstack)
 			return itemstack
 		end
@@ -604,7 +606,7 @@ local function dragon_horn_place(itemstack, player, pointed_thing)
 				waterdragon.dragons[id].stored_in_item = false
 			end
 			waterdragon.force_storage_save = true
-			local desc = "Dragon Horn\n" .. minetest.colorize("#bdd9ff", correct_name(mob))
+			local desc = S("Dragon Horn\n") .. minetest.colorize("#bdd9ff", correct_name(mob))
 			if nametag ~= "" then
 				desc = desc .. "\n" .. infotext(nametag)
 			end
@@ -622,7 +624,7 @@ local function dragon_horn_place(itemstack, player, pointed_thing)
 end
 
 minetest.register_craftitem("waterdragon:dragon_horn", {
-	description = "Dragon Horn",
+	description = S("Dragon Horn"),
 	inventory_image = "waterdragon_dragon_horn.png",
 	stack_max = 1,
 	on_place = dragon_horn_place,
@@ -637,13 +639,13 @@ minetest.register_alias("waterdragon:dragon_flute", "waterdragon:dragon_horn")
 --------------
 
 minetest.register_craftitem("waterdragon:dragonstone_crucible", {
-	description = "Water Dragonstone Crucible",
+	description = S("Water Dragonstone Crucible"),
 	inventory_image = "waterdragon_dragonstone_crucible.png",
 	stack_max = 999
 })
 
 minetest.register_craftitem("waterdragon:dragonstone_crucible_full", {
-	description = "Water Dragonstone Crucible (Full)",
+	description = S("Water Dragonstone Crucible (Full)"),
 	inventory_image = "waterdragon_dragonstone_crucible_full.png",
 	stack_max = 1,
 	groups = { not_in_creative_inventory = 1 }
@@ -1424,7 +1426,7 @@ craft_boots({
 	material = "waterdragon:draconic_steel_ingot_pure_water"
 })
 
--- rare_water-Forged Draconic Steel Armor --
+-- Rare Water-Forged Draconic Steel Armor --
 
 craft_helmet({
 	output = "waterdragon:helmet_rare_water_draconic_steel",
@@ -1444,6 +1446,28 @@ craft_leggings({
 craft_boots({
 	output = "waterdragon:boots_rare_water_draconic_steel",
 	material = "waterdragon:draconic_steel_ingot_rare_water"
+})
+
+-- Draconic Scale Armor --
+
+craft_helmet({
+	output = "waterdragon:helmet_pure_water_draconic",
+	material = "waterdragon:scales_pure_water_dragon"
+})
+
+craft_chestplate({
+	output = "waterdragon:chestplate_pure_water_draconic",
+	material = "waterdragon:scales_pure_water_dragon"
+})
+
+craft_boots({
+	output = "waterdragon:boots_pure_water_draconic",
+	material = "waterdragon:scales_pure_water_dragon"
+})
+
+craft_leggings({
+	output = "waterdragon:leggings_pure_water_draconic",
+	material = "waterdragon:scales_pure_water_dragon"
 })
 
 ----------------------------------
