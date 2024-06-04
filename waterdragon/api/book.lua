@@ -341,7 +341,7 @@ minetest.register_craftitem("waterdragon:book_waterdragon", {
 		local meta = itemstack:get_meta()
 		local desc = meta:get_string("description")
 		if desc:find("Bestiary") then
-			meta:set_string("description", "Book of Dragon Uisge")
+			meta:set_string("description", S("Book of Dragon Uisge"))
 			meta:set_string("pages", nil)
 		end
 		local name = player:get_player_name()
@@ -351,7 +351,7 @@ minetest.register_craftitem("waterdragon:book_waterdragon", {
 		local meta = itemstack:get_meta()
 		local desc = meta:get_string("description")
 		if desc:find("Bestiary") then
-			meta:set_string("description", "Book of Dragon Uisge")
+			meta:set_string("description", S("Book of Dragon Uisge"))
 			meta:set_string("pages", nil)
 		end
 		local name = player:get_player_name()

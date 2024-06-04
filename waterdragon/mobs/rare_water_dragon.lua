@@ -49,7 +49,7 @@ creatura.register_mob("waterdragon:rare_water_dragon", {
 		"waterdragon_rare_water_dragon.png^waterdragon_baked_in_shading.png",
 	},
 	animations = {
-		stand = {range = {x = 1, y = 59}, speed = 20, frame_blend = 0.3, loop = true},
+		stand = {range = {x = 1, y = 59}, speed = 8, frame_blend = 0.3, loop = true},
 		stand_water = {range = {x = 61, y = 119}, speed = 20, frame_blend = 0.3, loop = true},
 		slam = {range = {x = 121, y = 159}, speed = 30, frame_blend = 0.3, loop = false},
 		repel = {range = {x = 161, y = 209}, speed = 30, frame_blend = 0.3, loop = false},

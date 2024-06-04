@@ -1198,6 +1198,15 @@ minetest.register_craft({
 	}
 })
 
+minetest.register_craft({
+	output = "waterdragon:bucket_dragon_water",
+	recipe = {
+		{ "group:wood", "waterdragon_dragon_water_drop", "group:wood" },
+		{ "group:wood", "waterdragon_dragon_water_drop", "group:wood" },
+		{ "", "group:wood", "" },
+	}
+})
+
 ---------------------------
 -- Quick Craft Functions --
 ---------------------------
@@ -1516,3 +1525,60 @@ minetest.register_on_craft(function(itemstack, player, old_craft_grid)
 		return itemstack
 	end
 end)
+
+minetest.register_craftitem("waterdragon:bucket_dragon_water", {
+	description = S("Bucket of Dragon Water"),
+	inventory_image = "waterdragon_bucket_dragon_water.png",
+	groups = { dragon_drops = 1 },
+	on_use = function(itemstack, player, pointed_thing)
+		if not player then return false end
+		local entity 
+        if pointed_thing.type == "object" then
+            -- If the player is pointing at an object, check if it's a mob
+            local pointed_object = pointed_thing.ref
+            entity = pointed_object:get_luaentity()
+        end
+		if entity
+		and entity.name:match("^waterdragon:")
+		and entity.memorize then
+			local ent_pos = entity:get_center_pos()
+			local particle = "waterdragon_dragon_water_drop.png"
+			if not entity.owner then
+				entity.owner = player:get_player_name()
+				entity:memorize("owner", entity.owner)
+				minetest.chat_send_player(player:get_player_name(), S(" has been tamed!"))
+			else
+				minetest.chat_send_player(player:get_player_name(), S(" is already tamed"))
+			end
+			minetest.add_particlespawner({
+				amount = 16,
+				time = 0.25,
+				minpos = {
+					x = ent_pos.x - entity.width,
+					y = ent_pos.y - entity.width,
+					z = ent_pos.z - entity.width
+				},
+				maxpos = {
+					x = ent_pos.x + entity.width,
+					y = ent_pos.y + entity.width,
+					z = ent_pos.z + entity.width
+				},
+				minacc = {x = 0, y = 0.25, z = 0},
+				maxacc = {x = 0, y = -0.25, z = 0},
+				minexptime = 0.75,
+				maxexptime = 1,
+				minsize = 4,
+				maxsize = 4,
+				texture = particle,
+				glow = 16
+			})
+		else
+			minetest.chat_send_player(player:get_player_name(), S("You must be pointing at a Water Dragon"))
+		end
+		-- Consume the item from the player's inventory
+		itemstack:take_item()
+		return itemstack
+	end
+})
+
+
