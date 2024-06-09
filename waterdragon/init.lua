@@ -135,7 +135,7 @@ dofile(path.."/mapgen.lua")
 
 local water_simple_spawning_dragons = minetest.settings:get_bool("water_simple_spawning_dragons") or false
 
-local spawn_rate = tonumber(minetest.settings:get("water_dragon_simple_spawn_rate")) or 80000
+local spawn_rate = tonumber(minetest.settings:get("water_dragon_simple_spawn_rate")) or 600
 
 if water_simple_spawning_dragons then
     creatura.register_mob_spawn("waterdragon:rare_water_dragon", {

@@ -12,7 +12,7 @@ local water_cavern_spawning = minetest.settings:get("water_cavern_spawning") or 
 
 local water_nest_spawn_rate = tonumber(minetest.settings:get("water_nest_spawn_rate")) or 128
 
-local water_cavern_spawn_rate = tonumber(minetest.settings:get("water_cavern_spawn_rate")) or 128
+local water_cavern_spawn_rate = tonumber(minetest.settings:get("water_cavern_spawn_rate")) or 40
 
 ---------------------
 -- Local Variables --

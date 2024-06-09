@@ -62,9 +62,9 @@ creatura.register_mob("waterdragon:rare_water_dragon", {
 		fly = {range = {x = 401, y = 439}, speed = 30, frame_blend = 0.3, loop = true},
 		fly_pure_water = {range = {x = 441, y = 479}, speed = 30, frame_blend = 0.3, loop = true},
 		land = {range = {x = 481, y = 509}, speed = 30, frame_blend = 0.3, loop = false},
-		sleep = {range = {x = 511, y = 569.5}, speed = 10, frame_blend = 1, prty = 2, loop = true},
+		sleep = {range = {x = 511, y = 569.5}, speed = 6, frame_blend = 1, prty = 2, loop = true},
 		death = {range = {x = 571, y = 579}, speed = 30, frame_blend = 5, prty = 3, loop = false},
-		shoulder_idle = {range = {x = 581, y = 639}, speed = 30, frame_blend = 0.6, loop = true}
+		shoulder_idle = {range = {x = 581, y = 639}, speed = 30, frame_blend = 0.6, loop = true},
 	},
 	-- Misc
 	sounds = {
@@ -271,7 +271,7 @@ local spawn_egg_def = minetest.registered_items["waterdragon:spawn_rare_water_dr
 spawn_egg_def.on_place = function(itemstack, _, pointed_thing)
 	local pos = minetest.get_pointed_thing_position(pointed_thing, true)
 	waterdragon.spawn_dragon(pos, "waterdragon:rare_water_dragon", false, math.random(75, 100))
-	if not creative then
+	if creative then
 		itemstack:take_item()
 		return itemstack
 	end

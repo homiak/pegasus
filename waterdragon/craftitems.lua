@@ -81,10 +81,10 @@ minetest.register_craftitem("waterdragon:dragon_water_drop", {
 
 		if entity and entity.hp <= 0 then
 			local ent_pos = entity:get_center_pos()
-			local particle = "waterdragon_dragon_water_drop.png"
+			local particle = "creatura_particle_green.png"
 			entity.hp = entity.max_health
 			entity:memorize("hp", entity.hp)
-			minetest.chat_send_player(user:get_player_name(), correct_name(entity.name) .. S(" has been revived!"))
+			minetest.chat_send_player(user:get_player_name(), S(" has been revived!"))
 			minetest.add_particlespawner({
 				amount = 16,
 				time = 0.25,
@@ -1542,7 +1542,7 @@ minetest.register_craftitem("waterdragon:bucket_dragon_water", {
 		and entity.name:match("^waterdragon:")
 		and entity.memorize then
 			local ent_pos = entity:get_center_pos()
-			local particle = "waterdragon_dragon_water_drop.png"
+			local particle = "creatura_particle_green.png"
 			if not entity.owner then
 				entity.owner = player:get_player_name()
 				entity:memorize("owner", entity.owner)

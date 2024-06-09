@@ -1312,60 +1312,9 @@ end)
 minetest.register_privilege("dragon_uisge", {
 	description = "Allows Player to customize and force tame Water Dragons",
 	give_to_singleplayer = false,
-	give_to_admin = true
+	give_to_admin = false
 })
 
-minetest.register_chatcommand("tame_wtd", {
-	description = "Tames pointed Water Dragon",
-	privs = {dragon_uisge = true},
-	func = function(name)
-		local player = minetest.get_player_by_name(name)
-		if not player then return false end
-		local dir = player:get_look_dir()
-		local pos = player:get_pos()
-		pos.y = pos.y + player:get_properties().eye_height or 1.625
-		local dest = vec_add(pos, vec_multi(dir, 40))
-		local object, ent = get_pointed_mob(pos, dest)
-		if object
-		and ent.name:match("^waterdragon:")
-		and ent.memorize then
-			local ent_pos = object:get_pos()
-			local particle = "waterdragon_dragon_water_drop.png"
-			if not ent.owner then
-				ent.owner = name
-				ent:memorize("owner", ent.owner)
-				minetest.chat_send_player(name, S(" has been tamed!"))
-			else
-				minetest.chat_send_player(name, S(" is already tamed"))
-				particle = "waterdragon_dragon_water_drop.png"
-			end
-			minetest.add_particlespawner({
-				amount = 16,
-				time = 0.25,
-				minpos = {
-					x = ent_pos.x - ent.width,
-					y = ent_pos.y - ent.width,
-					z = ent_pos.z - ent.width
-				},
-				maxpos = {
-					x = ent_pos.x + ent.width,
-					y = ent_pos.y + ent.width,
-					z = ent_pos.z + ent.width
-				},
-				minacc = {x = 0, y = 0.25, z = 0},
-				maxacc = {x = 0, y = -0.25, z = 0},
-				minexptime = 0.75,
-				maxexptime = 1,
-				minsize = 4,
-				maxsize = 4,
-				texture = particle,
-				glow = 16
-			})
-		else
-			minetest.chat_send_player(name, S("You must be pointing at a Water Dragon"))
-		end
-	end
-})
 
 minetest.register_chatcommand("set_wtd_owner", {
 	description = "Sets owner of pointed Water Dragon",
@@ -1382,7 +1331,7 @@ minetest.register_chatcommand("set_wtd_owner", {
 		local object, ent = get_pointed_mob(pos, dest)
 		if object then
 			local ent_pos = ent:get_center_pos()
-			local particle = "waterdragon_dragon_water_drop.png"
+			local particle = "creatura_particle_green.png"
 			ent.owner = param_name
 			ent:memorize("owner", ent.owner)
 			minetest.chat_send_player(name, S(" is now owned by ") .. param_name)
@@ -1535,7 +1484,7 @@ function waterdragon.dragon_activate(self)
 	else
 		self.growth_stage = 4
 	end
-	self.hunger = self:recall("hunger") or ((self.max_health * 0.5) * self.growth_scale) * 0.5
+	self.hunger = self:recall("hunger") or ((self.max_health * 0.3) * self.growth_scale) * 0.3
 	self:set_scale(self.growth_scale)
 	self:do_growth()
 	self:set_drops()
@@ -1551,7 +1500,7 @@ function waterdragon.dragon_activate(self)
 	self.owner = self:recall("owner") or false
 	self.stance = self:recall("stance") or "neutral"
 	self.order = self:recall("order") or "wander"
-	self.fly_allowed = self:recall("fly_allowed") or false
+	self.fly_allowed = self:recall("fly_allowed") or true
 	self.aux_setting = self:recall("aux_setting") or "toggle_view"
 	self.pitch_fly = self:recall("pitch_fly") or false
 	self.shoulder_mounted = false
@@ -1742,7 +1691,7 @@ function waterdragon.dragon_rightclick(self, clicker)
 	local name = clicker:get_player_name()
 	local inv = minetest.get_inventory({type = "player", name = name})
 	if waterdragon.contains_book(inv) then
-		waterdragon.add_page(inv, "dragons")
+		waterdragon.add_page(inv, "waterdragons")
 	end
 	if self.hp <= 0 then
 		if waterdragon.drop_items(self) then

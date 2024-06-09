@@ -22,7 +22,7 @@ local book_pages = {
 			file = "waterdragon_book_home.txt"
 		},
 		{ -- Next Page
-			unlock_key = "dragons",
+			unlock_key = "waterdragons",
 			element_type = "image_button",
 			font_size = 24,
 			offset = {x = 15, y = 9},
@@ -35,7 +35,7 @@ local book_pages = {
 			font_size = 24,
 			offset = {x = 10.5, y = 1.5},
 			size = {x = 4, y = 1},
-			text = "btn_dragons;Chapter 1: waterdragons"
+			text = "btn_dragons;Chapter 1: Water Dragons"
 		},
 		{ -- Chapter 2
 			unlock_key = "draconic_steel",
@@ -416,7 +416,6 @@ end)
 -- To Do
 
 -- Flight Stamina
--- forms.lua translation
 -- 3D model (optional)
 -- on/off breath (optional)
 -- book/libri

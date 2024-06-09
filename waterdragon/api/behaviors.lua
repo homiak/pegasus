@@ -1055,7 +1055,7 @@ waterdragon.dragon_behavior = {
 			if name then
 				local inv = minetest.get_inventory({type = "player", name = name})
 				if waterdragon.contains_book(inv) then
-					waterdragon.add_page(inv, "dragons")
+					waterdragon.add_page(inv, "waterdragons")
 				end
 			end
 			self._target = target
