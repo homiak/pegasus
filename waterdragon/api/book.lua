@@ -411,3 +411,12 @@ minetest.register_globalstep(function()
         end
     end
 end)
+
+
+-- To Do
+
+-- Flight Stamina
+-- forms.lua translation
+-- 3D model (optional)
+-- on/off breath (optional)
+-- book/libri
