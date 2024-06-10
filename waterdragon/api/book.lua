@@ -21,6 +21,13 @@ local book_pages = {
 			offset = {x = 0, y = 1.5},
 			file = "waterdragon_book_home.txt"
 		},
+		{ -- Water Dragon Image
+		element_type = "image",
+		font_size = 24,
+		offset = {x = 8.19, y = 1.19},
+		size = {x = 8.5, y = 8.5},
+		text = "waterdragon_book_img_water_dragon_3.png"
+		},
 		{ -- Next Page
 			unlock_key = "waterdragons",
 			element_type = "image_button",
@@ -29,22 +36,6 @@ local book_pages = {
 			size = {x = 1, y = 1},
 			text = "waterdragon_book_icon_next.png;btn_next;;true;false"
 		},
-		{ -- Chapter 1
-			unlock_key = "waterdragons",
-			element_type = "button",
-			font_size = 24,
-			offset = {x = 10.5, y = 1.5},
-			size = {x = 4, y = 1},
-			text = "btn_dragons;Chapter 1: Water Dragons"
-		},
-		{ -- Chapter 2
-			unlock_key = "draconic_steel",
-			element_type = "button",
-			font_size = 24,
-			offset = {x = 10.5, y = 5.5},
-			size = {x = 4, y = 1},
-			text = "btn_draconic_steel;Chapter 2: Water-Forged Draconic Steel"
-		}
 	},
 	-- Chapter 1
 	{ -- Dragons Page 1
@@ -112,14 +103,20 @@ local book_pages = {
 			offset = {x = 0, y = 1.5},
 			file = "waterdragon_book_dragon3.txt"
 		},
-		{ -- Water Dragon Image
-		element_type = "image",
-		font_size = 24,
-		offset = {x = 7.5, y = 0.5},
-		size = {x = 9, y = 9},
-		text = "waterdragon_book_img_water_dragon_3.png"
+		{ -- Water Dragon Text
+			element_type = "label",
+			font_size = 24,
+			offset = {x = 8, y = 1.5},
+			file = "waterdragon_book_dragon5.txt"
+		},
+		{ -- Next Page
+			element_type = "image_button",
+			offset = {x = 15, y = 9},
+			size = {x = 1, y = 1},
+			text = "waterdragon_book_icon_next.png;btn_next;;true;false"
 		},
 		{ -- Last Page
+			unlock_key = "draconic_steel",
 			element_type = "image_button",
 			font_size = 24,
 			offset = {x = 1, y = 9},
@@ -131,6 +128,7 @@ local book_pages = {
 	-- Chapter 2
 	{ -- Steel Page 1
 		{ -- Main Page
+			unlock_key = "draconic_steel",
 			element_type = "label",
 			font_size = 24,
 			offset = {x = 0, y = 1.5},
@@ -147,6 +145,13 @@ local book_pages = {
 			offset = {x = 15, y = 9},
 			size = {x = 1, y = 1},
 			text = "waterdragon_book_icon_next.png;btn_next;;true;false"
+		},
+		{ -- Last Page
+			element_type = "image_button",
+			font_size = 24,
+			offset = {x = 1, y = 9},
+			size = {x = 1, y = 1},
+			text = "waterdragon_book_icon_last.png;btn_last;;true;false"
 		}
 	},
 { -- Steel Page 2
@@ -270,7 +275,7 @@ local function prepare_element(def, meta, playername)
 		local font_size_x = (waterdragon.book_font_size[playername] or 1)
 		local font_size = (def.font_size or 16) * font_size_x
 		if def.file then
-			local filename = minetest.get_modpath("waterdragon") .. "/book/" .. def.file
+			local filename = minetest.get_modpath("waterdragon") .. "/book_of_waterdragon/" .. def.file
 			local file = io.open(filename)
 			if file then
 				local full_text = ""
@@ -291,8 +296,7 @@ local function prepare_element(def, meta, playername)
 	else
 		-- Add Images/Interaction
 		local render = false
-		if def.unlock_key
-		and #chapters > 0 then
+		if def.unlock_key and #chapters > 0 then
 			for _, chapter in ipairs(chapters) do
 				if chapter
 				and chapter == def.unlock_key then
@@ -388,7 +392,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		return true
 	end
 	if fields.btn_draconic_steel then
-		minetest.show_formspec(plyr_name, "waterdragon:book_page_" .. 6, getPage(6, meta, plyr_name))
+		minetest.show_formspec(plyr_name, "waterdragon:book_page_" .. 5, getPage(5, meta, plyr_name))
 		return true
 	end
 	if fields.drp_font_scale

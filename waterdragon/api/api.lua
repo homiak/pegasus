@@ -106,7 +106,7 @@ local function get_pointed_mob(a, b)
 		local objects = minetest.get_objects_in_area(vec_sub(pos, 6), vec_add(pos, 6))
 		for _, object in pairs(objects) do
 			if object
-			and object:get_luaentity() then
+				and object:get_luaentity() then
 				local ent = object:get_luaentity()
 				if ent.name:match("^waterdragon:") then
 					return object, ent
@@ -142,12 +142,12 @@ minetest.register_on_mods_loaded(function()
 					wet_conversions[name] = "waterdragon:log_wet" -- wet Log
 					wet_conversions[name] = "waterdragon:log_wet" -- wet Log
 				elseif minetest.get_item_group(name, "flora") > 0
-				or minetest.get_item_group(name, "leaves") > 0
-				or minetest.get_item_group(name, "snowy") > 0 then
+					or minetest.get_item_group(name, "leaves") > 0
+					or minetest.get_item_group(name, "snowy") > 0 then
 					wet_conversions[name] = "air"
 				end
 			elseif def.drawtype == "liquid"
-			and minetest.get_item_group(name, "water") > 0 then
+				and minetest.get_item_group(name, "water") > 0 then
 				wet_conversions[name] = waterdragon.global_nodes["rare_water"]
 			end
 		end
@@ -158,16 +158,11 @@ minetest.after(0.1, function()
 	flame_node = waterdragon.global_nodes["flame"]
 end)
 
-local pure_water_eye_textures = {
+local water_eye_textures = {
 	"blue",
 	"orange",
-	"red"
-}
-
-local rare_water_eye_textures = {
-	"blue",
-	"orange",
-	"red"
+	"red",
+	"yellow"
 }
 
 
@@ -212,7 +207,7 @@ function waterdragon.generate_id()
 	if waterdragon.dragons[idst] then
 		local fail_safe = 20
 		while waterdragon.dragons[idst]
-		and fail_safe > 0 do
+			and fail_safe > 0 do
 			for _ = 0, 5 do idst = idst .. (random(0, 9)) end
 			fail_safe = fail_safe - 1
 		end
@@ -287,7 +282,9 @@ waterdragon.generate_texture = generate_texture
 
 function waterdragon.drop_items(self)
 	if not creatura.is_valid(self)
-	or not self.object:get_pos() then return end
+		or not self.object:get_pos() then
+		return
+	end
 	if not self.drop_queue then
 		self.drop_queue = {}
 		for i = 1, #self.drops do
@@ -298,7 +295,7 @@ function waterdragon.drop_items(self)
 			local chance = drop_def.chance
 			local amount = random(min_amount, max_amount)
 			if random(chance) < 2 then
-				table.insert(self.drop_queue, {name = name, amount = amount})
+				table.insert(self.drop_queue, { name = name, amount = amount })
 			end
 		end
 		self:memorize("drop_queue", self.drop_queue)
@@ -320,10 +317,10 @@ function waterdragon.drop_items(self)
 			time = 0.25,
 			minpos = minpos,
 			maxpos = maxpos,
-			minacc = {x = 0, y = 2, z = 0},
-			maxacc = {x = 0, y = 3, z = 0},
-			minvel = {x = math.random(-1, 1), y = -0.25, z = math.random(-1, 1)},
-			maxvel = {x = math.random(-2, 2), y = -0.25, z = math.random(-2, 2)},
+			minacc = { x = 0, y = 2, z = 0 },
+			maxacc = { x = 0, y = 3, z = 0 },
+			minvel = { x = math.random(-1, 1), y = -0.25, z = math.random(-1, 1) },
+			maxvel = { x = math.random(-2, 2), y = -0.25, z = math.random(-2, 2) },
 			minexptime = 0.75,
 			maxexptime = 1,
 			minsize = 4,
@@ -412,7 +409,7 @@ function waterdragon.head_tracking(self)
 	if not pos then return end
 	local anim = self._anim or "stand"
 	if anim == "sleep"
-	or self.hp <= 0 then
+		or self.hp <= 0 then
 		self:move_head(yaw)
 		return
 	end
@@ -434,7 +431,10 @@ function waterdragon.head_tracking(self)
 		plyr_pos.y = plyr_pos.y + 1.4
 		local dir = vec_dir(pos, plyr_pos)
 		local dist = vec_dist(pos, plyr_pos)
-		if dist > 24 * scale then self.head_tracking = nil return end
+		if dist > 24 * scale then
+			self.head_tracking = nil
+			return
+		end
 		local tyaw = dir2yaw(dir)
 		self:move_head(tyaw, dir.y)
 		return
@@ -454,7 +454,7 @@ local effect_cooldown = {}
 minetest.register_entity("waterdragon:dragon_rare_water", {
 	max_hp = 40,
 	physical = true,
-	collisionbox = {-0.1, -0.1, -0.1, 0.1, 0.1, 0.1},
+	collisionbox = { -0.1, -0.1, -0.1, 0.1, 0.1, 0.1 },
 	visual = "mesh",
 	mesh = "waterdragon_dragon_rare_water.obj",
 	textures = {
@@ -463,13 +463,13 @@ minetest.register_entity("waterdragon:dragon_rare_water", {
 	use_texture_alpha = true,
 	active_time = 0,
 	on_activate = function(self)
-		self.object:set_armor_groups({immortal = 1, fleshy = 0})
-		self.object:set_acceleration({x = 0, y = -9.8, z = 0})
+		self.object:set_armor_groups({ immortal = 1, fleshy = 0 })
+		self.object:set_acceleration({ x = 0, y = -9.8, z = 0 })
 	end,
 	on_step = function(self, dtime)
 		if self.active_time > 0
-		and (not self.child
-		or not self.child:get_pos()) then
+			and (not self.child
+				or not self.child:get_pos()) then
 			self.object:remove()
 			return
 		end
@@ -488,7 +488,7 @@ minetest.register_entity("waterdragon:dragon_rare_water", {
 minetest.register_entity("waterdragon:dragon_pure_water", {
 	max_hp = 40,
 	physical = false,
-	collisionbox = {-0.1, -0.1, -0.1, 0.1, 0.1, 0.1},
+	collisionbox = { -0.1, -0.1, -0.1, 0.1, 0.1, 0.1 },
 	visual = "mesh",
 	mesh = "waterdragon_dragon_pure_water.obj",
 	textures = {
@@ -499,11 +499,11 @@ minetest.register_entity("waterdragon:dragon_pure_water", {
 	pure_water_time = 0.07,
 	pure_water_frame = 1,
 	on_activate = function(self)
-		self.object:set_armor_groups({immortal = 1, fleshy = 0})
+		self.object:set_armor_groups({ immortal = 1, fleshy = 0 })
 	end,
 	on_step = function(self, dtime)
 		if not self.child
-		or not self.child:get_pos() then
+			or not self.child:get_pos() then
 			self.object:remove()
 			return
 		end
@@ -522,18 +522,18 @@ minetest.register_entity("waterdragon:dragon_pure_water", {
 			end
 		end
 		if self.active_time - math.floor(self.active_time) < 0.1
-		and (self.child:get_luaentity()
-		or self.child:is_player()) then
+			and (self.child:get_luaentity()
+				or self.child:is_player()) then
 			local ent = self.child:get_luaentity()
 			if ((ent and ent.hp) or 0) > 0 then
-				self.child:punch(self.object, 0, {fleshy=2})
+				self.child:punch(self.object, 0, { fleshy = 2 })
 			end
 			if ent
-			and ent._creatura_mob
-			and ((ent and ent.hp) or 0) <= 0
-			and ent.drops then
+				and ent._creatura_mob
+				and ((ent and ent.hp) or 0) <= 0
+				and ent.drops then
 				if #ent.drops
-				and #ent.drops > 0 then
+					and #ent.drops > 0 then
 					local n_drops = table.copy(ent.drops)
 					for n = 1, #n_drops do
 						local name = n_drops[n].name
@@ -541,11 +541,11 @@ minetest.register_entity("waterdragon:dragon_pure_water", {
 							local output = minetest.get_craft_result({
 								method = "cooking",
 								width = 1,
-								items = {name}
+								items = { name }
 							})
 							if output.item
-							and output.item:get_name()
-							and output.item:get_name() ~= "" then
+								and output.item:get_name()
+								and output.item:get_name() ~= "" then
 								local cooked_name = output.item:get_name()
 								n_drops[n].name = cooked_name
 							end
@@ -581,22 +581,22 @@ local function damage_objects(self, pos, radius)
 		local ent = object and object:get_luaentity()
 		local damage = object:is_player()
 		if (self.rider and object == self.rider)
-		or (self.passenger and object == self.passenger) then
+			or (self.passenger and object == self.passenger) then
 			damage = false
 		elseif ent then
 			local is_mob = ent.logic ~= nil or ent._creatura_mob or ent._cmi_is_mob
 			damage = is_mob and (ent.hp or ent.health or 0) > 0
 		end
 		if damage then
-			object:punch(self.object, 1.0, {damage_groups = {fleshy = math.ceil(self.damage * 0.33)}})
+			object:punch(self.object, 1.0, { damage_groups = { fleshy = math.ceil(self.damage * 0.33) } })
 			--self:punch_target(object, math.ceil(self.damage * 0.2))
 		end
 		if ent and ent.name == "__builtin:item" then
 			local stack = ItemStack(ent.itemstring)
 			if stack
-			and stack:get_count() > 98
-			and stack:get_name():match("stone")
-			and minetest.get_item_group(stack:get_name(), "cracky") > 0 then
+				and stack:get_count() > 98
+				and stack:get_name():match("stone")
+				and minetest.get_item_group(stack:get_name(), "cracky") > 0 then
 				local dragonstone_no = floor(stack:get_count() / 99)
 				local leftover_no = stack:get_count() - 99 * dragonstone_no
 				if self.name == "waterdragon:rare_water_dragon" then
@@ -617,7 +617,7 @@ end
 local function make_wet_nodes(pos, radius)
 	local h_stride = radius
 	local v_stride = math.ceil(radius * 0.5)
-	local pos1= {
+	local pos1 = {
 		x = pos.x - h_stride,
 		y = pos.y - v_stride,
 		z = pos.z - h_stride
@@ -643,14 +643,14 @@ local function make_wet_nodes(pos, radius)
 				end
 				local name = minetest.get_node(npos).name
 				if name
-				and not name:find("wet")
-				and name ~= "air"
-				and name ~= "ignore" then
+					and not name:find("wet")
+					and name ~= "air"
+					and name ~= "ignore" then
 					local convert_to = wet_conversions[name]
 					if convert_to
-					and (convert_to ~= waterdragon.global_nodes["rare_water"]
-					or minetest.get_node({x = x, y = npos.y + 1, z = z}).name == "air") then
-						minetest.set_node(npos, {name = convert_to})
+						and (convert_to ~= waterdragon.global_nodes["rare_water"]
+							or minetest.get_node({ x = x, y = npos.y + 1, z = z }).name == "air") then
+						minetest.set_node(npos, { name = convert_to })
 					end
 				end
 			end
@@ -661,7 +661,7 @@ end
 local function make_nodes_wet(pos, radius)
 	local h_stride = radius
 	local v_stride = math.ceil(radius * 0.5)
-	local pos1= {
+	local pos1 = {
 		x = pos.x - h_stride,
 		y = pos.y - v_stride,
 		z = pos.z - h_stride
@@ -687,14 +687,14 @@ local function make_nodes_wet(pos, radius)
 				end
 				local name = minetest.get_node(npos).name
 				if name
-				and not name:find("wet")
-				and name ~= "air"
-				and name ~= "ignore" then
+					and not name:find("wet")
+					and name ~= "air"
+					and name ~= "ignore" then
 					local convert_to = wet_conversions[name]
 					if convert_to
-					and (convert_to ~= waterdragon.global_nodes["pure_water"]
-					or minetest.get_node({x = x, y = npos.y + 1, z = z}).name == "air") then
-						minetest.set_node(npos, {name = convert_to})
+						and (convert_to ~= waterdragon.global_nodes["pure_water"]
+							or minetest.get_node({ x = x, y = npos.y + 1, z = z }).name == "air") then
+						minetest.set_node(npos, { name = convert_to })
 					end
 				end
 			end
@@ -729,7 +729,7 @@ function waterdragon.pure_water_breath(self, pos2)
 		self:memorize("attack_disabled", self.attack_disabled)
 		return
 	elseif self.attack_stamina > 25
-	and self.attack_disabled then
+		and self.attack_disabled then
 		self.attack_disabled = false
 		self:memorize("attack_disabled", self.attack_disabled)
 	end
@@ -753,13 +753,13 @@ function waterdragon.pure_water_breath(self, pos2)
 				collisiondetection = true,
 				collision_removal = true,
 				pos = particle_origin,
-				vel = {min = vec_multi(dir, 32), max = vec_multi(dir, 48)},
-				acc = {min = vec_new(-4, -4, -4), max = vec_new(4, 4, 4)},
-				size = {min = 8 * scale, max = 12 * scale},
+				vel = { min = vec_multi(dir, 32), max = vec_multi(dir, 48) },
+				acc = { min = vec_new(-4, -4, -4), max = vec_new(4, 4, 4) },
+				size = { min = 8 * scale, max = 12 * scale },
 				glow = 16,
 				texture = {
 					name = "waterdragon_water_particle.png",
-					alpha_tween = {0.75, 0.25},
+					alpha_tween = { 0.75, 0.25 },
 					blend = "alpha"
 				}
 			})
@@ -771,8 +771,8 @@ function waterdragon.pure_water_breath(self, pos2)
 				maxpos = particle_origin,
 				minvel = vec_multi(dir, 32),
 				maxvel = vec_multi(dir, 48),
-				minacc = {x = -4, y = -4, z = -4},
-				maxacc = {x = 4, y = 4, z = 4},
+				minacc = { x = -4, y = -4, z = -4 },
+				maxacc = { x = 4, y = 4, z = 4 },
 				minexptime = 0.02 * 32,
 				maxexptime = 0.04 * 32,
 				minsize = 8 * scale,
@@ -793,7 +793,7 @@ function waterdragon.pure_water_breath(self, pos2)
 			end
 			local def = creatura.get_node_def(pure_water_pos)
 			if def.walkable
-			or def.drawtype == "liquid" then
+				or def.drawtype == "liquid" then
 				breath_end = pure_water_pos
 				break
 			end
@@ -814,7 +814,7 @@ function waterdragon.rare_water_breath(self, pos2)
 		self:memorize("attack_disabled", self.attack_disabled)
 		return
 	elseif self.attack_stamina > 25
-	and self.attack_disabled then
+		and self.attack_disabled then
 		self.attack_disabled = false
 		self:memorize("attack_disabled", self.attack_disabled)
 	end
@@ -838,14 +838,14 @@ function waterdragon.rare_water_breath(self, pos2)
 				collisiondetection = true,
 				collision_removal = true,
 				pos = particle_origin,
-				vel = {min = vec_multi(dir, 32), max = vec_multi(dir, 48)},
-				acc = {min = vec_new(-4, -4, -4), max = vec_new(4, 4, 4)},
-				size = {min = 6 * scale, max = 8 * scale},
+				vel = { min = vec_multi(dir, 32), max = vec_multi(dir, 48) },
+				acc = { min = vec_new(-4, -4, -4), max = vec_new(4, 4, 4) },
+				size = { min = 6 * scale, max = 8 * scale },
 				glow = 16,
 				texpool = {
-					{name = "waterdragon_rare_water_particle_1.png", alpha_tween = {1, 0}, blend = "alpha"},
-					{name = "waterdragon_rare_water_particle_2.png", alpha_tween = {1, 0}, blend = "alpha"},
-					{name = "waterdragon_rare_water_particle_3.png", alpha_tween = {1, 0}, blend = "alpha"},
+					{ name = "waterdragon_rare_water_particle_1.png", alpha_tween = { 1, 0 }, blend = "alpha" },
+					{ name = "waterdragon_rare_water_particle_2.png", alpha_tween = { 1, 0 }, blend = "alpha" },
+					{ name = "waterdragon_rare_water_particle_3.png", alpha_tween = { 1, 0 }, blend = "alpha" },
 				}
 			})
 		else
@@ -856,8 +856,8 @@ function waterdragon.rare_water_breath(self, pos2)
 				maxpos = particle_origin,
 				minvel = vec_multi(dir, 32),
 				maxvel = vec_multi(dir, 48),
-				minacc = {x = -4, y = -4, z = -4},
-				maxacc = {x = 4, y = 4, z = 4},
+				minacc = { x = -4, y = -4, z = -4 },
+				maxacc = { x = 4, y = 4, z = 4 },
 				minexptime = 0.02 * 32,
 				maxexptime = 0.04 * 32,
 				minsize = 6 * scale,
@@ -909,7 +909,7 @@ waterdragon.dragon_api = {
 			self._anim = anim
 			local old_prty = 1
 			if old_anim
-			and self.animations[old_anim].prty then
+				and self.animations[old_anim].prty then
 				old_prty = self.animations[old_anim].prty
 			end
 			local prty = 1
@@ -937,8 +937,8 @@ waterdragon.dragon_api = {
 		self.age = self:memorize("age", self.age + 1)
 		local age = self.age
 		if age < 150
-		or (age > 150
-		and age < 1.5) then -- second check ensures pre-1.2 dragons grow to new limit
+			or (age > 150
+				and age < 1.5) then -- second check ensures pre-1.2 dragons grow to new limit
 			self.growth_scale = self:memorize("growth_scale", self.growth_scale + 0.0099)
 			self:set_scale(self.growth_scale)
 			if age <= 25 then
@@ -980,29 +980,29 @@ waterdragon.dragon_api = {
 		local stage = self.growth_stage
 		local drops = {
 			[1] = {
-				{name = "waterdragon:scales_" .. type .. "_dragon", min = 1, max = 3, chance = 2},
+				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 1, max = 3, chance = 2 },
 			},
 			[2] = {
-				{name = "waterdragon:scales_" .. type .. "_dragon", min = 4, max = 12, chance = 2},
-				{name = "waterdragon:dragon_bone", min = 1, max = 3, chance = 3}
+				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 4, max = 12, chance = 2 },
+				{ name = "waterdragon:dragon_bone",                  min = 1, max = 3,  chance = 3 }
 			},
 			[3] = {
-				{name = "waterdragon:scales_" .. type .. "_dragon", min = 8, max = 20, chance = 1},
-				{name = "waterdragon:dragon_bone", min = 3, max = 8, chance = 1}
+				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 8, max = 20, chance = 1 },
+				{ name = "waterdragon:dragon_bone",                  min = 3, max = 8,  chance = 1 }
 			},
 			[4] = {
-				{name = "waterdragon:scales_" .. type .. "_dragon", min = 16, max = 24, chance = 1},
-				{name = "waterdragon:dragon_bone", min = 6, max = 10, chance = 1},
+				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 16, max = 24, chance = 1 },
+				{ name = "waterdragon:dragon_bone",                  min = 6,  max = 10, chance = 1 },
 			},
 			[5] = {
-				{name = "waterdragon:dragon_water_drop", min = 1, max = 3, chance = 2},
+				{ name = "waterdragon:dragon_water_drop", min = 1, max = 3, chance = 2 },
 			},
 		}
 		if not self.owner then
 			if type == "rare_water" then
-				table.insert(drops[4], {name = "waterdragon:egg_rare_water_" .. self.color, min = 1, max = 1, chance = 1})
+				table.insert(drops[4], { name = "waterdragon:egg_rare_water_" .. self.color, min = 1, max = 1, chance = 1 })
 			else
-				table.insert(drops[4], {name = "waterdragon:egg_pure_water_" .. self.color, min = 1, max = 1, chance = 1})
+				table.insert(drops[4], { name = "waterdragon:egg_pure_water_" .. self.color, min = 1, max = 1, chance = 1 })
 			end
 		end
 		self.drops = drops[stage]
@@ -1014,13 +1014,13 @@ waterdragon.dragon_api = {
 			sounds = self.child_sounds
 		end
 		local spec = sounds and sounds[sound]
-		local parameters = {object = self.object}
+		local parameters = { object = self.object }
 		if type(spec) == "table" then
 			local name = spec.name
 			if spec.variations then
 				name = name .. "_" .. random(spec.variations)
 			elseif #spec
-			and #spec > 1 then
+				and #spec > 1 then
 				spec = sounds[sound][random(#sounds[sound])]
 				name = spec.name
 			end
@@ -1040,8 +1040,8 @@ waterdragon.dragon_api = {
 	destroy_terrain = function(self)
 		local moveresult = self.moveresult
 		if not terrain_destruction
-		or not moveresult
-		or not moveresult.collisions then
+			or not moveresult
+			or not moveresult.collisions then
 			return
 		end
 		local pos = self.object:get_pos()
@@ -1052,7 +1052,7 @@ waterdragon.dragon_api = {
 				if n_pos.y - pos.y >= 1 then
 					local node = minetest.get_node(n_pos)
 					if minetest.get_item_group(node.name, "cracky") ~= 1
-					and minetest.get_item_group(node.name, "unbreakable") < 1 then
+						and minetest.get_item_group(node.name, "unbreakable") < 1 then
 						if random(6) < 2 then
 							minetest.dig_node(n_pos)
 						else
@@ -1071,9 +1071,11 @@ waterdragon.dragon_api = {
 		local texture = self:get_props().textures[1]
 		local eyes_open = string.find(texture, "eyes")
 		if self._glow_level == level
-		and ((self._anim ~= "sleep" and eyes_open)
-		or (self._anim == "sleep" and not eyes_open))
-		and not force then return end
+			and ((self._anim ~= "sleep" and eyes_open)
+				or (self._anim == "sleep" and not eyes_open))
+			and not force then
+			return
+		end
 		local def = minetest.registered_entities[self.name]
 		local textures = {
 			def.textures[self.texture_no]
@@ -1092,17 +1094,17 @@ waterdragon.dragon_api = {
 		if self.name == "waterdragon:pure_water_dragon" then
 			dragon_type = "pure_water"
 		end
-		local eyes =  "waterdragon_" .. dragon_type .. "_eyes_".. self.eye_color .. ".png"
+		local eyes = "waterdragon_" .. dragon_type .. "_eyes_" .. self.eye_color .. ".png"
 		if self.growth_scale < 0.25 then
-			eyes = "waterdragon_" .. dragon_type .. "_eyes_child_".. self.eye_color .. ".png"
+			eyes = "waterdragon_" .. dragon_type .. "_eyes_child_" .. self.eye_color .. ".png"
 		end
 		if self._anim == "sleep" then
 			self.object:set_properties({
-				textures = {"(" .. texture .. modifier .. ")"}
+				textures = { "(" .. texture .. modifier .. ")" }
 			})
 		else
 			self.object:set_properties({
-				textures = {"(" .. texture .. modifier .. ")^" .. eyes}
+				textures = { "(" .. texture .. modifier .. ")^" .. eyes }
 			})
 		end
 	end,
@@ -1120,7 +1122,7 @@ waterdragon.dragon_api = {
 		local roll = diff(tyaw, yaw) / 2
 		local r_step = math.min(rate, abs(diff(rot.z, tyaw)) % (pi2))
 		local n_roll = interp_angle(rot.z, roll, r_step)
-		self.object:set_rotation({x = rot.x, y = n_yaw, z = n_roll})
+		self.object:set_rotation({ x = rot.x, y = n_yaw, z = n_roll })
 	end,
 	set_weighted_velocity = function(self, speed, goal)
 		self._tyaw = dir2yaw(goal)
@@ -1141,7 +1143,7 @@ waterdragon.dragon_api = {
 		if self.jaw_init then
 			local end_anim = self._anim:find("pure_water") or floor(rot.x) == deg(-open_angle)
 			if end_anim
-			or self.roar_anim_length <= 0 then
+				or self.roar_anim_length <= 0 then
 				self.jaw_init = false
 				self.roar_anim_length = 0
 				local step = math.min(self.dtime * 5, abs(diff(rad(rot.x), 0)) % (pi2))
@@ -1157,18 +1159,18 @@ waterdragon.dragon_api = {
 		end
 		if tgt_angle < -45 then tgt_angle = -45 end
 		if tgt_angle > 0 then tgt_angle = 0 end
-		self.object:set_bone_position("Jaw.CTRL", {x = 0, y = 0.15, z = -0.29}, {x = deg(tgt_angle), y = 0, z = 0})
+		self.object:set_bone_position("Jaw.CTRL", { x = 0, y = 0.15, z = -0.29 }, { x = deg(tgt_angle), y = 0, z = 0 })
 	end,
 	move_tail = function(self)
 		if self._anim == "stand"
-		or self._anim == "stand_water" then
+			or self._anim == "stand_water" then
 			self.last_yaw = self.object:get_yaw()
 		end
 		local anim_data = self.dynamic_anim_data
 		local yaw = self.object:get_yaw()
 		for seg = 1, #anim_data.tail do
 			local data = anim_data.tail[seg]
-			local _, rot = self.object:get_bone_position("Tail.".. seg .. ".CTRL")
+			local _, rot = self.object:get_bone_position("Tail." .. seg .. ".CTRL")
 			rot = rot.z
 			local y_diff = diff(yaw, self.last_yaw)
 			local tgt_rot = -y_diff * 10
@@ -1180,8 +1182,8 @@ waterdragon.dragon_api = {
 				end
 				rot = interp_angle(rad(rot), tgt_rot, math.min(self.dtime * 3, abs(y_diff * 10) % (pi2)))
 			end
-			self.object:set_bone_position("Tail.".. seg .. ".CTRL", data.pos,
-				{x = data.rot.x, y = data.rot.y, z = math.deg(rot) * (data.rot.z or 1)})
+			self.object:set_bone_position("Tail." .. seg .. ".CTRL", data.pos,
+				{ x = data.rot.x, y = data.rot.y, z = math.deg(rot) * (data.rot.z or 1) })
 		end
 	end,
 	move_head = function(self, tyaw, pitch)
@@ -1190,7 +1192,7 @@ waterdragon.dragon_api = {
 		for seg = 1, seg_no do
 			-- Data
 			local data = self.dynamic_anim_data.head[seg]
-			local bone_name = "Neck.".. seg .. ".CTRL"
+			local bone_name = "Neck." .. seg .. ".CTRL"
 			if seg == seg_no then
 				bone_name = "Head.CTRL"
 			end
@@ -1203,7 +1205,7 @@ waterdragon.dragon_api = {
 			if abs(deg(n_yaw)) > 22 then n_yaw = 0 end
 			local dir = yaw2dir(n_yaw)
 			dir.y = pitch or 0
-			local n_pitch = -(sqrt(dir.x^2 + dir.y^2) / dir.z) / 4
+			local n_pitch = -(sqrt(dir.x ^ 2 + dir.y ^ 2) / dir.z) / 4
 			if abs(deg(n_pitch)) > 22 then n_pitch = 0 end
 			if self.dtime then
 				local rate = self.dtime * 3
@@ -1216,13 +1218,13 @@ waterdragon.dragon_api = {
 				local pitch_w = math.min(rate, abs(diff(rad(rot.x), n_pitch)) % (pi2))
 				n_pitch = interp_angle(rad(rot.x), n_pitch, pitch_w)
 			end
-			self.object:set_bone_position(bone_name, data.pos, {x = deg(n_pitch), y = data.rot.y, z = deg(n_yaw)})
+			self.object:set_bone_position(bone_name, data.pos, { x = deg(n_pitch), y = data.rot.y, z = deg(n_yaw) })
 		end
 	end,
 	feed = function(self, player)
 		local name = player:get_player_name()
 		if not self.owner
-		or self.owner ~= name then
+			or self.owner ~= name then
 			return
 		end
 		local item, item_name = self:follow_wielded_item(player)
@@ -1236,7 +1238,7 @@ waterdragon.dragon_api = {
 				self:heal(self.max_health / 5)
 			end
 			if self.hunger
-			and self.hunger < (self.max_health * 0.5) * scale then
+				and self.hunger < (self.max_health * 0.5) * scale then
 				self.hunger = self.hunger + 5
 				self:memorize("hunger", self.hunger)
 			end
@@ -1244,8 +1246,8 @@ waterdragon.dragon_api = {
 				self.food = (self.food or 0) + 1
 			end
 			if self.food
-			and self.food >= 20
-			and self.age then
+				and self.food >= 20
+				and self.age then
 				self.food = 0
 				self:increase_age()
 			end
@@ -1262,10 +1264,10 @@ waterdragon.dragon_api = {
 				time = 0.1,
 				minpos = minppos,
 				maxpos = maxppos,
-				minvel = {x=-1, y=1, z=-1},
-				maxvel = {x=1, y=2, z=1},
-				minacc = {x=0, y=-5, z=0},
-				maxacc = {x=0, y=-9, z=0},
+				minvel = { x = -1, y = 1, z = -1 },
+				maxvel = { x = 1, y = 2, z = 1 },
+				minacc = { x = 0, y = -5, z = 0 },
+				maxacc = { x = 0, y = -9, z = 0 },
 				minexptime = 1,
 				maxexptime = 1,
 				minsize = 4 * scale,
@@ -1281,7 +1283,7 @@ waterdragon.dragon_api = {
 	play_wing_sound = function(self)
 		local offset = self.frame_offset or 0
 		if offset > 20
-		and not self.flap_sound_played then
+			and not self.flap_sound_played then
 			minetest.sound_play("waterdragon_flap", {
 				object = self.object,
 				gain = 3.0,
@@ -1319,7 +1321,7 @@ minetest.register_privilege("dragon_uisge", {
 minetest.register_chatcommand("set_wtd_owner", {
 	description = "Sets owner of pointed Water Dragon",
 	params = "<name>",
-	privs = {dragon_uisge = true},
+	privs = { dragon_uisge = true },
 	func = function(name, params)
 		local player = minetest.get_player_by_name(name)
 		local param_name = params:match("%S+")
@@ -1348,8 +1350,8 @@ minetest.register_chatcommand("set_wtd_owner", {
 					y = ent_pos.y + ent.width,
 					z = ent_pos.z + ent.width
 				},
-				minacc = {x = 0, y = 0.25, z = 0},
-				maxacc = {x = 0, y = -0.25, z = 0},
+				minacc = { x = 0, y = 0.25, z = 0 },
+				maxacc = { x = 0, y = -0.25, z = 0 },
 				minexptime = 0.75,
 				maxexptime = 1,
 				minsize = 4,
@@ -1366,7 +1368,7 @@ minetest.register_chatcommand("set_wtd_owner", {
 minetest.register_chatcommand("wtd_blacklist_add", {
 	description = "Adds player to attack blacklist of Water Dragons",
 	params = "<name>",
-	privs = {dragon_uisge = true},
+	privs = { dragon_uisge = true },
 	func = function(name, params)
 		local player = minetest.get_player_by_name(name)
 		local param_name = params:match("%S+")
@@ -1383,7 +1385,7 @@ minetest.register_chatcommand("wtd_blacklist_add", {
 minetest.register_chatcommand("wtd_blacklist_remove", {
 	description = "Removes player from attack blacklist of the Water Dragons",
 	params = "<name>",
-	privs = {dragon_uisge = true},
+	privs = { dragon_uisge = true },
 	func = function(name, params)
 		local player = minetest.get_player_by_name(name)
 		local param_name = params:match("%S+")
@@ -1404,7 +1406,7 @@ minetest.register_chatcommand("wtd_blacklist_remove", {
 local function get_dragon_by_id(dragon_id)
 	for _, ent in pairs(minetest.luaentities) do
 		if ent.dragon_id
-		and ent.dragon_id == dragon_id then
+			and ent.dragon_id == dragon_id then
 			return ent
 		end
 	end
@@ -1413,9 +1415,9 @@ end
 minetest.register_on_mods_loaded(function()
 	for name, def in pairs(minetest.registered_entities) do
 		if (minetest.registered_entities[name].logic
-		or minetest.registered_entities[name].brainfunc)
-		or minetest.registered_entities[name]._cmi_is_mob
-		or minetest.registered_entities[name]._creatura_mob then
+				or minetest.registered_entities[name].brainfunc)
+			or minetest.registered_entities[name]._cmi_is_mob
+			or minetest.registered_entities[name]._creatura_mob then
 			local old_punch = def.on_punch
 			if not old_punch then
 				old_punch = function() end
@@ -1429,7 +1431,7 @@ minetest.register_on_mods_loaded(function()
 				end
 				local player_name = puncher:get_player_name()
 				if waterdragon.bonded_dragons[player_name]
-				and #waterdragon.bonded_dragons[player_name] > 0 then
+					and #waterdragon.bonded_dragons[player_name] > 0 then
 					for i = 1, #waterdragon.bonded_dragons[player_name] do
 						local ent = get_dragon_by_id(waterdragon.bonded_dragons[player_name][i])
 						if ent then
@@ -1456,16 +1458,12 @@ function waterdragon.dragon_activate(self)
 	generate_texture(self)
 	self.eye_color = self:recall("eye_color")
 	if not self.eye_color then
-		if dragon_type == "pure_water" then
-			self.eye_color = pure_water_eye_textures[random(3)]
-		else
-			self.eye_color = rare_water_eye_textures[random(2)]
-		end
+		self.eye_color = water_eye_textures[random(4)]
 		self:memorize("eye_color", self.eye_color)
 	end
 	self.gender = self:recall("gender") or nil
 	if not self.gender then
-		local genders = {"male", "female"}
+		local genders = { "male", "female" }
 		self.gender = self:memorize("gender", genders[random(2)])
 	end
 	if self.growth_scale then
@@ -1510,7 +1508,7 @@ function waterdragon.dragon_activate(self)
 	self.attack_stamina = self:recall("attack_stamina") or 150
 	self.attack_disabled = self:recall("attack_disabled") or false
 	self.flight_stamina = self:recall("flight_stamina") or 1400
-	
+
 	-- Sound Data
 	self.flap_sound_timer = 1.5
 	self.flap_sound_played = false
@@ -1528,10 +1526,10 @@ function waterdragon.dragon_activate(self)
 	end
 	local global_data = waterdragon.dragons[self.dragon_id] or {}
 	if global_data.removal_queue
-	and #global_data.removal_queue > 0 then
+		and #global_data.removal_queue > 0 then
 		for i = #global_data.removal_queue, 1, -1 do
 			if global_data.removal_queue[i]
-			and vector.equals(vec_round(global_data.removal_queue[i]), vec_round(self.object:get_pos())) then
+				and vector.equals(vec_round(global_data.removal_queue[i]), vec_round(self.object:get_pos())) then
 				waterdragon.dragons[self.dragon_id].removal_queue[i] = nil
 				self.object:remove()
 				return
@@ -1547,9 +1545,9 @@ function waterdragon.dragon_activate(self)
 	}
 	local owner = waterdragon.dragons[self.dragon_id].owner
 	if owner
-	and minetest.get_player_by_name(owner)
-	and (not waterdragon.bonded_dragons[owner]
-	or not is_value_in_table(waterdragon.bonded_dragons[owner], self.dragon_id)) then
+		and minetest.get_player_by_name(owner)
+		and (not waterdragon.bonded_dragons[owner]
+			or not is_value_in_table(waterdragon.bonded_dragons[owner], self.dragon_id)) then
 		waterdragon.bonded_dragons[owner] = waterdragon.bonded_dragons[owner] or {}
 		table.insert(waterdragon.bonded_dragons[owner], self.dragon_id)
 	end
@@ -1590,19 +1588,19 @@ function waterdragon.dragon_step(self, dtime)
 		self:animate("shoulder_idle")
 		local player = minetest.get_player_by_name(self.owner)
 		if not player
-		or player:get_player_control().sneak == true
-		or self.age > 4 then
+			or player:get_player_control().sneak == true
+			or self.age > 4 then
 			self.object:set_detach()
 			self.shoulder_mounted = self:memorize("shoulder_mounted", false)
 		end
 		is_flying = false
 	end
 	-- Dynamic Physics
-	self.speed = 45 * clamp((self.growth_scale), 0.1, 1) -- Speed increases with size
+	self.speed = 45 * clamp((self.growth_scale), 0.1, 1)     -- Speed increases with size
 	self.turn_rate = 6 - 3 * clamp((self.growth_scale), 0.1, 1) -- Turning radius widens with size
 	if not is_flying
-	or self.in_liquid then
-		self.speed = self.speed * 0.18 -- Speed reduced when landed
+		or self.in_liquid then
+		self.speed = self.speed * 0.18  -- Speed reduced when landed
 		self.turn_rate = self.turn_rate * 1.5 -- Turning radius reduced when landed
 	end
 	-- Timers
@@ -1615,7 +1613,7 @@ function waterdragon.dragon_step(self, dtime)
 			self.time_in_horn = nil
 		end
 		if random(16) < 2
-		and not is_firing then
+			and not is_firing then
 			self:play_sound("random")
 		end
 		-- Dynamic Stats
@@ -1623,7 +1621,7 @@ function waterdragon.dragon_step(self, dtime)
 		local atk_stam = self.attack_stamina or 150
 		local alert_timer = self.alert_timer or 0
 		if is_flying
-		and not self.in_liquid then -- Drain Stamina when flying
+			and not self.in_liquid then -- Drain Stamina when flying
 			fly_stam = fly_stam - 1
 		else
 			if fly_stam < 900 then -- Regen Stamina when landed
@@ -1649,13 +1647,13 @@ function waterdragon.dragon_step(self, dtime)
 	end
 	-- Switch Aerial/Terrestrial States
 	if not self.is_landed
-	and not self.fly_allowed
-	and self.owner then
+		and not self.fly_allowed
+		and self.owner then
 		self.is_landed = self:memorize("is_landed", true)
 	elseif self:timer(16)
-	and random(4) < 2 then
+		and random(4) < 2 then
 		if self.is_landed
-		and self.flight_stamina > 300 then
+			and self.flight_stamina > 300 then
 			self.is_landed = self:memorize("is_landed", false)
 		else
 			self.is_landed = self:memorize("is_landed", true)
@@ -1680,7 +1678,6 @@ function waterdragon.dragon_step(self, dtime)
 	end
 end
 
-
 -------------------
 -- On Rightclick --
 -------------------
@@ -1689,7 +1686,7 @@ end
 
 function waterdragon.dragon_rightclick(self, clicker)
 	local name = clicker:get_player_name()
-	local inv = minetest.get_inventory({type = "player", name = name})
+	local inv = minetest.get_inventory({ type = "player", name = name })
 	if waterdragon.contains_book(inv) then
 		waterdragon.add_page(inv, "waterdragons")
 	end
@@ -1705,24 +1702,23 @@ function waterdragon.dragon_rightclick(self, clicker)
 	end
 	local item_name = clicker:get_wielded_item():get_name() or ""
 	if self.owner
-	and name == self.owner
-	and item_name == "" then
+		and name == self.owner
+		and item_name == "" then
 		if clicker:get_player_control().sneak then
 			self:show_formspec(clicker)
 		elseif not self.rider
-		and self.age >= 35 then
+			and self.age >= 35 then
 			waterdragon.attach_player(self, clicker)
 		elseif self.age < 5 then
 			self.shoulder_mounted = self:memorize("shoulder_mounted", true)
 			self.object:set_attach(clicker, "",
-				{x = 3 - self.growth_scale, y = 11.5,z = -1.5 - (self.growth_scale * 5)}, {x=0,y=0,z=0})
+				{ x = 3 - self.growth_scale, y = 11.5, z = -1.5 - (self.growth_scale * 5) }, { x = 0, y = 0, z = 0 })
 		end
 	end
 	if self.rider
-	and not self.passenger
-	and name ~= self.owner
-	and item_name == "" then
+		and not self.passenger
+		and name ~= self.owner
+		and item_name == "" then
 		waterdragon.send_passenger_request(self, clicker)
 	end
 end
-
