@@ -452,11 +452,11 @@ end
 local effect_cooldown = {}
 
 minetest.register_entity("waterdragon:dragon_rare_water", {
-	max_hp = 40,
+	max_hp = 1600,
 	physical = true,
 	collisionbox = { -0.1, -0.1, -0.1, 0.1, 0.1, 0.1 },
 	visual = "mesh",
-	mesh = "waterdragon_dragon_rare_water.obj",
+	mesh = "waterdragon_dragon_water.obj",
 	textures = {
 		"waterdragon_dragon_rare_water.png^[opacity:170"
 	},
@@ -486,7 +486,7 @@ minetest.register_entity("waterdragon:dragon_rare_water", {
 })
 
 minetest.register_entity("waterdragon:dragon_pure_water", {
-	max_hp = 40,
+	max_hp = 1500,
 	physical = false,
 	collisionbox = { -0.1, -0.1, -0.1, 0.1, 0.1, 0.1 },
 	visual = "mesh",
@@ -998,13 +998,6 @@ waterdragon.dragon_api = {
 				{ name = "waterdragon:dragon_water_drop", min = 1, max = 3, chance = 2 },
 			},
 		}
-		if not self.owner then
-			if type == "rare_water" then
-				table.insert(drops[4], { name = "waterdragon:egg_rare_water_" .. self.color, min = 1, max = 1, chance = 1 })
-			else
-				table.insert(drops[4], { name = "waterdragon:egg_pure_water_" .. self.color, min = 1, max = 1, chance = 1 })
-			end
-		end
 		self.drops = drops[stage]
 	end,
 	play_sound = function(self, sound)

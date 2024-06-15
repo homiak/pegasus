@@ -184,7 +184,7 @@ register_node("waterdragon:bone_pile_wet", {
 -- Draconic Steel Forge --
 --------------------------
 
-local stack_size = minetest.registered_items[steel_ingot].stack_max or 99
+local stack_size = minetest.registered_items[steel_ingot].stack_max or 999
 
 local forge_core = {
 	["waterdragon:draconic_forge_pure_water"] = "waterdragon:dragonstone_block_pure_water",

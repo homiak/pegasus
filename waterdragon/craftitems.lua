@@ -555,7 +555,7 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 		else
 			ent.object:set_pos(player:get_pos())
 		end
-		minetest.chat_send_player(player:get_player_name(), S("Teleporting Water Dragon"))
+		minetest.chat_send_player(player:get_player_name(), S("You have called your Water Dragon"))
 	else -- Link Dragon to Horn
 		local ent = pointed_thing.ref and pointed_thing.ref:get_luaentity()
 		if ent
