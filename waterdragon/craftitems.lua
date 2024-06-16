@@ -1201,9 +1201,9 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "waterdragon:bucket_dragon_water",
 	recipe = {
-		{ "group:wood", "waterdragon_dragon_water_drop", "group:wood" },
-		{ "group:wood", "waterdragon_dragon_water_drop", "group:wood" },
-		{ "", "group:wood", "" },
+		{ "group:wood", "waterdragon:dragon_water_drop", "group:wood" },
+		{ "group:wood", "waterdragon:dragon_water_drop", "group:wood" },
+		{ "", "group:wood", "" }
 	}
 })
 

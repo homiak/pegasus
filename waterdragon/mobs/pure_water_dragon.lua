@@ -25,7 +25,7 @@ creatura.register_mob("waterdragon:pure_water_dragon", {
 	fire_resistance = 1,
 	armor_groups = {fleshy = 50},
 	damage = 35,
-	turn_rate = 5,
+	turn_rate = 7,
 	speed = 45,
 	tracking_range = 128,
 	-- Entity Physics
