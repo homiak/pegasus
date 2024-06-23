@@ -140,7 +140,7 @@ minetest.register_on_mods_loaded(function()
 				elseif minetest.get_item_group(name, "flora") > 0
 					or minetest.get_item_group(name, "leaves") > 0
 					or minetest.get_item_group(name, "snowy") > 0 then
-					wet_conversions[name] = "air"
+					wet_conversions[name] = "default:water_flowing"
 				end
 			elseif def.drawtype == "liquid"
 				and minetest.get_item_group(name, "water") > 0 then
@@ -744,8 +744,8 @@ function waterdragon.pure_water_breath(self, pos2)
 		local scale = self.growth_scale
 		if minetest.has_feature("particlespawner_tweenable") then
 			minetest.add_particlespawner({
-				amount = 3,
-				time = 0.25,
+				amount = 200,
+				time = 0.05,
 				collisiondetection = true,
 				collision_removal = true,
 				pos = particle_origin,
@@ -761,8 +761,8 @@ function waterdragon.pure_water_breath(self, pos2)
 			})
 		else
 			minetest.add_particlespawner({
-				amount = 3,
-				time = 0.25,
+				amount = 200,
+				time = 0.05,
 				minpos = particle_origin,
 				maxpos = particle_origin,
 				minvel = vec_multi(dir, 32),
@@ -829,8 +829,8 @@ function waterdragon.rare_water_breath(self, pos2)
 		local scale = self.growth_scale
 		if minetest.has_feature("particlespawner_tweenable") then
 			minetest.add_particlespawner({
-				amount = 3,
-				time = 0.25,
+				amount = 200,
+				time = 0.0005,
 				collisiondetection = true,
 				collision_removal = true,
 				pos = particle_origin,
@@ -846,8 +846,8 @@ function waterdragon.rare_water_breath(self, pos2)
 			})
 		else
 			minetest.add_particlespawner({
-				amount = 3,
-				time = 0.25,
+				amount = 200,
+				time = 0.0005,
 				minpos = particle_origin,
 				maxpos = particle_origin,
 				minvel = vec_multi(dir, 32),
@@ -1237,12 +1237,16 @@ waterdragon.dragon_api = {
 				item:take_item()
 				player:set_wielded_item(item)
 			end
+			if minetest.is_creative_enabled(player) then
+				item:take_item()
+				player:set_wielded_item(item)
+			end
 			local scale = self.growth_scale or 1
 			if self.hp < (self.max_health * scale) then
 				self:heal(self.max_health / 5)
 			end
 			if self.hunger
-				and self.hunger < (self.max_health * 0.5) * scale then
+				and self.hunger < (self.max_health * 0.4) * scale then
 				self.hunger = self.hunger + 5
 				self:memorize("hunger", self.hunger)
 			end
@@ -1316,7 +1320,7 @@ end)
 --------------
 
 minetest.register_privilege("dragon_uisge", {
-	description = "Allows Player to customize and force tame Water Dragons",
+	description = "Allows Player to force Water Dragons",
 	give_to_singleplayer = false,
 	give_to_admin = false
 })
