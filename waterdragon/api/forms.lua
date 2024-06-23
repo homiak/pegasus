@@ -209,8 +209,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				["Orange"] = "#d92e00",
 				["Yellow"] = "#edad00",
 				["Dark Blue"] = "#07084f",
-				["Cyan"] = "#2deded",
-				["None"] = "#fffffff"
+				["Cyan"] = "#2deded"
 			},
 			pure_water = {
 				["Red"] = "#d20000",

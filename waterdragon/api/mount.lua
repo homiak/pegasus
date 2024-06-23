@@ -293,7 +293,7 @@ local function passenger_form(player)
 	local formspec = {
 		"size[6,3.476]",
 		"real_coordinates[true]",
-		"label[0.25,1;" .. name .. " would like to ride as a passenger]",
+		"label[0.25,1;" .. name .. S(" would like to ride as a passenger]"),
 		"button_exit[0.25,1.3;2.3,0.8;btn_accept_pssngr;Accept]",
 		"button_exit[3.5,1.3;2.3,0.8;btn_decline_pssngr;Decline]",
 	}
@@ -343,8 +343,8 @@ local function menu_form()
 	local formspec = {
 		"size[6,3.476]",
 		"real_coordinates[true]",
-		"button[0.25,1.3;2.3,0.8;btn_view_point;Change View Point]",
-		"button[3.5,1.3;2.3,0.8;btn_pitch_toggle;Toggle Pitch Flight]",
+		"button[0.25,1.3;2.3,0.8;btn_view_point;View Point]",
+		"button[3.5,1.3;2.3,0.8;btn_pitch_toggle;Pitch Flight]",
 	}
 	return table.concat(formspec, "")
 end
@@ -439,7 +439,6 @@ creatura.register_utility("waterdragon:mount", function(self)
 	local view_held = false
 	local view_point = 3
 	local first_person_height = 45
-	--local initial_age = self.age
 	self:halt()
 	local func = function(_self)
 		local player = _self.rider
