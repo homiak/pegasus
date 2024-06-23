@@ -4,7 +4,7 @@ water_simple_spawning_dragons (Simple Spawning) bool false
 #    Water Dragon Spawn Rate. 1 in x chance per spawn tick for a Water Dragon to spawn. This setting only applies when Simple Spawning is enabled.
 water_dragon_simple_spawn_rate (Simple Spawn Rate) int 600
 
-#    If true, Water Dragons will spawn in mountains with nests
+#    If true, Water Dragons will spawn in mountains with Nests
 water_nest_spawning (Nest Spawning) bool true
 
 #    Water Dragon Nest Spawn Rate. 1 in x chance per chunk generated for a Water Dragon Nest to spawn. This setting only applies when Nest Spawning is enabled.
@@ -22,8 +22,8 @@ water_dragon_terrain_destruction (Terrain Destruction) bool true
 #    Disable if stairs mod gives a crash (Exile and other games are known to cause this)
 water_register_stairs (Register Stairs) bool true
 
-#    Chance (by percentage of 100) for a special color to occur on one of Water Dragons potential color regions
-water_unique_color_chance (Unique Color Chance) int 65
+#    Chance (by percentage of 100) for a special colour to occur on one of Water Dragons potential colour regions
+water_unique_color_chance (Unique Colour Chance) int 65
 
 
 

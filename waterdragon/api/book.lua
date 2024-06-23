@@ -434,6 +434,3 @@ end)
 -- To Do
 
 -- Flight Stamina
--- 3D model (optional)
--- on/off breath (optional)
--- book/libri

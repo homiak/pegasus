@@ -270,7 +270,11 @@ local spawn_egg_def = minetest.registered_items["waterdragon:spawn_pure_water_dr
 spawn_egg_def.on_place = function(itemstack, _, pointed_thing)
 	local pos = minetest.get_pointed_thing_position(pointed_thing, true)
 	waterdragon.spawn_dragon(pos, "waterdragon:pure_water_dragon", false, 75)
-	if not creative then
+	if creative then
+		itemstack:take_item()
+		return itemstack
+	end
+	if  not creative then
 		itemstack:take_item()
 		return itemstack
 	end

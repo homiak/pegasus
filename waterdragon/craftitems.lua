@@ -81,7 +81,7 @@ minetest.register_craftitem("waterdragon:dragon_water_drop", {
 
 		if entity and entity.hp <= 0 then
 			local ent_pos = entity:get_center_pos()
-			local particle = "creatura_particle_green.png"
+			local particle = "waterdragon_particle_green.png"
 			entity.hp = entity.max_health
 			entity:memorize("hp", entity.hp)
 			minetest.chat_send_player(user:get_player_name(), S(" has been revived!"))
@@ -107,13 +107,13 @@ minetest.register_craftitem("waterdragon:dragon_water_drop", {
 				texture = particle,
 				glow = 16
 			})
-		else
-			minetest.chat_send_player(user:get_player_name(), S("You must be pointing at a dead mob"))
-		end
 
 		-- Consume the item from the player's inventory
 		itemstack:take_item()
 		return itemstack
+		else
+			minetest.chat_send_player(user:get_player_name(), S("You must be pointing at a dead mob"))
+		end
 	end
 })
 
@@ -589,7 +589,7 @@ local function dragon_horn_place(itemstack, player, pointed_thing)
 			meta:set_string("mob", nil)
 			meta:set_string("dragon_id", nil)
 			meta:set_string("staticdata", nil)
-			meta:set_string("description", "Dragon Horn")
+			meta:set_string("description", S("Dragon Horn"))
 			player:set_wielded_item(itemstack)
 			return itemstack
 		end
@@ -678,10 +678,7 @@ for color in pairs(waterdragon.colors_pure_water) do
 		sound = { breaks = "default_tool_breaks" },
 		groups = { pickaxe = 1 }
 	})
-	if color ~= "red" then
-		local item = "waterdragon:pick_dragonhide_pure_water"
-		minetest.registered_tools[item].groups = { pickaxe = 1, not_in_creative_inventory = 0 }
-	end
+
 	-- Shovel
 	minetest.register_tool("waterdragon:shovel_dragonhide_pure_water", {
 		description = S("Pure Water Dragonhide Shovel"),
@@ -702,10 +699,7 @@ for color in pairs(waterdragon.colors_pure_water) do
 		sound = { breaks = "default_tool_breaks" },
 		groups = { shovel = 1 }
 	})
-	if color ~= "red" then
-		local item = "waterdragon:shovel_dragonhide_pure_water"
-		minetest.registered_tools[item].groups = { shovel = 1, not_in_creative_inventory = 0 }
-	end
+	
 	-- Axe
 	minetest.register_tool("waterdragon:axe_dragonhide_pure_water", {
 		description = S("Pure Water Dragonhide Axe"),
@@ -726,10 +720,7 @@ for color in pairs(waterdragon.colors_pure_water) do
 		sound = { breaks = "default_tool_breaks" },
 		groups = { axe = 1 }
 	})
-	if color ~= "red" then
-		local item = "waterdragon:axe_dragonhide_pure_water"
-		minetest.registered_tools[item].groups = { axe = 1, not_in_creative_inventory = 0 }
-	end
+	
 	-- Sword
 	minetest.register_tool("waterdragon:sword_dragonhide_pure_water", {
 		description = S("Pure Water Dragonhide Sword"),
@@ -751,10 +742,6 @@ for color in pairs(waterdragon.colors_pure_water) do
 		sound = { breaks = "default_tool_breaks" },
 		groups = { sword = 1 }
 	})
-	if color ~= "red" then
-		local item = "waterdragon:sword_dragonhide_pure_water"
-		minetest.registered_tools[item].groups = { sword = 1, not_in_creative_inventory = 0 }
-	end
 end
 
 for color in pairs(waterdragon.colors_rare_water) do
@@ -778,10 +765,7 @@ for color in pairs(waterdragon.colors_rare_water) do
 		sound = { breaks = "default_tool_breaks" },
 		groups = { pickaxe = 1 }
 	})
-	if color ~= "sapphire" then
-		local item = "waterdragon:pick_dragonhide_rare_water"
-		minetest.registered_tools[item].groups = { pickaxe = 1, not_in_creative_inventory = 0 }
-	end
+
 	-- Shovel
 	minetest.register_tool("waterdragon:shovel_dragonhide_rare_water", {
 		description = S("Rare Water Dragonhide Shovel"),
@@ -802,10 +786,7 @@ for color in pairs(waterdragon.colors_rare_water) do
 		sound = { breaks = "default_tool_breaks" },
 		groups = { shovel = 1 }
 	})
-	if color ~= "sapphire" then
-		local item = "waterdragon:shovel_dragonhide_rare_water"
-		minetest.registered_tools[item].groups = { shovel = 1, not_in_creative_inventory = 0 }
-	end
+	
 	-- Axe
 	minetest.register_tool("waterdragon:axe_dragonhide_rare_water", {
 		description = S("Rare Water Dragonhide Axe"),
@@ -826,10 +807,7 @@ for color in pairs(waterdragon.colors_rare_water) do
 		sound = { breaks = "default_tool_breaks" },
 		groups = { axe = 1 }
 	})
-	if color ~= "sapphire" then
-		local item = "waterdragon:axe_dragonhide_rare_water"
-		minetest.registered_tools[item].groups = { axe = 1, not_in_creative_inventory = 0 }
-	end
+	
 	-- Sword
 	minetest.register_tool("waterdragon:sword_dragonhide_rare_water", {
 		description = S("Rare Water Dragonhide Sword"),
@@ -851,10 +829,6 @@ for color in pairs(waterdragon.colors_rare_water) do
 		sound = { breaks = "default_tool_breaks" },
 		groups = { sword = 1 }
 	})
-	if color ~= "sapphire" then
-		local item = "waterdragon:sword_dragonhide_rare_water"
-		minetest.registered_tools[item].groups = { sword = 1, not_in_creative_inventory = 0 }
-	end
 end
 
 minetest.register_alias("waterdragon:pick_dragonbone", "waterdragon:pick_dragonhide_pure_water_black")
@@ -1065,15 +1039,6 @@ end)
 -------------
 
 minetest.register_craft({
-	output = "waterdragon:dragon_flute",
-	recipe = {
-		{ "",               "",                        "waterdragon:dragon_bone" },
-		{ "",               "waterdragon:dragon_bone", "waterdragon:dragon_bone" },
-		{ rare_water_block, "waterdragon:dragon_bone", "" },
-	}
-})
-
-minetest.register_craft({
 	output = "waterdragon:dragonstone_block_rare_water",
 	recipe = {
 		{ "",                      "waterdragon:wet_stone", "" },
@@ -1092,31 +1057,14 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "waterdragon:dragon_horn",
+	output = "waterdragon:book_waterdragon",
 	recipe = {
-		{ "",                        "",                        pure_water_block },
-		{ "",                        "waterdragon:dragon_bone", pure_water_block },
-		{ "waterdragon:dragon_bone", "waterdragon:dragon_bone", "" },
+		{ "group:dragon_scales", "default:paper", "group:dragon_scales" },
+		{ "group:dragon_scales", "default:paper", "group:dragon_scales" },
+		{ "group:dragon_scales", "default:paper", "group:dragon_scales" },
 	}
 })
 
-minetest.register_craft({
-	output = "waterdragon:book_waterdragon",
-	recipe = {
-		{ "",                    "", "" },
-		{ "group:dragon_scales", "", "" },
-		{ "group:book",          "", "" },
-	}
-})
-
-minetest.register_craft({
-	output = "waterdragon:book_waterdragon",
-	recipe = {
-		{ "",                    "", "" },
-		{ "group:dragon_scales", "", "" },
-		{ "group:book",          "", "" },
-	}
-})
 
 minetest.register_craft({
 	output = "waterdragon:wood_planks_wet",
@@ -1459,6 +1407,8 @@ craft_boots({
 
 -- Draconic Scale Armor --
 
+-- Pure Water Scale Armor
+
 craft_helmet({
 	output = "waterdragon:helmet_pure_water_draconic",
 	material = "waterdragon:scales_pure_water_dragon"
@@ -1474,9 +1424,31 @@ craft_boots({
 	material = "waterdragon:scales_pure_water_dragon"
 })
 
+-- Rare Water Scale Armor
+
 craft_leggings({
-	output = "waterdragon:leggings_pure_water_draconic",
-	material = "waterdragon:scales_pure_water_dragon"
+	output = "waterdragon:leggings_rare_water_draconic",
+	material = "waterdragon:scales_rare_water_dragon"
+})
+
+craft_helmet({
+	output = "waterdragon:helmet_rare_water_draconic",
+	material = "waterdragon:scales_rare_water_dragon"
+})
+
+craft_chestplate({
+	output = "waterdragon:chestplate_rare_water_draconic",
+	material = "waterdragon:scales_rare_water_dragon"
+})
+
+craft_boots({
+	output = "waterdragon:boots_rare_water_draconic",
+	material = "waterdragon:scales_rare_water_dragon"
+})
+
+craft_leggings({
+	output = "waterdragon:leggings_rare_water_draconic",
+	material = "waterdragon:scales_rare_water_dragon"
 })
 
 ----------------------------------
@@ -1542,7 +1514,7 @@ minetest.register_craftitem("waterdragon:bucket_dragon_water", {
 		and entity.name:match("^waterdragon:")
 		and entity.memorize then
 			local ent_pos = entity:get_center_pos()
-			local particle = "creatura_particle_green.png"
+			local particle = "waterdragon_particle_green.png"
 			if not entity.owner then
 				entity.owner = player:get_player_name()
 				entity:memorize("owner", entity.owner)
@@ -1572,12 +1544,12 @@ minetest.register_craftitem("waterdragon:bucket_dragon_water", {
 				texture = particle,
 				glow = 16
 			})
-		else
-			minetest.chat_send_player(player:get_player_name(), S("You must be pointing at a Water Dragon"))
-		end
 		-- Consume the item from the player's inventory
 		itemstack:take_item()
 		return itemstack
+		else
+			minetest.chat_send_player(player:get_player_name(), S("You must be pointing at a Water Dragon"))
+		end
 	end
 })
 

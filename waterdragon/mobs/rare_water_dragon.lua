@@ -275,6 +275,10 @@ spawn_egg_def.on_place = function(itemstack, _, pointed_thing)
 		itemstack:take_item()
 		return itemstack
 	end
+	if  not creative then
+		itemstack:take_item()
+		return itemstack
+	end
 end
 
 minetest.register_craftitem("waterdragon:spawn_rare_water_dragon", spawn_egg_def)

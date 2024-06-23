@@ -938,7 +938,7 @@ waterdragon.dragon_api = {
 		local age = self.age
 		if age < 150
 			or (age > 150
-				and age < 1.5) then -- second check ensures pre-1.2 dragons grow to new limit
+				and age < 1.5) then -- second check ensures pre-1.2 Water Dragons grow to new limit
 			self.growth_scale = self:memorize("growth_scale", self.growth_scale + 0.0099)
 			self:set_scale(self.growth_scale)
 			if age <= 25 then
@@ -981,21 +981,26 @@ waterdragon.dragon_api = {
 		local drops = {
 			[1] = {
 				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 1, max = 3, chance = 2 },
+				{ name = "waterdragon:dragon_horn", min = 3, max = 6,  chance = 1 },
 			},
 			[2] = {
 				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 4, max = 12, chance = 2 },
-				{ name = "waterdragon:dragon_bone",                  min = 1, max = 3,  chance = 3 }
+				{ name = "waterdragon:dragon_bone", min = 1, max = 3,  chance = 3 },
+				{ name = "waterdragon:dragon_horn", min = 3, max = 6,  chance = 1 },
 			},
 			[3] = {
 				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 8, max = 20, chance = 1 },
-				{ name = "waterdragon:dragon_bone",                  min = 3, max = 8,  chance = 1 }
+				{ name = "waterdragon:dragon_horn", min = 3, max = 6,  chance = 1 },
+				{ name = "waterdragon:dragon_bone", min = 3, max = 8,  chance = 1 },
 			},
 			[4] = {
 				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 16, max = 24, chance = 1 },
 				{ name = "waterdragon:dragon_bone",                  min = 6,  max = 10, chance = 1 },
+				{ name = "waterdragon:dragon_horn", min = 3, max = 6,  chance = 1 },
 			},
 			[5] = {
 				{ name = "waterdragon:dragon_water_drop", min = 1, max = 3, chance = 2 },
+				{ name = "waterdragon:dragon_horn", min = 3, max = 6,  chance = 1 },
 			},
 		}
 		self.drops = drops[stage]
@@ -1326,7 +1331,7 @@ minetest.register_chatcommand("set_wtd_owner", {
 		local object, ent = get_pointed_mob(pos, dest)
 		if object then
 			local ent_pos = ent:get_center_pos()
-			local particle = "creatura_particle_green.png"
+			local particle = "waterdragon_particle_green.png"
 			ent.owner = param_name
 			ent:memorize("owner", ent.owner)
 			minetest.chat_send_player(name, S(" is now owned by ") .. param_name)
