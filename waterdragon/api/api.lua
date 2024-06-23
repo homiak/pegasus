@@ -54,7 +54,7 @@ local yaw2dir = minetest.yaw_to_dir
 -- Settings --
 --------------
 
-local terrain_destruction = minetest.settings:get_bool("water_dragon_terrain_destruction", true)
+local terrain_destruction = minetest.settings:get_bool("water_dragon_terrain_destruction", false)
 
 ---------------------
 -- Local Utilities --
@@ -123,9 +123,8 @@ end
 local walkable_nodes = {}
 
 local wet_conversions = {}
-local wet_conversions = {}
 
-local flame_node
+local flame_node = {}
 
 minetest.register_on_mods_loaded(function()
 	for name, def in pairs(minetest.registered_nodes) do
@@ -133,14 +132,11 @@ minetest.register_on_mods_loaded(function()
 			if def.walkable then
 				table.insert(walkable_nodes, name)
 				if minetest.get_item_group(name, "stone") > 0 then
-					wet_conversions[name] = "waterdragon:stone_wet" -- wet Stone
-					wet_conversions[name] = "waterdragon:stone_wet" -- wet Stone
+					wet_conversions[name] = "waterdragon:stone_wet" -- Wet Stone
 				elseif minetest.get_item_group(name, "soil") > 0 then
-					wet_conversions[name] = "waterdragon:soil_wet" -- wet Soil
-					wet_conversions[name] = "waterdragon:soil_wet" -- wet Soil
+					wet_conversions[name] = "waterdragon:soil_wet" -- Wet Soil
 				elseif minetest.get_item_group(name, "tree") > 0 then
-					wet_conversions[name] = "waterdragon:log_wet" -- wet Log
-					wet_conversions[name] = "waterdragon:log_wet" -- wet Log
+					wet_conversions[name] = "waterdragon:log_wet" -- Wet Log
 				elseif minetest.get_item_group(name, "flora") > 0
 					or minetest.get_item_group(name, "leaves") > 0
 					or minetest.get_item_group(name, "snowy") > 0 then
@@ -658,7 +654,7 @@ local function make_wet_nodes(pos, radius)
 	end
 end
 
-local function make_nodes_wet(pos, radius)
+local function make_nodes_wet_pure_water(pos, radius)
 	local h_stride = radius
 	local v_stride = math.ceil(radius * 0.5)
 	local pos1 = {
@@ -877,7 +873,17 @@ function waterdragon.rare_water_breath(self, pos2)
 			if random(5) < 2 then
 				damage_objects(self, rare_water_pos, spread + 2)
 			end
+			local pure_water_pos = vec_add(pos, vec_multi(dir, i))
+			make_nodes_wet_pure_water(pure_water_pos, spread)
+			if random(5) < 2 then
+				damage_objects(self, pure_water_pos, spread + 2)
+			end
 			local def = creatura.get_node_def(pure_water_pos)
+			if def.walkable then
+				breath_end = pure_water_pos
+				break
+			end
+			local def = creatura.get_node_def(rare_water_pos)
 			if def.walkable then
 				breath_end = rare_water_pos
 				break
@@ -1047,7 +1053,7 @@ waterdragon.dragon_api = {
 		for _, collision in ipairs(moveresult.collisions) do
 			if collision.type == "node" then
 				local n_pos = collision.node_pos
-				if n_pos.y - pos.y >= 1 then
+				if n_pos.y - pos.y >= 1.5 then
 					local node = minetest.get_node(n_pos)
 					if minetest.get_item_group(node.name, "cracky") ~= 1
 						and minetest.get_item_group(node.name, "unbreakable") < 1 then

@@ -130,6 +130,13 @@ local book_pages = {
 			text = "waterdragon_book_icon_next.png;btn_next;;true;false"
 		},
 		{ -- Last Page
+			element_type = "image_button",
+			font_size = 24,
+			offset = {x = 1, y = 9},
+			size = {x = 1, y = 1},
+			text = "waterdragon_book_icon_last.png;btn_last;;true;false"
+		},
+		{ -- Last Page
 			unlock_key = "draconic_steel",
 			element_type = "image_button",
 			font_size = 24,

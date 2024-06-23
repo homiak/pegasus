@@ -21,11 +21,8 @@ local water_cavern_spawn_rate = tonumber(minetest.settings:get("water_cavern_spa
 local random = math.random
 
 local c_wet_stone = minetest.get_content_id("waterdragon:stone_wet")
-local c_wet_stone = minetest.get_content_id("waterdragon:stone_wet")
 local c_soil_wet = minetest.get_content_id("waterdragon:soil_wet")
-local c_soil_wet = minetest.get_content_id("waterdragon:soil_wet")
-local c_bones_pure_water = minetest.get_content_id("waterdragon:bone_pile_wet")
-local c_bones_rare_water = minetest.get_content_id("waterdragon:bone_pile_wet")
+local c_bones_water = minetest.get_content_id("waterdragon:bone_pile_wet")
 local c_eggs_pure_water = minetest.get_content_id("waterdragon:egg_pure_water")
 local c_eggs_rare_water = minetest.get_content_id("waterdragon:egg_rare_water")
 
@@ -187,7 +184,20 @@ local function generate_pure_water_dragon_nest(minp, maxp, area, data)
 					if random(loot_chance) < 2 then
 						data[vi] = c_gold
 					elseif random(24) < 2 then
-						data[vi] = c_bones_pure_water
+						data[vi] = c_bones_water
+					end
+				end
+				-- Create scattered Eggs
+				local egg_chance = 30
+				if gender == "male" then
+					egg_chance = 12
+				end
+				if data[bi] == c_wet_stone
+				and data[vi] == c_air then
+					if random(egg_chance) < 2 then
+						data[vi] = c_steel
+					elseif random(24) < 2 then
+						data[vi] = c_eggs_pure_water
 					end
 				end
 				-- Create stone pillars
@@ -294,7 +304,7 @@ local function generate_rare_water_dragon_nest(minp, maxp, area, data)
 				and y < center_y then
 					data[vi] = c_wet_stone
 				end
-				-- Create wet Soil around nest
+				-- Create Wet Soil around nest
 				if distance > 13 - (height * 0.66)
 				and distance < 19 - (height * 0.66)
 				and data[vi] ~= c_air
@@ -312,7 +322,7 @@ local function generate_rare_water_dragon_nest(minp, maxp, area, data)
 					if random(loot_chance) < 2 then
 						data[vi] = c_steel
 					elseif random(24) < 2 then
-						data[vi] = c_bones_rare_water
+						data[vi] = c_bones_water
 					end
 				end
 				-- Create scattered Eggs
@@ -429,7 +439,7 @@ local function generate_pure_water_dragon_cavern(minp, maxp, area, data)
 					if random(loot_chance) < 2 then
 						data[vi] = c_gold
 					elseif random(24) < 2 then
-						data[vi] = c_bones_pure_water
+						data[vi] = c_bones_water
 					end
 				end
 				nixyz = nixyz + 1
@@ -523,7 +533,7 @@ local function generate_rare_water_dragon_cavern(minp, maxp, area, data)
 					if random(loot_chance) < 2 then
 						data[vi] = c_steel
 					elseif random(24) < 2 then
-						data[vi] = c_bones_rare_water
+						data[vi] = c_bones_water
 					end
 				end
 				nixyz = nixyz + 1

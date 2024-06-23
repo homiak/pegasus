@@ -84,7 +84,7 @@ minetest.register_craftitem("waterdragon:dragon_water_drop", {
 			local particle = "waterdragon_particle_green.png"
 			entity.hp = entity.max_health
 			entity:memorize("hp", entity.hp)
-			minetest.chat_send_player(user:get_player_name(), S(" has been revived!"))
+			minetest.chat_send_player(user:get_player_name(), S("The animal has been revived!"))
 			minetest.add_particlespawner({
 				amount = 16,
 				time = 0.25,
@@ -528,8 +528,8 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 		player:set_wielded_item(itemstack)
 		return itemstack
 	end
-	if id ~= "" then                  -- If the horn has a linked Dragon
-		if not waterdragon.dragons[id] then -- Clear data if linked Dragon is dead
+	if id ~= "" then                  -- If the horn has a linked Water Dragon
+		if not waterdragon.dragons[id] then -- Clear data if linked Water Dragon is dead
 			meta:set_string("mob", nil)
 			meta:set_string("dragon_id", nil)
 			meta:set_string("staticdata", nil)
@@ -1050,9 +1050,9 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "waterdragon:dragonstone_block_pure_water",
 	recipe = {
-		{ "",                     "waterdragon:wet_soil", "" },
+		{ "", "waterdragon:wet_soil", "" },
 		{ "waterdragon:wet_soil", "waterdragon:wet_soil", "waterdragon:wet_soil" },
-		{ "",                     "waterdragon:wet_soil", "" },
+		{ "", "waterdragon:wet_soil", "" },
 	}
 })
 
@@ -1076,18 +1076,18 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "waterdragon:draconic_steel_forge_rare_water",
 	recipe = {
-		{ "waterdragon:stone_wet", "waterdragon:stone_wet", "waterdragon:stone_wet" },
-		{ "waterdragon:stone_wet", "default:furnace",       "waterdragon:stone_wet" },
-		{ "waterdragon:stone_wet", "waterdragon:stone_wet", "waterdragon:stone_wet" },
+		{ "waterdragon:dragonstone_block_rare_water", "waterdragon:dragonstone_block_rare_water", "waterdragon:dragonstone_block_rare_water" },
+		{ "waterdragon:dragonstone_block_rare_water", "default:furnace", "waterdragon:dragonstone_block_rare_water" },
+		{ "waterdragon:dragonstone_block_rare_water", "waterdragon:dragonstone_block_rare_water", "waterdragon:dragonstone_block_rare_water" },
 	}
 })
 
 minetest.register_craft({
 	output = "waterdragon:draconic_steel_forge_pure_water",
 	recipe = {
-		{ "waterdragon:stone_wet", "waterdragon:stone_wet", "waterdragon:stone_wet" },
-		{ "waterdragon:stone_wet", "default:furnace",       "waterdragon:stone_wet" },
-		{ "waterdragon:stone_wet", "waterdragon:stone_wet", "waterdragon:stone_wet" },
+		{ "waterdragon:dragonstone_block_pure_water", "waterdragon:dragonstone_block_pure_water", "waterdragon:dragonstone_block_pure_water" },
+		{ "waterdragon:dragonstone_block_pure_water", "default:furnace", "waterdragon:dragonstone_block_pure_water" },
+		{ "waterdragon:dragonstone_block_pure_water", "waterdragon:dragonstone_block_pure_water", "waterdragon:dragonstone_block_pure_water" },
 	}
 })
 
@@ -1140,9 +1140,9 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "waterdragon:dragonstone_crucible",
 	recipe = {
-		{ "waterdragon:dragonstone_block_pure_water", "",                                         "waterdragon:dragonstone_block_pure_water" },
-		{ "waterdragon:dragonstone_block_pure_water", "",                                         "waterdragon:dragonstone_block_pure_water" },
-		{ "",                                         "waterdragon:dragonstone_block_pure_water", "" },
+		{ "waterdragon:stone_wet", "", "waterdragon:stone_wet" },
+		{ "waterdragon:stone_wet", "", "waterdragon:stone_wet" },
+		{ "", "waterdragon:stone_wet", "" },
 	}
 })
 
@@ -1424,6 +1424,11 @@ craft_boots({
 	material = "waterdragon:scales_pure_water_dragon"
 })
 
+craft_leggings({
+	output = "waterdragon:leggings_pure_water_draconic",
+	material = "waterdragon:scales_pure_water_dragon"
+})
+
 -- Rare Water Scale Armor
 
 craft_leggings({
@@ -1446,10 +1451,6 @@ craft_boots({
 	material = "waterdragon:scales_rare_water_dragon"
 })
 
-craft_leggings({
-	output = "waterdragon:leggings_rare_water_draconic",
-	material = "waterdragon:scales_rare_water_dragon"
-})
 
 ----------------------------------
 -- Draconic Steel Tool On-Craft --
@@ -1511,16 +1512,15 @@ minetest.register_craftitem("waterdragon:bucket_dragon_water", {
             entity = pointed_object:get_luaentity()
         end
 		if entity
-		and entity.name:match("^waterdragon:")
 		and entity.memorize then
 			local ent_pos = entity:get_center_pos()
 			local particle = "waterdragon_particle_green.png"
 			if not entity.owner then
 				entity.owner = player:get_player_name()
 				entity:memorize("owner", entity.owner)
-				minetest.chat_send_player(player:get_player_name(), S(" has been tamed!"))
+				minetest.chat_send_player(player:get_player_name(), S("The animal has been tamed!"))
 			else
-				minetest.chat_send_player(player:get_player_name(), S(" is already tamed"))
+				minetest.chat_send_player(player:get_player_name(), S("The animal is already tamed"))
 			end
 			minetest.add_particlespawner({
 				amount = 16,
