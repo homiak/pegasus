@@ -321,7 +321,7 @@ function waterdragon.drop_items(self)
 			maxexptime = 1,
 			minsize = 4,
 			maxsize = 4,
-			texture = "creatura_smoke_particle.png",
+			texture = "waterdragon_smoke_particle.png",
 			animation = {
 				type = 'vertical_frames',
 				aspect_w = 4,
@@ -585,7 +585,7 @@ local function damage_objects(self, pos, radius)
 		end
 		if damage then
 			object:punch(self.object, 1.0, { damage_groups = { fleshy = math.ceil(self.damage * 0.33) } })
-			--self:punch_target(object, math.ceil(self.damage * 0.2))
+			self:punch_target(object, math.ceil(self.damage * 0.2))
 		end
 		if ent and ent.name == "__builtin:item" then
 			local stack = ItemStack(ent.itemstring)

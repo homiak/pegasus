@@ -707,7 +707,7 @@ creatura.register_utility("waterdragon:die", function(self)
 				maxexptime = 1,
 				minsize = 4,
 				maxsize = 4,
-				texture = "creatura_smoke_particle.png",
+				texture = "waterdragon_smoke_particle.png",
 				animation = {
 					type = 'vertical_frames',
 					aspect_w = 4,

@@ -746,7 +746,7 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 		-- If the crucible is full, and no breath is applied, begin cooling
 		if crucible:get_name() == "waterdragon:dragonstone_crucible_full"
 		and inv:room_for_item("output", "waterdragon:draconic_steel_ingot_pure_water") then
-			forge_particle(pos, "creatura_smoke_particle.png", {
+			forge_particle(pos, "waterdragon_smoke_particle.png", {
 				type = 'vertical_frames',
 				aspect_w = 4,
 				aspect_h = 4,
@@ -780,7 +780,7 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 		if input:get_name() ~= steel_ingot
 		or crucible:get_name() ~= "waterdragon:dragonstone_crucible" then
 			update_pure_water_form(meta)
-			forge_particle(pos, "creatura_smoke_particle.png", {
+			forge_particle(pos, "waterdragon_smoke_particle.png", {
 				type = 'vertical_frames',
 				aspect_w = 4,
 				aspect_h = 4,
@@ -946,7 +946,7 @@ minetest.register_node("waterdragon:draconic_forge_rare_water", {
 
 		if crucible:get_name() ~= "waterdragon:dragonstone_crucible_full" then
 			update_rare_water_form(meta)
-			forge_particle(pos, "creatura_smoke_particle.png", {
+			forge_particle(pos, "waterdragon_smoke_particle.png", {
 				type = 'vertical_frames',
 				aspect_w = 4,
 				aspect_h = 4,
