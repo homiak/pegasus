@@ -87,4 +87,8 @@ Rare Water Draconic Steel Forge=
 Pure Water Draconic Steel Forge=
 Bucket of Dragon Water=
  would like to ride as a passenger=
+Enter name:=
+Rename=
+ Years Old=
+ 
 
