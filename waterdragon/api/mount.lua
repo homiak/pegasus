@@ -181,14 +181,15 @@ function waterdragon.attach_player(self, player)
 	if not self.attack_stamina then
 		return
 	end
-	local data = waterdragon.mounted_player_data[player:get_player_name()]
+	local data = waterdragon.mounted_player_data[player:get_player_name()] or {}
+
 	if not data.huds then
 		local health = self.hp / math.ceil(self.max_health * scale) * 100
 		local hunger = self.hunger / math.ceil(self.max_hunger * scale) * 100
 		local stamina = self.flight_stamina / 900 * 100
 		local breath = self.attack_stamina / 100 * 100
-		player:hud_set_flags({wielditem = false})
-		waterdragon.mounted_player_data[player:get_player_name()].huds = {
+		player:hud_set_flags({wielditem = true})
+		data.huds = {
 			["health"] = set_hud(player, {
 				text = "waterdragon_forms_health_bg.png^[lowpart:" .. health .. ":waterdragon_forms_health_fg.png",
 				position = {x = 0, y = 0.7}
@@ -235,8 +236,8 @@ function waterdragon.attach_passenger(self, player)
 		local health = self.hp / math.ceil(self.max_health * scale) * 100
 		local hunger = self.hunger / math.ceil(self.max_hunger * scale) * 100
 		local stamina = self.flight_stamina / 900 * 100
-		local breath = self.attack_stamina / 100 * 100
-		player:hud_set_flags({wielditem = false})
+		local breath = self.attack_stamina / 90 * 90
+		player:hud_set_flags({wielditem = true})
 		waterdragon.mounted_player_data[player:get_player_name()].huds = {
 			["health"] = set_hud(player, {
 				text = "waterdragon_forms_health_bg.png^[lowpart:" .. health .. ":waterdragon_forms_health_fg.png",
@@ -495,7 +496,7 @@ creatura.register_utility("waterdragon:mount", function(self)
 								y = 80 * scale,
 								z = -110 * scale
 							}, {x = 0, y = 0, z = 0})
-							player:hud_set_flags({wielditem = false})
+							player:hud_set_flags({wielditem = true})
 						elseif view_point == 2 then
 							view_point = 3
 							local dragon_size = _self.object:get_properties().visual_size
@@ -510,7 +511,7 @@ creatura.register_utility("waterdragon:mount", function(self)
 								y = 80 * scale,
 								z = -160 * scale
 							}, {x = 0, y = 0, z = 0})
-							player:hud_set_flags({wielditem = false})
+							player:hud_set_flags({wielditem = true})
 						end
 						view_held = true
 					end

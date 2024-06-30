@@ -100,7 +100,6 @@ function minetest.clear_objects(options)
 end
 
 -- Load Files --
-
 dofile(path.."/api/api.lua")
 dofile(path.."/api/mount.lua")
 dofile(path.."/api/behaviors.lua")
@@ -132,27 +131,6 @@ minetest.register_on_mods_loaded(function()
 end)
 
 dofile(path.."/mapgen.lua")
-
-local water_simple_spawning_dragons = minetest.settings:get_bool("water_simple_spawning_dragons") or false
-
-local spawn_rate = tonumber(minetest.settings:get("water_dragon_simple_spawn_rate")) or 600
-
-if water_simple_spawning_dragons then
-    creatura.register_mob_spawn("waterdragon:rare_water_dragon", {
-        chance = spawn_rate,
-        min_group = 1,
-        max_group = 1,
-        biomes = waterdragon.cold_biomes,
-        nodes = {"air"}
-    })
-    creatura.register_mob_spawn("waterdragon:pure_water_dragon", {
-        chance = spawn_rate,
-        min_group = 1,
-        max_group = 1,
-        biomes = waterdragon.warm_biomes,
-        nodes = {"air"}
-    })
-end
 
 -- Aliases --
 

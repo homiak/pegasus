@@ -47,9 +47,9 @@ end
 local function get_binder_desc(self)
 	local info = S("Dragon Horn\n") .. minetest.colorize("#bdd9ff", correct_name(self.name))
 	if self.nametag == "" then
-		info = info .. "\n" .. infotext("Nameless Dragon")
+		info = info .. "\n" .. infotext("a Nameless Dragon")
 	else
-		info = info .. "\n" .. infotext(self.nametag or "Nameless Dragon")
+		info = info .. "\n" .. infotext(self.nametag or "a Nameless Dragon")
 	end
 	if self.age then
 		info = info .. "\n" .. infotext(self.age)
@@ -483,7 +483,7 @@ local function capture(player, ent)
 		meta:set_string("mob", ent.name)
 		meta:set_string("dragon_id", ent.dragon_id)
 		meta:set_string("staticdata", ent:get_staticdata())
-		meta:set_string("nametag", ent.nametag or "Nameless Dragon")
+		meta:set_string("nametag", ent.nametag or "a Nameless Dragon")
 		meta:set_string("description", get_binder_desc(ent))
 		if stored_aging > 0 then
 			meta:set_int("timestamp", os.time())
@@ -583,9 +583,9 @@ local function dragon_horn_place(itemstack, player, pointed_thing)
 		pos.y = pos.y + 3
 		local mob = meta:get_string("mob")
 		local staticdata = meta:get_string("staticdata")
-		local nametag = meta:get_string("nametag") or "Nameless Dragon"
+		local nametag = meta:get_string("nametag") or "a Nameless Dragon"
 		local id = meta:get_string("dragon_id")
-		if not waterdragon.dragons[id] then -- Clear data if linked Dragon is dead
+		if not waterdragon.dragons[id] then -- Clear data if linked Water Dragon is dead
 			meta:set_string("mob", nil)
 			meta:set_string("dragon_id", nil)
 			meta:set_string("staticdata", nil)
@@ -1488,7 +1488,7 @@ minetest.register_on_craft(function(itemstack, player, old_craft_grid)
 			local name = itemstack:get_name()
 			local desc = minetest.registered_items[name].description
 			meta:set_string("dragon_id", last_id)
-			local dragon_name = "Nameless Dragon"
+			local dragon_name = "a Nameless Dragon"
 			if waterdragon.dragons[last_id]
 				and waterdragon.dragons[last_id].name then
 				dragon_name = waterdragon.dragons[last_id].name

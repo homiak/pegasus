@@ -26,8 +26,8 @@ local function get_rename_formspec(self)
 	local tag = self.nametag or ""
 	local form = {
 		"size[8,4]",
-		"field[0.5,1;7.5,0;name;" .. minetest.formspec_escape("Enter name:") .. ";" .. tag .. "]",
-		"button_exit[2.5,3.5;3,1;mob_rename;" .. minetest.formspec_escape("Rename") .. "]"
+		"field[0.5,1;7.5,0;name;" .. minetest.formspec_escape(S("Enter name:")) .. ";" .. tag .. "]",
+		"button_exit[2.5,3.5;3,1;mob_rename;" .. minetest.formspec_escape(S("Rename")) .. "]"
 	}
 	return table.concat(form, "")
 end
@@ -78,7 +78,7 @@ local function get_dragon_formspec(self)
 	local form = {
 		"formspec_version[4]",
 		"size[16,10]",
-		--"no_prepend[]",
+		"no_prepend[]",
 		"bgcolor[#000000;false]",
 		"background[0,0;16,10;waterdragon_forms_bg_b.png]",
 		"label[6.8,0.8;" .. correct_name(self.name) .. " (" .. correct_name(self.gender) .. ")]",

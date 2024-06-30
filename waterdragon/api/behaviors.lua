@@ -193,7 +193,6 @@ creatura.register_movement_method("waterdragon:fly_simple", function(self)
 	local steer_timer = 0.25
 	local width = self.width
 	local wayp_threshold = width + ((width / self.turn_rate or 7))
-
 	self:set_gravity(0)
 	local function func(_self, goal, speed_factor)
 		local pos = _self.object:get_pos()

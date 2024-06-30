@@ -1,9 +1,3 @@
-#    If true, Water Dragons will spawn randomly throughout the world
-water_simple_spawning_dragons (Simple Spawning) bool false
-
-#    Water Dragon Spawn Rate. 1 in x chance per spawn tick for a Water Dragon to spawn. This setting only applies when Simple Spawning is enabled.
-water_dragon_simple_spawn_rate (Simple Spawn Rate) int 600
-
 #    If true, Water Dragons will spawn in mountains with Nests
 water_nest_spawning (Nest Spawning) bool true
 

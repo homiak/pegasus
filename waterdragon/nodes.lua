@@ -10,16 +10,6 @@ local random = math.random
 
 local steel_ingot = "default:steel_ingot"
 
-minetest.register_on_mods_loaded(function()
-	for name in pairs(minetest.registered_items) do
-		if name:match(":steel_ingot") or name:match(":ingot_steel")
-		or name:match(":iron_ingot") or name:match(":ingot_iron") then
-			steel_ingot = name
-			break
-		end
-	end
-end)
-
 -- Local Utilities --
 
 local stair_queue = {}
@@ -184,7 +174,7 @@ register_node("waterdragon:bone_pile_wet", {
 -- Draconic Steel Forge --
 --------------------------
 
-local stack_size = minetest.registered_items[steel_ingot].stack_max or 999
+local stack_size = minetest.registered_items[steel_ingot].stack_max or 99
 
 local forge_core = {
 	["waterdragon:draconic_forge_pure_water"] = "waterdragon:dragonstone_block_pure_water",
@@ -560,7 +550,7 @@ local function cool_crucible(pos, ingot)
 		local draconic_ingot = ItemStack(ingot)
 		local ingot_meta = draconic_ingot:get_meta()
 		local ingot_desc = minetest.registered_items[ingot].description
-		local dragon_name = "Nameless Dragon"
+		local dragon_name = "a Nameless Dragon"
 		if waterdragon.dragons[dragon_id]
 		and waterdragon.dragons[dragon_id].name then
 			dragon_name = waterdragon.dragons[dragon_id].name
@@ -733,12 +723,12 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 			crucible = inv:get_stack("crucible", 1)
 		end
 
-		-- If a Dragon is breathing into forge, increase melting progress
+		-- If a Water Dragon is breathing into forge, increase melting progress
 		if dragon_id
 		and melt_perc < 100 then
 			melt_perc = melt_perc + 5
 			meta:set_string("dragon_id", "")
-		-- If the Dragon has stopped breathing into forge, undo melting progress
+		-- If the Water Dragon has stopped breathing into forge, undo melting progress
 		elseif melt_perc > 0 then
 			melt_perc = melt_perc - 5
 		end
@@ -796,7 +786,7 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 
 		meta:set_string("dragon_id", id)
 
-		forge_particle(pos, "pure_water_basic_flame.png")
+		forge_particle(pos, "fire_basic_flame.png")
 	end
 })
 
@@ -918,7 +908,7 @@ minetest.register_node("waterdragon:draconic_forge_rare_water", {
 			cool_crucible(pos, "waterdragon:draconic_steel_ingot_rare_water")
 		end
 
-		-- If a Dragon is breathing into forge, increase freezing progress
+		-- If a Dragon is breathing into forge, increase making wet progress
 		if cooling_init then
 			cool_perc = cool_perc + 5
 			meta:set_string("cooling_init", "")
