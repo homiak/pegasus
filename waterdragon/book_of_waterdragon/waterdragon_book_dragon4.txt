@@ -8,4 +8,6 @@ To revive a Water Dragon
 you need a Drop of Dragon
 Water. To tame a Water 
 Dragon you need a Bucket
-  of Dragon Water.
+of Dragon Water. If you 
+press Shift+Rightclick then
+you can see the menu.

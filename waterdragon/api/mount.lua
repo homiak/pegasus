@@ -279,7 +279,7 @@ function waterdragon.detach_player(self, player)
 	player:hud_set_flags({ wielditem = true })
 	-- Set Fake Player (Using a fake player and changing 1st person eye offset works around the above issue)
 	waterdragon.unset_fake_player(player)
-	-- Set Dragon Data
+	-- Set Water Dragon Data
 	if player == self.rider then
 		self.rider = nil
 	else

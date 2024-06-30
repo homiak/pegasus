@@ -463,7 +463,7 @@ for color in pairs(waterdragon.colors_rare_water) do
 end
 
 --------------------
--- Dragon Storage --
+--Water Dragon Storage --
 --------------------
 
 -- API --
@@ -556,7 +556,7 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 			ent.object:set_pos(player:get_pos())
 		end
 		minetest.chat_send_player(player:get_player_name(), S("You have called your Water Dragon"))
-	else -- Link Dragon to Horn
+	else -- Link Water Dragon to Horn
 		local ent = pointed_thing.ref and pointed_thing.ref:get_luaentity()
 		if ent
 			and ent.name:match("^waterdragon:")
