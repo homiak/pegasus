@@ -1,7 +1,7 @@
 -----------
 -- Nodes --
 -----------
-local S = waterdragon.S
+
 local random = math.random
 
 -- Sounds --
@@ -10,7 +10,31 @@ local random = math.random
 
 local steel_ingot = "default:steel_ingot"
 
+minetest.register_on_mods_loaded(function()
+	for name in pairs(minetest.registered_items) do
+		if name:match(":steel_ingot") or name:match(":ingot_steel")
+		or name:match(":iron_ingot") or name:match(":ingot_iron") then
+			steel_ingot = name
+			break
+		end
+	end
+end)
+
 -- Local Utilities --
+
+local function correct_name(str)
+	if str then
+		if str:match(":") then str = str:split(":")[2] end
+		return (string.gsub(" " .. str, "%W%l", string.upper):sub(2):gsub("_", " "))
+	end
+end
+
+local function infotext(str, format)
+	if format then
+		return minetest.colorize("#a9a9a9", correct_name(str))
+	end
+	return minetest.colorize("#a9a9a9", str)
+end
 
 local stair_queue = {}
 
@@ -23,151 +47,204 @@ end
 
 -- Logs --
 
-register_node("waterdragon:log_wet", {
-	description = S("Wet Log"),
-	tiles = {"waterdragon_log_wet_top.png", "waterdragon_log_wet_top.png", "waterdragon_log_wet.png"},
+register_node("draconis:log_scorched", {
+	description = "Scorched Log",
+	tiles = {"draconis_log_scorched_top.png", "draconis_log_scorched_top.png", "draconis_log_scorched.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
-	sounds = waterdragon.sounds.wood,
+	sounds = draconis.sounds.wood,
+	on_place = minetest.rotate_node
+}, true)
+
+register_node("draconis:log_frozen", {
+	description = "Frozen Log",
+	tiles = {"draconis_log_frozen_top.png", "draconis_log_frozen_top.png", "draconis_log_frozen.png"},
+	paramtype2 = "facedir",
+	is_ground_content = false,
+	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
+	sounds = draconis.sounds.wood,
 	on_place = minetest.rotate_node
 }, true)
 
 -- Stone --
 
-register_node("waterdragon:stone_wet", {
-	description = S("Wet Stone"),
-	tiles = {"waterdragon_stone_wet.png"},
+register_node("draconis:stone_scorched", {
+	description = "Scorched Stone",
+	tiles = {"draconis_stone_scorched.png"},
 	paramtype2 = "facedir",
 	place_param2 = 0,
 	is_ground_content = false,
 	groups = {cracky = 1, level = 3},
-	sounds = waterdragon.sounds.stone
+	sounds = draconis.sounds.stone
 }, true)
 
--- Dragonstone Blocks
-
-register_node("waterdragon:dragonstone_block_rare_water", {
-	description = S("Rare Water Dragonstone Block"),
-	tiles = {"waterdragon_dragonstone_block_rare_water.png"},
+register_node("draconis:stone_frozen", {
+	description = "Frozen Stone",
+	tiles = {"draconis_stone_frozen.png"},
 	paramtype2 = "facedir",
 	place_param2 = 0,
 	is_ground_content = false,
 	groups = {cracky = 1, level = 3},
-	sounds = waterdragon.sounds.stone
-}, true)
-
-register_node("waterdragon:dragonstone_block_pure_water", {
-	description = S("Pure Water Dragonstone Block"),
-	tiles = {"waterdragon_dragonstone_block_pure_water.png"},
-	paramtype2 = "facedir",
-	place_param2 = 0,
-	is_ground_content = false,
-	groups = {cracky = 1, level = 3},
-	sounds = waterdragon.sounds.stone
+	sounds = draconis.sounds.stone
 }, true)
 
 -- Soil --
 
-register_node("waterdragon:soil_wet", {
-	description = S("Wet Soil"),
-	tiles = {"waterdragon_soil_wet.png"},
+register_node("draconis:soil_scorched", {
+	description = "Scorched Soil",
+	tiles = {"draconis_soil_scorched.png"},
 	groups = {crumbly = 3, soil = 1},
-	sounds = waterdragon.sounds.dirt
+	sounds = draconis.sounds.dirt
+})
+
+register_node("draconis:soil_frozen", {
+	description = "Frozen Soil",
+	tiles = {"draconis_soil_frozen.png"},
+	groups = {crumbly = 3, soil = 1},
+	sounds = draconis.sounds.dirt
 })
 
 -- Wood Planks
 
-register_node("waterdragon:wood_planks_wet", {
-	description = S("Wet Wood Planks"),
-	tiles = {"waterdragon_wood_planks_wet.png"},
+register_node("draconis:wood_planks_scorched", {
+	description = "Scorched Wood Planks",
+	tiles = {"draconis_wood_planks_scorched.png"},
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
-	sounds = waterdragon.sounds.wood,
+	sounds = draconis.sounds.wood,
 }, true)
 
+register_node("draconis:wood_planks_frozen", {
+	description = "Frozen Wood Planks",
+	tiles = {"draconis_wood_planks_frozen.png"},
+	is_ground_content = false,
+	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
+	sounds = draconis.sounds.wood,
+}, true)
 
 -- Stone Bricks --
 
-register_node("waterdragon:dragonstone_bricks_pure_water", {
-	description = S("Pure Water Dragonstone Bricks"),
-	tiles = {"waterdragon_dragonstone_bricks_pure_water.png"},
+register_node("draconis:dragonstone_bricks_fire", {
+	description = "Fire Dragonstone Bricks",
+	tiles = {"draconis_dragonstone_bricks_fire.png"},
 	paramtype2 = "facedir",
 	place_param2 = 0,
 	is_ground_content = false,
 	groups = {cracky = 1, level = 2},
-	sounds = waterdragon.sounds.stone
+	sounds = draconis.sounds.stone
 }, true)
 
-register_node("waterdragon:dragonstone_bricks_rare_water", {
-	description = S("Rare Water Dragonstone Bricks"),
-	tiles = {"waterdragon_dragonstone_bricks_rare_water.png"},
+register_node("draconis:dragonstone_block_fire", {
+	description = "Fire Dragonstone Block",
+	tiles = {"draconis_dragonstone_block_fire.png"},
 	paramtype2 = "facedir",
 	place_param2 = 0,
 	is_ground_content = false,
 	groups = {cracky = 1, level = 2},
-	sounds = waterdragon.sounds.stone
+	sounds = draconis.sounds.stone
 }, true)
 
+register_node("draconis:dragonstone_bricks_ice", {
+	description = "Ice Dragonstone Bricks",
+	tiles = {"draconis_dragonstone_bricks_ice.png"},
+	paramtype2 = "facedir",
+	place_param2 = 0,
+	is_ground_content = false,
+	groups = {cracky = 1, level = 2},
+	sounds = draconis.sounds.stone
+}, true)
 
-register_node("waterdragon:stone_bricks_wet", {
-	description = S("Wet Stone Brick"),
-	tiles = {"waterdragon_stone_brick_wet.png"},
+register_node("draconis:dragonstone_block_ice", {
+	description = "Ice Dragonstone Block",
+	tiles = {"draconis_dragonstone_block_ice.png"},
+	paramtype2 = "facedir",
+	place_param2 = 0,
+	is_ground_content = false,
+	groups = {cracky = 1, level = 2},
+	sounds = draconis.sounds.stone
+}, true)
+
+register_node("draconis:stone_bricks_scorched", {
+	description = "Scorched Stone Brick",
+	tiles = {"draconis_stone_brick_scorched.png"},
 	paramtype2 = "facedir",
 	place_param2 = 0,
 	is_ground_content = false,
 	groups = {cracky = 1, level = 3},
-	sounds = waterdragon.sounds.stone
+	sounds = draconis.sounds.stone
+}, true)
+
+register_node("draconis:stone_bricks_frozen", {
+	description = "Frozen Stone Brick",
+	tiles = {"draconis_stone_brick_frozen.png"},
+	paramtype2 = "facedir",
+	place_param2 = 0,
+	is_ground_content = false,
+	groups = {cracky = 1, level = 3},
+	sounds = draconis.sounds.stone
 }, true)
 
 ------------------
 -- Scale Blocks --
 ------------------
 
-for color in pairs(waterdragon.colors_pure_water) do
-	register_node("waterdragon:dragonhide_block_pure_water", {
-		description = S("Pure Water Dragonhide Block"),
+for color in pairs(draconis.colors_fire) do
+	register_node("draconis:dragonhide_block_fire_" .. color, {
+		description = "Fire Dragonhide Block \n" .. infotext(color, true),
 		tiles = {
-			"waterdragon_dragonhide_block_pure_water_top.png",
-			"waterdragon_dragonhide_block_pure_water_top.png",
-			"waterdragon_dragonhide_block_pure_water.png"
+			"draconis_dragonhide_block_" .. color .. "_top.png",
+			"draconis_dragonhide_block_" .. color .. "_top.png",
+			"draconis_dragonhide_block_" .. color .. ".png"
 		},
 		paramtype2 = "facedir",
 		place_param2 = 0,
 		is_ground_content = false,
-		groups = {cracky = 1, level = 3, pure_water_dragonhide_block = 1},
-		sounds = waterdragon.sounds.stone
+		groups = {cracky = 1, level = 3, fire_dragonhide_block = 1},
+		sounds = draconis.sounds.stone
 	})
 end
 
-for color in pairs(waterdragon.colors_rare_water) do
-	register_node("waterdragon:dragonhide_block_rare_water", {
-		description = S("Pure Water Dragonhide Block"),
+for color in pairs(draconis.colors_ice) do
+	register_node("draconis:dragonhide_block_ice_" .. color, {
+		description = "Ice Dragonhide Block \n" .. infotext(color, true),
 		tiles = {
-			"waterdragon_dragonhide_block_rare_water_top.png",
-			"waterdragon_dragonhide_block_rare_water_top.png",
-			"waterdragon_dragonhide_block_rare_water.png"
+			"draconis_dragonhide_block_" .. color .. "_top.png",
+			"draconis_dragonhide_block_" .. color .. "_top.png",
+			"draconis_dragonhide_block_" .. color .. ".png"
 		},
 		paramtype2 = "facedir",
 		place_param2 = 0,
 		is_ground_content = false,
-		groups = {cracky = 1, level = 3, rare_water_dragonhide_block = 1},
-		sounds = waterdragon.sounds.stone
+		groups = {cracky = 1, level = 3, ice_dragonhide_block = 1},
+		sounds = draconis.sounds.stone
 	})
 end
 
 -- Bone Pile --
 
-register_node("waterdragon:bone_pile_wet", {
-	description = S("Wet Bone Pile"),
+register_node("draconis:bone_pile_scorched", {
+	description = "Scorched Bone Pile",
 	tiles = {
-		"waterdragon_bone_pile_wet.png",
+		"draconis_bone_pile_scorched.png",
 	},
 	paramtype2 = "facedir",
 	place_param2 = 0,
 	is_ground_content = false,
 	groups = {cracky = 3, level = 1, flammable = 1},
-	sounds = waterdragon.sounds.wood
+	sounds = draconis.sounds.wood
+})
+
+register_node("draconis:bone_pile_frozen", {
+	description = "Frozen Bone Pile",
+	tiles = {
+		"draconis_bone_pile_frozen.png",
+	},
+	paramtype2 = "facedir",
+	place_param2 = 0,
+	is_ground_content = false,
+	groups = {cracky = 3, level = 1, slippery = 1},
+	sounds = draconis.sounds.wood
 })
 
 --------------------------
@@ -177,30 +254,30 @@ register_node("waterdragon:bone_pile_wet", {
 local stack_size = minetest.registered_items[steel_ingot].stack_max or 99
 
 local forge_core = {
-	["waterdragon:draconic_forge_pure_water"] = "waterdragon:dragonstone_block_pure_water",
-	["waterdragon:draconic_forge_rare_water"] = "waterdragon:dragonstone_block_rare_water"
+	["draconis:draconic_forge_fire"] = "draconis:dragonstone_block_fire",
+	["draconis:draconic_forge_ice"] = "draconis:dragonstone_block_ice"
 }
 
 local forge_shell = {
-	["waterdragon:draconic_forge_pure_water"] = "waterdragon:dragonstone_bricks_pure_water",
-	["waterdragon:draconic_forge_rare_water"] = "waterdragon:dragonstone_bricks_rare_water"
+	["draconis:draconic_forge_fire"] = "draconis:dragonstone_bricks_fire",
+	["draconis:draconic_forge_ice"] = "draconis:dragonstone_bricks_ice"
 }
 
-local function update_pure_water_form(meta)
+local function update_fire_form(meta)
 	local melt_perc = meta:get_int("melt_perc") or 0
 	local cool_perc = meta:get_int("cool_perc") or 0
 	local formspec
 	if melt_perc > 0 and melt_perc <= 100
 	or cool_perc > 0 and cool_perc <= 100 then
 		-- Melting Formspec
-		local melt = "image[3.475,1.3;1.56,0.39;waterdragon_form_pure_water_empty.png^[transformR270]"
+		local melt = "image[3.475,1.3;1.56,0.39;draconis_form_fire_empty.png^[transformR270]"
 		if melt_perc > 0 then
-			melt = "image[3.475,1.3;1.56,0.39;waterdragon_form_pure_water_empty.png^[lowpart:"..
-			melt_perc..":waterdragon_form_pure_water_full.png^[transformR270]]"
+			melt = "image[3.475,1.3;1.56,0.39;draconis_form_fire_empty.png^[lowpart:"..
+			melt_perc..":draconis_form_fire_full.png^[transformR270]]"
 		end
 		-- Cooling Formspec
-		local elbow_up = "image[6.35,1.325;1.95,0.39;waterdragon_form_pure_water_elbow_up_empty.png^[transformR270]"
-		local elbow_down = "image[7.91,1.7;0.39,1.69;waterdragon_form_pure_water_elbow_down_empty.png^[transformFY]]"
+		local elbow_up = "image[6.35,1.325;1.95,0.39;draconis_form_fire_elbow_up_empty.png^[transformR270]"
+		local elbow_down = "image[7.91,1.7;0.39,1.69;draconis_form_fire_elbow_down_empty.png^[transformFY]]"
 		if cool_perc > 0 then
 			local elbow_p1 = math.floor((cool_perc * 2) / 100 * 100)
 			local elbow_p2 = elbow_p1 - 100
@@ -212,17 +289,17 @@ local function update_pure_water_form(meta)
 			if elbow_p2 > 100 then
 				elbow_p2 = 100
 			end
-			elbow_up = "image[6.35,1.325;1.95,0.39;waterdragon_form_pure_water_elbow_up_empty.png^[lowpart:"..
-			elbow_p1..":waterdragon_form_pure_water_elbow_up_full.png^[transformR270]]"
+			elbow_up = "image[6.35,1.325;1.95,0.39;draconis_form_fire_elbow_up_empty.png^[lowpart:"..
+			elbow_p1..":draconis_form_fire_elbow_up_full.png^[transformR270]]"
 			if elbow_p2 > 0 then
-				elbow_down = "image[7.91,1.7;0.39,1.69;waterdragon_form_pure_water_elbow_down_empty.png^[lowpart:"..
-				elbow_p2..":waterdragon_form_pure_water_elbow_down_full.png^[transformFY]]"
+				elbow_down = "image[7.91,1.7;0.39,1.69;draconis_form_fire_elbow_down_empty.png^[lowpart:"..
+				elbow_p2..":draconis_form_fire_elbow_down_full.png^[transformFY]]"
 			end
 		end
 		formspec = table.concat({
 			"formspec_version[3]",
 			"size[11,10]",
-			"image[0,0;11,10;waterdragon_form_forge_bg.png]",
+			"image[0,0;11,10;draconis_form_forge_bg.png]",
 			-- Melting Percentage
 			melt,
 			-- Cooling Percentage
@@ -245,10 +322,10 @@ local function update_pure_water_form(meta)
 		formspec = table.concat({
 			"formspec_version[3]",
 			"size[11,10]",
-			"image[0,0;11,10;waterdragon_form_forge_bg.png]",
-			"image[3.475,1.3;1.56,0.39;waterdragon_form_pure_water_empty.png^[transformR270]",
-			"image[6.35,1.325;1.95,0.39;waterdragon_form_pure_water_elbow_up_empty.png^[transformR270]",
-			"image[7.91,1.7;0.39,1.69;waterdragon_form_pure_water_elbow_down_empty.png^[transformFY]]",
+			"image[0,0;11,10;draconis_form_forge_bg.png]",
+			"image[3.475,1.3;1.56,0.39;draconis_form_fire_empty.png^[transformR270]",
+			"image[6.35,1.325;1.95,0.39;draconis_form_fire_elbow_up_empty.png^[transformR270]",
+			"image[7.91,1.7;0.39,1.69;draconis_form_fire_elbow_down_empty.png^[transformFY]]",
 			"list[current_player;main;0.65,5;8,4;]",
 			"list[context;input;2.325,1.05;1,1;]",
 			"list[context;crucible;5.175,1.05;1,1;]",
@@ -265,13 +342,13 @@ local function update_pure_water_form(meta)
 	meta:set_string("formspec", formspec)
 end
 
-local function update_rare_water_form(meta)
+local function update_ice_form(meta)
 	local cool_perc = meta:get_int("cool_perc") or 0
 	local formspec
 	if cool_perc > 0 and cool_perc <= 100 then
 		-- Cooling Formspec
-		local elbow_up = "image[6.35,1.325;1.95,0.39;waterdragon_form_pure_water_elbow_up_empty.png^[transformR270]"
-		local elbow_down = "image[7.91,1.7;0.39,1.69;waterdragon_form_pure_water_elbow_down_empty.png^[transformFY]]"
+		local elbow_up = "image[6.35,1.325;1.95,0.39;draconis_form_fire_elbow_up_empty.png^[transformR270]"
+		local elbow_down = "image[7.91,1.7;0.39,1.69;draconis_form_fire_elbow_down_empty.png^[transformFY]]"
 		if cool_perc > 0 then
 			local elbow_p1 = math.floor((cool_perc * 2) / 100 * 100)
 			local elbow_p2 = elbow_p1 - 100
@@ -283,17 +360,17 @@ local function update_rare_water_form(meta)
 			if elbow_p2 > 100 then
 				elbow_p2 = 100
 			end
-			elbow_up = "image[6.35,1.325;1.95,0.39;waterdragon_form_pure_water_elbow_up_empty.png^[lowpart:"..
-			elbow_p1..":waterdragon_form_pure_water_elbow_up_full.png^[transformR270]]"
+			elbow_up = "image[6.35,1.325;1.95,0.39;draconis_form_fire_elbow_up_empty.png^[lowpart:"..
+			elbow_p1..":draconis_form_fire_elbow_up_full.png^[transformR270]]"
 			if elbow_p2 > 0 then
-				elbow_down = "image[7.91,1.7;0.39,1.69;waterdragon_form_pure_water_elbow_down_empty.png^[lowpart:"..
-				elbow_p2..":waterdragon_form_pure_water_elbow_down_full.png^[transformFY]]"
+				elbow_down = "image[7.91,1.7;0.39,1.69;draconis_form_fire_elbow_down_empty.png^[lowpart:"..
+				elbow_p2..":draconis_form_fire_elbow_down_full.png^[transformFY]]"
 			end
 		end
 		formspec = table.concat({
 			"formspec_version[3]",
 			"size[11,10]",
-			"image[0,0;11,10;waterdragon_form_forge_bg.png]",
+			"image[0,0;11,10;draconis_form_forge_bg.png]",
 			-- Cooling Percentage
 			elbow_up,
 			-- Cooling Percentage P2
@@ -311,9 +388,9 @@ local function update_rare_water_form(meta)
 		formspec = table.concat({
 			"formspec_version[3]",
 			"size[11,10]",
-			"image[0,0;11,10;waterdragon_form_forge_bg.png]",
-			"image[6.35,1.325;1.95,0.39;waterdragon_form_pure_water_elbow_up_empty.png^[transformR270]",
-			"image[7.91,1.7;0.39,1.69;waterdragon_form_pure_water_elbow_down_empty.png^[transformFY]]",
+			"image[0,0;11,10;draconis_form_forge_bg.png]",
+			"image[6.35,1.325;1.95,0.39;draconis_form_fire_elbow_up_empty.png^[transformR270]",
+			"image[7.91,1.7;0.39,1.69;draconis_form_fire_elbow_down_empty.png^[transformFY]]",
 			"list[current_player;main;0.65,5;8,4;]",
 			"list[context;crucible;5.175,1.05;1,1;]",
 			"list[context;output;7.65,3.5;1,1;]",
@@ -489,7 +566,7 @@ local function remove_forge_structure(pos) -- Removes Forge Structure
 	end
 end
 
--- Pure Water Forge Funcs
+-- Fire Forge Funcs
 
 local function forge_particle(pos, texture, animation)
 	local flame_dir = {x = 0, y = 1, z = 0}
@@ -521,13 +598,13 @@ local function melt_ingots(pos, dragon_id)
 	local crucible = inv:get_stack("crucible", 1)
 	if input:get_name() ~= steel_ingot
 	or input:get_count() < stack_size
-	or crucible:get_name() ~= "waterdragon:dragonstone_crucible" then
+	or crucible:get_name() ~= "draconis:dragonstone_crucible" then
 		minetest.get_node_timer(pos):stop()
-		update_pure_water_form(meta)
+		update_fire_form(meta)
 	else
 		input:take_item(stack_size)
 		inv:set_stack("input", 1, input)
-		local full_crucible = ItemStack("waterdragon:dragonstone_crucible_full")
+		local full_crucible = ItemStack("draconis:dragonstone_crucible_full")
 		full_crucible:get_meta():set_string("dragon_id", dragon_id)
 		inv:set_stack("crucible", 1, full_crucible)
 	end
@@ -539,50 +616,50 @@ local function cool_crucible(pos, ingot)
 	local crucible = inv:get_stack("crucible", 1)
 	local node = minetest.get_node(pos)
 	local name = node.name
-	if crucible:get_name() ~= "waterdragon:dragonstone_crucible_full" then
+	if crucible:get_name() ~= "draconis:dragonstone_crucible_full" then
 		minetest.get_node_timer(pos):stop()
 	else
 		local dragon_id = crucible:get_meta():get_string("dragon_id")
-		if name:find("rare_water") then
+		if name:find("ice") then
 			dragon_id = meta:get_string("dragon_id")
 		end
-		inv:set_stack("crucible", 1, "waterdragon:dragonstone_crucible")
+		inv:set_stack("crucible", 1, "draconis:dragonstone_crucible")
 		local draconic_ingot = ItemStack(ingot)
 		local ingot_meta = draconic_ingot:get_meta()
 		local ingot_desc = minetest.registered_items[ingot].description
-		local dragon_name = "a Nameless Dragon"
-		if waterdragon.dragons[dragon_id]
-		and waterdragon.dragons[dragon_id].name then
-			dragon_name = waterdragon.dragons[dragon_id].name
+		local dragon_name = "Unnamed Dragon"
+		if draconis.dragons[dragon_id]
+		and draconis.dragons[dragon_id].name then
+			dragon_name = draconis.dragons[dragon_id].name
 		end
 		ingot_meta:set_string("dragon_id", dragon_id)
 		ingot_meta:set_string("description", ingot_desc .. "\n(Forged by " .. dragon_name .. ")")
 		inv:set_stack("output", 1, draconic_ingot)
 		meta:set_int("cool_perc", 0)
 	end
-	if name:find("rare_water") then
-		update_rare_water_form(meta)
+	if name:find("ice") then
+		update_ice_form(meta)
 	else
-		update_pure_water_form(meta)
+		update_fire_form(meta)
 	end
 end
 
-minetest.register_node("waterdragon:draconic_forge_pure_water", {
-	description = S("Pure Water Draconic Steel Forge"),
+minetest.register_node("draconis:draconic_forge_fire", {
+	description = "Fire Draconic Steel Forge",
 	tiles = {
-		"waterdragon_dragonstone_block_pure_water.png",
-		"waterdragon_dragonstone_block_pure_water.png",
-		"waterdragon_draconic_forge_pure_water.png"
+		"draconis_dragonstone_block_fire.png",
+		"draconis_dragonstone_block_fire.png",
+		"draconis_draconic_forge_fire.png"
 	},
 	paramtype2 = "facedir",
 	place_param2 = 0,
 	is_ground_content = false,
 	groups = {cracky = 1, level = 2},
-	sounds = waterdragon.sounds.stone,
+	sounds = draconis.sounds.stone,
 	on_construct = function(pos)
 		if get_forge_structure(pos) then
 			local meta = minetest.get_meta(pos)
-			update_pure_water_form(meta)
+			update_fire_form(meta)
 			local inv = meta:get_inventory()
 			inv:set_size("input", 1)
 			inv:set_size("crucible", 1)
@@ -624,7 +701,7 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 			return stack:get_count() or 0
 		end
 		if listname == "crucible"
-		and stack:get_name():match("^waterdragon:dragonstone_crucible") then
+		and stack:get_name():match("^draconis:dragonstone_crucible") then
 			return stack:get_count() or 0
 		end
 		return 0
@@ -644,7 +721,7 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 		local inv = meta:get_inventory()
 		local timer = minetest.get_node_timer(pos)
 
-		if not inv:room_for_item("output", "waterdragon:draconic_steel_ingot_pure_water") then
+		if not inv:room_for_item("output", "draconis:draconic_steel_ingot_fire") then
 			timer:stop()
 			return
 		end
@@ -653,10 +730,10 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 		local melt_perc = meta:get_int("melt_perc") or 0
 
 		if melt_perc < 1 then
-			update_pure_water_form(meta)
+			update_fire_form(meta)
 		end
 
-		if crucible:get_name() == "waterdragon:dragonstone_crucible_full" then
+		if crucible:get_name() == "draconis:dragonstone_crucible_full" then
 			timer:start(1)
 		end
 	end,
@@ -670,7 +747,7 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 		local melt_perc = meta:get_int("melt_perc") or 0
 		local cool_perc = meta:get_int("cool_perc") or 0
 
-		if not crucible:get_name():match("^waterdragon:dragonstone_crucible") then
+		if not crucible:get_name():match("^draconis:dragonstone_crucible") then
 			if melt_perc > 0 then
 				meta:set_int("melt_perc", 0)
 			end
@@ -678,7 +755,7 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 				meta:set_int("cool_perc", 0)
 			end
 			timer:stop()
-			update_pure_water_form(meta)
+			update_fire_form(meta)
 			return
 		end
 
@@ -690,12 +767,12 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 			if cool_perc < 1 then
 				timer:stop()
 			end
-			update_pure_water_form(meta)
+			update_fire_form(meta)
 			return
 		end
 
 		if melt_perc < 1 then
-			update_pure_water_form(meta)
+			update_fire_form(meta)
 		end
 	end,
 
@@ -719,24 +796,24 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 		-- If cooling has reached end, cool crucible
 		if cool_perc >= 100 then
 			cool_perc = 0
-			cool_crucible(pos, "waterdragon:draconic_steel_ingot_pure_water")
+			cool_crucible(pos, "draconis:draconic_steel_ingot_fire")
 			crucible = inv:get_stack("crucible", 1)
 		end
 
-		-- If a Water Dragon is breathing into forge, increase melting progress
+		-- If a Dragon is breathing into forge, increase melting progress
 		if dragon_id
 		and melt_perc < 100 then
 			melt_perc = melt_perc + 5
 			meta:set_string("dragon_id", "")
-		-- If the Water Dragon has stopped breathing into forge, undo melting progress
+		-- If the Dragon has stopped breathing into forge, undo melting progress
 		elseif melt_perc > 0 then
 			melt_perc = melt_perc - 5
 		end
 
 		-- If the crucible is full, and no breath is applied, begin cooling
-		if crucible:get_name() == "waterdragon:dragonstone_crucible_full"
-		and inv:room_for_item("output", "waterdragon:draconic_steel_ingot_pure_water") then
-			forge_particle(pos, "waterdragon_smoke_particle.png", {
+		if crucible:get_name() == "draconis:dragonstone_crucible_full"
+		and inv:room_for_item("output", "draconis:draconic_steel_ingot_fire") then
+			forge_particle(pos, "creatura_smoke_particle.png", {
 				type = 'vertical_frames',
 				aspect_w = 4,
 				aspect_h = 4,
@@ -749,10 +826,10 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 		meta:set_int("melt_perc", melt_perc)
 		meta:set_int("cool_perc", cool_perc)
 
-		update_pure_water_form(meta)
+		update_fire_form(meta)
 		if (melt_perc > 0
 		and melt_perc <= last_perc)
-		or crucible:get_name() == "waterdragon:dragonstone_crucible_full"
+		or crucible:get_name() == "draconis:dragonstone_crucible_full"
 		or dragon_id then
 			--meta:set_string("dragon_id", "")
 			return true
@@ -768,9 +845,9 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 		local crucible = inv:get_stack("crucible", 1)
 
 		if input:get_name() ~= steel_ingot
-		or crucible:get_name() ~= "waterdragon:dragonstone_crucible" then
-			update_pure_water_form(meta)
-			forge_particle(pos, "waterdragon_smoke_particle.png", {
+		or crucible:get_name() ~= "draconis:dragonstone_crucible" then
+			update_fire_form(meta)
+			forge_particle(pos, "creatura_smoke_particle.png", {
 				type = 'vertical_frames',
 				aspect_w = 4,
 				aspect_h = 4,
@@ -790,22 +867,22 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 	end
 })
 
-minetest.register_node("waterdragon:draconic_forge_rare_water", {
-	description = S("Rare Water Draconic Steel Forge"),
+minetest.register_node("draconis:draconic_forge_ice", {
+	description = "Ice Draconic Steel Forge",
 	tiles = {
-		"waterdragon_dragonstone_block_rare_water.png",
-		"waterdragon_dragonstone_block_rare_water.png",
-		"waterdragon_draconic_forge_rare_water.png"
+		"draconis_dragonstone_block_ice.png",
+		"draconis_dragonstone_block_ice.png",
+		"draconis_draconic_forge_ice.png"
 	},
 	paramtype2 = "facedir",
 	place_param2 = 0,
 	is_ground_content = false,
 	groups = {cracky = 1, level = 2},
-	sounds = waterdragon.sounds.stone,
+	sounds = draconis.sounds.stone,
 	on_construct = function(pos)
 		if get_forge_structure(pos) then
 			local meta = minetest.get_meta(pos)
-			update_rare_water_form(meta)
+			update_ice_form(meta)
 			local inv = meta:get_inventory()
 			inv:set_size("crucible", 1)
 			inv:set_size("output", 1)
@@ -861,7 +938,7 @@ minetest.register_node("waterdragon:draconic_forge_rare_water", {
 		local inv = meta:get_inventory()
 		local timer = minetest.get_node_timer(pos)
 
-		if not inv:room_for_item("output", "waterdragon:draconic_steel_ingot_rare_water") then
+		if not inv:room_for_item("output", "draconis:draconic_steel_ingot_ice") then
 			timer:stop()
 			return
 		end
@@ -869,7 +946,7 @@ minetest.register_node("waterdragon:draconic_forge_rare_water", {
 		local cool_perc = meta:get_int("cool_perc") or 0
 
 		if cool_perc < 1 then
-			update_rare_water_form(meta)
+			update_ice_form(meta)
 		end
 	end,
 
@@ -880,17 +957,17 @@ minetest.register_node("waterdragon:draconic_forge_rare_water", {
 		local timer = minetest.get_node_timer(pos)
 		local cool_perc = meta:get_int("cool_perc") or 0
 
-		if not crucible:get_name():match("^waterdragon:dragonstone_crucible") then
+		if not crucible:get_name():match("^draconis:dragonstone_crucible") then
 			if cool_perc > 0 then
 				meta:set_int("cool_perc", 0)
 			end
 			timer:stop()
-			update_rare_water_form(meta)
+			update_ice_form(meta)
 			return
 		end
 
 		if cool_perc < 1 then
-			update_rare_water_form(meta)
+			update_ice_form(meta)
 		end
 	end,
 
@@ -902,17 +979,17 @@ minetest.register_node("waterdragon:draconic_forge_rare_water", {
 		local cool_perc = meta:get_int("cool_perc") or 0
 		local last_perc = cool_perc
 
-		-- If cooling has reached end, make input wet
+		-- If cooling has reached end, freeze input
 		if cool_perc >= 100 then
 			cool_perc = 0
-			cool_crucible(pos, "waterdragon:draconic_steel_ingot_rare_water")
+			cool_crucible(pos, "draconis:draconic_steel_ingot_ice")
 		end
 
-		-- If a Water Dragon is breathing into forge, increase making wet progress
+		-- If a Dragon is breathing into forge, increase freezing progress
 		if cooling_init then
 			cool_perc = cool_perc + 5
 			meta:set_string("cooling_init", "")
-		-- If the Water Dragon has stopped breathing into forge, undo making wet progress
+		-- If the Dragon has stopped breathing into forge, undo freezing progress
 		elseif cool_perc > 0 then
 			cool_perc = cool_perc - 5
 		end
@@ -920,8 +997,8 @@ minetest.register_node("waterdragon:draconic_forge_rare_water", {
 		meta:set_int("last_perc", last_perc)
 		meta:set_int("cool_perc", cool_perc)
 
-		update_rare_water_form(meta)
-		if crucible:get_name() == "waterdragon:dragonstone_crucible_full" then
+		update_ice_form(meta)
+		if crucible:get_name() == "draconis:dragonstone_crucible_full" then
 			meta:set_string("cooling_init", "")
 			return true
 		end
@@ -934,9 +1011,9 @@ minetest.register_node("waterdragon:draconic_forge_rare_water", {
 		local timer = minetest.get_node_timer(pos)
 		local crucible = inv:get_stack("crucible", 1)
 
-		if crucible:get_name() ~= "waterdragon:dragonstone_crucible_full" then
-			update_rare_water_form(meta)
-			forge_particle(pos, "waterdragon_smoke_particle.png", {
+		if crucible:get_name() ~= "draconis:dragonstone_crucible_full" then
+			update_ice_form(meta)
+			forge_particle(pos, "creatura_smoke_particle.png", {
 				type = 'vertical_frames',
 				aspect_w = 4,
 				aspect_h = 4,
@@ -953,7 +1030,7 @@ minetest.register_node("waterdragon:draconic_forge_rare_water", {
 		meta:set_string("cooling_init", "true")
 		meta:set_string("dragon_id", id)
 
-		forge_particle(pos, "waterdragon_rare_water_particle_1.png")
+		forge_particle(pos, "draconis_ice_particle_1.png")
 	end
 })
 
@@ -961,10 +1038,10 @@ minetest.register_node("waterdragon:draconic_forge_rare_water", {
 -- Stairs --
 ------------
 
-local water_register_stairs = minetest.settings:get_bool("water_register_stairs")
+local register_stairs = minetest.settings:get_bool("register_stairs")
 
 if minetest.get_modpath("stairs")
-and water_register_stairs then
+and register_stairs then
 	for i = 1, #stair_queue do
 		local name = stair_queue[i]
 		local def = minetest.registered_nodes[name]
@@ -987,36 +1064,36 @@ end
 -- Aliasing --
 --------------
 
-for color in pairs(waterdragon.colors_rare_water) do
-	minetest.register_alias_force("waterdragon:rare_water_scale_brick_" .. color, "waterdragon:stone_bricks_wet")
-	minetest.register_alias_force("waterdragon:egg_rare_water_" .. color, "waterdragon:egg_rare_water_" .. color)
+for color in pairs(draconis.colors_ice) do
+	minetest.register_alias_force("draconis:ice_scale_brick_" .. color, "draconis:stone_bricks_frozen")
+	minetest.register_alias_force("draconis:egg_ice_" .. color, "draconis:egg_ice_" .. color)
 end
 
-for color in pairs(waterdragon.colors_pure_water) do
-	minetest.register_alias_force("waterdragon:pure_water_scale_brick_" .. color, "waterdragon:stone_bricks_wet")
-	minetest.register_alias_force("waterdragon:egg_pure_water_" .. color, "waterdragon:egg_pure_water_" .. color)
+for color in pairs(draconis.colors_fire) do
+	minetest.register_alias_force("draconis:fire_scale_brick_" .. color, "draconis:stone_bricks_scorched")
+	minetest.register_alias_force("draconis:egg_fire_" .. color, "draconis:egg_fire_" .. color)
 end
 
-minetest.register_alias_force("waterdragon:dracolily_rare_water", "")
-minetest.register_alias_force("waterdragon:dracolily_pure_water", "")
-minetest.register_alias_force("waterdragon:growth_essence_rare_water", "")
-minetest.register_alias_force("waterdragon:growth_essence_pure_water", "")
-minetest.register_alias_force("waterdragon:blood_rare_water_dragon", "")
-minetest.register_alias_force("waterdragon:blood_pure_water_dragon", "")
-minetest.register_alias_force("waterdragon:manuscript", "")
+minetest.register_alias_force("draconis:dracolily_ice", "")
+minetest.register_alias_force("draconis:dracolily_fire", "")
+minetest.register_alias_force("draconis:growth_essence_ice", "")
+minetest.register_alias_force("draconis:growth_essence_fire", "")
+minetest.register_alias_force("draconis:blood_ice_dragon", "")
+minetest.register_alias_force("draconis:blood_fire_dragon", "")
+minetest.register_alias_force("draconis:manuscript", "")
 
-minetest.register_alias_force("waterdragon:wet_soil", "waterdragon:soil_wet")
-minetest.register_alias_force("waterdragon:wet_stone", "waterdragon:stone_wet")
-minetest.register_alias_force("waterdragon:wet_tree", "waterdragon:log_wet")
-minetest.register_alias_force("waterdragon:wet_wood", "waterdragon:wood_planks_wet")
-minetest.register_alias_force("waterdragon:wet_stone_brick", "waterdragon:stone_bricks_wet")
-minetest.register_alias_force("waterdragon:wet_stone_block", "waterdragon:stone_wet")
-minetest.register_alias_force("waterdragon:draconic_steel_forge_rare_water", "waterdragon:draconic_forge_rare_water")
+minetest.register_alias_force("draconis:frozen_soil", "draconis:soil_frozen")
+minetest.register_alias_force("draconis:frozen_stone", "draconis:stone_frozen")
+minetest.register_alias_force("draconis:frozen_tree", "draconis:log_frozen")
+minetest.register_alias_force("draconis:frozen_wood", "draconis:wood_planks_frozen")
+minetest.register_alias_force("draconis:frozen_stone_brick", "draconis:stone_bricks_frozen")
+minetest.register_alias_force("draconis:frozen_stone_block", "draconis:stone_frozen")
+minetest.register_alias_force("draconis:draconic_steel_forge_ice", "draconis:draconic_forge_ice")
 
-minetest.register_alias_force("waterdragon:wet_soil", "waterdragon:soil_wet")
-minetest.register_alias_force("waterdragon:wet_stone", "waterdragon:stone_wet")
-minetest.register_alias_force("waterdragon:wet_tree", "waterdragon:log_wet")
-minetest.register_alias_force("waterdragon:wet_wood", "waterdragon:wood_planks_wet")
-minetest.register_alias_force("waterdragon:wet_stone_brick", "waterdragon:stone_bricks_wet")
-minetest.register_alias_force("waterdragon:wet_stone_block", "waterdragon:stone_wet")
-minetest.register_alias_force("waterdragon:draconic_steel_forge_pure_water", "waterdragon:draconic_forge_pure_water")
+minetest.register_alias_force("draconis:scorched_soil", "draconis:soil_scorched")
+minetest.register_alias_force("draconis:scorched_stone", "draconis:stone_scorched")
+minetest.register_alias_force("draconis:scorched_tree", "draconis:log_scorched")
+minetest.register_alias_force("draconis:scorched_wood", "draconis:wood_planks_scorched")
+minetest.register_alias_force("draconis:scorched_stone_brick", "draconis:stone_bricks_scorched")
+minetest.register_alias_force("draconis:scorched_stone_block", "draconis:stone_scorched")
+minetest.register_alias_force("draconis:draconic_steel_forge_fire", "draconis:draconic_forge_fire")

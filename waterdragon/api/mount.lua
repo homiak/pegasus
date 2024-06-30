@@ -175,7 +175,7 @@ function waterdragon.attach_player(self, player)
 	player:set_look_horizontal(self.object:get_yaw() or 0)
 	-- Set Fake Player (Using a fake player and changing 1st person eye offset works around the above issue)
 	waterdragon.set_fake_player(self, player)
-	-- Set Dragon Data
+	-- Set Water Dragon Data
 	self.rider = player
 	-- Set HUD
 	if not self.attack_stamina then
@@ -228,7 +228,7 @@ function waterdragon.attach_passenger(self, player)
 	player:set_look_horizontal(self.object:get_yaw() or 0)
 	-- Set Fake Player (Using a fake player and changing 1st person eye offset works around the above issue)
 	waterdragon.set_fake_player(self, player, true)
-	-- Set Dragon Data
+	-- Set Water Dragon Data
 	self.passenger = player
 	-- Set HUD
 	local data = waterdragon.mounted_player_data[player:get_player_name()]
@@ -394,6 +394,7 @@ end)
 -- Data Handling --
 -------------------
 
+
 minetest.register_on_leaveplayer(function(player)
 	waterdragon.unset_fake_player(player)
 end)
@@ -438,224 +439,206 @@ end
 --------------
 
 creatura.register_utility("waterdragon:mount", function(self)
-	local is_landed = creatura.sensor_floor(self, 5, true) < 4
-	local view_held = false
-	local view_point = 3
-	local first_person_height = 45
-	self:halt()
-	local func = function(_self)
-		local player = _self.rider
-		if not player or not player:get_pos() then return true end
-		local pssngr = _self.passenger
+    local is_landed = creatura.sensor_floor(self, 5, true) < 4
+    local view_held = false
+    local view_point = 3
+    local first_person_height = 45
+    local is_landing = false
+    self:halt()
+    local func = function(_self)
+        local player = _self.rider
+        if not player or not player:get_pos() then return true end
+        local pssngr = _self.passenger
 
-		local player_name = player:get_player_name()
-		local control = player:get_player_control()
+        local player_name = player:get_player_name()
+        local control = player:get_player_control()
 
-		local look_dir = player:get_look_dir()
-		local look_yaw = minetest.dir_to_yaw(look_dir)
+        local look_dir = player:get_look_dir()
+        local look_yaw = minetest.dir_to_yaw(look_dir)
 
-		local scale = _self.growth_scale
-		local player_data = waterdragon.mounted_player_data[player_name]
+        local scale = _self.growth_scale
+        local player_data = waterdragon.mounted_player_data[player_name]
 
-		if not player_data then return true end
+        if not player_data then return true end
 
-		update_hud(self, player)
+        update_hud(self, player)
 
-		local player_props = player:get_properties()
+        local player_props = player:get_properties()
 
-		if player_props.visual_size.x ~= 0 then
-			player:set_properties({
-				visual_size = { x = 0, y = 0, z = 0 },
-			})
-		end
+        if player_props.visual_size.x ~= 0 then
+            player:set_properties({
+                visual_size = {x = 0, y = 0, z = 0},
+            })
+        end
 
-		if not _self:get_action() then
-			if control.aux1 then
-				if waterdragon.aux_key_setting[player_name] == "pov" then
-					if not view_held then
-						if view_point == 3 then
-							view_point = 1
-							player_data.fake_player:set_properties({
-								visual_size = { x = 0, y = 0, z = 0 },
-							})
-							player:set_eye_offset({
-								x = 0,
-								y = 45 * scale,
-								z = 20 * scale
-							}, { x = 0, y = 0, z = 0 })
-							player:hud_set_flags({ wielditem = true })
-						elseif view_point == 1 then
-							view_point = 2
-							local dragon_size = _self.object:get_properties().visual_size
-							player_data.fake_player:set_properties({
-								visual_size = {
-									x = 1 / dragon_size.x,
-									y = 1 / dragon_size.y
-								}
-							})
-							player:set_eye_offset({
-								x = 45 * scale,
-								y = 80 * scale,
-								z = -110 * scale
-							}, { x = 0, y = 0, z = 0 })
-							player:hud_set_flags({ wielditem = true })
-						elseif view_point == 2 then
-							view_point = 3
-							local dragon_size = _self.object:get_properties().visual_size
-							player_data.fake_player:set_properties({
-								visual_size = {
-									x = 1 / dragon_size.x,
-									y = 1 / dragon_size.y
-								}
-							})
-							player:set_eye_offset({
-								x = 0,
-								y = 80 * scale,
-								z = -160 * scale
-							}, { x = 0, y = 0, z = 0 })
-							player:hud_set_flags({ wielditem = true })
-						end
-						view_held = true
-					end
-				else
-					view_held = true
-					if _self.pitch_fly then
-						_self.pitch_fly = _self:memorize("pitch_fly", false)
-					else
-						_self.pitch_fly = _self:memorize("pitch_fly", true)
-					end
-				end
-			else
-				view_held = false
-			end
+        if not _self:get_action() then
+            if control.aux1 then
+                if waterdragon.aux_key_setting[player_name] == "pov" then
+                    if not view_held then
+                        if view_point == 3 then
+                            view_point = 1
+                            player_data.fake_player:set_properties({
+                                visual_size = {x = 0, y = 0, z = 0},
+                            })
+                            player:set_eye_offset({
+                                x = 0,
+                                y = 45 * scale,
+                                z = 20 * scale
+                            }, {x = 0, y = 0, z = 0})
+                            player:hud_set_flags({wielditem = true})
+                        elseif view_point == 1 then
+                            view_point = 2
+                            local dragon_size = _self.object:get_properties().visual_size
+                            player_data.fake_player:set_properties({
+                                visual_size = {
+                                    x = 1 / dragon_size.x,
+                                    y = 1 / dragon_size.y
+                                }
+                            })
+                            player:set_eye_offset({
+                                x = 45 * scale,
+                                y = 80 * scale,
+                                z = -110 * scale
+                            }, {x = 0, y = 0, z = 0})
+                            player:hud_set_flags({wielditem = true})
+                        elseif view_point == 2 then
+                            view_point = 3
+                            local dragon_size = _self.object:get_properties().visual_size
+                            player_data.fake_player:set_properties({
+                                visual_size = {
+                                    x = 1 / dragon_size.x,
+                                    y = 1 / dragon_size.y
+                                }
+                            })
+                            player:set_eye_offset({
+                                x = 0,
+                                y = 80 * scale,
+                                z = -160 * scale
+                            }, {x = 0, y = 0, z = 0})
+                            player:hud_set_flags({wielditem = true})
+                        end
+                        view_held = true
+                    end
+                else
+                    view_held = true
+                    if _self.pitch_fly then
+                        _self.pitch_fly = _self:memorize("pitch_fly", false)
+                    else
+                        _self.pitch_fly = _self:memorize("pitch_fly", true)
+                    end
+                end
+            else
+                view_held = false
+            end
 
-			local anim
+            local anim
 
-			if is_landed then
-				_self:set_gravity(-9.8)
-				anim = "stand"
-				if control.up then
-					_self:set_forward_velocity(12)
-					_self:turn_to(look_yaw, 4)
-					anim = "walk"
-				end
-				if control.jump then
-					is_landed = false
-					waterdragon.action_takeoff(_self)
-				end
-			else
-				if not is_landed then
-					_self:set_gravity(0)
-					anim = "hover"
+            if is_landed then
+                _self:set_gravity(-9.8)
+                anim = "stand"
+                if control.up then
+                    _self:set_forward_velocity(12)
+                    _self:turn_to(look_yaw, 4)
+                    anim = "walk"
+                end
+                if control.jump and _self.flight_stamina > 100 then
+                    is_landed = false
+                    waterdragon.action_takeoff(_self)
+                end
+            elseif is_landing then
+                -- Continue the landing process
+				minetest.log("action", "fly to land2")
+                if _self:action_flight_to_land() then
+                    is_landed = true
+                    is_landing = false
+                    minetest.chat_send_player(player_name, "Dragon has landed due to low stamina.")
+                end
+                anim = "fly"
+            else
+                _self:set_gravity(0)
+                anim = "hover"
 
-					-- Check for low stamina
-					if _self.flight_stamina < 100 then
-						is_landed = true
-						waterdragon.action_land(_self)
-						minetest.chat_send_player(player_name, S("the Water Dragon is tired and needs to land"))
-					else
-						if control.up then
-							anim = "fly"
-							if _self.pitch_fly then
-								_self:set_vertical_velocity(12 * look_dir.y)
-							end
-							_self:set_forward_velocity(24)
-						else
-							_self:set_vertical_velocity(0)
-							_self:set_forward_velocity(0)
-						end
-						_self:tilt_to(look_yaw, 2)
-						if not _self.pitch_fly then
-							if control.jump then
-								_self:set_vertical_velocity(12)
-							elseif control.down then
-								_self:set_vertical_velocity(-12)
-							else
-								_self:set_vertical_velocity(0)
-							end
-						end
-						if _self.touching_ground and control.down then
-							is_landed = true
-							waterdragon.action_land(_self)
-						end
-					end
-				else
-					_self:set_gravity(0)
-					anim = "hover"
-					if control.up then
-						anim = "fly"
-						if _self.pitch_fly then
-							_self:set_vertical_velocity(12 * look_dir.y)
-						end
-						_self:set_forward_velocity(24)
-					else
-						_self:set_vertical_velocity(0)
-						_self:set_forward_velocity(0)
-					end
-					_self:tilt_to(look_yaw, 2)
-					if not _self.pitch_fly then
-						if control.jump then
-							_self:set_vertical_velocity(12)
-						elseif control.down then
-							_self:set_vertical_velocity(-12)
-						else
-							_self:set_vertical_velocity(0)
-						end
-					end
-					if _self.touching_ground
-						and control.down then
-						is_landed = true
-						waterdragon.action_land(_self)
-					end
-				end
-			end
+                -- Check for low stamina
+                if _self.flight_stamina < 100 then
+                    is_landing = true
+                    minetest.chat_send_player(player_name, "Dragon is tired and needs to land.")
+                else
+                    if control.up then
+                        anim = "fly"
+                        if _self.pitch_fly then
+                            _self:set_vertical_velocity(12 * look_dir.y)
+                        end
+                        _self:set_forward_velocity(24)
+                    else
+                        _self:set_vertical_velocity(0)
+                        _self:set_forward_velocity(0)
+                    end
+                    _self:tilt_to(look_yaw, 2)
+                    if not _self.pitch_fly then
+                        if control.jump then
+                            _self:set_vertical_velocity(12)
+                        elseif control.down then
+                            _self:set_vertical_velocity(-12)
+                        else
+                            _self:set_vertical_velocity(0)
+                        end
+                    end
+                    if _self.touching_ground and control.down then
+                        is_landed = true
+                        waterdragon.action_land(_self)
+                    end
+                end
+            end
 
-			if control.LMB then
-				local start = _self.object:get_pos()
-				local offset = player:get_eye_offset()
-				local eye_correction = vector.multiply({ x = look_dir.x, y = 0, z = look_dir.z }, offset.z * 0.125)
-				start = vector.add(start, eye_correction)
-				start.y = start.y + (offset.y * 0.125)
-				local tpos = vector.add(start, vector.multiply(look_dir, 64))
-				local head_dir = vector.direction(start, tpos)
-				look_dir.y = head_dir.y
-				_self:breath_attack(tpos)
-				anim = anim .. "_pure_water"
-			end
+            if control.LMB then
+                local start = _self.object:get_pos()
+                local offset = player:get_eye_offset()
+                local eye_correction = vector.multiply({x = look_dir.x, y = 0, z= look_dir.z}, offset.z * 0.125)
+                start = vector.add(start, eye_correction)
+                start.y = start.y + (offset.y * 0.125)
+                local tpos = vector.add(start, vector.multiply(look_dir, 64))
+                local head_dir = vector.direction(start, tpos)
+                look_dir.y = head_dir.y
+                _self:breath_attack(tpos)
+                anim = anim .. "_pure_water"
+            end
 
-			if anim then
-				_self:animate(anim)
-				if view_point == 1 then
-					if anim:match("idle")
-						or (anim:match("fly")
-							and control.jump) then
-						first_person_height = first_person_height + (65 - first_person_height) * 0.2
-					else
-						first_person_height = first_person_height + (45 - first_person_height) * 0.2
-					end
-					player:set_eye_offset({
-						x = 0,
-						y = first_person_height * scale,
-						z = 20 * scale
-					}, { x = 0, y = 0, z = 0 })
-				end
-			end
-		end
+            if anim then
+                _self:animate(anim)
+                if view_point == 1 then
+                    if anim:match("idle")
+                    or (anim:match("fly")
+                    and control.jump) then
+                        first_person_height = first_person_height + (65 - first_person_height) * 0.2
+                    else
+                        first_person_height = first_person_height + (45 - first_person_height) * 0.2
+                    end
+                    player:set_eye_offset({
+                        x = 0,
+                        y = first_person_height * scale,
+                        z = 20 * scale
+                    }, {x = 0, y = 0, z = 0})
+                end
+            end
+        end
 
-		_self:move_head(look_yaw, look_dir.y)
+        _self:move_head(look_yaw, look_dir.y)
 
-		if control.sneak
-			or player:get_player_name() ~= _self.owner then
-			waterdragon.detach_player(_self, player)
-			if pssngr then
-				waterdragon.detach_player(_self, _self.passenger)
-			end
-			return true
-		end
-		if pssngr
-			and pssngr:get_player_control().sneak then
-			waterdragon.detach_player(_self, pssngr)
-		end
-	end
-	self:set_utility(func)
+        if control.sneak
+        or player:get_player_name() ~= _self.owner then
+            waterdragon.detach_player(_self, player)
+            if pssngr then
+                waterdragon.detach_player(_self, _self.passenger)
+            end
+            return true
+        end
+        if pssngr
+        and pssngr:get_player_control().sneak then
+            waterdragon.detach_player(_self, pssngr)
+        end
+    end
+    self:set_utility(func)
 end)
+
+
+

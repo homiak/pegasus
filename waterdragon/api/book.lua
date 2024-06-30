@@ -22,11 +22,11 @@ local book_pages = {
 			file = "waterdragon_book_home.txt"
 		},
 		{ -- Water Dragon Image
-		element_type = "image",
-		font_size = 24,
-		offset = {x = 8.19, y = 1.19},
-		size = {x = 8.5, y = 8.5},
-		text = "waterdragon_book_img_water_dragon_3.png"
+			element_type = "image",
+			font_size = 24,
+			offset = {x = 8.19, y = 1.19},
+			size = {x = 8.5, y = 8.5},
+			text = "waterdragon_book_img_water_dragon_3.png"
 		},
 		{ -- Next Page
 			unlock_key = "waterdragons",

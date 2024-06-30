@@ -513,7 +513,7 @@ end
 local function dragon_horn_use(itemstack, player, pointed_thing)
 	local meta = itemstack:get_meta()
 	local staticdata = meta:get_string("staticdata")
-	if staticdata ~= "" then return end -- Skip func if Horn contains Dragon
+	if staticdata ~= "" then return end -- Skip func if Horn contains Water Dragon
 	local mob = meta:get_string("mob")
 	local id = meta:get_string("dragon_id")
 	local stored_aging = meta:get_int("stored_aging") or 0
@@ -858,7 +858,7 @@ local function draconic_step(itemstack, player, pointed_thing)
 			end
 		end
 	end
-	-- Destroy Tool if Dragon is not alive
+	-- Destroy Tool if Water Dragon is not alive
 	if dragon_id ~= ""
 		and not waterdragon.dragons[dragon_id] then
 		itemstack:set_wear(65536)
@@ -1251,7 +1251,7 @@ end
 -- Tools --
 -----------
 
--- Dragon Bone Tools --
+-- Water Dragon Bone Tools --
 
 for color in pairs(waterdragon.colors_pure_water) do
 	craft_pick({

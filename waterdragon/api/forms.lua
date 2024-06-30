@@ -49,7 +49,7 @@ local function correct_name(str)
 end
 
 -----------------
--- Dragon Form --
+-- Water Dragon Form --
 -----------------
 
 local function get_dragon_formspec(self)

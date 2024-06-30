@@ -645,8 +645,8 @@ end
 -- Behavior --
 --------------
 
--- Sleep
 
+-- Sleep
 creatura.register_utility("waterdragon:sleep", function(self)
 	local function func(_self)
 		if not _self:get_action() then
@@ -814,6 +814,7 @@ end)
 creatura.register_utility("waterdragon:fly_to_land", function(self)
 	local landed = false
 	local function func(_self)
+	minetest.log("action", "inside fly to land")
 		if not _self:get_action() then
 			if landed then return true end
 			if _self.touching_ground then
@@ -992,31 +993,6 @@ waterdragon.dragon_behavior = {
 			return 0.1, {self}
 		end
 	},
-	--[[{ -- Wander (Flight)
-		utility = "waterdragon:aerial_wander",
-		get_score = function(self)
-			local pos = self.object:get_pos()
-			if not pos then return end
-			local flight_allowed = not self.owner or self.flight_allowed
-			if not flight_allowed then return 0 end
-			if  self.in_liquid then
-				self.flight_stamina = self:memorize("flight_stamina", self.flight_stamina + 200)
-				self.is_landed = self:memorize("is_landed", false)
-				return 1, {self, 0.7}
-			end
-			if not owner
-			and self.nest_pos
-			and vec_dist(pos, self.nest_pos) > 128 then
-				self.flight_stamina = self:memorize("flight_stamina", self.flight_stamina + 200)
-				self.is_landed = self:memorize("is_landed", false)
-				return 0.8, {self, 0.7}
-			end
-			if not self.is_landed then
-				return 0.2, {self, 0.5}
-			end
-			return 0
-		end
-	},]]
 	{ -- Attack
 		utility = "waterdragon:attack",
 		get_score = function(self)
@@ -1024,10 +1000,10 @@ waterdragon.dragon_behavior = {
 			if not pos then return end
 			local stance = (self.owner and self.stance) or "aggressive"
 			local skip = self.age < 20 or stance == "passive"
-			if skip then return 0 end -- Young/Passive Dragons don't attack
+			if skip then return 0 end -- Young/Passive Water Dragons don't attack
 			local target = self._target
 			if not target then
-				if stance ~= "aggressive" then return 0 end -- Neutral Dragons with no set target
+				if stance ~= "aggressive" then return 0 end -- Neutral Water Dragons with no set target
 				local target_list = waterdragon[self.name:split(":")[2] .. "_targets"]
 				target = find_target(self, target_list)
 				if not target or not target:get_pos() then return 0 end
@@ -1117,44 +1093,8 @@ waterdragon.dragon_behavior = {
 			or not self.rider:get_look_horizontal() then return 0 end
 			return 1, {self}
 		end
-	},
-	--[[{ -- Fly to Land
-		utility = "waterdragon:fly_to_land",
-		get_score = function(self)
-			if not self.touching_ground then return 0 end
-			local dist2floor = creatura.sensor_floor(self, 4, true)
-			if dist2floor < 4 then return 0 end
-			local util = self:get_utility() or ""
-			if self.in_liquid
-			or util == "waterdragon:hover_attack"
-			or util == "waterdragon:follow_player" then return 0 end
-			local is_landed = self.is_landed or self.flight_stamina < 15
-			local is_grounded = (self.owner and not self.fly_allowed) or self.order == "stay"
-			local is_sleepy = not util:match("attack") and (not self.owner or is_night)
-			local attacking_tgt = self._target and creatura.is_alive(self._target)
-			local current_anim = self._anim
-			local is_flying = current_anim and current_anim:find("fly")
-			if is_landed
-			or is_grounded
-			or is_sleepy
-			or attacking_tgt then
-				if util == "waterdragon:wander_flight"
-				or util == "waterdragon:mount"
-				or (is_flying
-				and not self.touching_ground) then
-					local score = 0.3
-					if self.flight_stamina < 15
-					or attacking_tgt
-					or (self.owner
-					and not self.rider
-					and not self.fly_allowed) then
-						score = 1
-					end
-					return score, {self}
-				end
-			end
-			return 0
-		end
-	}]]
+	}
 }
+
+
 
