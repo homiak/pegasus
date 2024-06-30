@@ -16,7 +16,7 @@ minetest.register_entity("waterdragon:mounted_player_visual", {
 	initial_properties = {
 		mesh = "character.b3d",
 		visual = "mesh",
-		collisionbox = {0, 0, 0, 0, 0, 0},
+		collisionbox = { 0, 0, 0, 0, 0, 0 },
 		stepheight = 0,
 		physical = false,
 		collide_with_objects = false
@@ -41,7 +41,7 @@ minetest.register_entity("waterdragon:mounted_player_visual", {
 			textures = player:get_properties().textures,
 			nametag = self.player
 		})
-		self.object:set_armor_groups({immortal = 1})
+		self.object:set_armor_groups({ immortal = 1 })
 		self.object:set_yaw(player:get_look_horizontal())
 	end,
 	get_staticdata = function() return "" end,
@@ -50,14 +50,14 @@ minetest.register_entity("waterdragon:mounted_player_visual", {
 
 function waterdragon.set_fake_player(self, player, passenger)
 	if not player
-	or not player:get_look_horizontal()
-	or not player:is_player() then
+		or not player:get_look_horizontal()
+		or not player:is_player() then
 		return
 	end
 	local player_name = player:get_player_name()
 	if waterdragon.mounted_player_data[player_name]
-	and waterdragon.mounted_player_data[player_name].fake_player
-	and waterdragon.mounted_player_data[player_name].fake_player:get_pos() then
+		and waterdragon.mounted_player_data[player_name].fake_player
+		and waterdragon.mounted_player_data[player_name].fake_player:get_pos() then
 		waterdragon.unset_fake_player(player)
 		return
 	end
@@ -65,7 +65,7 @@ function waterdragon.set_fake_player(self, player, passenger)
 	local fake_player = minetest.add_entity(
 		player_pos,
 		"waterdragon:mounted_player_visual",
-		minetest.serialize({player = player_name})
+		minetest.serialize({ player = player_name })
 	)
 	-- Cache Player Data
 	waterdragon.mounted_player_data[player_name] = {
@@ -86,17 +86,17 @@ function waterdragon.set_fake_player(self, player, passenger)
 	}
 	-- Set Players Data
 	player:set_properties({
-		visual_size = {x = 0, y = 0, z = 0},
+		visual_size = { x = 0, y = 0, z = 0 },
 		textures = {}
 	})
-	player:set_nametag_attributes({text = " ", bgcolor = false})
+	player:set_nametag_attributes({ text = " ", bgcolor = false })
 	-- Attach Fake Player
 	if passenger then
-		fake_player:set_attach(self.object, "Torso.2", {x = 0, y = -0.3, z = 0.2}, {x = 90, y = 0, z = 180})
+		fake_player:set_attach(self.object, "Torso.2", { x = 0, y = -0.3, z = 0.2 }, { x = 90, y = 0, z = 180 })
 	else
-		fake_player:set_attach(self.object, "Torso.2", {x = 0, y = 0.75, z = 0.2}, {x = 90, y = 0, z = 180})
+		fake_player:set_attach(self.object, "Torso.2", { x = 0, y = 0.75, z = 0.2 }, { x = 90, y = 0, z = 180 })
 	end
-	fake_player:set_animation({x = 81, y = 160}, 30, 0)
+	fake_player:set_animation({ x = 81, y = 160 }, 30, 0)
 	local player_size = fake_player:get_properties().visual_size
 	local dragon_size = self.object:get_properties().visual_size
 	fake_player:set_properties({
@@ -108,20 +108,20 @@ function waterdragon.set_fake_player(self, player, passenger)
 		pointable = false
 	})
 	player:set_properties({
-		collisionbox = {0, 0, 0, 0, 0, 0}
+		collisionbox = { 0, 0, 0, 0, 0, 0 }
 	})
 end
 
 function waterdragon.unset_fake_player(player)
 	if not player
-	or not player:get_look_horizontal()
-	or not player:is_player() then
+		or not player:get_look_horizontal()
+		or not player:is_player() then
 		return
 	end
 	local player_name = player:get_player_name()
 	if not waterdragon.mounted_player_data[player_name]
-	or not waterdragon.mounted_player_data[player_name].fake_player
-	or not waterdragon.mounted_player_data[player_name].fake_player:get_pos() then
+		or not waterdragon.mounted_player_data[player_name].fake_player
+		or not waterdragon.mounted_player_data[player_name].fake_player:get_pos() then
 		return
 	end
 	-- Cache Player Data
@@ -150,28 +150,28 @@ local function set_hud(player, def)
 		hud_elem_type = "image",
 		position = def.position,
 		text = def.text,
-		scale = {x = 3, y = 3},
-		alignment = {x = 1, y = -1},
-		offset = {x = 0, y = -5}
+		scale = { x = 3, y = 3 },
+		alignment = { x = 1, y = -1 },
+		offset = { x = 0, y = -5 }
 	}
 	return player:hud_add(hud)
 end
 
 function waterdragon.attach_player(self, player)
 	if not player
-	or not player:get_look_horizontal()
-	or not player:is_player() then
+		or not player:get_look_horizontal()
+		or not player:is_player() then
 		return
 	end
 	local scale = self.growth_scale or 1
 	-- Attach Player
-	player:set_attach(self.object, "Torso.2", {x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
+	player:set_attach(self.object, "Torso.2", { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 })
 	-- Set Players Eye Offset
 	player:set_eye_offset({
 		x = 0,
 		y = 50 * scale,
 		z = -160 * scale
-	}, {x = 0, y = 0, z = 0}) -- 3rd person eye offset is limited to 15 on each axis (Fix this, devs.)
+	}, { x = 0, y = 0, z = 0 }) -- 3rd person eye offset is limited to 15 on each axis (Fix this, devs.)
 	player:set_look_horizontal(self.object:get_yaw() or 0)
 	-- Set Fake Player (Using a fake player and changing 1st person eye offset works around the above issue)
 	waterdragon.set_fake_player(self, player)
@@ -188,23 +188,23 @@ function waterdragon.attach_player(self, player)
 		local hunger = self.hunger / math.ceil(self.max_hunger * scale) * 100
 		local stamina = self.flight_stamina / 900 * 100
 		local breath = self.attack_stamina / 100 * 100
-		player:hud_set_flags({wielditem = true})
+		player:hud_set_flags({ wielditem = true })
 		data.huds = {
 			["health"] = set_hud(player, {
 				text = "waterdragon_forms_health_bg.png^[lowpart:" .. health .. ":waterdragon_forms_health_fg.png",
-				position = {x = 0, y = 0.7}
+				position = { x = 0, y = 0.7 }
 			}),
 			["hunger"] = set_hud(player, {
 				text = "waterdragon_forms_hunger_bg.png^[lowpart:" .. hunger .. ":waterdragon_forms_hunger_fg.png",
-				position = {x = 0, y = 0.8}
+				position = { x = 0, y = 0.8 }
 			}),
 			["stamina"] = set_hud(player, {
 				text = "waterdragon_forms_stamina_bg.png^[lowpart:" .. stamina .. ":waterdragon_forms_stamina_fg.png",
-				position = {x = 0, y = 0.9}
+				position = { x = 0, y = 0.9 }
 			}),
 			["breath"] = set_hud(player, {
 				text = "waterdragon_forms_breath_bg.png^[lowpart:" .. breath .. ":waterdragon_forms_breath_fg.png",
-				position = {x = 0, y = 1}
+				position = { x = 0, y = 1 }
 			})
 		}
 	end
@@ -212,19 +212,19 @@ end
 
 function waterdragon.attach_passenger(self, player)
 	if not player
-	or not player:get_look_horizontal()
-	or not player:is_player() then
+		or not player:get_look_horizontal()
+		or not player:is_player() then
 		return
 	end
 	local scale = self.growth_scale
 	-- Attach Player
-	player:set_attach(self.object, "Torso.2", {x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
+	player:set_attach(self.object, "Torso.2", { x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 })
 	-- Set Players Eye Offset
 	player:set_eye_offset({
 		x = 0,
 		y = 50 * scale,
 		z = -160 * scale
-	}, {x = 0, y = 0, z = 0}) -- 3rd person eye offset is limited to 15 on each axis (Fix this, devs.)
+	}, { x = 0, y = 0, z = 0 }) -- 3rd person eye offset is limited to 15 on each axis (Fix this, devs.)
 	player:set_look_horizontal(self.object:get_yaw() or 0)
 	-- Set Fake Player (Using a fake player and changing 1st person eye offset works around the above issue)
 	waterdragon.set_fake_player(self, player, true)
@@ -237,23 +237,23 @@ function waterdragon.attach_passenger(self, player)
 		local hunger = self.hunger / math.ceil(self.max_hunger * scale) * 100
 		local stamina = self.flight_stamina / 900 * 100
 		local breath = self.attack_stamina / 90 * 90
-		player:hud_set_flags({wielditem = true})
+		player:hud_set_flags({ wielditem = true })
 		waterdragon.mounted_player_data[player:get_player_name()].huds = {
 			["health"] = set_hud(player, {
 				text = "waterdragon_forms_health_bg.png^[lowpart:" .. health .. ":waterdragon_forms_health_fg.png",
-				position = {x = 0, y = 0.7}
+				position = { x = 0, y = 0.7 }
 			}),
 			["hunger"] = set_hud(player, {
 				text = "waterdragon_forms_hunger_bg.png^[lowpart:" .. hunger .. ":waterdragon_forms_hunger_fg.png",
-				position = {x = 0, y = 0.8}
+				position = { x = 0, y = 0.8 }
 			}),
 			["stamina"] = set_hud(player, {
 				text = "waterdragon_forms_stamina_bg.png^[lowpart:" .. stamina .. ":waterdragon_forms_stamina_fg.png",
-				position = {x = 0, y = 0.9}
+				position = { x = 0, y = 0.9 }
 			}),
 			["breath"] = set_hud(player, {
 				text = "waterdragon_forms_breath_bg.png^[lowpart:" .. breath .. ":waterdragon_forms_breath_fg.png",
-				position = {x = 0, y = 1}
+				position = { x = 0, y = 1 }
 			})
 		}
 	end
@@ -261,8 +261,8 @@ end
 
 function waterdragon.detach_player(self, player)
 	if not player
-	or not player:get_look_horizontal()
-	or not player:is_player() then
+		or not player:get_look_horizontal()
+		or not player:is_player() then
 		return
 	end
 	local player_name = player:get_player_name()
@@ -276,7 +276,7 @@ function waterdragon.detach_player(self, player)
 		player:hud_remove(data.huds["stamina"])
 		player:hud_remove(data.huds["breath"])
 	end
-	player:hud_set_flags({wielditem = true})
+	player:hud_set_flags({ wielditem = true })
 	-- Set Fake Player (Using a fake player and changing 1st person eye offset works around the above issue)
 	waterdragon.unset_fake_player(player)
 	-- Set Dragon Data
@@ -303,8 +303,10 @@ end
 
 function waterdragon.send_passenger_request(self, clicker)
 	if not self.rider
-	or not self.rider:get_look_horizontal()
-	or not clicker:get_look_horizontal() then return end
+		or not self.rider:get_look_horizontal()
+		or not clicker:get_look_horizontal() then
+		return
+	end
 	local rider = self.rider
 	minetest.show_formspec(rider:get_player_name(), "waterdragon:passenger_request", passenger_form(clicker))
 	requesting_passenger[rider:get_player_name()] = {
@@ -322,15 +324,15 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		local pssngr = requesting_passenger[name].player
 		local ent = requesting_passenger[name].entity
 		if fields.btn_accept_pssngr
-		and pssngr
-		and pssngr:get_look_horizontal() then
+			and pssngr
+			and pssngr:get_look_horizontal() then
 			waterdragon.attach_passenger(ent, pssngr)
 			requesting_passenger[name] = nil
 			return false
 		end
 		if fields.btn_decline_pssngr
-		or fields.quit
-		or fields.key_enter then
+			or fields.quit
+			or fields.key_enter then
 			requesting_passenger[name] = nil
 		end
 	end
@@ -383,7 +385,7 @@ end)
 minetest.register_on_dieplayer(function(player)
 	local name = player:get_player_name()
 	if name
-	and waterdragon.mounted_player_data[name] then
+		and waterdragon.mounted_player_data[name] then
 		waterdragon.detach_player(waterdragon.mounted_player_data[name].dragon, player)
 	end
 end)
@@ -414,19 +416,19 @@ local function update_hud(self, player)
 	waterdragon.mounted_player_data[name].huds = {
 		["health"] = set_hud(player, {
 			text = "waterdragon_forms_health_bg.png^[lowpart:" .. health .. ":waterdragon_forms_health_fg.png",
-			position = {x = 0, y = 0.7}
+			position = { x = 0, y = 0.7 }
 		}),
 		["hunger"] = set_hud(player, {
 			text = "waterdragon_forms_hunger_bg.png^[lowpart:" .. hunger .. ":waterdragon_forms_hunger_fg.png",
-			position = {x = 0, y = 0.8}
+			position = { x = 0, y = 0.8 }
 		}),
 		["stamina"] = set_hud(player, {
 			text = "waterdragon_forms_stamina_bg.png^[lowpart:" .. stamina .. ":waterdragon_forms_stamina_fg.png",
-			position = {x = 0, y = 0.9}
+			position = { x = 0, y = 0.9 }
 		}),
 		["breath"] = set_hud(player, {
 			text = "waterdragon_forms_breath_bg.png^[lowpart:" .. breath .. ":waterdragon_forms_breath_fg.png",
-			position = {x = 0, y = 1}
+			position = { x = 0, y = 1 }
 		})
 	}
 end
@@ -463,7 +465,7 @@ creatura.register_utility("waterdragon:mount", function(self)
 
 		if player_props.visual_size.x ~= 0 then
 			player:set_properties({
-				visual_size = {x = 0, y = 0, z = 0},
+				visual_size = { x = 0, y = 0, z = 0 },
 			})
 		end
 
@@ -474,14 +476,14 @@ creatura.register_utility("waterdragon:mount", function(self)
 						if view_point == 3 then
 							view_point = 1
 							player_data.fake_player:set_properties({
-								visual_size = {x = 0, y = 0, z = 0},
+								visual_size = { x = 0, y = 0, z = 0 },
 							})
 							player:set_eye_offset({
 								x = 0,
 								y = 45 * scale,
 								z = 20 * scale
-							}, {x = 0, y = 0, z = 0})
-							player:hud_set_flags({wielditem = true})
+							}, { x = 0, y = 0, z = 0 })
+							player:hud_set_flags({ wielditem = true })
 						elseif view_point == 1 then
 							view_point = 2
 							local dragon_size = _self.object:get_properties().visual_size
@@ -495,8 +497,8 @@ creatura.register_utility("waterdragon:mount", function(self)
 								x = 45 * scale,
 								y = 80 * scale,
 								z = -110 * scale
-							}, {x = 0, y = 0, z = 0})
-							player:hud_set_flags({wielditem = true})
+							}, { x = 0, y = 0, z = 0 })
+							player:hud_set_flags({ wielditem = true })
 						elseif view_point == 2 then
 							view_point = 3
 							local dragon_size = _self.object:get_properties().visual_size
@@ -510,8 +512,8 @@ creatura.register_utility("waterdragon:mount", function(self)
 								x = 0,
 								y = 80 * scale,
 								z = -160 * scale
-							}, {x = 0, y = 0, z = 0})
-							player:hud_set_flags({wielditem = true})
+							}, { x = 0, y = 0, z = 0 })
+							player:hud_set_flags({ wielditem = true })
 						end
 						view_held = true
 					end
@@ -542,39 +544,76 @@ creatura.register_utility("waterdragon:mount", function(self)
 					waterdragon.action_takeoff(_self)
 				end
 			else
-				_self:set_gravity(0)
-				anim = "hover"
-				if control.up then
-					anim = "fly"
-					if _self.pitch_fly then
-						_self:set_vertical_velocity(12 * look_dir.y)
+				if not is_landed then
+					_self:set_gravity(0)
+					anim = "hover"
+
+					-- Check for low stamina
+					if _self.flight_stamina < 100 then
+						is_landed = true
+						waterdragon.action_land(_self)
+						minetest.chat_send_player(player_name, S("the Water Dragon is tired and needs to land"))
+					else
+						if control.up then
+							anim = "fly"
+							if _self.pitch_fly then
+								_self:set_vertical_velocity(12 * look_dir.y)
+							end
+							_self:set_forward_velocity(24)
+						else
+							_self:set_vertical_velocity(0)
+							_self:set_forward_velocity(0)
+						end
+						_self:tilt_to(look_yaw, 2)
+						if not _self.pitch_fly then
+							if control.jump then
+								_self:set_vertical_velocity(12)
+							elseif control.down then
+								_self:set_vertical_velocity(-12)
+							else
+								_self:set_vertical_velocity(0)
+							end
+						end
+						if _self.touching_ground and control.down then
+							is_landed = true
+							waterdragon.action_land(_self)
+						end
 					end
-					_self:set_forward_velocity(24)
 				else
-					_self:set_vertical_velocity(0)
-					_self:set_forward_velocity(0)
-				end
-				_self:tilt_to(look_yaw, 2)
-				if not _self.pitch_fly then
-					if control.jump then
-						_self:set_vertical_velocity(12)
-					elseif control.down then
-						_self:set_vertical_velocity(-12)
+					_self:set_gravity(0)
+					anim = "hover"
+					if control.up then
+						anim = "fly"
+						if _self.pitch_fly then
+							_self:set_vertical_velocity(12 * look_dir.y)
+						end
+						_self:set_forward_velocity(24)
 					else
 						_self:set_vertical_velocity(0)
+						_self:set_forward_velocity(0)
 					end
-				end
-				if _self.touching_ground
-				and control.down then
-					is_landed = true
-					waterdragon.action_land(_self)
+					_self:tilt_to(look_yaw, 2)
+					if not _self.pitch_fly then
+						if control.jump then
+							_self:set_vertical_velocity(12)
+						elseif control.down then
+							_self:set_vertical_velocity(-12)
+						else
+							_self:set_vertical_velocity(0)
+						end
+					end
+					if _self.touching_ground
+						and control.down then
+						is_landed = true
+						waterdragon.action_land(_self)
+					end
 				end
 			end
 
 			if control.LMB then
 				local start = _self.object:get_pos()
 				local offset = player:get_eye_offset()
-				local eye_correction = vector.multiply({x = look_dir.x, y = 0, z= look_dir.z}, offset.z * 0.125)
+				local eye_correction = vector.multiply({ x = look_dir.x, y = 0, z = look_dir.z }, offset.z * 0.125)
 				start = vector.add(start, eye_correction)
 				start.y = start.y + (offset.y * 0.125)
 				local tpos = vector.add(start, vector.multiply(look_dir, 64))
@@ -588,8 +627,8 @@ creatura.register_utility("waterdragon:mount", function(self)
 				_self:animate(anim)
 				if view_point == 1 then
 					if anim:match("idle")
-					or (anim:match("fly")
-					and control.jump)then
+						or (anim:match("fly")
+							and control.jump) then
 						first_person_height = first_person_height + (65 - first_person_height) * 0.2
 					else
 						first_person_height = first_person_height + (45 - first_person_height) * 0.2
@@ -598,7 +637,7 @@ creatura.register_utility("waterdragon:mount", function(self)
 						x = 0,
 						y = first_person_height * scale,
 						z = 20 * scale
-					}, {x = 0, y = 0, z = 0})
+					}, { x = 0, y = 0, z = 0 })
 				end
 			end
 		end
@@ -606,7 +645,7 @@ creatura.register_utility("waterdragon:mount", function(self)
 		_self:move_head(look_yaw, look_dir.y)
 
 		if control.sneak
-		or player:get_player_name() ~= _self.owner then
+			or player:get_player_name() ~= _self.owner then
 			waterdragon.detach_player(_self, player)
 			if pssngr then
 				waterdragon.detach_player(_self, _self.passenger)
@@ -614,7 +653,7 @@ creatura.register_utility("waterdragon:mount", function(self)
 			return true
 		end
 		if pssngr
-		and pssngr:get_player_control().sneak then
+			and pssngr:get_player_control().sneak then
 			waterdragon.detach_player(_self, pssngr)
 		end
 	end

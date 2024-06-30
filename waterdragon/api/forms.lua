@@ -57,7 +57,7 @@ local function get_dragon_formspec(self)
 	local current_age = self.age or 150
 	local health = get_stat(self, "hp", "max_health")
 	local hunger = get_stat(self, "hunger", "max_hunger")
-	local stamina = get_perc(self.flight_stamina, 1400)
+	local stamina = get_perc(self.flight_stamina, 150)
 	local breath = get_perc(self.attack_stamina, 150)
 	-- Visuals
 	local frame_range = self.animations["stand"].range

@@ -1515,7 +1515,7 @@ function waterdragon.dragon_activate(self)
 	self.is_landed = self:recall("is_landed") or false
 	self.attack_stamina = self:recall("attack_stamina") or 150
 	self.attack_disabled = self:recall("attack_disabled") or false
-	self.flight_stamina = self:recall("flight_stamina") or 1400
+	self.flight_stamina = self:recall("flight_stamina") or 150
 
 	-- Sound Data
 	self.flap_sound_timer = 1.5
@@ -1625,7 +1625,7 @@ function waterdragon.dragon_step(self, dtime)
 			self:play_sound("random")
 		end
 		-- Dynamic Stats
-		local fly_stam = self.flight_stamina or 1400
+		local fly_stam = self.flight_stamina or 150
 		local atk_stam = self.attack_stamina or 150
 		local alert_timer = self.alert_timer or 0
 		if is_flying
