@@ -188,7 +188,7 @@ function waterdragon.attach_player(self, player)
 		local hunger = self.hunger / math.ceil(self.max_hunger * scale) * 100
 		local stamina = self.flight_stamina / 900 * 100
 		local breath = self.attack_stamina / 100 * 100
-		player:hud_set_flags({ wielditem = true })
+		player:hud_set_flags({ wielditem = false })
 		data.huds = {
 			["health"] = set_hud(player, {
 				text = "waterdragon_forms_health_bg.png^[lowpart:" .. health .. ":waterdragon_forms_health_fg.png",
@@ -237,7 +237,7 @@ function waterdragon.attach_passenger(self, player)
 		local hunger = self.hunger / math.ceil(self.max_hunger * scale) * 100
 		local stamina = self.flight_stamina / 900 * 100
 		local breath = self.attack_stamina / 90 * 90
-		player:hud_set_flags({ wielditem = true })
+		player:hud_set_flags({ wielditem = false })
 		waterdragon.mounted_player_data[player:get_player_name()].huds = {
 			["health"] = set_hud(player, {
 				text = "waterdragon_forms_health_bg.png^[lowpart:" .. health .. ":waterdragon_forms_health_fg.png",
@@ -276,7 +276,7 @@ function waterdragon.detach_player(self, player)
 		player:hud_remove(data.huds["stamina"])
 		player:hud_remove(data.huds["breath"])
 	end
-	player:hud_set_flags({ wielditem = true })
+	player:hud_set_flags({ wielditem = false })
 	-- Set Fake Player (Using a fake player and changing 1st person eye offset works around the above issue)
 	waterdragon.unset_fake_player(player)
 	-- Set Water Dragon Data
@@ -482,10 +482,10 @@ creatura.register_utility("waterdragon:mount", function(self)
                             })
                             player:set_eye_offset({
                                 x = 0,
-                                y = 45 * scale,
+                                y = 450 * scale,
                                 z = 20 * scale
                             }, {x = 0, y = 0, z = 0})
-                            player:hud_set_flags({wielditem = true})
+                            player:hud_set_flags({wielditem = false})
                         elseif view_point == 1 then
                             view_point = 2
                             local dragon_size = _self.object:get_properties().visual_size
@@ -500,7 +500,7 @@ creatura.register_utility("waterdragon:mount", function(self)
                                 y = 80 * scale,
                                 z = -110 * scale
                             }, {x = 0, y = 0, z = 0})
-                            player:hud_set_flags({wielditem = true})
+                            player:hud_set_flags({wielditem = false})
                         elseif view_point == 2 then
                             view_point = 3
                             local dragon_size = _self.object:get_properties().visual_size
@@ -515,7 +515,7 @@ creatura.register_utility("waterdragon:mount", function(self)
                                 y = 80 * scale,
                                 z = -160 * scale
                             }, {x = 0, y = 0, z = 0})
-                            player:hud_set_flags({wielditem = true})
+                            player:hud_set_flags({wielditem = false})
                         end
                         view_held = true
                     end
@@ -541,18 +541,11 @@ creatura.register_utility("waterdragon:mount", function(self)
                     _self:turn_to(look_yaw, 4)
                     anim = "walk"
                 end
-                if control.jump and _self.flight_stamina > 100 then
+                if control.jump then
                     is_landed = false
                     waterdragon.action_takeoff(_self)
                 end
             elseif is_landing then
-                -- Continue the landing process
-				minetest.log("action", "fly to land2")
-                if _self:action_flight_to_land() then
-                    is_landed = true
-                    is_landing = false
-                    minetest.chat_send_player(player_name, "Dragon has landed due to low stamina.")
-                end
                 anim = "fly"
             else
                 _self:set_gravity(0)
@@ -608,7 +601,7 @@ creatura.register_utility("waterdragon:mount", function(self)
                 if view_point == 1 then
                     if anim:match("idle")
                     or (anim:match("fly")
-                    and control.jump) then
+                    and control.jump)then
                         first_person_height = first_person_height + (65 - first_person_height) * 0.2
                     else
                         first_person_height = first_person_height + (45 - first_person_height) * 0.2
@@ -639,6 +632,7 @@ creatura.register_utility("waterdragon:mount", function(self)
     end
     self:set_utility(func)
 end)
+
 
 
 

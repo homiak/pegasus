@@ -45,11 +45,11 @@ if minetest.get_modpath("default") then
 end
 
 waterdragon.colors_pure_water = {
-    ["pure_water"] = "393939",
+    ["pure_water"] = "d8e2f2",
 }
 
 waterdragon.colors_rare_water = {
-    ["rare_water"] = "9df8ff"
+    ["rare_water"] = "0f66f2"
 }
 
 waterdragon.global_nodes = {}
