@@ -28,7 +28,7 @@ end)
 
 -- Local Utilities --
 
-local dragon_drops = {}
+local wtd_drops = {}
 
 local function correct_name(str)
 	if str then
@@ -67,7 +67,7 @@ end
 minetest.register_craftitem("waterdragon:dragon_water_drop", {
 	description = S("Drop of Dragon Water"),
 	inventory_image = "waterdragon_dragon_water_drop.png",
-	groups = { dragon_drops = 1 },
+	groups = { wtd_drops = 1 },
 	on_use = function(itemstack, user, pointed_thing)
 
 		if not user or not pointed_thing then return false end
@@ -117,7 +117,7 @@ minetest.register_craftitem("waterdragon:dragon_water_drop", {
 	end
 })
 
-table.insert(dragon_drops, "waterdragon:dragon_water_drop")
+table.insert(wtd_drops, "waterdragon:dragon_water_drop")
 
 minetest.register_craftitem("waterdragon:dragon_bone", {
 	description = S("Water Dragon Bone"),
@@ -125,7 +125,7 @@ minetest.register_craftitem("waterdragon:dragon_bone", {
 	groups = { bone = 1 }
 })
 
-table.insert(dragon_drops, "waterdragon:dragon_bone")
+table.insert(wtd_drops, "waterdragon:dragon_bone")
 
 for color, hex in pairs(waterdragon.colors_pure_water) do
 	minetest.register_craftitem("waterdragon:scales_pure_water_dragon", {
@@ -133,7 +133,7 @@ for color, hex in pairs(waterdragon.colors_pure_water) do
 		inventory_image = "waterdragon_dragon_scales.png^[multiply:#" .. hex,
 		groups = { dragon_scales = 1 }
 	})
-	table.insert(dragon_drops, "waterdragon:scales_pure_water_dragon")
+	table.insert(wtd_drops, "waterdragon:scales_pure_water_dragon")
 end
 
 for color, hex in pairs(waterdragon.colors_rare_water) do
@@ -142,7 +142,7 @@ for color, hex in pairs(waterdragon.colors_rare_water) do
 		inventory_image = "waterdragon_dragon_scales.png^[multiply:#" .. hex,
 		groups = { dragon_scales = 1 }
 	})
-	table.insert(dragon_drops, "waterdragon:scales_rare_water_dragon")
+	table.insert(wtd_drops, "waterdragon:scales_rare_water_dragon")
 end
 
 ---------------
@@ -1059,9 +1059,9 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "waterdragon:book_waterdragon",
 	recipe = {
-		{ "group:dragon_scales", "default:paper", "group:dragon_scales" },
-		{ "group:dragon_scales", "default:paper", "group:dragon_scales" },
-		{ "group:dragon_scales", "default:paper", "group:dragon_scales" },
+		{ "group:wtd_scales", "default:paper", "group:wtd_scales" },
+		{ "group:wtd_scales", "default:paper", "group:wtd_scales" },
+		{ "group:wtd_scales", "default:paper", "group:wtd_scales" },
 	}
 })
 
@@ -1502,7 +1502,7 @@ end)
 minetest.register_craftitem("waterdragon:bucket_dragon_water", {
 	description = S("Bucket of Dragon Water"),
 	inventory_image = "waterdragon_bucket_dragon_water.png",
-	groups = { dragon_drops = 1 },
+	groups = { wtd_drops = 1 },
 	on_use = function(itemstack, player, pointed_thing)
 		if not player then return false end
 		local entity 
