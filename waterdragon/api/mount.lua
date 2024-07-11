@@ -169,8 +169,8 @@ function waterdragon.attach_player(self, player)
 	-- Set Players Eye Offset
 	player:set_eye_offset({
 		x = 0,
-		y = 50 * scale,
-		z = -160 * scale
+		y = 115 * scale, -- Set eye offset
+		z = -280 * scale
 	}, { x = 0, y = 0, z = 0 }) -- 3rd person eye offset is limited to 15 on each axis (Fix this, devs.)
 	player:set_look_horizontal(self.object:get_yaw() or 0)
 	-- Set Fake Player (Using a fake player and changing 1st person eye offset works around the above issue)
@@ -222,8 +222,8 @@ function waterdragon.attach_passenger(self, player)
 	-- Set Players Eye Offset
 	player:set_eye_offset({
 		x = 0,
-		y = 50 * scale,
-		z = -160 * scale
+		y = 115 * scale, -- Passenger's eye offset
+		z = -280 * scale
 	}, { x = 0, y = 0, z = 0 }) -- 3rd person eye offset is limited to 15 on each axis (Fix this, devs.)
 	player:set_look_horizontal(self.object:get_yaw() or 0)
 	-- Set Fake Player (Using a fake player and changing 1st person eye offset works around the above issue)
@@ -482,7 +482,7 @@ creatura.register_utility("waterdragon:mount", function(self)
                             })
                             player:set_eye_offset({
                                 x = 0,
-                                y = 450 * scale,
+                                y = 450 * scale, -- no
                                 z = 20 * scale
                             }, {x = 0, y = 0, z = 0})
                             player:hud_set_flags({wielditem = false})
@@ -497,8 +497,8 @@ creatura.register_utility("waterdragon:mount", function(self)
                             })
                             player:set_eye_offset({
                                 x = 45 * scale,
-                                y = 80 * scale,
-                                z = -110 * scale
+                                y = 170 * scale, -- Set eye offset
+                                z = -290 * scale
                             }, {x = 0, y = 0, z = 0})
                             player:hud_set_flags({wielditem = false})
                         elseif view_point == 2 then
@@ -511,9 +511,9 @@ creatura.register_utility("waterdragon:mount", function(self)
                                 }
                             })
                             player:set_eye_offset({
-                                x = 0,
-                                y = 80 * scale,
-                                z = -160 * scale
+								x = 0,
+								y = 115 * scale,
+								z = -280 * scale
                             }, {x = 0, y = 0, z = 0})
                             player:hud_set_flags({wielditem = false})
                         end
@@ -608,8 +608,8 @@ creatura.register_utility("waterdragon:mount", function(self)
                     end
                     player:set_eye_offset({
                         x = 0,
-                        y = first_person_height * scale,
-                        z = 20 * scale
+                        y = 125 * scale, -- Set eye offset
+                        z = 30 * scale
                     }, {x = 0, y = 0, z = 0})
                 end
             end

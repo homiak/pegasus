@@ -858,7 +858,7 @@ local function draconic_step(itemstack, player, pointed_thing)
 			end
 		end
 	end
-	-- Destroy Tool if Dragon is not alive
+	-- Destroy Tool if Water Dragon is not alive
 	if dragon_id ~= ""
 		and not waterdragon.dragons[dragon_id] then
 		itemstack:set_wear(65536)
@@ -868,7 +868,7 @@ local function draconic_step(itemstack, player, pointed_thing)
 		)
 		return itemstack
 	end
-	-- Get distance to Dragon
+	-- Get distance to Water Dragon
 	local dragon_data = waterdragon.dragons[dragon_id]
 	local pos = player:get_pos()
 	local dist2dragon

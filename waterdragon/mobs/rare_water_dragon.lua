@@ -35,10 +35,10 @@ creatura.register_mob("waterdragon:rare_water_dragon", {
 	-- Visuals
 	mesh = "waterdragon_water_dragon.b3d",
 	hitbox = {
-		width = 2.5,
-		height = 5
+		width = 5,
+		height = 10
 	},
-	visual_size = {x = 20, y = 20},
+	visual_size = {x = 40, y = 40},
 	glow = 12,
 	backface_culling = false,
 	use_texture_alpha = false,

@@ -821,7 +821,7 @@ function waterdragon.rare_water_breath(self, pos2)
 	local breath_delay = (self.breath_delay or 0) - 1
 	if breath_delay <= 0 then
 		local vel = self.object:get_velocity()
-		local particle_origin = {
+		local particle_origin2 = {
 			x = pos.x + vel.x * 0.25,
 			y = pos.y + vel.y * 0.25,
 			z = pos.z + vel.z * 0.25
@@ -833,7 +833,7 @@ function waterdragon.rare_water_breath(self, pos2)
 				time = 0.0005,
 				collisiondetection = true,
 				collision_removal = true,
-				pos = particle_origin,
+				pos = particle_origin2,
 				vel = { min = vec_multi(dir, 32), max = vec_multi(dir, 48) },
 				acc = { min = vec_new(-4, -4, -4), max = vec_new(4, 4, 4) },
 				size = { min = 6 * scale, max = 8 * scale },
@@ -848,16 +848,16 @@ function waterdragon.rare_water_breath(self, pos2)
 			minetest.add_particlespawner({
 				amount = 200,
 				time = 0.0005,
-				minpos = particle_origin,
-				maxpos = particle_origin,
+				minpos = particle_origin2,
+				maxpos = particle_origin2,
 				minvel = vec_multi(dir, 32),
 				maxvel = vec_multi(dir, 48),
 				minacc = { x = -4, y = -4, z = -4 },
 				maxacc = { x = 4, y = 4, z = 4 },
 				minexptime = 0.02 * 32,
 				maxexptime = 0.04 * 32,
-				minsize = 6 * scale,
-				maxsize = 8 * scale,
+				minsize = 4 * scale,
+				maxsize = 6 * scale,
 				collisiondetection = true,
 				collision_removal = true,
 				vertical = false,
@@ -1578,7 +1578,7 @@ end
 -- On Step --
 -------------
 
--- Dragon
+-- Water Dragon
 
 function waterdragon.dragon_step(self, dtime)
 	self:update_emission()
@@ -1617,7 +1617,7 @@ function waterdragon.dragon_step(self, dtime)
 		is_flying = false
 	end
 	-- Dynamic Physics
-	self.speed = 45 * clamp((self.growth_scale), 0.1, 1)     -- Speed increases with size
+	self.speed = 45 * clamp((self.growth_scale), 0.1, 1) -- Speed increases with size
 	self.turn_rate = 6 - 3 * clamp((self.growth_scale), 0.1, 1) -- Turning radius widens with size
 	if not is_flying
 		or self.in_liquid then
