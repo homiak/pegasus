@@ -1386,7 +1386,7 @@ minetest.register_chatcommand("set_dragon_owner", {
 	end
 })
 
-minetest.register_chatcommand("dragon_blacklist_add", {
+minetest.register_chatcommand("wtd_blacklist_add", {
 	description = "Adds player to attack blacklist of Water Dragons",
 	params = "<name>",
 	privs = { dragon_uisge = true },
@@ -1403,7 +1403,7 @@ minetest.register_chatcommand("dragon_blacklist_add", {
 	end
 })
 
-minetest.register_chatcommand("dragon_blacklist_remove", {
+minetest.register_chatcommand("wtd_blacklist_remove", {
 	description = "Removes player from attack blacklist of the Water Dragons",
 	params = "<name>",
 	privs = { dragon_uisge = true },
@@ -1528,7 +1528,7 @@ function waterdragon.dragon_activate(self)
 	self.is_landed = self:recall("is_landed") or false
 	self.attack_stamina = self:recall("attack_stamina") or 150
 	self.attack_disabled = self:recall("attack_disabled") or false
-	self.flight_stamina = self:recall("flight_stamina") or 150
+	self.flight_stamina = self:recall("flight_stamina") or 300
 
 	-- Sound Data
 	self.flap_sound_timer = 1.5
@@ -1638,7 +1638,7 @@ function waterdragon.dragon_step(self, dtime)
 			self:play_sound("random")
 		end
 		-- Dynamic Stats
-		local fly_stam = self.flight_stamina or 150
+		local fly_stam = self.flight_stamina or 300
 		local atk_stam = self.attack_stamina or 150
 		local alert_timer = self.alert_timer or 0
 		if is_flying
@@ -1674,7 +1674,7 @@ function waterdragon.dragon_step(self, dtime)
 	elseif self:timer(16)
 		and random(4) < 2 then
 		if self.is_landed
-			and self.flight_stamina > 300 then
+			and self.flight_stamina > 50 then
 			self.is_landed = self:memorize("is_landed", false)
 		else
 			self.is_landed = self:memorize("is_landed", true)
