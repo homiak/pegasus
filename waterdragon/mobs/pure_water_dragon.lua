@@ -106,7 +106,7 @@ creatura.register_mob("waterdragon:pure_water_dragon", {
 	},
 	drops = {}, -- Set in on_activate
 	follow = {
-		"group:food_meat"
+		"group:meat"
 	},
 	dynamic_anim_data = {
 		yaw_factor = 0.35,
