@@ -100,7 +100,7 @@ local function get_dragon_formspec(self)
 	return table.concat(form, "")
 end
 
-waterdragon.dragon_api.show_formspec = function(self, player)
+waterdragon.wtd_api.show_formspec = function(self, player)
 	minetest.show_formspec(player:get_player_name(), "waterdragon:dragon_forms", get_dragon_formspec(self))
 	form_objref[player:get_player_name()] = self
 end

@@ -9,7 +9,7 @@ local data = {
 }
 
 local function save()
-    mod_storage:set_string("waterdragons", minetest.serialize(data.dragons))
+    mod_storage:set_string("waterdragons", minetest.serialize(data.wtds))
     mod_storage:set_string("bonded_dragons", minetest.serialize(data.bonded_dragons))
     mod_storage:set_string("aux_key_setting", minetest.serialize(data.aux_key_setting))
     mod_storage:set_string("attack_blacklist", minetest.serialize(data.attack_blacklist))

@@ -386,7 +386,7 @@ minetest.register_on_dieplayer(function(player)
 	local name = player:get_player_name()
 	if name
 		and waterdragon.mounted_player_data[name] then
-		waterdragon.detach_player(waterdragon.mounted_player_data[name].dragon, player)
+		waterdragon.detach_player(waterdragon.mounted_player_data[name].wtd, player)
 	end
 end)
 
