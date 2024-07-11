@@ -352,7 +352,7 @@ local function menu_form()
 	return table.concat(formspec, "")
 end
 
-minetest.register_chatcommand("wtd_mount_settings", {
+minetest.register_chatcommand("dragon_mount_settings", {
 	privs = {
 		interact = true,
 	},
@@ -386,7 +386,7 @@ minetest.register_on_dieplayer(function(player)
 	local name = player:get_player_name()
 	if name
 		and waterdragon.mounted_player_data[name] then
-		waterdragon.detach_player(waterdragon.mounted_player_data[name].wtd, player)
+		waterdragon.detach_player(waterdragon.mounted_player_data[name].dragon, player)
 	end
 end)
 

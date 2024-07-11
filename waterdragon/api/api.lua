@@ -200,9 +200,9 @@ end
 function waterdragon.generate_id()
 	local idst = ""
 	for _ = 0, 5 do idst = idst .. (random(0, 9)) end
-	if waterdragon.wtds[idst] then
+	if waterdragon.dragons[idst] then
 		local fail_safe = 20
-		while waterdragon.wtds[idst]
+		while waterdragon.dragons[idst]
 			and fail_safe > 0 do
 			for _ = 0, 5 do idst = idst .. (random(0, 9)) end
 			fail_safe = fail_safe - 1
@@ -794,7 +794,7 @@ function waterdragon.pure_water_breath(self, pos2)
 				break
 			end
 		end
-		do_forge(breath_end, "waterdragon:draconic_forge_pure_water", self.wtd_id)
+		do_forge(breath_end, "waterdragon:draconic_forge_pure_water", self.dragon_id)
 		breath_delay = 4
 	end
 	self.breath_delay = breath_delay
@@ -889,7 +889,7 @@ function waterdragon.rare_water_breath(self, pos2)
 				break
 			end
 		end
-		do_forge(breath_end, "waterdragon:draconic_forge_rare_water", self.wtd_id)
+		do_forge(breath_end, "waterdragon:draconic_forge_rare_water", self.dragon_id)
 		breath_delay = 4
 	end
 	self.breath_delay = breath_delay
@@ -904,7 +904,7 @@ end
 --------------------
 
 
-waterdragon.wtd_api = {
+waterdragon.dragon_api = {
 	action_flight_to_land = function(self)
 	minetest.log("action", "fly to land action")
         if not self:get_action() then
@@ -1322,7 +1322,7 @@ waterdragon.wtd_api = {
 dofile(minetest.get_modpath("waterdragon") .. "/api/forms.lua")
 
 minetest.register_on_mods_loaded(function()
-	for k, v in pairs(waterdragon.wtd_api) do
+	for k, v in pairs(waterdragon.dragon_api) do
 		minetest.registered_entities["waterdragon:pure_water_dragon"][k] = v
 		minetest.registered_entities["waterdragon:rare_water_dragon"][k] = v
 	end
@@ -1339,7 +1339,7 @@ minetest.register_privilege("dragon_uisge", {
 })
 
 
-minetest.register_chatcommand("set_wtd_owner", {
+minetest.register_chatcommand("set_dragon_owner", {
 	description = "Sets owner of pointed Water Dragon",
 	params = "<name>",
 	privs = { dragon_uisge = true },
@@ -1386,7 +1386,7 @@ minetest.register_chatcommand("set_wtd_owner", {
 	end
 })
 
-minetest.register_chatcommand("wtd_blacklist_add", {
+minetest.register_chatcommand("dragon_blacklist_add", {
 	description = "Adds player to attack blacklist of Water Dragons",
 	params = "<name>",
 	privs = { dragon_uisge = true },
@@ -1403,7 +1403,7 @@ minetest.register_chatcommand("wtd_blacklist_add", {
 	end
 })
 
-minetest.register_chatcommand("wtd_blacklist_remove", {
+minetest.register_chatcommand("dragon_blacklist_remove", {
 	description = "Removes player from attack blacklist of the Water Dragons",
 	params = "<name>",
 	privs = { dragon_uisge = true },
@@ -1426,8 +1426,8 @@ minetest.register_chatcommand("wtd_blacklist_remove", {
 
 local function get_dragon_by_id(dragon_id)
 	for _, ent in pairs(minetest.luaentities) do
-		if ent.wtd_id
-			and ent.wtd_id == dragon_id then
+		if ent.dragon_id
+			and ent.dragon_id == dragon_id then
 			return ent
 		end
 	end
@@ -1471,7 +1471,7 @@ end)
 
 -- Dragon
 
-function waterdragon.wtd_activate(self)
+function waterdragon.dragon_activate(self)
 	local dragon_type = "rare_water"
 	if self.name == "waterdragon:pure_water_dragon" then
 		dragon_type = "pure_water"
@@ -1540,37 +1540,37 @@ function waterdragon.wtd_activate(self)
 	self._ignore_obj = {}
 	self.alert_timer = self:recall("alert_timer") or 0
 	self._remove = self:recall("_remove") or nil
-	self.wtd_id = self:recall("dragon_id") or 1
-	if self.wtd_id == 1 then
-		self.wtd_id = waterdragon.generate_id()
-		self:memorize("dragon_id", self.wtd_id)
+	self.dragon_id = self:recall("dragon_id") or 1
+	if self.dragon_id == 1 then
+		self.dragon_id = waterdragon.generate_id()
+		self:memorize("dragon_id", self.dragon_id)
 	end
-	local global_data = waterdragon.wtds[self.wtd_id] or {}
+	local global_data = waterdragon.dragons[self.dragon_id] or {}
 	if global_data.removal_queue
 		and #global_data.removal_queue > 0 then
 		for i = #global_data.removal_queue, 1, -1 do
 			if global_data.removal_queue[i]
 				and vector.equals(vec_round(global_data.removal_queue[i]), vec_round(self.object:get_pos())) then
-				waterdragon.wtds[self.wtd_id].removal_queue[i] = nil
+				waterdragon.dragons[self.dragon_id].removal_queue[i] = nil
 				self.object:remove()
 				return
 			end
 		end
 	end
-	waterdragon.wtds[self.wtd_id] = {
+	waterdragon.dragons[self.dragon_id] = {
 		last_pos = self.object:get_pos(),
 		owner = self.owner or nil,
 		staticdata = self:get_staticdata(),
 		removal_queue = global_data.removal_queue or {},
 		stored_in_item = global_data.stored_in_item or false
 	}
-	local owner = waterdragon.wtds[self.wtd_id].owner
+	local owner = waterdragon.dragons[self.dragon_id].owner
 	if owner
 		and minetest.get_player_by_name(owner)
 		and (not waterdragon.bonded_dragons[owner]
-			or not is_value_in_table(waterdragon.bonded_dragons[owner], self.wtd_id)) then
+			or not is_value_in_table(waterdragon.bonded_dragons[owner], self.dragon_id)) then
 		waterdragon.bonded_dragons[owner] = waterdragon.bonded_dragons[owner] or {}
-		table.insert(waterdragon.bonded_dragons[owner], self.wtd_id)
+		table.insert(waterdragon.bonded_dragons[owner], self.dragon_id)
 	end
 end
 
@@ -1580,7 +1580,7 @@ end
 
 -- Water Dragon
 
-function waterdragon.wtd_step(self, dtime)
+function waterdragon.dragon_step(self, dtime)
 	self:update_emission()
 	self:destroy_terrain()
 	-- Animation Tracking
@@ -1682,11 +1682,11 @@ function waterdragon.wtd_step(self, dtime)
 	end
 	-- Global Info
 	if self.hp <= 0 then
-		waterdragon.wtds[self.wtd_id] = nil
+		waterdragon.dragons[self.dragon_id] = nil
 		return
 	end
-	local global_data = waterdragon.wtds[self.wtd_id] or {}
-	waterdragon.wtds[self.wtd_id] = {
+	local global_data = waterdragon.dragons[self.dragon_id] or {}
+	waterdragon.dragons[self.dragon_id] = {
 		last_pos = self.object:get_pos(),
 		owner = self.owner or nil,
 		name = self.nametag or nil,
@@ -1694,7 +1694,7 @@ function waterdragon.wtd_step(self, dtime)
 		removal_queue = global_data.removal_queue or {},
 		stored_in_item = global_data.stored_in_item or false
 	}
-	if waterdragon.wtds[self.wtd_id].stored_in_item then
+	if waterdragon.dragons[self.dragon_id].stored_in_item then
 		self.object:remove()
 	end
 end
@@ -1705,7 +1705,7 @@ end
 
 -- Dragon
 
-function waterdragon.wtd_rightclick(self, clicker)
+function waterdragon.dragon_rightclick(self, clicker)
 	local name = clicker:get_player_name()
 	local inv = minetest.get_inventory({ type = "player", name = name })
 	if waterdragon.contains_book(inv) then
@@ -1713,7 +1713,7 @@ function waterdragon.wtd_rightclick(self, clicker)
 	end
 	if self.hp <= 0 then
 		if waterdragon.drop_items(self) then
-			waterdragon.wtds[self.wtd_id] = nil
+			waterdragon.dragons[self.dragon_id] = nil
 			self.object:remove()
 		end
 		return

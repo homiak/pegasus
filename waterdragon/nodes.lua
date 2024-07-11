@@ -551,9 +551,9 @@ local function cool_crucible(pos, ingot)
 		local ingot_meta = draconic_ingot:get_meta()
 		local ingot_desc = minetest.registered_items[ingot].description
 		local dragon_name = "a Nameless Dragon"
-		if waterdragon.wtds[dragon_id]
-		and waterdragon.wtds[dragon_id].name then
-			dragon_name = waterdragon.wtds[dragon_id].name
+		if waterdragon.dragons[dragon_id]
+		and waterdragon.dragons[dragon_id].name then
+			dragon_name = waterdragon.dragons[dragon_id].name
 		end
 		ingot_meta:set_string("dragon_id", dragon_id)
 		ingot_meta:set_string("description", ingot_desc .. "\n(Forged by " .. dragon_name .. ")")

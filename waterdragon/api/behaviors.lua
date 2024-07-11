@@ -986,7 +986,7 @@ end)
 
 -- Utility Stack --
 
-waterdragon.wtd_behavior = {
+waterdragon.dragon_behavior = {
 	{ -- Wander
 		utility = "waterdragon:fly_and_roost",
 		get_score = function(self)

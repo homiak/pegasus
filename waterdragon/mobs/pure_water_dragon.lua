@@ -207,15 +207,15 @@ creatura.register_mob("waterdragon:pure_water_dragon", {
 	},
 	-- Function
 	breath_attack = waterdragon.pure_water_breath,
-	utility_stack = waterdragon.wtd_behavior,
+	utility_stack = waterdragon.dragon_behavior,
 	activate_func = function(self)
-		waterdragon.wtd_activate(self)
+		waterdragon.dragon_activate(self)
 	end,
 	step_func = function(self, dtime, moveresult)
-		waterdragon.wtd_step(self, dtime, moveresult)
+		waterdragon.dragon_step(self, dtime, moveresult)
 	end,
 	on_rightclick = function(self, clicker)
-		waterdragon.wtd_rightclick(self, clicker)
+		waterdragon.dragon_rightclick(self, clicker)
 	end,
 	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, direction, damage)
 		if time_from_last_punch < 0.66
@@ -228,14 +228,14 @@ creatura.register_mob("waterdragon:pure_water_dragon", {
 		self.alert_timer = self:memorize("alert_timer", 15)
 	end,
 	deactivate_func = function(self)
-		if not waterdragon.wtds[self.wtd_id] then return end
-		local owner = waterdragon.wtds[self.wtd_id].owner
+		if not waterdragon.dragons[self.dragon_id] then return end
+		local owner = waterdragon.dragons[self.dragon_id].owner
 		if not owner then return end
 		if not waterdragon.bonded_dragons then return end
 		if waterdragon.bonded_dragons[owner]
-		and is_value_in_table(waterdragon.bonded_dragons[owner], self.wtd_id) then
+		and is_value_in_table(waterdragon.bonded_dragons[owner], self.dragon_id) then
 			for i = #waterdragon.bonded_dragons[owner], 1, -1 do
-				if waterdragon.bonded_dragons[owner][i] == self.wtd_id then
+				if waterdragon.bonded_dragons[owner][i] == self.dragon_id then
 					waterdragon.bonded_dragons[owner][i] = nil
 				end
 			end

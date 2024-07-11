@@ -28,7 +28,7 @@ end)
 
 -- Local Utilities --
 
-local wtd_drops = {}
+local dragon_drops = {}
 
 local function correct_name(str)
 	if str then
@@ -67,7 +67,7 @@ end
 minetest.register_craftitem("waterdragon:dragon_water_drop", {
 	description = S("Drop of Dragon Water"),
 	inventory_image = "waterdragon_dragon_water_drop.png",
-	groups = { wtd_drops = 1 },
+	groups = { dragon_drops = 1 },
 	on_use = function(itemstack, user, pointed_thing)
 
 		if not user or not pointed_thing then return false end
@@ -117,7 +117,7 @@ minetest.register_craftitem("waterdragon:dragon_water_drop", {
 	end
 })
 
-table.insert(wtd_drops, "waterdragon:dragon_water_drop")
+table.insert(dragon_drops, "waterdragon:dragon_water_drop")
 
 minetest.register_craftitem("waterdragon:dragon_bone", {
 	description = S("Water Dragon Bone"),
@@ -125,24 +125,24 @@ minetest.register_craftitem("waterdragon:dragon_bone", {
 	groups = { bone = 1 }
 })
 
-table.insert(wtd_drops, "waterdragon:dragon_bone")
+table.insert(dragon_drops, "waterdragon:dragon_bone")
 
 for color, hex in pairs(waterdragon.colors_pure_water) do
 	minetest.register_craftitem("waterdragon:scales_pure_water_dragon", {
 		description = S("Pure Water Dragon Scales"),
-		inventory_image = "waterdragon_wtd_scales.png^[multiply:#" .. hex,
-		groups = { wtd_scales = 1 }
+		inventory_image = "waterdragon_dragon_scales.png^[multiply:#" .. hex,
+		groups = { dragon_scales = 1 }
 	})
-	table.insert(wtd_drops, "waterdragon:scales_pure_water_dragon")
+	table.insert(dragon_drops, "waterdragon:scales_pure_water_dragon")
 end
 
 for color, hex in pairs(waterdragon.colors_rare_water) do
 	minetest.register_craftitem("waterdragon:scales_rare_water_dragon", {
 		description = S("Rare Water Dragon Scales"),
-		inventory_image = "waterdragon_wtd_scales.png^[multiply:#" .. hex,
-		groups = { wtd_scales = 1 }
+		inventory_image = "waterdragon_dragon_scales.png^[multiply:#" .. hex,
+		groups = { dragon_scales = 1 }
 	})
-	table.insert(wtd_drops, "waterdragon:scales_rare_water_dragon")
+	table.insert(dragon_drops, "waterdragon:scales_rare_water_dragon")
 end
 
 ---------------
@@ -477,11 +477,11 @@ local function capture(player, ent)
 	local meta = stack:get_meta()
 	if not meta:get_string("staticdata")
 		or meta:get_string("staticdata") == "" then
-		if not ent.wtd_id then return end
+		if not ent.dragon_id then return end
 		local stored_aging = meta:get_int("stored_aging") or 0
 		waterdragon.set_color_string(ent)
 		meta:set_string("mob", ent.name)
-		meta:set_string("dragon_id", ent.wtd_id)
+		meta:set_string("dragon_id", ent.dragon_id)
 		meta:set_string("staticdata", ent:get_staticdata())
 		meta:set_string("nametag", ent.nametag or "a Nameless Dragon")
 		meta:set_string("description", get_binder_desc(ent))
@@ -489,7 +489,7 @@ local function capture(player, ent)
 			meta:set_int("timestamp", os.time())
 		end
 		player:set_wielded_item(stack)
-		waterdragon.wtds[ent.wtd_id].stored_in_item = true
+		waterdragon.dragons[ent.dragon_id].stored_in_item = true
 		ent.object:remove()
 		waterdragon.force_storage_save = true
 		return stack
@@ -501,8 +501,8 @@ end
 
 local function get_dragon_by_id(dragon_id)
 	for _, ent in pairs(minetest.luaentities) do
-		if ent.wtd_id
-			and ent.wtd_id == dragon_id then
+		if ent.dragon_id
+			and ent.dragon_id == dragon_id then
 			return ent
 		end
 	end
@@ -529,7 +529,7 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 		return itemstack
 	end
 	if id ~= "" then -- If the horn has a linked Water Dragon
-		if not waterdragon.wtds[id] then -- Clear data if linked Water Dragon is dead
+		if not waterdragon.dragons[id] then -- Clear data if linked Water Dragon is dead
 			meta:set_string("mob", nil)
 			meta:set_string("dragon_id", nil)
 			meta:set_string("staticdata", nil)
@@ -540,18 +540,18 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 		local ent = pointed_thing.ref and pointed_thing.ref:get_luaentity()
 		if ent
 			and ent.name:match("^waterdragon:")
-			and ent.wtd_id
-			and ent.wtd_id == id
+			and ent.dragon_id
+			and ent.dragon_id == id
 			and not ent.rider then -- Store Water Dragon if linked to Horn
 			return capture(player, ent)
 		end
 		-- Teleport linked Water Dragon if not pointed
-		local last_pos = waterdragon.wtds[id].last_pos
+		local last_pos = waterdragon.dragons[id].last_pos
 		ent = get_dragon_by_id(id)
-		if waterdragon.wtds[id].stored_in_item then return itemstack end
+		if waterdragon.dragons[id].stored_in_item then return itemstack end
 		if not ent then
-			table.insert(waterdragon.wtds[id].removal_queue, last_pos)
-			minetest.add_entity(player:get_pos(), mob, waterdragon.wtds[id].staticdata)
+			table.insert(waterdragon.dragons[id].removal_queue, last_pos)
+			minetest.add_entity(player:get_pos(), mob, waterdragon.dragons[id].staticdata)
 		else
 			ent.object:set_pos(player:get_pos())
 		end
@@ -560,7 +560,7 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 		local ent = pointed_thing.ref and pointed_thing.ref:get_luaentity()
 		if ent
 			and ent.name:match("^waterdragon:")
-			and ent.wtd_id
+			and ent.dragon_id
 			and ent.owner
 			and ent.owner == player:get_player_name()
 			and not ent.rider then
@@ -585,7 +585,7 @@ local function dragon_horn_place(itemstack, player, pointed_thing)
 		local staticdata = meta:get_string("staticdata")
 		local nametag = meta:get_string("nametag") or "a Nameless Dragon"
 		local id = meta:get_string("dragon_id")
-		if not waterdragon.wtds[id] then -- Clear data if linked Water Dragon is dead
+		if not waterdragon.dragons[id] then -- Clear data if linked Water Dragon is dead
 			meta:set_string("mob", nil)
 			meta:set_string("dragon_id", nil)
 			meta:set_string("staticdata", nil)
@@ -595,15 +595,15 @@ local function dragon_horn_place(itemstack, player, pointed_thing)
 		end
 		if staticdata == ""
 			and id ~= ""
-			and waterdragon.wtds[id]
-			and waterdragon.wtds[id].stored_in_item then
-			staticdata = waterdragon.wtds[id].staticdata
+			and waterdragon.dragons[id]
+			and waterdragon.dragons[id].stored_in_item then
+			staticdata = waterdragon.dragons[id].staticdata
 		end
 		if staticdata ~= "" then
 			local ent = minetest.add_entity(pos, mob, staticdata)
 			if id ~= ""
-				and waterdragon.wtds[id] then
-				waterdragon.wtds[id].stored_in_item = false
+				and waterdragon.dragons[id] then
+				waterdragon.dragons[id].stored_in_item = false
 			end
 			waterdragon.force_storage_save = true
 			local desc = S("Dragon Horn\n") .. minetest.colorize("#bdd9ff", correct_name(mob))
@@ -860,7 +860,7 @@ local function draconic_step(itemstack, player, pointed_thing)
 	end
 	-- Destroy Tool if Water Dragon is not alive
 	if dragon_id ~= ""
-		and not waterdragon.wtds[dragon_id] then
+		and not waterdragon.dragons[dragon_id] then
 		itemstack:set_wear(65536)
 		minetest.sound_play(
 			{ name = "waterdragon_draconic_steel_shatter", pitch = math.random(-5, 5) * 0.1 },
@@ -869,7 +869,7 @@ local function draconic_step(itemstack, player, pointed_thing)
 		return itemstack
 	end
 	-- Get distance to Water Dragon
-	local dragon_data = waterdragon.wtds[dragon_id]
+	local dragon_data = waterdragon.dragons[dragon_id]
 	local pos = player:get_pos()
 	local dist2dragon
 	if dragon_id ~= ""
@@ -1059,9 +1059,9 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "waterdragon:book_waterdragon",
 	recipe = {
-		{ "group:wtd_scales", "default:paper", "group:wtd_scales" },
-		{ "group:wtd_scales", "default:paper", "group:wtd_scales" },
-		{ "group:wtd_scales", "default:paper", "group:wtd_scales" },
+		{ "group:dragon_scales", "default:paper", "group:dragon_scales" },
+		{ "group:dragon_scales", "default:paper", "group:dragon_scales" },
+		{ "group:dragon_scales", "default:paper", "group:dragon_scales" },
 	}
 })
 
@@ -1489,9 +1489,9 @@ minetest.register_on_craft(function(itemstack, player, old_craft_grid)
 			local desc = minetest.registered_items[name].description
 			meta:set_string("dragon_id", last_id)
 			local dragon_name = "a Nameless Dragon"
-			if waterdragon.wtds[last_id]
-				and waterdragon.wtds[last_id].name then
-				dragon_name = waterdragon.wtds[last_id].name
+			if waterdragon.dragons[last_id]
+				and waterdragon.dragons[last_id].name then
+				dragon_name = waterdragon.dragons[last_id].name
 			end
 			meta:set_string("description", desc .. "\n(Forged by " .. dragon_name .. ")")
 		end
@@ -1502,7 +1502,7 @@ end)
 minetest.register_craftitem("waterdragon:bucket_dragon_water", {
 	description = S("Bucket of Dragon Water"),
 	inventory_image = "waterdragon_bucket_dragon_water.png",
-	groups = { wtd_drops = 1 },
+	groups = { dragon_drops = 1 },
 	on_use = function(itemstack, player, pointed_thing)
 		if not player then return false end
 		local entity 
