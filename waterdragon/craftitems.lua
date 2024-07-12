@@ -1559,7 +1559,6 @@ local use_count = 0
 minetest.register_tool("waterdragon:draconic_tooth", {
     description = S("Water Dragon Tooth"),
     inventory_image = "waterdragon_draconic_tooth.png",
-	groups = { wtd_drops },
     tool_capabilities = {
         full_punch_interval = 0.8,
         max_drop_level = 1,
@@ -1577,7 +1576,6 @@ minetest.register_tool("waterdragon:draconic_tooth", {
             minetest.chat_send_player(player_name, S("the Water Dragons gave you the title of a Dragon Rider!"))
             use_count = 0
         end
-        minetest.do_item_eat(0, nil, itemstack, user, pointed_thing)
         
         return itemstack
     end,
