@@ -514,7 +514,7 @@ local function forge_particle(pos, texture, animation)
 	})
 end
 
-local function melt_ingots(pos, dragon_id)
+local function melt_ingots(pos, wtd_id)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	local input = inv:get_stack("input", 1)
@@ -528,7 +528,7 @@ local function melt_ingots(pos, dragon_id)
 		input:take_item(stack_size)
 		inv:set_stack("input", 1, input)
 		local full_crucible = ItemStack("waterdragon:dragonstone_crucible_full")
-		full_crucible:get_meta():set_string("dragon_id", dragon_id)
+		full_crucible:get_meta():set_string("wtd_id", wtd_id)
 		inv:set_stack("crucible", 1, full_crucible)
 	end
 end
@@ -542,20 +542,20 @@ local function cool_crucible(pos, ingot)
 	if crucible:get_name() ~= "waterdragon:dragonstone_crucible_full" then
 		minetest.get_node_timer(pos):stop()
 	else
-		local dragon_id = crucible:get_meta():get_string("dragon_id")
+		local wtd_id = crucible:get_meta():get_string("wtd_id")
 		if name:find("rare_water") then
-			dragon_id = meta:get_string("dragon_id")
+			wtd_id = meta:get_string("wtd_id")
 		end
 		inv:set_stack("crucible", 1, "waterdragon:dragonstone_crucible")
 		local draconic_ingot = ItemStack(ingot)
 		local ingot_meta = draconic_ingot:get_meta()
 		local ingot_desc = minetest.registered_items[ingot].description
 		local dragon_name = "a Nameless Dragon"
-		if waterdragon.dragons[dragon_id]
-		and waterdragon.dragons[dragon_id].name then
-			dragon_name = waterdragon.dragons[dragon_id].name
+		if waterdragon.dragons[wtd_id]
+		and waterdragon.dragons[wtd_id].name then
+			dragon_name = waterdragon.dragons[wtd_id].name
 		end
-		ingot_meta:set_string("dragon_id", dragon_id)
+		ingot_meta:set_string("wtd_id", wtd_id)
 		ingot_meta:set_string("description", ingot_desc .. "\n(Forged by " .. dragon_name .. ")")
 		inv:set_stack("output", 1, draconic_ingot)
 		meta:set_int("cool_perc", 0)
@@ -703,7 +703,7 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
 		local crucible = inv:get_stack("crucible", 1)
-		local dragon_id = meta:get_string("dragon_id") ~= ""
+		local wtd_id = meta:get_string("wtd_id") ~= ""
 		local melt_perc = meta:get_int("melt_perc") or 0
 		local last_perc = melt_perc
 		local cool_perc = meta:get_int("cool_perc") or 0
@@ -711,9 +711,9 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 
 		-- If melting has reached end, melt input
 		if melt_perc >= 100
-		and dragon_id then
+		and wtd_id then
 			melt_perc = 0
-			melt_ingots(pos, meta:get_string("dragon_id"))
+			melt_ingots(pos, meta:get_string("wtd_id"))
 		end
 
 		-- If cooling has reached end, cool crucible
@@ -724,10 +724,10 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 		end
 
 		-- If a Water Dragon is breathing into forge, increase melting progress
-		if dragon_id
+		if wtd_id
 		and melt_perc < 100 then
 			melt_perc = melt_perc + 5
-			meta:set_string("dragon_id", "")
+			meta:set_string("wtd_id", "")
 		-- If the Water Dragon has stopped breathing into forge, undo melting progress
 		elseif melt_perc > 0 then
 			melt_perc = melt_perc - 5
@@ -753,8 +753,8 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 		if (melt_perc > 0
 		and melt_perc <= last_perc)
 		or crucible:get_name() == "waterdragon:dragonstone_crucible_full"
-		or dragon_id then
-			--meta:set_string("dragon_id", "")
+		or wtd_id then
+			--meta:set_string("wtd_id", "")
 			return true
 		end
 	end,
@@ -784,7 +784,7 @@ minetest.register_node("waterdragon:draconic_forge_pure_water", {
 			timer:start(1)
 		end
 
-		meta:set_string("dragon_id", id)
+		meta:set_string("wtd_id", id)
 
 		forge_particle(pos, "fire_basic_flame.png")
 	end
@@ -951,7 +951,7 @@ minetest.register_node("waterdragon:draconic_forge_rare_water", {
 		end
 
 		meta:set_string("cooling_init", "true")
-		meta:set_string("dragon_id", id)
+		meta:set_string("wtd_id", id)
 
 		forge_particle(pos, "waterdragon_rare_water_particle_1.png")
 	end

@@ -2,17 +2,17 @@ local mod_storage = minetest.get_mod_storage()
 
 local data = {
     dragons = minetest.deserialize(mod_storage:get_string("waterdragons")) or {},
-    bonded_dragons = minetest.deserialize(mod_storage:get_string("bonded_dragons")) or {},
+    bonded_wtd = minetest.deserialize(mod_storage:get_string("bonded_wtd")) or {},
     aux_key_setting = minetest.deserialize(mod_storage:get_string("aux_key_setting")) or {},
-    attack_blacklist = minetest.deserialize(mod_storage:get_string("attack_blacklist")) or {},
+    wtd_attack_bl = minetest.deserialize(mod_storage:get_string("wtd_attack_bl")) or {},
 	book_font_size = minetest.deserialize(mod_storage:get_string("book_font_size")) or {}
 }
 
 local function save()
     mod_storage:set_string("waterdragons", minetest.serialize(data.dragons))
-    mod_storage:set_string("bonded_dragons", minetest.serialize(data.bonded_dragons))
+    mod_storage:set_string("bonded_wtd", minetest.serialize(data.bonded_wtd))
     mod_storage:set_string("aux_key_setting", minetest.serialize(data.aux_key_setting))
-    mod_storage:set_string("attack_blacklist", minetest.serialize(data.attack_blacklist))
+    mod_storage:set_string("wtd_attack_bl", minetest.serialize(data.wtd_attack_bl))
 	mod_storage:set_string("book_font_size", minetest.serialize(data.book_font_size))
 end
 

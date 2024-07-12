@@ -477,11 +477,11 @@ local function capture(player, ent)
 	local meta = stack:get_meta()
 	if not meta:get_string("staticdata")
 		or meta:get_string("staticdata") == "" then
-		if not ent.dragon_id then return end
+		if not ent.wtd_id then return end
 		local stored_aging = meta:get_int("stored_aging") or 0
 		waterdragon.set_color_string(ent)
 		meta:set_string("mob", ent.name)
-		meta:set_string("dragon_id", ent.dragon_id)
+		meta:set_string("wtd_id", ent.wtd_id)
 		meta:set_string("staticdata", ent:get_staticdata())
 		meta:set_string("nametag", ent.nametag or "a Nameless Dragon")
 		meta:set_string("description", get_binder_desc(ent))
@@ -489,7 +489,7 @@ local function capture(player, ent)
 			meta:set_int("timestamp", os.time())
 		end
 		player:set_wielded_item(stack)
-		waterdragon.dragons[ent.dragon_id].stored_in_item = true
+		waterdragon.dragons[ent.wtd_id].stored_in_item = true
 		ent.object:remove()
 		waterdragon.force_storage_save = true
 		return stack
@@ -499,10 +499,10 @@ local function capture(player, ent)
 	end
 end
 
-local function get_dragon_by_id(dragon_id)
+local function get_dragon_by_id(wtd_id)
 	for _, ent in pairs(minetest.luaentities) do
-		if ent.dragon_id
-			and ent.dragon_id == dragon_id then
+		if ent.wtd_id
+			and ent.wtd_id == wtd_id then
 			return ent
 		end
 	end
@@ -515,7 +515,7 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 	local staticdata = meta:get_string("staticdata")
 	if staticdata ~= "" then return end -- Skip func if Horn contains Water Dragon
 	local mob = meta:get_string("mob")
-	local id = meta:get_string("dragon_id")
+	local id = meta:get_string("wtd_id")
 	local stored_aging = meta:get_int("stored_aging") or 0
 	if player:get_player_control().sneak then
 		if stored_aging < 1 then
@@ -531,7 +531,7 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 	if id ~= "" then -- If the horn has a linked Water Dragon
 		if not waterdragon.dragons[id] then -- Clear data if linked Water Dragon is dead
 			meta:set_string("mob", nil)
-			meta:set_string("dragon_id", nil)
+			meta:set_string("wtd_id", nil)
 			meta:set_string("staticdata", nil)
 			meta:set_string("description", S("Dragon Horn"))
 			player:set_wielded_item(itemstack)
@@ -540,8 +540,8 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 		local ent = pointed_thing.ref and pointed_thing.ref:get_luaentity()
 		if ent
 			and ent.name:match("^waterdragon:")
-			and ent.dragon_id
-			and ent.dragon_id == id
+			and ent.wtd_id
+			and ent.wtd_id == id
 			and not ent.rider then -- Store Water Dragon if linked to Horn
 			return capture(player, ent)
 		end
@@ -560,7 +560,7 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 		local ent = pointed_thing.ref and pointed_thing.ref:get_luaentity()
 		if ent
 			and ent.name:match("^waterdragon:")
-			and ent.dragon_id
+			and ent.wtd_id
 			and ent.owner
 			and ent.owner == player:get_player_name()
 			and not ent.rider then
@@ -584,10 +584,10 @@ local function dragon_horn_place(itemstack, player, pointed_thing)
 		local mob = meta:get_string("mob")
 		local staticdata = meta:get_string("staticdata")
 		local nametag = meta:get_string("nametag") or "a Nameless Dragon"
-		local id = meta:get_string("dragon_id")
+		local id = meta:get_string("wtd_id")
 		if not waterdragon.dragons[id] then -- Clear data if linked Water Dragon is dead
 			meta:set_string("mob", nil)
-			meta:set_string("dragon_id", nil)
+			meta:set_string("wtd_id", nil)
 			meta:set_string("staticdata", nil)
 			meta:set_string("description", S("Dragon Horn"))
 			player:set_wielded_item(itemstack)
@@ -841,7 +841,7 @@ minetest.register_alias("waterdragon:sword_dragonbone", "waterdragon:sword_drago
 local function draconic_step(itemstack, player, pointed_thing)
 	local meta = itemstack:get_meta()
 	local name = itemstack:get_name()
-	local dragon_id = meta:get_string("dragon_id")
+	local wtd_id = meta:get_string("wtd_id")
 	local def = minetest.registered_tools[name]
 	local toolcaps = table.copy(def.tool_capabilities)
 	local current_caps = itemstack:get_tool_capabilities()
@@ -859,8 +859,8 @@ local function draconic_step(itemstack, player, pointed_thing)
 		end
 	end
 	-- Destroy Tool if Water Dragon is not alive
-	if dragon_id ~= ""
-		and not waterdragon.dragons[dragon_id] then
+	if wtd_id ~= ""
+		and not waterdragon.dragons[wtd_id] then
 		itemstack:set_wear(65536)
 		minetest.sound_play(
 			{ name = "waterdragon_draconic_steel_shatter", pitch = math.random(-5, 5) * 0.1 },
@@ -869,10 +869,10 @@ local function draconic_step(itemstack, player, pointed_thing)
 		return itemstack
 	end
 	-- Get distance to Water Dragon
-	local dragon_data = waterdragon.dragons[dragon_id]
+	local dragon_data = waterdragon.dragons[wtd_id]
 	local pos = player:get_pos()
 	local dist2dragon
-	if dragon_id ~= ""
+	if wtd_id ~= ""
 		and not dragon_data.stored_in_item then
 		local dragon_pos = dragon_data.last_pos
 		dist2dragon = vector.distance(pos, dragon_pos)
@@ -1462,8 +1462,8 @@ minetest.register_on_craft(function(itemstack, player, old_craft_grid)
 		local itemlist = {}
 		local shatter = false
 		for _, stack in pairs(old_craft_grid) do
-			if stack:get_meta():get_string("dragon_id") ~= "" then
-				local current_id = stack:get_meta():get_string("dragon_id")
+			if stack:get_meta():get_string("wtd_id") ~= "" then
+				local current_id = stack:get_meta():get_string("wtd_id")
 				if not last_id then
 					last_id = current_id
 				end
@@ -1487,7 +1487,7 @@ minetest.register_on_craft(function(itemstack, player, old_craft_grid)
 			local meta = itemstack:get_meta()
 			local name = itemstack:get_name()
 			local desc = minetest.registered_items[name].description
-			meta:set_string("dragon_id", last_id)
+			meta:set_string("wtd_id", last_id)
 			local dragon_name = "a Nameless Dragon"
 			if waterdragon.dragons[last_id]
 				and waterdragon.dragons[last_id].name then
