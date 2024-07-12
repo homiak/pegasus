@@ -1001,25 +1001,35 @@ waterdragon.dragon_api = {
 			[1] = {
 				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 1, max = 3, chance = 2 },
 				{ name = "waterdragon:dragon_horn", min = 3, max = 6,  chance = 1 },
+				{ name = "waterdragon:dragon_bone", min = 1, max = 3, chance = 2 },
 			},
 			[2] = {
-				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 4, max = 12, chance = 2 },
+				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 5, max = 16, chance = 2 },
 				{ name = "waterdragon:dragon_bone", min = 1, max = 3,  chance = 3 },
 				{ name = "waterdragon:dragon_horn", min = 3, max = 6,  chance = 1 },
+				{ name = "waterdragon:draconic_tooth", min = 3, max = 6,  chance = 1 },
+				{ name = "waterdragon:dragon_water_drop", min = 1, max = 3, chance = 2 },
 			},
 			[3] = {
-				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 8, max = 20, chance = 1 },
+				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 5, max = 16, chance = 1 },
 				{ name = "waterdragon:dragon_horn", min = 3, max = 6,  chance = 1 },
 				{ name = "waterdragon:dragon_bone", min = 3, max = 8,  chance = 1 },
+				{ name = "waterdragon:draconic_tooth", min = 3, max = 6,  chance = 1 },
+				{ name = "waterdragon:dragon_water_drop", min = 1, max = 3, chance = 2 },
 			},
 			[4] = {
-				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 16, max = 24, chance = 1 },
-				{ name = "waterdragon:dragon_bone",                  min = 6,  max = 10, chance = 1 },
+				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 5, max = 16, chance = 1 },
+				{ name = "waterdragon:dragon_bone", min = 6,  max = 10, chance = 1 },
 				{ name = "waterdragon:dragon_horn", min = 3, max = 6,  chance = 1 },
+				{ name = "waterdragon:draconic_tooth", min = 3, max = 6,  chance = 1 },
+				{ name = "waterdragon:dragon_water_drop", min = 1, max = 3, chance = 2 },
 			},
 			[5] = {
 				{ name = "waterdragon:dragon_water_drop", min = 1, max = 3, chance = 2 },
 				{ name = "waterdragon:dragon_horn", min = 3, max = 6,  chance = 1 },
+				{ name = "waterdragon:draconic_tooth", min = 3, max = 6,  chance = 1 },
+				{ name = "waterdragon:dragon_bone", min = 3, max = 6,  chance = 1 },
+				{ name = "waterdragon:scales_" .. type .. "_dragon", min = 5, max = 16, chance = 1 },
 			},
 		}
 		self.drops = drops[stage]

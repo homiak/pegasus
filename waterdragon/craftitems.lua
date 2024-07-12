@@ -1554,3 +1554,31 @@ minetest.register_craftitem("waterdragon:bucket_dragon_water", {
 })
 
 
+local use_count = 0
+
+minetest.register_tool("waterdragon:draconic_tooth", {
+    description = S("Water Dragon Tooth"),
+    inventory_image = "waterdragon_draconic_tooth.png",
+	groups = { wtd_drops },
+    tool_capabilities = {
+        full_punch_interval = 0.8,
+        max_drop_level = 1,
+        groupcaps = {
+            snappy = {times = {[1] = 2.5, [2] = 1.20, [3] = 0.35}, uses = 30, maxlevel = 3},
+        },
+        damage_groups = {fleshy = 6},
+    },
+    sound = {breaks = "default_tool_breaks"},
+    on_use = function(itemstack, user, pointed_thing)
+        use_count = use_count + 1
+        
+        if use_count == 1000 then
+            local player_name = user:get_player_name()
+            minetest.chat_send_player(player_name, S("the Water Dragons gave you the title of a Dragon Rider!"))
+            use_count = 0
+        end
+        minetest.do_item_eat(0, nil, itemstack, user, pointed_thing)
+        
+        return itemstack
+    end,
+})

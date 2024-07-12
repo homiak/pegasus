@@ -352,7 +352,7 @@ local function menu_form()
 	return table.concat(formspec, "")
 end
 
-minetest.register_chatcommand("dragon_mount_settings", {
+minetest.register_chatcommand("wtd_mount_settings", {
 	privs = {
 		interact = true,
 	},
@@ -546,15 +546,15 @@ creatura.register_utility("waterdragon:mount", function(self)
                     waterdragon.action_takeoff(_self)
                 end
             elseif is_landing then
-                anim = "fly"
+                anim = "fly_to_land"
             else
                 _self:set_gravity(0)
                 anim = "hover"
 
                 -- Check for low stamina
                 if _self.flight_stamina < 100 then
-                    is_landing = true
-                    minetest.chat_send_player(player_name, "Dragon is tired and needs to land.")
+                    is_landed = true
+                    minetest.chat_send_player(player_name, S("the Water Dragon is tired and needs to land"))
                 else
                     if control.up then
                         anim = "fly"
@@ -576,7 +576,7 @@ creatura.register_utility("waterdragon:mount", function(self)
                             _self:set_vertical_velocity(0)
                         end
                     end
-                    if _self.touching_ground and control.down then
+                    if _self.touching_ground then
                         is_landed = true
                         waterdragon.action_land(_self)
                     end

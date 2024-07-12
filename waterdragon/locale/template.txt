@@ -90,4 +90,6 @@ Bucket of Dragon Water=
 Enter name:=
 Rename=
 the Water Dragon is tired and needs to land=
+the Water Dragons gave you the title of a Dragon Rider!=
+Water Dragon Tooth=
 
