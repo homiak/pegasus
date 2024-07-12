@@ -1556,30 +1556,26 @@ minetest.register_craftitem("waterdragon:bucket_dragon_water", {
 
 local use_count = 0
 
-minetest.register_tool("waterdragon:draconic_tooth", {
-    description = S("Water Dragon Tooth"),
+minetest.register_craftitem("waterdragon:draconic_tooth", {
+    description = "Water Dragon Tooth",
     inventory_image = "waterdragon_draconic_tooth.png",
-    tool_capabilities = {
-        full_punch_interval = 0.6,
-			max_drop_level = 3,
-			groupcaps = {
-				cracky = {
-					times = { [1] = 1.2, [2] = 0.8, [3] = 0.6 },
-					uses = 40,
-					maxlevel = 3
-				}
-			}
-    },
-    sound = {breaks = "default_tool_breaks"},
+    groups = { wtd_drops = 1 },
     on_use = function(itemstack, user, pointed_thing)
         use_count = use_count + 1
-        
         if use_count == 1000 then
             local player_name = user:get_player_name()
-            minetest.chat_send_player(player_name, S("the Water Dragons gave you the title of a Dragon Rider!"))
+            minetest.chat_send_player(player_name, "the Water Dragons gave you the title of a Dragon Rider!")
             use_count = 0
+		end
+		if pointed_thing.type == "object" then
+            local target = pointed_thing.ref
+            if target and target:get_luaentity() and target:get_luaentity().health then
+                -- Увеличиваем здоровье существа на 8
+                local current_health = target:get_luaentity().health
+                target:get_luaentity().health = current_health + 8
+                itemstack:take_item()
+            end
         end
-        
         return itemstack
-    end,
+    end
 })
