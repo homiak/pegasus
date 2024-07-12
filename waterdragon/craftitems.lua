@@ -1560,12 +1560,15 @@ minetest.register_tool("waterdragon:draconic_tooth", {
     description = S("Water Dragon Tooth"),
     inventory_image = "waterdragon_draconic_tooth.png",
     tool_capabilities = {
-        full_punch_interval = 0.8,
-        max_drop_level = 1,
-        groupcaps = {
-            snappy = {times = {[1] = 2.5, [2] = 1.20, [3] = 0.35}, uses = 30, maxlevel = 3},
-        },
-        damage_groups = {fleshy = 6},
+        full_punch_interval = 0.6,
+			max_drop_level = 3,
+			groupcaps = {
+				cracky = {
+					times = { [1] = 1.2, [2] = 0.8, [3] = 0.6 },
+					uses = 40,
+					maxlevel = 3
+				}
+			}
     },
     sound = {breaks = "default_tool_breaks"},
     on_use = function(itemstack, user, pointed_thing)
