@@ -90,18 +90,18 @@ local function get_dragon_formspec(self)
 		"image[1.1,5.3;1,1;" .. stamina_ind .."]",
 		"image[1.1,7.3;1,1;" .. breath_ind .."]",
 		"tooltip[13.45,7.6;1.9,1.9;" .. correct_name(self.stance) .. "]",
-		"image_button[13.45,7.6;1.9,1.9;waterdragon_forms_dragon_" .. self.stance .. ".png;btn_dragon_stance;;false;false;]",
+		"image_button[13.45,7.6;1.9,1.9;waterdragon_forms_dragon_" .. self.stance .. ".png;btn_wtd_stance;;false;false;]",
 		"tooltip[13.45,3.9;1.9,1.9;" .. correct_name(self.order) .. "]",
 		"image_button[13.45,3.9;1.9,1.9;waterdragon_forms_dragon_" .. self.order .. ".png;btn_dragon_order;;false;false;]",
 		"tooltip[13.45,0.3;1.9,1.9;" .. fly_allowed .. "]",
-		"image_button[13.45,0.3;1.9,1.9;" .. fly_image .. ";btn_dragon_fly;;true;false;]"
+		"image_button[13.45,0.3;1.9,1.9;" .. fly_image .. ";btn_wtd_fly;;true;false;]"
 	}
 		table.insert(form, "button[9.75,8.75;2.6,0.5;btn_customize;Customize]")
 	return table.concat(form, "")
 end
 
 waterdragon.dragon_api.show_formspec = function(self, player)
-	minetest.show_formspec(player:get_player_name(), "waterdragon:dragon_forms", get_dragon_formspec(self))
+	minetest.show_formspec(player:get_player_name(), "waterdragon:wtd_forms", get_dragon_formspec(self))
 	form_objref[player:get_player_name()] = self
 end
 
@@ -144,8 +144,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		return
 	end
 	local ent = form_objref[name]
-	if formname == "waterdragon:dragon_forms" then
-		if fields.btn_dragon_stance then
+	if formname == "waterdragon:wtd_forms" then
+		if fields.btn_wtd_stance then
 			if not ent.object then return end
 			if ent.stance == "neutral" then
 				ent.stance = ent:memorize("stance", "aggressive")
@@ -169,12 +169,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			end
 			ent:show_formspec(player)
 		end
-		if fields.btn_dragon_fly then
+		if fields.btn_wtd_fly then
 			if not ent.object then return end
 			if ent.fly_allowed then
-				ent.fly_allowed = ent:memorize("fly_allowed", false)
-			else
 				ent.fly_allowed = ent:memorize("fly_allowed", true)
+			else
+				ent.fly_disallowed = ent:memorize("fly_disallowed", true)
 			end
 			ent:show_formspec(player)
 		end
