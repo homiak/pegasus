@@ -20,7 +20,7 @@ local path = minetest.get_modpath("waterdragon")
 
 local storage = dofile(path.."/storage.lua")
 
-waterdragon.dragons = storage.dragons
+waterdragon.waterdragons = storage.waterdragons
 waterdragon.bonded_wtd = storage.bonded_wtd
 waterdragon.aux_key_setting = storage.aux_key_setting
 waterdragon.wtd_attack_bl = storage.wtd_attack_bl
@@ -89,9 +89,9 @@ local clear_objects = minetest.clear_objects
 
 function minetest.clear_objects(options)
     clear_objects(options)
-    for id, dragon in pairs(waterdragon.dragons) do
-        if not dragon.stored_in_item then
-            waterdragon.dragons[id] = nil
+    for id, wtd in pairs(waterdragon.waterdragons) do
+        if not wtd.stored_in_item then
+            waterdragon.waterdragons[id] = nil
             if waterdragon.bonded_wtd[id] then
                 waterdragon.bonded_wtd[id] = nil
             end

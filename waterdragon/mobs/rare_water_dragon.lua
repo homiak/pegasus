@@ -229,8 +229,8 @@ creatura.register_mob("waterdragon:rare_water_dragon", {
 		self.alert_timer = self:memorize("alert_timer", 15)
 	end,
 	deactivate_func = function(self)
-		if not waterdragon.dragons[self.wtd_id] then return end
-		local owner = waterdragon.dragons[self.wtd_id].owner
+		if not waterdragon.waterdragons[self.wtd_id] then return end
+		local owner = waterdragon.waterdragons[self.wtd_id].owner
 		if not owner then return end
 		if not waterdragon.bonded_wtd then return end
 		if waterdragon.bonded_wtd[owner]

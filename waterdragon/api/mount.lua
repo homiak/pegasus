@@ -81,7 +81,7 @@ function waterdragon.set_fake_player(self, player, passenger)
 		formspec = player:get_inventory_formspec(),
 		hotbar = player:hud_get_hotbar_itemcount(),
 		nametag = player:get_nametag_attributes(),
-		dragon = self,
+		wtd = self,
 		fake_player = fake_player
 	}
 	-- Set Players Data
@@ -386,7 +386,7 @@ minetest.register_on_dieplayer(function(player)
 	local name = player:get_player_name()
 	if name
 		and waterdragon.mounted_player_data[name] then
-		waterdragon.detach_player(waterdragon.mounted_player_data[name].dragon, player)
+		waterdragon.detach_player(waterdragon.mounted_player_data[name].wtd, player)
 	end
 end)
 

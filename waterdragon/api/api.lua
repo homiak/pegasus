@@ -168,9 +168,9 @@ local water_eye_textures = {
 
 function waterdragon.spawn_dragon(pos, mob, mapgen, age)
 	if not pos then return false end
-	local dragon = minetest.add_entity(pos, mob)
-	if dragon then
-		local ent = dragon:get_luaentity()
+	local wtd = minetest.add_entity(pos, mob)
+	if wtd then
+		local ent = wtd:get_luaentity()
 		ent._mem = ent:memorize("_mem", true)
 		ent.age = ent:memorize("age", age)
 		ent.growth_scale = ent:memorize("growth_scale", age * 0.01)
@@ -200,9 +200,9 @@ end
 function waterdragon.generate_id()
 	local idst = ""
 	for _ = 0, 5 do idst = idst .. (random(0, 9)) end
-	if waterdragon.dragons[idst] then
+	if waterdragon.waterdragons[idst] then
 		local fail_safe = 20
-		while waterdragon.dragons[idst]
+		while waterdragon.waterdragons[idst]
 			and fail_safe > 0 do
 			for _ = 0, 5 do idst = idst .. (random(0, 9)) end
 			fail_safe = fail_safe - 1
@@ -1555,26 +1555,26 @@ function waterdragon.dragon_activate(self)
 		self.wtd_id = waterdragon.generate_id()
 		self:memorize("wtd_id", self.wtd_id)
 	end
-	local global_data = waterdragon.dragons[self.wtd_id] or {}
+	local global_data = waterdragon.waterdragons[self.wtd_id] or {}
 	if global_data.removal_queue
 		and #global_data.removal_queue > 0 then
 		for i = #global_data.removal_queue, 1, -1 do
 			if global_data.removal_queue[i]
 				and vector.equals(vec_round(global_data.removal_queue[i]), vec_round(self.object:get_pos())) then
-				waterdragon.dragons[self.wtd_id].removal_queue[i] = nil
+				waterdragon.waterdragons[self.wtd_id].removal_queue[i] = nil
 				self.object:remove()
 				return
 			end
 		end
 	end
-	waterdragon.dragons[self.wtd_id] = {
+	waterdragon.waterdragons[self.wtd_id] = {
 		last_pos = self.object:get_pos(),
 		owner = self.owner or nil,
 		staticdata = self:get_staticdata(),
 		removal_queue = global_data.removal_queue or {},
 		stored_in_item = global_data.stored_in_item or false
 	}
-	local owner = waterdragon.dragons[self.wtd_id].owner
+	local owner = waterdragon.waterdragons[self.wtd_id].owner
 	if owner
 		and minetest.get_player_by_name(owner)
 		and (not waterdragon.bonded_wtd[owner]
@@ -1692,11 +1692,11 @@ function waterdragon.dragon_step(self, dtime)
 	end
 	-- Global Info
 	if self.hp <= 0 then
-		waterdragon.dragons[self.wtd_id] = nil
+		waterdragon.waterdragons[self.wtd_id] = nil
 		return
 	end
-	local global_data = waterdragon.dragons[self.wtd_id] or {}
-	waterdragon.dragons[self.wtd_id] = {
+	local global_data = waterdragon.waterdragons[self.wtd_id] or {}
+	waterdragon.waterdragons[self.wtd_id] = {
 		last_pos = self.object:get_pos(),
 		owner = self.owner or nil,
 		name = self.nametag or nil,
@@ -1704,7 +1704,7 @@ function waterdragon.dragon_step(self, dtime)
 		removal_queue = global_data.removal_queue or {},
 		stored_in_item = global_data.stored_in_item or false
 	}
-	if waterdragon.dragons[self.wtd_id].stored_in_item then
+	if waterdragon.waterdragons[self.wtd_id].stored_in_item then
 		self.object:remove()
 	end
 end
@@ -1723,7 +1723,7 @@ function waterdragon.dragon_rightclick(self, clicker)
 	end
 	if self.hp <= 0 then
 		if waterdragon.drop_items(self) then
-			waterdragon.dragons[self.wtd_id] = nil
+			waterdragon.waterdragons[self.wtd_id] = nil
 			self.object:remove()
 		end
 		return

@@ -82,7 +82,7 @@ local function get_dragon_formspec(self)
 		"bgcolor[#000000;false]",
 		"background[0,0;16,10;waterdragon_forms_bg_b.png]",
 		"label[6.8,0.8;" .. correct_name(self.name) .. " (" .. correct_name(self.gender) .. ")]",
-		"label[7,1.5;" .. current_age .." Years Old]",
+		"label[7,1.5;" .. current_age .." Year(s) Old]",
 		"button[6.75,8.75;2.6,0.5;btn_dragon_name;" .. (self.nametag or "Set Name") .. "]",
 		"model[3,1.7;10,7;mob_mesh;" .. self.mesh .. ";" .. texture .. ";-10,-130;false;false;" .. frame_loop .. ";15]",
 		"image[1.1,1.3;1,1;" .. health_ind .."]",
