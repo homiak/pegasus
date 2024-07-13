@@ -1,8 +1,11 @@
 -------------
 --- Armor ---
 -------------
+
 -- Ver 1.0 --
+
 local S = waterdragon.S
+
 -- Pure Water-Forged Armor --
 
 armor:register_armor("waterdragon:helmet_pure_water_draconic_steel", {

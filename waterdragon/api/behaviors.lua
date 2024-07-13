@@ -6,6 +6,7 @@ waterdragon.pure_water_dragon_targets = {}
 
 waterdragon.rare_water_dragon_targets = {}
 
+
 minetest.register_on_mods_loaded(function()
 	for name, def in pairs(minetest.registered_entities) do
 		local is_mobkit = (def.logic ~= nil or def.brainfuc ~= nil)
@@ -1095,6 +1096,4 @@ waterdragon.dragon_behavior = {
 		end
 	}
 }
-
-
 
