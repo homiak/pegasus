@@ -235,8 +235,8 @@ function waterdragon.attach_passenger(self, player)
 	if not data.huds then
 		local health = self.hp / math.ceil(self.max_health * scale) * 100
 		local hunger = self.hunger / math.ceil(self.max_hunger * scale) * 100
-		local stamina = self.flight_stamina / 900 * 100
-		local breath = self.attack_stamina / 90 * 90
+		local stamina = self.flight_stamina / 300 * 1
+		local breath = self.attack_stamina / 150 * 1
 		player:hud_set_flags({ wielditem = false })
 		waterdragon.mounted_player_data[player:get_player_name()].huds = {
 			["health"] = set_hud(player, {

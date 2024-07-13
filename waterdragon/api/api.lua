@@ -1626,11 +1626,15 @@ function waterdragon.dragon_step(self, dtime)
 		end
 		is_flying = false
 	end
+
+if self.in_liquid then
+	self.speed = 50 * 2 
+end
+
 	-- Dynamic Physics
-	self.speed = 45 * clamp((self.growth_scale), 0.1, 1) -- Speed increases with size
+	self.speed = 50 * clamp((self.growth_scale), 0.1, 1) -- Speed increases with size
 	self.turn_rate = 6 - 3 * clamp((self.growth_scale), 0.1, 1) -- Turning radius widens with size
-	if not is_flying
-		or self.in_liquid then
+	if not is_flying then
 		self.speed = self.speed * 0.18  -- Speed reduced when landed
 		self.turn_rate = self.turn_rate * 1.5 -- Turning radius reduced when landed
 	end
@@ -1655,7 +1659,7 @@ function waterdragon.dragon_step(self, dtime)
 			and not self.in_liquid then -- Drain Stamina when flying
 			fly_stam = fly_stam - 1
 		else
-			if fly_stam < 900 then -- Regen Stamina when landed
+			if fly_stam < 300 then -- Regen Stamina when landed
 				fly_stam = fly_stam + self.dtime * 8
 			end
 		end

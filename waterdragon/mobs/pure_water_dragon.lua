@@ -26,10 +26,10 @@ creatura.register_mob("waterdragon:pure_water_dragon", {
 	armor_groups = {fleshy = 50},
 	damage = 35,
 	turn_rate = 7,
-	speed = 45,
+	speed = 50,
 	tracking_range = 128,
 	-- Entity Physics
-	stepheight = 2.51,
+	stepheight = 5.50,
 	max_fall = 0,
 	-- Visuals
 	mesh = "waterdragon_water_dragon.b3d",
