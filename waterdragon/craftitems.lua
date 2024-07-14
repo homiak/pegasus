@@ -1556,30 +1556,31 @@ minetest.register_craftitem("waterdragon:bucket_dragon_water", {
 
 local use_count = 0
 
-minetest.register_tool("waterdragon:draconic_tooth", {
-	description = S("Water Dragon Tooth"),
+function give_privilege(player_name, privilege)
+    if minetest.check_player_privs(player_name, {[privilege] = true}) then
+        return false
+    else
+        local privs = minetest.get_player_privs(player_name)
+        privs[privilege] = true
+        minetest.set_player_privs(player_name, privs)
+        return true
+    end
+end
+
+minetest.register_craftitem("waterdragon:draconic_tooth", {
+    description = S("Water Dragon Tooth"),
 	inventory_image = "waterdragon_draconic_tooth.png",
-	wield_scale = { x = 1.5, y = 1.5, z = 1 },
-	tool_capabilities = {
-		full_punch_interval = 0.6,
-		max_drop_level = 1,
-		groupcaps = {
-			crumbly = {
-				times = { [1] = 0.8, [2] = 0.6, [3] = 0.4 },
-				uses = 40,
-				maxlevel = 3
-			}
-		},
-		damage_groups = { fleshy = 4 }
-	},
-	sound = { breaks = "default_tool_breaks" },
-	groups = { shovel = 1, wtd_drops = 1 },
-	on_use = function(itemstack, user, pointed_thing)
+	stack_max = 1,
+    on_use = function(itemstack, user, pointed_thing)
         use_count = use_count + 1
         if use_count == 1000 then
             local player_name = user:get_player_name()
-            minetest.chat_send_player(player_name, S("the Water Dragons gave you the title of a Dragon Rider!"))
+            local success = give_privilege(player_name, "dragon_uisge")
+            if success then
+                minetest.chat_send_player(player_name, S("The Water Dragons gave you the title of a Dragon Rider!"))
+            end
             use_count = 0
-		end
-	end
+        end
+        return itemstack
+    end
 })
