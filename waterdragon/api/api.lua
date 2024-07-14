@@ -1367,7 +1367,7 @@ minetest.register_chatcommand("set_wtd_owner", {
 			local particle = "waterdragon_particle_green.png"
 			ent.owner = param_name
 			ent:memorize("owner", ent.owner)
-			minetest.chat_send_player(name, S(" is now owned by ") .. param_name)
+			minetest.chat_send_player(name, S("the Water Dragon is now owned by ") .. param_name)
 			minetest.add_particlespawner({
 				amount = 16,
 				time = 0.25,

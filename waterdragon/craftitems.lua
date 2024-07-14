@@ -130,7 +130,7 @@ table.insert(wtd_drops, "waterdragon:dragon_bone")
 for color, hex in pairs(waterdragon.colors_pure_water) do
 	minetest.register_craftitem("waterdragon:scales_pure_water_dragon", {
 		description = S("Pure Water Dragon Scales"),
-		inventory_image = "waterdragon_dragon_scales.png^[multiply:#" .. hex,
+		inventory_image = "waterdragon_wtd_scales.png^[multiply:#" .. hex,
 		groups = { dragon_scales = 1 }
 	})
 	table.insert(wtd_drops, "waterdragon:scales_pure_water_dragon")
@@ -139,7 +139,7 @@ end
 for color, hex in pairs(waterdragon.colors_rare_water) do
 	minetest.register_craftitem("waterdragon:scales_rare_water_dragon", {
 		description = S("Rare Water Dragon Scales"),
-		inventory_image = "waterdragon_dragon_scales.png^[multiply:#" .. hex,
+		inventory_image = "waterdragon_wtd_scales.png^[multiply:#" .. hex,
 		groups = { dragon_scales = 1 }
 	})
 	table.insert(wtd_drops, "waterdragon:scales_rare_water_dragon")
