@@ -636,3 +636,6 @@ end)
 
 
 
+if anim == "sleep" then
+	flight_stamina = 200
+end

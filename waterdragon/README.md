@@ -11,6 +11,6 @@ Standard installation via Minetest Mod Menu, or just from ContentDB.
 Usage
 After installing the mod, you will be able to encounter Water Dragons in their Nests. Interact with them to discover their unique abilities and obtain Draconic materials for crafting blocks and armor.
 
-For more information you will find in the Book of Dragon Uisge item.
+For more information you will find in the Book about Water Dragons item.
 inspired by Draconis and created by Scottii.
 

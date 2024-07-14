@@ -1349,7 +1349,7 @@ minetest.register_privilege("dragon_uisge", {
 })
 
 
-minetest.register_chatcommand("set_dragon_owner", {
+minetest.register_chatcommand("set_wtd_owner", {
 	description = "Sets owner of pointed Water Dragon",
 	params = "<name>",
 	privs = { dragon_uisge = true },

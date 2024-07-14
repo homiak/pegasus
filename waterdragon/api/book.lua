@@ -291,12 +291,12 @@ local function prepare_element(def, meta, playername)
 	local offset_x = def.offset.x
 	local offset_y = def.offset.y
 	local form = ""
-	-- Add text
+	-- Add Book Text
 	if def.element_type == "label" then
 		local font_size_x = (waterdragon.book_font_size[playername] or 1)
 		local font_size = (def.font_size or 16) * font_size_x
 		if def.file then
-			local filename = minetest.get_modpath("waterdragon") .. "/book_of_waterdragon/" .. def.file
+			local filename = minetest.get_modpath("waterdragon") .. "/book_of_wtd/" .. def.file
 			local file = io.open(filename)
 			if file then
 				local full_text = ""
@@ -359,14 +359,14 @@ end
 ---------------
 
 minetest.register_craftitem("waterdragon:book_waterdragon", {
-	description = S("Book of Dragon Uisge"),
+	description = S("Book about Water Dragons"),
 	inventory_image = "waterdragon_book_waterdragon.png",
 	stack_max = 1,
 	on_place = function(itemstack, player)
 		local meta = itemstack:get_meta()
 		local desc = meta:get_string("description")
 		if desc:find("Bestiary") then
-			meta:set_string("description", S("Book of Dragon Uisge"))
+			meta:set_string("description", S("Book about Water Dragons"))
 			meta:set_string("pages", nil)
 		end
 		local name = player:get_player_name()
@@ -376,7 +376,7 @@ minetest.register_craftitem("waterdragon:book_waterdragon", {
 		local meta = itemstack:get_meta()
 		local desc = meta:get_string("description")
 		if desc:find("Bestiary") then
-			meta:set_string("description", S("Book of Dragon Uisge"))
+			meta:set_string("description", S("Book about Water Dragons"))
 			meta:set_string("pages", nil)
 		end
 		local name = player:get_player_name()
