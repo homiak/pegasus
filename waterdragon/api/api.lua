@@ -1434,7 +1434,7 @@ minetest.register_chatcommand("wtd_blacklist_remove", {
 -- Target Assigning --
 ----------------------
 
-local function get_dragon_by_id(wtd_id)
+local function get_wtd_by_id(wtd_id)
 	for _, ent in pairs(minetest.luaentities) do
 		if ent.wtd_id
 			and ent.wtd_id == wtd_id then
@@ -1464,7 +1464,7 @@ minetest.register_on_mods_loaded(function()
 				if waterdragon.bonded_wtd[player_name]
 					and #waterdragon.bonded_wtd[player_name] > 0 then
 					for i = 1, #waterdragon.bonded_wtd[player_name] do
-						local ent = get_dragon_by_id(waterdragon.bonded_wtd[player_name][i])
+						local ent = get_wtd_by_id(waterdragon.bonded_wtd[player_name][i])
 						if ent then
 							ent._target = self.object
 						end

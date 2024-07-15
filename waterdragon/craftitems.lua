@@ -44,7 +44,7 @@ local function infotext(str, format)
 	return minetest.colorize("#bdd9ff", str)
 end
 
-local function get_binder_desc(self)
+local function get_horn_desc(self)
 	local info = S("Dragon Horn\n") .. minetest.colorize("#bdd9ff", correct_name(self.name))
 	if self.nametag == "" then
 		info = info .. "\n" .. infotext("a Nameless Dragon")
@@ -462,9 +462,9 @@ for color in pairs(waterdragon.colors_rare_water) do
 	})
 end
 
---------------------
+--------------------------
 -- Water Dragon Storage --
---------------------
+--------------------------
 
 -- API --
 
@@ -484,7 +484,7 @@ local function capture(player, ent)
 		meta:set_string("wtd_id", ent.wtd_id)
 		meta:set_string("staticdata", ent:get_staticdata())
 		meta:set_string("nametag", ent.nametag or "a Nameless Dragon")
-		meta:set_string("description", get_binder_desc(ent))
+		meta:set_string("description", get_horn_desc(ent))
 		if stored_aging > 0 then
 			meta:set_int("timestamp", os.time())
 		end
@@ -499,7 +499,7 @@ local function capture(player, ent)
 	end
 end
 
-local function get_dragon_by_id(wtd_id)
+local function get_wtd_by_id(wtd_id)
 	for _, ent in pairs(minetest.luaentities) do
 		if ent.wtd_id
 			and ent.wtd_id == wtd_id then
@@ -528,7 +528,7 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 		player:set_wielded_item(itemstack)
 		return itemstack
 	end
-	if id ~= "" then -- If the horn has a linked Water Dragon
+	if id ~= "" then -- If the Horn has a linked Water Dragon
 		if not waterdragon.waterdragons[id] then -- Clear data if linked Water Dragon is dead
 			meta:set_string("mob", nil)
 			meta:set_string("wtd_id", nil)
@@ -547,7 +547,7 @@ local function dragon_horn_use(itemstack, player, pointed_thing)
 		end
 		-- Teleport linked Water Dragon if not pointed
 		local last_pos = waterdragon.waterdragons[id].last_pos
-		ent = get_dragon_by_id(id)
+		ent = get_wtd_by_id(id)
 		if waterdragon.waterdragons[id].stored_in_item then return itemstack end
 		if not ent then
 			table.insert(waterdragon.waterdragons[id].removal_queue, last_pos)

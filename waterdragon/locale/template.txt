@@ -1,3 +1,5 @@
+# textdomain: waterdragon
+# Template
 
 Dragon Horn=
 Pure Water Dragonstone Block=
