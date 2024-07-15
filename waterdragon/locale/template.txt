@@ -1,5 +1,4 @@
-# textdomain: waterdragon
-# Template
+
 Dragon Horn=
 Pure Water Dragonstone Block=
 Pure Water Dragonstone Bricks=
