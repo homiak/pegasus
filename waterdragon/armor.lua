@@ -1,12 +1,12 @@
 -------------
---- Armor ---
+--- Armour ---
 -------------
 
 -- Ver 1.0 --
 
 local S = waterdragon.S
 
--- Pure Water-Forged Armor --
+-- Pure Water-Forged Armour --
 
 armor:register_armor("waterdragon:helmet_pure_water_draconic_steel", {
     description = S("Pure Water-Forged Draconic Steel Helmet"),
@@ -41,7 +41,7 @@ armor:register_armor("waterdragon:boots_pure_water_draconic_steel", {
     damage_groups = {cracky=1, snappy=3, choppy=2, crumbly=1, level=30},
 })
 
--- Rare Water-Forged Armor --
+-- Rare Water-Forged Armour --
 
 armor:register_armor("waterdragon:helmet_rare_water_draconic_steel", {
     description = S("Rare Water-Forged Draconic Steel Helmet"),
@@ -76,7 +76,7 @@ armor:register_armor("waterdragon:boots_rare_water_draconic_steel", {
     damage_groups = {cracky=1, snappy=3, choppy=2, crumbly=1, level=30},
 })
 
--- Pure Water Draconic Scale Armor
+-- Pure Water Draconic Scale Armour
 
 armor:register_armor("waterdragon:leggings_pure_water_draconic", {
     description = S("Pure Water Draconic Scale Leggings"),
@@ -114,7 +114,7 @@ armor:register_armor("waterdragon:boots_pure_water_draconic", {
     damage_groups = {cracky=1, snappy=3, choppy=2, crumbly=1, level=10},
 })
 
--- Rare Water Draconic Scale Armor 
+-- Rare Water Draconic Scale Armour 
 
 armor:register_armor("waterdragon:chestplate_rare_water_draconic", {
     description = S("Rare Water Draconic Scale Chestplate"),

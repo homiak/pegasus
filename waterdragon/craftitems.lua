@@ -1358,10 +1358,10 @@ craft_sword({
 })
 
 -----------
--- Armor --
+-- Armour --
 -----------
 
--- Pure Water-Forged Draconic Steel Armor --
+-- Pure Water-Forged Draconic Steel Armour --
 
 craft_helmet({
 	output = "waterdragon:helmet_pure_water_draconic_steel",
@@ -1383,7 +1383,7 @@ craft_boots({
 	material = "waterdragon:draconic_steel_ingot_pure_water"
 })
 
--- Rare Water-Forged Draconic Steel Armor --
+-- Rare Water-Forged Draconic Steel Armour --
 
 craft_helmet({
 	output = "waterdragon:helmet_rare_water_draconic_steel",
@@ -1405,9 +1405,9 @@ craft_boots({
 	material = "waterdragon:draconic_steel_ingot_rare_water"
 })
 
--- Draconic Scale Armor --
+-- Draconic Scale Armour --
 
--- Pure Water Scale Armor
+-- Pure Water Scale Armour
 
 craft_helmet({
 	output = "waterdragon:helmet_pure_water_draconic",
@@ -1429,7 +1429,7 @@ craft_leggings({
 	material = "waterdragon:scales_pure_water_dragon"
 })
 
--- Rare Water Scale Armor
+-- Rare Water Scale Armour
 
 craft_leggings({
 	output = "waterdragon:leggings_rare_water_draconic",
