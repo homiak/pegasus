@@ -1,6 +1,5 @@
 # textdomain: waterdragon
 # Template
-
 Dragon Horn=Drakenhoorn
 Pure Water Dragonstone Block=Zuiver Water Drakensteen Blok
 Pure Water Dragonstone Bricks=Zuiver Water Drakensteen Bakstenen
@@ -47,15 +46,15 @@ You have called your Water Dragon=Je hebt je Waterdraak geroepen
 You must be pointing at a dead mob=Je moet op een dood wezen richten
 Sprint key now changes point of view=Sprintknop verandert nu gezichtspunt
 Sprint key now changes vertical movement method=Sprintknop verandert nu verticale bewegingsmethode
-The animal has been revived!= is weer tot leven gewekt!
+The animal has been revived!=is weer tot leven gewekt!
 The animal has been tamed!=Het dier is getemd!
 The animal is already tamed=Het dier is al getemd
 You must be pointing at a Water Dragon=Je moet op een Waterdraak richten
-the Water Dragon is now owned by =de Waterdraak is nu eigendom van 
- is already on the Water Dragon attack blacklist= staat al op de Waterdraak aanvalslijst
- has been added to the Water Dragon attack blacklist= is toegevoegd aan de Waterdraak aanvalslijst
- isn't on the Water Dragon attack blacklist= staat niet op de Waterdraak aanvalslijst
- has been removed from the Water Dragon attack blacklist= is verwijderd van de Waterdraak aanvalslijst
+the Water Dragon is now owned by=de Waterdraak is nu eigendom van 
+is already on the Water Dragon attack blacklist=staat al op de Waterdraak aanvalslijst
+has been added to the Water Dragon attack blacklist=is toegevoegd aan de Waterdraak aanvalslijst
+isn't on the Water Dragon attack blacklist=staat niet op de Waterdraak aanvalslijst
+has been removed from the Water Dragon attack blacklist=is verwijderd van de Waterdraak aanvalslijst
 Your Water Dragon will age while stored=Je Waterdraak zal verouderen tijdens opslag
 Your Water Dragon will not age while stored=Je Waterdraak zal niet verouderen tijdens opslag
 Rare Water Draconic Scale Boots=Zeldzaam Water Draconische Schubben Laarzen
@@ -87,7 +86,7 @@ Pure Water-Forged Draconic Steel Axe=Zuiver Water-Gesmede Draconische Stalen Bij
 Rare Water Draconic Steel Forge=Zeldzaam Water Draconische Stalen Smidse
 Pure Water Draconic Steel Forge=Zuiver Water Draconische Stalen Smidse
 Bucket of Dragon Water=Emmer Drakenwater
- would like to ride as a passenger= wil rijden als passagier
+would like to ride as a passenger=wil rijden als passagier
 the Water Dragon is tired and needs to land=De Waterdraak is moe en moet landen
 the Water Dragons gave you the title of a Dragon Rider!=de Waterdraken hebben je de titel van een Drakenrijder gegeven!
 Water Dragon Tooth=Waterdrakentand

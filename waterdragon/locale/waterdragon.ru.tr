@@ -1,6 +1,5 @@
 # textdomain: waterdragon
 # Template
-
 Dragon Horn=Рог Водяного Дракона
 Pure Water Dragonstone Block=Блок Дракона Простой Воды
 Pure Water Dragonstone Bricks=Кирпичи Дракона Простой Воды
@@ -51,11 +50,11 @@ The animal has been revived!=Животное ожило!
 The animal has been tamed!=Животное был приручено!
 The animal is already tamed=Животное уже приручено
 You must be pointing at a Water Dragon=Вы должны смотреть на Водяного Дракона
-the Water Dragon is now owned by =Хозяином Водяного Дракона стал 
- is already on the Water Dragon attack blacklist= уже есть на черном листе атаки Водяных Драконов
- has been added to the Water Dragon attack blacklist= был добавлен в черный лист атаки Водяных Драконов
- isn't on the Water Dragon attack blacklist= нету на черном листе атаки Водяных Драконов
- has been removed from the Water Dragon attack blacklist= был убран с черного листа атаки Водяных Драконов
+the Water Dragon is now owned by=Хозяином Водяного Дракона стал
+is already on the Water Dragon attack blacklist=уже есть на черном листе атаки Водяных Драконов
+has been added to the Water Dragon attack blacklist=был добавлен в черный лист атаки Водяных Драконов
+isn't on the Water Dragon attack blacklist=нету на черном листе атаки Водяных Драконов
+has been removed from the Water Dragon attack blacklist=был убран с черного листа атаки Водяных Драконов
 Your Water Dragon will age while stored=Ваш Водяной Дракон будет стареть пока он в роге
 Your Water Dragon will not age while stored=Ваш Водяной Дракон не будет стареть пока он в роге
 Rare Water Draconic Scale Boots=Ботинки из Чешуи Дракона Редкой Воды
@@ -87,7 +86,7 @@ Pure Water-Forged Draconic Steel Axe=Топор из Драконьего Мет
 Rare Water Draconic Steel Forge=Кузница для Драконьего Металла Дракона Редкой Воды
 Pure Water Draconic Steel Forge=Кузница для Драконьего Металла Дракона Простой Воды
 Bucket of Dragon Water=Ведро Драконьей Воды
- would like to ride as a passenger= хотел бы покататься как пассажир
+would like to ride as a passenger=хотел бы покататься как пассажир
 Enter name:=Введите имя здесь:
 Rename=Переименовать
 the Water Dragon is tired and needs to land=Водяной Дракон устал и должен сесть

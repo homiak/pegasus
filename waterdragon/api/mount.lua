@@ -294,7 +294,7 @@ local function passenger_form(player)
 	local formspec = {
 		"size[6,3.476]",
 		"real_coordinates[true]",
-		"label[0.25,1;" .. name .. S(" would like to ride as a passenger]"),
+		"label[0.25,1;" .. name .." ".. S("would like to ride as a passenger]"),
 		"button_exit[0.25,1.3;2.3,0.8;btn_accept_pssngr;Accept]",
 		"button_exit[3.5,1.3;2.3,0.8;btn_decline_pssngr;Decline]",
 	}

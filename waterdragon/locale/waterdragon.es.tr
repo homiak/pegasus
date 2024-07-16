@@ -1,6 +1,5 @@
 # textdomain: waterdragon
 # Template
-
 Dragon Horn=Cuerno de Dragón
 Pure Water Dragonstone Block=Bloque de Piedra de Dragón de Agua Pura
 Pure Water Dragonstone Bricks=Ladrillos de Piedra de Dragón de Agua Pura
@@ -51,11 +50,11 @@ The animal has been revived!=El animal ha sido revivido!
 The animal has been tamed!=El animal ha sido domesticado!
 The animal is already tamed=El animal ya esta domesticado
 You must be pointing at a Water Dragon=Debes apuntar a un Dragón de Agua
-the Water Dragon is now owned by =El Dragón de Agua ahora es propiedad de  
- is already on the Water Dragon attack blacklist= ya está en la lista negra de ataque del Dragón de Agua
- has been added to the Water Dragon attack blacklist= ha sido añadido a la lista negra de ataque del Dragón de Agua
- isn't on the Water Dragon attack blacklist= no está en la lista negra de ataque del Dragón de Agua
- has been removed from the Water Dragon attack blacklist= ha sido removido de la lista negra de ataque del Dragón de Agua
+the Water Dragon is now owned by=El Dragón de Agua ahora es propiedad de  
+is already on the Water Dragon attack blacklist=ya está en la lista negra de ataque del Dragón de Agua
+has been added to the Water Dragon attack blacklist=ha sido añadido a la lista negra de ataque del Dragón de Agua
+isn't on the Water Dragon attack blacklist=no está en la lista negra de ataque del Dragón de Agua
+has been removed from the Water Dragon attack blacklist=ha sido removido de la lista negra de ataque del Dragón de Agua
 Your Water Dragon will age while stored=Tu Dragón de Agua envejecerá mientras esté almacenado
 Your Water Dragon will not age while stored=Tu Dragón de Agua no envejecerá mientras esté almacenado
 Rare Water Draconic Scale Boots=Botas de Escamas de Dragón de Agua Raras
@@ -87,7 +86,7 @@ Pure Water-Forged Draconic Steel Axe=Hacha de Acero Dracónico Forjada con Agua 
 Rare Water Draconic Steel Forge=Forja de Acero Dracónico de Agua Rara
 Pure Water Draconic Steel Forge=Forja de Acero Dracónico de Agua Pura
 Bucket of Dragon Water=Cubo de Agua de Dragón
- would like to ride as a passenger= le gustaría viajar como pasajero
+would like to ride as a passenger=le gustaría viajar como pasajero
 the Water Dragon is tired and needs to land=el Dragón de Agua está cansado y necesita aterrizar
 the Water Dragons gave you the title of a Dragon Rider!=Los Dragones de Agua te dieron el título de Jinete de Dragón!
 Water Dragon Tooth=Diente de Dragón de Agua

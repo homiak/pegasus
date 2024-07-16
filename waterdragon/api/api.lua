@@ -1367,7 +1367,7 @@ minetest.register_chatcommand("set_wtd_owner", {
 			local particle = "waterdragon_particle_green.png"
 			ent.owner = param_name
 			ent:memorize("owner", ent.owner)
-			minetest.chat_send_player(name, S("the Water Dragon is now owned by ") .. param_name)
+			minetest.chat_send_player(name, S("the Water Dragon is now owned by").." " .. param_name)
 			minetest.add_particlespawner({
 				amount = 16,
 				time = 0.25,
@@ -1405,11 +1405,11 @@ minetest.register_chatcommand("wtd_blacklist_add", {
 		local param_name = params:match("%S+")
 		if not player or not param_name then return false end
 		if waterdragon.wtd_attack_bl[param_name] then
-			minetest.chat_send_player(name, param_name .. S(" is already on the Water Dragon attack blacklist"))
+			minetest.chat_send_player(name, param_name .." ".. S("is already on the Water Dragon attack blacklist"))
 			return false
 		end
 		waterdragon.wtd_attack_bl[param_name] = true
-		minetest.chat_send_player(name, param_name .. S(" has been added to the Water Dragon attack blacklist"))
+		minetest.chat_send_player(name, param_name .." ".. S("has been added to the Water Dragon attack blacklist"))
 	end
 })
 
@@ -1422,11 +1422,11 @@ minetest.register_chatcommand("wtd_blacklist_remove", {
 		local param_name = params:match("%S+")
 		if not player or not param_name then return false end
 		if not waterdragon.wtd_attack_bl[param_name] then
-			minetest.chat_send_player(name, param_name .. S(" isn't on the Water Dragon attack blacklist"))
+			minetest.chat_send_player(name, param_name .." ".. S("isn't on the Water Dragon attack blacklist"))
 			return false
 		end
 		waterdragon.wtd_attack_bl[param_name] = nil
-		minetest.chat_send_player(name, param_name .. S(" has been removed from the Water Dragon attack blacklist"))
+		minetest.chat_send_player(name, param_name .." ".. S("has been removed from the Water Dragon attack blacklist"))
 	end
 })
 

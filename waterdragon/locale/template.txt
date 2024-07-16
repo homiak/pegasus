@@ -1,6 +1,5 @@
 # textdomain: waterdragon
 # Template
-
 Dragon Horn=
 Pure Water Dragonstone Block=
 Pure Water Dragonstone Bricks=
@@ -47,15 +46,15 @@ You have called your Water Dragon=
 You must be pointing at a dead mob=
 Sprint key now changes point of view=
 Sprint key now changes vertical movement method=
-The animal has been revived!=動物は生き返りました!
-The animal has been tamed!=動物は飼いならされました!
-The animal is already tamed=動物はすでに飼いならされています
+The animal has been revived!=
+The animal has been tamed!=
+The animal is already tamed=
 You must be pointing at a Water Dragon=
-the Water Dragon is now owned by =
- is already on the Water Dragon attack blacklist=
- has been added to the Water Dragon attack blacklist=
- isn't on the Water Dragon attack blacklist=
- has been removed from the Water Dragon attack blacklist=
+the Water Dragon is now owned by=
+is already on the Water Dragon attack blacklist=
+has been added to the Water Dragon attack blacklist=
+isn't on the Water Dragon attack blacklist=
+has been removed from the Water Dragon attack blacklist=
 Your Water Dragon will age while stored=
 Your Water Dragon will not age while stored=
 Rare Water Draconic Scale Boots=
@@ -87,10 +86,7 @@ Pure Water-Forged Draconic Steel Axe=
 Rare Water Draconic Steel Forge=
 Pure Water Draconic Steel Forge=
 Bucket of Dragon Water=
- would like to ride as a passenger=
-Enter name:=
-Rename=
+would like to ride as a passenger=
 the Water Dragon is tired and needs to land=
 the Water Dragons gave you the title of a Dragon Rider!=
 Water Dragon Tooth=
-
