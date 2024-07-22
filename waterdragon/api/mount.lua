@@ -496,8 +496,8 @@ creatura.register_utility("waterdragon:mount", function(self)
                                 }
                             })
                             player:set_eye_offset({
-                                x = 45 * scale,
-                                y = 170 * scale, -- Set eye offset
+                                x = 115 * scale,
+                                y = 170 * scale, -- Set eye offset (3)
                                 z = -290 * scale
                             }, {x = 0, y = 0, z = 0})
                             player:hud_set_flags({wielditem = false})

@@ -109,20 +109,6 @@ local book_pages = {
 			offset = {x = 8, y = 1.5},
 			file = "waterdragon_book_dragon4.txt"
 		},
-		{ -- Water Dragon Image
-			element_type = "image",
-			font_size = 24,
-			offset = {x = 1.5, y = 7},
-			size = {x = 2, y = 2},
-			text = "waterdragon_book_img_p_dragon_egg.png"
-		},
-		{ -- Water Dragon Image
-			element_type = "image",
-			font_size = 24,
-			offset = {x = 4.5, y = 7},
-			size = {x = 2, y = 2},
-			text = "waterdragon_book_img_r_dragon_egg.png"
-		},
 		{ -- Next Page
 			element_type = "image_button",
 			offset = {x = 15, y = 9},

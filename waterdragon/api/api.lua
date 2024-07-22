@@ -139,7 +139,8 @@ minetest.register_on_mods_loaded(function()
 					wet_conversions[name] = "waterdragon:log_wet" -- Wet Log
 				elseif minetest.get_item_group(name, "flora") > 0
 					or minetest.get_item_group(name, "leaves") > 0
-					or minetest.get_item_group(name, "snowy") > 0 then
+					or minetest.get_item_group(name, "snowy") > 0
+					or minetest.get_item_group(name, "fire") > 0 then
 					wet_conversions[name] = "default:water_flowing"
 				end
 			elseif def.drawtype == "liquid"
@@ -1742,7 +1743,7 @@ function waterdragon.dragon_rightclick(self, clicker)
 		if clicker:get_player_control().sneak then
 			self:show_formspec(clicker)
 		elseif not self.rider
-			and self.age >= 35 then
+			and self.age >= 20 then
 			waterdragon.attach_player(self, clicker)
 		elseif self.age < 5 then
 			self.shoulder_mounted = self:memorize("shoulder_mounted", true)

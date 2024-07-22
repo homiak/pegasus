@@ -1573,7 +1573,7 @@ minetest.register_craftitem("waterdragon:draconic_tooth", {
 	stack_max = 1,
     on_use = function(itemstack, user, pointed_thing)
         use_count = use_count + 1
-        if use_count == 1000 then
+        if use_count == 100 then
             local player_name = user:get_player_name()
             local success = give_privilege(player_name, "dragon_uisge")
             if success then
