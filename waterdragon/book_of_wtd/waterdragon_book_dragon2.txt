@@ -8,5 +8,6 @@ optimal strategy is to use
 heavy cover and wait for an 
 opportunity to land a hit. Upon 
 defeat, Water Dragon corpses can be 
-looted for Water Bones, Water Scales, and 
-Dragon Water Drops.
+looted for Water Bones, Water Scales,
+Dragon Water Drops, Teeth and Wing
+Horns.
