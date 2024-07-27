@@ -1638,9 +1638,8 @@ local function check_and_revive(pos)
     local objs = minetest.get_objects_inside_radius(pos, 2)
     for _, obj in ipairs(objs) do
         local luaentity = obj:get_luaentity()
-        if luaentity and luaentity.dead then
-            luaentity.dead = false
-            luaentity.object:set_hp(luaentity.max_hp or 20)
+        if luaentity and luaentity.dead == false then
+            luaentity.dead = true
             
             return true
         end
@@ -1661,3 +1660,6 @@ minetest.registered_entities["waterdragon:wing_horn_entity"].on_step = function(
         end
     end
 end
+
+-- Something special
+
