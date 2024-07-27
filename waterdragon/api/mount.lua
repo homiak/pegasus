@@ -185,7 +185,7 @@ function waterdragon.attach_player(self, player)
 
 	if not data.huds then
 		local health = self.hp / math.ceil(self.max_health * scale) * 100
-		local hunger = self.hunger / math.ceil(self.max_hunger * scale) * 100
+		local hunger = self.hunger / math.ceil(self.max_hunger * scale) * 500
 		local stamina = self.flight_stamina / 900 * 100
 		local breath = self.attack_stamina / 100 * 100
 		player:hud_set_flags({ wielditem = false })
