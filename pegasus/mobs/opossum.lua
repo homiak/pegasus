@@ -34,7 +34,6 @@ creatura.register_mob("pegasus:opossum", {
 		clean_crop = {range = {x = 171, y = 200}, speed = 15, frame_blend = 0.2, loop = false}
 	},
 	follow = {
-		"pegasus:song_bird_egg",
 		"pegasus:mutton_raw",
 		"pegasus:beef_raw",
 		"pegasus:porkchop_raw",

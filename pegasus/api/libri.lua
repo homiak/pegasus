@@ -32,26 +32,18 @@ local pages = {}
 local generate_mobs = {
 	["pegasus:cow"] = "Cow",
 	["pegasus:opossum"] = "Opossum",
-	["pegasus:tropical_fish"] = "Tropical Fish",
 	["pegasus:fox"] = "Fox",
 	["pegasus:pegasus"] = "pegasus",
 	["pegasus:pig"] = "Pig",
-	["pegasus:song_bird"] = "Song Bird",
-	["pegasus:turkey"] = "Turkey",
-	["pegasus:wolf"] = "Wolf",
 }
 
 
 local spawn_biomes = {
 	["pegasus:cow"] = "grassland",
 	["pegasus:opossum"] = "temperate",
-	["pegasus:tropical_fish"] = "ocean",
 	["pegasus:fox"] = "boreal",
 	["pegasus:pegasus"] = "grassland",
 	["pegasus:pig"] = "temperate",
-	["pegasus:song_bird"] = "temperate",
-	["pegasus:turkey"] = "boreal",
-	["pegasus:wolf"] = "boreal",
 }
 
 -----------

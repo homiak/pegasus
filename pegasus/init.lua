@@ -103,16 +103,11 @@ dofile(path.."/api/lasso.lua")
 dofile(path.."/craftitems.lua")
 
 pegasus.animals = {
-	"pegasus:song_bird",
 	"pegasus:cat",
 	"pegasus:cow",
-	"pegasus:fox",
 	"pegasus:pegasus",
 	"pegasus:opossum",
 	"pegasus:pig",
-	"pegasus:turkey",
-	"pegasus:tropical_fish",
-	"pegasus:wolf",
 }
 
 dofile(path.."/api/api.lua")
@@ -122,10 +117,6 @@ load_file(path .. "/mobs", "fox.lua")
 load_file(path .. "/mobs", "pegasus.lua")
 load_file(path .. "/mobs", "opossum.lua")
 load_file(path .. "/mobs", "pig.lua")
-load_file(path .. "/mobs", "song_bird.lua")
-load_file(path .. "/mobs", "turkey.lua")
-load_file(path .. "/mobs", "tropical_fish.lua")
-load_file(path .. "/mobs", "wolf.lua")
 
 if minetest.settings:get_bool("spawn_mobs", true) then
 	dofile(path.."/api/spawning.lua")
