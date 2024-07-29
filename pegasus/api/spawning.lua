@@ -25,7 +25,6 @@ local predator_spawn_chance = tonumber(minetest.settings:get("pegasus_predator_c
 
 local chicken_biomes = {}
 
-local frog_biomes = {}
 
 local pig_biomes = {}
 
@@ -40,8 +39,6 @@ minetest.register_on_mods_loaded(function()
 	insert_all(chicken_biomes, pegasus.registered_biome_groups["tropical"].biomes)
 	insert_all(pig_biomes, pegasus.registered_biome_groups["temperate"].biomes)
 	insert_all(pig_biomes, pegasus.registered_biome_groups["boreal"].biomes)
-	insert_all(frog_biomes, pegasus.registered_biome_groups["swamp"].biomes)
-	insert_all(frog_biomes, pegasus.registered_biome_groups["tropical"].biomes)
 end)
 
 creatura.register_abm_spawn("pegasus:grizzly_bear", {
@@ -254,37 +251,6 @@ creatura.register_on_spawn("pegasus:song_bird", function(self, pos)
 	end
 end)
 
-creatura.register_abm_spawn("pegasus:frog", {
-	chance = ambient_spawn_chance * 0.75,
-	interval = 60,
-	min_light = 0,
-	min_height = -1,
-	max_height = 8,
-	min_group = 1,
-	max_group = 2,
-	neighbors = {"group:water"},
-	nodes = {"group:soil"}
-})
-
-creatura.register_on_spawn("pegasus:frog", function(self, pos)
-	local biome_data = minetest.get_biome_data(pos)
-	local biome_name = minetest.get_biome_name(biome_data.biome)
-
-	if table_contains(pegasus.registered_biome_groups["tropical"].biomes, biome_name) then
-		self:set_mesh(3)
-	elseif table_contains(pegasus.registered_biome_groups["temperate"].biomes, biome_name)
-	or table_contains(pegasus.registered_biome_groups["boreal"].biomes, biome_name) then
-		self:set_mesh(1)
-	elseif table_contains(pegasus.registered_biome_groups["grassland"].biomes, biome_name) then
-		self:set_mesh(2)
-	else
-		self.object:remove()
-	end
-
-	local activate = self.activate_func
-
-	activate(self)
-end)
 
 creatura.register_abm_spawn("pegasus:tropical_fish", {
 	chance = ambient_spawn_chance,

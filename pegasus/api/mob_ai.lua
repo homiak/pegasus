@@ -1469,57 +1469,6 @@ creatura.register_utility("pegasus:cat_play_with_owner", function(self)
 	self:set_utility(func)
 end)
 
--- Frog --
-
-local function get_bug_pos(self)
-	local pos = self.object:get_pos()
-	if not pos then return end
-
-	local food = minetest.find_nodes_in_area(
-		vec_sub(pos, 3),
-		vec_add(pos, 3),
-		self.follow
-	) or {}
-
-	return #food > 0 and food[1]
-end
-
-creatura.register_utility("pegasus:frog_seek_bug", function(self)
-	local timeout = 12
-
-	local bug = get_bug_pos(self)
-	local bug_reached = false
-	local function func(mob)
-		local pos = mob.object:get_pos()
-		if not pos or not bug then return true, 30 end
-
-		local dist = vec_dist(pos, bug)
-		if dist < mob.width + 0.5
-		and not bug_reached then
-			bug_reached = true
-
-			local dir = vec_dir(pos, bug)
-			local frame = floor(dist * 10)
-
-			self.object:set_yaw(dir2yaw(dir))
-			pegasus.move_head(self, dir2yaw(dir), dir.y)
-			creatura.action_idle(self, 0.4, "tongue_" .. frame)
-
-			minetest.remove_node(bug)
-		end
-
-		if not mob:get_action() then
-			if bug_reached then return true, 10 end
-			pegasus.action_walk(mob, 2, 0.5, "walk", bug)
-		end
-
-		timeout = timeout - mob.dtime
-		if timeout <= 0 then
-			return true
-		end
-	end
-	self:set_utility(func)
-end)
 
 -- Opossum
 
@@ -1956,66 +1905,6 @@ pegasus.mob_ai.fox_flee = {
 
 		self._puncher = target
 		return score, {self, target}
-	end
-}
-
--- Frog
-
-pegasus.mob_ai.frog_breed = {
-	utility = "pegasus:basic_breed",
-	step_delay = 0.25,
-	get_score = function(self)
-		if self.breeding
-		and pegasus.get_nearby_mate(self, self.name)
-		and self.in_liquid then
-			return 1, {self}
-		end
-		return 0
-	end
-}
-
-pegasus.mob_ai.frog_flop = {
-	utility = "pegasus:basic_idle",
-	step_delay = 0.25,
-	get_score = function(self)
-		if not self.in_liquid
-		and self.growth_scale < 0.8 then
-			return 1, {self, 1, "flop"}
-		end
-		return 0
-	end
-}
-
-pegasus.mob_ai.frog_seek_water = {
-	utility = "pegasus:basic_seek_pos",
-	get_score = function(self)
-		if self.in_liquid then return 0 end
-
-		local pos = self.object:get_pos()
-		if not pos then return end
-
-		local water = minetest.find_nodes_in_area(vec_sub(pos, 3), vec_add(pos, 3), {"group:water"})
-		if not water[1] then return 0 end
-
-		local player = self._target
-		local plyr_name = player and player:is_player() and player:get_player_name()
-
-		if plyr_name then
-			local plyr_pos = player and player:get_pos()
-			local trust = self.trust[plyr_name] or 0
-			return (10 - (vec_dist(pos, plyr_pos) + trust)) * 0.1, {self, water[1]}
-		end
-		return 0
-	end
-}
-
-pegasus.mob_ai.frog_seek_bug = {
-	utility = "pegasus:frog_seek_bug",
-	get_score = function(self)
-		if random(8) < 2 then
-			return 0.3, {self}
-		end
-		return 0
 	end
 }
 
