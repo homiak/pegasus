@@ -1,9 +1,9 @@
 # Dragon Uisge means in Scottish Gaelic a Water Dragon.
 
-**Water Dragons:** The mod introduces two types of Water Dragons - the Pure Water Dragon and the Rare Water Dragon. These Dragons inhabit their Water Nests, each with unique abilities and characteristics.
+**Water Dragons**  The mod introduces two types of Water Dragons - the Pure Water Dragon and the Rare Water Dragon. These Dragons inhabit their Water Nests, each with unique abilities and characteristics.
 
-**Draconic Blocks:** The mod features various decorative and functional blocks, including Draconic Bricks, slabs, stairs, and more.
-**Water-Forged Draconic Armour:** Gather the Water-Forged Draconic Steel material and craft powerful armor to protect you during battles.
+**Draconic Blocks**  The mod features various decorative and functional blocks, including Draconic Bricks, slabs, stairs, and more.
+**Water-Forged Draconic Armour**  Gather the Water-Forged Draconic Steel material and craft powerful armor to protect you during battles.
 
 ## Installation
 Standard installation via Minetest Mod Menu, or just from ContentDB.
@@ -15,11 +15,15 @@ More information you will find in the Book about Water Dragons - search inventor
 
 This mod is based on Draconis and created by Scottii.
 
+
 ## Release log
 
 ### Release v 1.0.0
 - Initial release
 
-### Release v 1.0.2
+### Release v 1.0.5
 - Add throwable Wing Horn
 - Fix bugs
+- Fix view points
+- A new chatcommand
+- Translation

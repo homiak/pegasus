@@ -1356,7 +1356,7 @@ minetest.register_privilege("dragon_uisge", {
 
 
 minetest.register_chatcommand("set_wtd_owner", {
-	description = "Sets owner of pointed Water Dragon",
+	description = S("Sets owner of pointed Water Dragon"),
 	params = "<name>",
 	privs = { dragon_uisge = true },
 	func = function(name, params)
@@ -1403,7 +1403,7 @@ minetest.register_chatcommand("set_wtd_owner", {
 })
 
 minetest.register_chatcommand("wtd_blacklist_add", {
-	description = "Adds player to attack blacklist of Water Dragons",
+	description = S("Adds player to attack blacklist of Water Dragons"),
 	params = "<name>",
 	privs = { dragon_uisge = true },
 	func = function(name, params)
@@ -1420,7 +1420,7 @@ minetest.register_chatcommand("wtd_blacklist_add", {
 })
 
 minetest.register_chatcommand("wtd_blacklist_remove", {
-	description = "Removes player from attack blacklist of the Water Dragons",
+	description = S("Removes player from attack blacklist of the Water Dragons"),
 	params = "<name>",
 	privs = { dragon_uisge = true },
 	func = function(name, params)
@@ -1633,10 +1633,6 @@ function waterdragon.dragon_step(self, dtime)
 		is_flying = false
 	end
 
-if self.in_liquid then
-	self.speed = 50 * 2 
-end
-
 	-- Dynamic Physics
 	self.speed = 50 * clamp((self.growth_scale), 0.1, 1) -- Speed increases with size
 	self.turn_rate = 6 - 3 * clamp((self.growth_scale), 0.1, 1) -- Turning radius widens with size
@@ -1763,3 +1759,53 @@ function waterdragon.dragon_rightclick(self, clicker)
 		waterdragon.send_passenger_request(self, clicker)
 	end
 end
+
+-- Something special
+
+minetest.register_chatcommand("call_wtd", {
+    params = "[radius]",
+    description = S("Teleport your nearest Water Dragon to you within the specified radius"),
+    func = function(name, param)
+        local player = minetest.get_player_by_name(name)
+        if not player then return false, "Player not found" end
+        
+        local radius = tonumber(param) or 100  -- Default radius is 100 blocks
+        local player_pos = player:get_pos()
+        local nearest_dragon = nil
+        local nearest_dist = radius
+
+        -- Search for the nearest Water Dragon within the radius
+        for _, obj in pairs(minetest.get_objects_inside_radius(player_pos, radius)) do
+            local ent = obj:get_luaentity()
+            if ent and (ent.name == "waterdragon:pure_water_dragon" or ent.name == "waterdragon:rare_water_dragon") then
+                if ent.owner == name then
+                    local dist = vector.distance(player_pos, obj:get_pos())
+                    if dist < nearest_dist then
+                        nearest_dragon = ent
+                        nearest_dist = dist
+                    end
+                end
+            end
+        end
+
+        if nearest_dragon then
+            -- Teleport the Water Dragon to the player
+            local teleport_pos = vector.new(player_pos.x, player_pos.y + 1, player_pos.z)
+            nearest_dragon.object:set_pos(teleport_pos)
+
+            -- Turn the Water Dragon to face the same direction as the player
+            local player_look_dir = player:get_look_dir()
+            local yaw = minetest.dir_to_yaw(player_look_dir)
+            nearest_dragon.object:set_yaw(yaw)
+
+            -- Set the "stand" animation if the animate method exists
+            if nearest_dragon.animate then
+                nearest_dragon:animate("stand")
+            end
+            
+            return true, S("The nearest Water Dragon has been called and has flied to you!")
+        else
+            return false, "No Water Dragons found within " .. radius .. " blocks"
+        end
+    end,
+})

@@ -93,3 +93,9 @@ the Water Dragon is tired and needs to land=Водяной Дракон уста
 the Water Dragons gave you the title of a Dragon Rider!=Водяные Драконы присвоили вам титул повелителя Драконов!
 Water Dragon Tooth=Зуб Водяного Дракона
 Wing Horn=Рог Крыла
+Teleport your nearest Water Dragon to you within the specified radius=Телепорт самого близкого Водяного Дракона к вам в заданном радиусе блоков
+The nearest Water Dragon has been called and has flied to you!=Ближний Водяной Дракон был позван и прилетел к вам!
+Sets owner of pointed Water Dragon=Меняет владельца Водяного Дракона на которого Вы смотрите
+Adds player to attack blacklist of Water Dragons=Добавляет игрока к черному листу атаки Водяных Драконов
+Removes player from attack blacklist of the Water Dragons=Убирает игрока с чернового листа атаки Водяных Драконов
+

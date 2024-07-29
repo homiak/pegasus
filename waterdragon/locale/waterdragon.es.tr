@@ -91,3 +91,9 @@ the Water Dragon is tired and needs to land=el Dragón de Agua está cansado y n
 the Water Dragons gave you the title of a Dragon Rider!=Los Dragones de Agua te dieron el título de Jinete de Dragón!
 Water Dragon Tooth=Diente de Dragón de Agua
 Wing Horn=Cuerno de Ala
+Teleport your nearest Water Dragon to you within the specified radius=Teletransporta a tu Dragón de Agua más cercano a ti dentro del radio especificado
+The nearest Water Dragon has been called and has flied to you!=El Dragón de Agua más cercano ha sido llamado y ha volado hacia ti!
+Sets owner of pointed Water Dragon=Establece propietario del Dragón de Agua puntiagudo
+Adds player to attack blacklist of Water Dragons=Añade al jugador a la lista negra de ataques de los Dragones de Agua.
+Removes player from attack blacklist of the Water Dragons=Elimina al jugador de la lista negra de ataque de los Dragones de Agua.
+

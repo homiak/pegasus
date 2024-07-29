@@ -1588,7 +1588,7 @@ minetest.register_craftitem("waterdragon:draconic_tooth", {
 -- Wing Horn
 
 minetest.register_craftitem("waterdragon:wing_horn", {
-    description = "Wing Horn",
+    description = S("Wing Horn"),
     inventory_image = "waterdragon_wing_horn.png",
     stack_max = 999,
     on_use = function(itemstack, user, pointed_thing)
@@ -1602,10 +1602,16 @@ function throw_wing_horn(itemstack, player)
     pos.y = pos.y + 1.5
     local dir = player:get_look_dir()
     local horn = minetest.add_entity(pos, "waterdragon:wing_horn_entity")
+	local throw = "waterdragon_throw"
     
     horn:set_velocity({x=dir.x * 15, y=dir.y * 15, z=dir.z * 15})
     horn:set_acceleration({x=0, y=-9.8, z=0})
-    
+    minetest.sound_play({
+		name = throw,
+		gain = 1.0,
+		max_hear_distance = 20,
+		loop = false
+	})
     itemstack:take_item()
     return itemstack
 end
@@ -1660,6 +1666,3 @@ minetest.registered_entities["waterdragon:wing_horn_entity"].on_step = function(
         end
     end
 end
-
--- Something special
-
