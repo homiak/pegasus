@@ -206,7 +206,8 @@ creatura.register_mob("pegasus:pegasus", {
 	},
 	follow = pegasus.food_wheat,
 	drops = {
-		{name = "pegasus:leather", min = 1, max = 4, chance = 2}
+		{name = "pegasus:leather", min = 1, max = 4, chance = 2},
+		{name = "pegasus:beef_raw", min = 1, max = 4, chance = 2}
 	},
 	fancy_collide = false,
 
@@ -214,7 +215,7 @@ creatura.register_mob("pegasus:pegasus", {
 	is_grazing_mob = true,
 	is_herding_mob = true,
 
-	-- pegasus Props
+	-- Pegasus Props
 	catch_with_net = true,
 	catch_with_lasso = true,
 	consumable_nodes = {

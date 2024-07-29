@@ -5,7 +5,7 @@ local path = minetest.get_modpath("pegasus")
 local storage = dofile(path .. "/api/storage.lua")
 
 pegasus.spawn_points = storage.spawn_points
-pegasus.libri_font_size = storage.libri_font_size
+pegasus.book_font_size = storage.book_font_size
 
 pegasus.pets = {}
 
@@ -114,7 +114,7 @@ if minetest.settings:get_bool("spawn_mobs", true) then
 	dofile(path.."/api/spawning.lua")
 end
 
-dofile(path.."/api/libri.lua")
+dofile(path.."/api/book.lua")
 
 minetest.register_on_mods_loaded(function()
 	for name, def in pairs(minetest.registered_entities) do

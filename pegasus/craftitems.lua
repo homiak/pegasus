@@ -162,13 +162,6 @@ minetest.register_craftitem("pegasus:leather", {
 	groups = {flammable = 2, leather = 1},
 })
 
-minetest.register_craftitem("pegasus:feather", {
-	description = "Feather",
-	inventory_image = "pegasus_feather.png",
-	groups = {flammable = 2, feather = 1},
-})
-
-
 
 -- Meat --
 
@@ -532,57 +525,24 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_craft({
-	output = "pegasus:saddle",
-	recipe = {
-		{"group:leather", "group:leather", "group:leather"},
-		{"group:leather", steel_ingot, "group:leather"},
-		{"farming:string", "", "farming:string"}
-	}
-})
 
 
 minetest.register_craft({
-	output = "pegasus:shears",
+	output = "pegasus:book_pegasus",
 	recipe = {
-		{"", steel_ingot, ""},
-		{"", "group:leather", steel_ingot}
+		{"pegasus:leather", "default:paper", "pegasus:leather"},
+		{"pegasus:leather", "default:paper", "pegasus:leather"},
+		{"pegasus:leather", "default:paper", "pegasus:leather"}
 	}
 })
 
-minetest.register_craft({
-	output = "pegasus:libri_pegasus",
-	recipe = {
-		{"", "", ""},
-		{"pegasus:feather", "", ""},
-		{"group:book", "group:color_green", ""}
-	}
-})
-
-minetest.register_craft({
-	output = "pegasus:libri_pegasus",
-	recipe = {
-		{"", "", ""},
-		{"pegasus:feather", "", ""},
-		{"group:book", "group:unicolor_green", ""}
-	}
-})
-
-minetest.register_craft({
-	output = "pegasus:libri_pegasus 2",
-	recipe = {
-		{"", "", ""},
-		{"pegasus:libri_pegasus", "group:book", ""},
-		{"", "", ""}
-	}
-})
 
 minetest.register_on_craft(function(itemstack, _, old_craft_grid)
-	if itemstack:get_name() == "pegasus:libri_pegasus"
+	if itemstack:get_name() == "pegasus:book_pegasus"
 	and itemstack:get_count() > 1 then
-		for _, old_libri in pairs(old_craft_grid) do
-			if old_libri:get_meta():get_string("chapters") then
-				local chapters = old_libri:get_meta():get_string("chapters")
+		for _, old_book in pairs(old_craft_grid) do
+			if old_book:get_meta():get_string("chapters") then
+				local chapters = old_book:get_meta():get_string("chapters")
 				itemstack:get_meta():set_string("chapters", chapters)
 				return itemstack
 			end

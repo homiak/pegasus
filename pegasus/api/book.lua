@@ -1,24 +1,24 @@
 -----------
--- Libri --
+-- book --
 -----------
 
-local libri = {}
+local book = {}
 
 local path = minetest.get_modpath(minetest.get_current_modname())
 
 local color = minetest.colorize
 
-local libri_bg = {
+local book_bg = {
 	"formspec_version[3]",
 	"size[16,10]",
-	"background[-0.7,-0.5;17.5,11.5;pegasus_libri_bg.png]"
+	"background[-0.7,-0.5;17.5,11.5;pegasus_book_bg.png]"
 }
 
-local libri_btn_next = "image_button[15,9;1,1;pegasus_libri_icon_next.png;btn_next;;true;false]"
+local book_btn_next = "image_button[15,9;1,1;pegasus_book_icon_next.png;btn_next;;true;false]"
 
-local libri_btn_last = "image_button[1,9;1,1;pegasus_libri_icon_last.png;btn_last;;true;false]"
+local book_btn_last = "image_button[1,9;1,1;pegasus_book_icon_last.png;btn_last;;true;false]"
 
-local libri_drp_font_scale = "dropdown[17,0;0.75,0.5;drp_font_scale;0.25,0.5,0.75,1;1]"
+local book_drp_font_scale = "dropdown[17,0;0.75,0.5;drp_font_scale;0.25,0.5,0.75,1;1]"
 
 local function correct_string(str)
 	if str then
@@ -88,7 +88,7 @@ local function generate_page(mob)
 			center_text = true,
 			font_size = 20,
 			offset = {x = 8, y = 1.5},
-			file = "pegasus_libri_" .. name .. ".txt"
+			file = "pegasus_book_" .. name .. ".txt"
 		},
 		{ -- Image
 			element_type = "model",
@@ -112,46 +112,46 @@ local function generate_page(mob)
 			biome_iter = 1,
 			text = correct_string(get_spawn_biomes(mob)[1])
 		},
-		libri.render_element({ -- Health Icon
+		book.render_element({ -- Health Icon
 			element_type = "image",
 			offset = {x = 2.535, y = 8.15},
 			size = {x = 1, y = 1},
-			text = "pegasus_libri_health_fg.png"
+			text = "pegasus_book_health_fg.png"
 		}),
-		libri.render_element({ -- Health Amount
+		book.render_element({ -- Health Amount
 			element_type = "label",
 			offset = {x = 3.25, y = 9},
 			text = "x" .. max_health(mob) / 2
 		}),
-		libri.render_element({ -- Lasso Icon
+		book.render_element({ -- Lasso Icon
 			element_type = "item_image",
 			offset = {x = 4.25, y = 8.15},
 			size = {x = 1, y = 1},
 			text = "pegasus:lasso"
 		}),
-		libri.render_element({ -- Lasso Indication Icon
+		book.render_element({ -- Lasso Indication Icon
 			element_type = "image",
 			offset = {x = 4.75, y = 8.75},
 			size = {x = 0.5, y = 0.5},
-			text = "pegasus_libri_" .. can_lasso(mob) .. "_icon.png"
+			text = "pegasus_book_" .. can_lasso(mob) .. "_icon.png"
 		}),
-		libri.render_element({ -- Net Icon
+		book.render_element({ -- Net Icon
 			element_type = "item_image",
 			offset = {x = 6, y = 8.15},
 			size = {x = 1, y = 1},
 			text = "pegasus:net"
 		}),
-		libri.render_element({ -- Net Indication Icon
+		book.render_element({ -- Net Indication Icon
 			element_type = "image",
 			offset = {x = 6.5, y = 8.75},
 			size = {x = 0.5, y = 0.5},
-			text = "pegasus_libri_" .. can_net(mob) .. "_icon.png"
+			text = "pegasus_book_" .. can_net(mob) .. "_icon.png"
 		}),
-		libri.render_element({ -- Styling
+		book.render_element({ -- Styling
 			element_type = "image",
 			offset = {x = -0.7, y = -0.5},
 			size = {x = 17.5, y = 11.5},
-			text = "pegasus_libri_info_fg.png"
+			text = "pegasus_book_info_fg.png"
 		})
 	}
 	pages[mob] = page
@@ -188,7 +188,7 @@ minetest.register_on_mods_loaded(function()
 				center_text = true,
 				font_size = 24,
 				offset = {x = 0, y = 1.5},
-				file = "pegasus_libri_home.txt"
+				file = "pegasus_book_home.txt"
 			},
 			{
 				element_type = "mobs",
@@ -220,7 +220,7 @@ end)
 -- API --
 ---------
 
-local function get_item_list(list, offset_x, offset_y) -- Creates a visual list of items for Libri formspecs
+local function get_item_list(list, offset_x, offset_y) -- Creates a visual list of items for book formspecs
 	local size = 1 / ((#list < 3 and #list) or 3)
 	if size < 0.45 then size = 0.45 end
 	local spacing = size * 0.5
@@ -237,7 +237,7 @@ local function get_item_list(list, offset_x, offset_y) -- Creates a visual list 
 	return form
 end
 
-function libri.generate_list(meta, offset, start_iter)
+function book.generate_list(meta, offset, start_iter)
 	local chapters = minetest.deserialize(meta:get_string("chapters")) or {}
 	local i = 0
 	local elements = ""
@@ -264,7 +264,7 @@ function libri.generate_list(meta, offset, start_iter)
 	return elements
 end
 
-function libri.render_element(def, meta, playername)
+function book.render_element(def, meta, playername)
 	local chapters = (meta and minetest.deserialize(meta:get_string("chapters"))) or {}
 	local chap_no = 0
 	for _ in pairs(chapters) do
@@ -275,10 +275,10 @@ function libri.render_element(def, meta, playername)
 	local form = ""
 	-- Add text
 	if def.element_type == "label" then
-		local font_size_x = (pegasus.libri_font_size[playername] or 1)
+		local font_size_x = (pegasus.book_font_size[playername] or 1)
 		local font_size = (def.font_size or 16) * font_size_x
 		if def.file then
-			local filename = path .. "/libri/" .. def.file
+			local filename = path .. "/book/" .. def.file
 			local file = io.open(filename)
 			if file then
 				local text = ""
@@ -297,9 +297,9 @@ function libri.render_element(def, meta, playername)
 			form = form .. "label[" .. offset_x .. "," .. offset_y .. ";" .. color("#000000", line .. "\n") .. "]"
 		end
 	elseif def.element_type == "mobs" then
-		form = form .. libri.generate_list(meta, def.offset, def.start_iter)
-		if chap_no > def.start_iter + 4 then form = form .. libri_btn_next end
-		if def.start_iter > 3 then form = form .. libri_btn_last end
+		form = form .. book.generate_list(meta, def.offset, def.start_iter)
+		if chap_no > def.start_iter + 4 then form = form .. book_btn_next end
+		if def.start_iter > 3 then form = form .. book_btn_last end
 	else
 		-- Add Images/Interaction
 		local render_element = false
@@ -325,7 +325,7 @@ function libri.render_element(def, meta, playername)
 end
 
 local function get_page(key, meta, playername)
-	local form = table.copy(libri_bg)
+	local form = table.copy(book_bg)
 	local chapters = minetest.deserialize(meta:get_string("chapters")) or {}
 	local chap_no = 0
 	for _ in pairs(chapters) do
@@ -334,14 +334,14 @@ local function get_page(key, meta, playername)
 	local page = pages[key]
 	for _, element in ipairs(page) do
 		if type(element) == "table" then
-			local element_rendered = libri.render_element(element, meta, playername)
+			local element_rendered = book.render_element(element, meta, playername)
 			table.insert(form, element_rendered)
 		else
 			table.insert(form, element)
 		end
 	end
 	table.insert(form, "style[drp_font_scale;noclip=true]")
-	table.insert(form, libri_drp_font_scale)
+	table.insert(form, book_drp_font_scale)
 	table.insert(form, "style[drp_font_scale;noclip=true]")
 	local def = minetest.registered_entities[key]
 	if def then
@@ -361,9 +361,9 @@ end
 
 -- Iterate through Animal textures and Biomes
 
-local libri_players = {}
+local book_players = {}
 
-local function iterate_libri_images()
+local function iterate_book_images()
 	for page, elements in pairs(pages) do
 		if page ~= "home" then
 			for _, info in ipairs(elements) do
@@ -401,24 +401,24 @@ local function iterate_libri_images()
 			end
 		end
 	end
-	for name, page in pairs(libri_players) do
+	for name, page in pairs(book_players) do
 		local player = minetest.get_player_by_name(name)
 		if player
 		and spawn_biomes[page] then
 			local meta = player:get_wielded_item():get_meta()
-			minetest.show_formspec(name, "pegasus:libri_" .. page:split(":")[2], get_page(page, meta, name))
+			minetest.show_formspec(name, "pegasus:book_" .. page:split(":")[2], get_page(page, meta, name))
 		end
 	end
-	minetest.after(2, iterate_libri_images)
+	minetest.after(2, iterate_book_images)
 end
 
-iterate_libri_images()
+iterate_book_images()
 
 -- Craftitem
 
-minetest.register_craftitem("pegasus:libri_pegasus", {
-	description = "Libri pegasus",
-	inventory_image = "pegasus_libri_pegasus.png",
+minetest.register_craftitem("pegasus:book_pegasus", {
+	description = "Book of Pegasus",
+	inventory_image = "pegasus_book_pegasus.png",
 	stack_max = 1,
 	groups = {book = 1},
 
@@ -426,8 +426,8 @@ minetest.register_craftitem("pegasus:libri_pegasus", {
 		local meta = itemstack:get_meta()
 		if meta:get_string("pages") ~= "" then meta:set_string("pages", "") end
 		local name = player:get_player_name()
-		minetest.show_formspec(name, "pegasus:libri_home_1", get_page("home_1", meta, name))
-		libri_players[name] = "home_1"
+		minetest.show_formspec(name, "pegasus:book_home_1", get_page("home_1", meta, name))
+		book_players[name] = "home_1"
 	end,
 	on_secondary_use = function(itemstack, player, pointed)
 		local meta = itemstack:get_meta()
@@ -446,8 +446,8 @@ minetest.register_craftitem("pegasus:libri_pegasus", {
 			return itemstack
 		end
 		local name = player:get_player_name()
-		minetest.show_formspec(name, "pegasus:libri_home_1", get_page("home_1", meta, name))
-		libri_players[name] = "home_1"
+		minetest.show_formspec(name, "pegasus:book_home_1", get_page("home_1", meta, name))
+		book_players[name] = "home_1"
 	end
 })
 
@@ -455,13 +455,13 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local plyr_name = player:get_player_name()
 	local wielded_item = player:get_wielded_item()
 	local meta = wielded_item:get_meta()
-	if formname:match("pegasus:libri_") then
+	if formname:match("pegasus:book_") then
 		for page in pairs(pages) do
 			if not page:match("^home") then
 				local name = page:split(":")[2]
 				if fields["btn_" .. name] then
-					minetest.show_formspec(plyr_name, "pegasus:libri_" .. name, get_page(page, meta, plyr_name))
-					libri_players[plyr_name] = page
+					minetest.show_formspec(plyr_name, "pegasus:book_" .. name, get_page(page, meta, plyr_name))
+					book_players[plyr_name] = page
 					return true
 				end
 			end
@@ -470,8 +470,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local current_no = tonumber(formname:sub(-1))
 			local page = "home_" .. current_no + 1
 			if pages[page] then
-				minetest.show_formspec(plyr_name, "pegasus:libri_" .. page, get_page(page, meta, plyr_name))
-				libri_players[plyr_name] = page
+				minetest.show_formspec(plyr_name, "pegasus:book_" .. page, get_page(page, meta, plyr_name))
+				book_players[plyr_name] = page
 				return true
 			end
 		end
@@ -479,19 +479,19 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local current_no = tonumber(formname:sub(-1))
 			local page = "home_" .. current_no - 1
 			if pages[page] then
-				minetest.show_formspec(plyr_name, "pegasus:libri_" .. page, get_page(page, meta, plyr_name))
-				libri_players[plyr_name] = page
+				minetest.show_formspec(plyr_name, "pegasus:book_" .. page, get_page(page, meta, plyr_name))
+				book_players[plyr_name] = page
 				return true
 			end
 		end
 		if fields.drp_font_scale then
-			pegasus.libri_font_size[plyr_name] = fields.drp_font_scale
-			local page = libri_players[plyr_name]
+			pegasus.book_font_size[plyr_name] = fields.drp_font_scale
+			local page = book_players[plyr_name]
 			if not page then return end
-			minetest.show_formspec(plyr_name, "pegasus:libri_" .. page, get_page(page, meta, plyr_name))
+			minetest.show_formspec(plyr_name, "pegasus:book_" .. page, get_page(page, meta, plyr_name))
 		end
 		if fields.quit or fields.key_enter then
-			libri_players[plyr_name] = nil
+			book_players[plyr_name] = nil
 		end
 	end
 end)
