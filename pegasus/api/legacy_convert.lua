@@ -1,5 +1,5 @@
 --------------------------------------
--- Convert Better Fauna to pegasus --
+-- Convert Better Fauna to Pegasus --
 --------------------------------------
 
 for i = 1, #pegasus.mobs do

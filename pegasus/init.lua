@@ -109,9 +109,7 @@ pegasus.animals = {
 	"pegasus:fox",
 	"pegasus:pegasus",
 	"pegasus:opossum",
-	"pegasus:owl",
 	"pegasus:pig",
-	"pegasus:sheep",
 	"pegasus:turkey",
 	"pegasus:tropical_fish",
 	"pegasus:wolf",
@@ -123,9 +121,7 @@ load_file(path .. "/mobs", "cow.lua")
 load_file(path .. "/mobs", "fox.lua")
 load_file(path .. "/mobs", "pegasus.lua")
 load_file(path .. "/mobs", "opossum.lua")
-load_file(path .. "/mobs", "owl.lua")
 load_file(path .. "/mobs", "pig.lua")
-load_file(path .. "/mobs", "sheep.lua")
 load_file(path .. "/mobs", "song_bird.lua")
 load_file(path .. "/mobs", "turkey.lua")
 load_file(path .. "/mobs", "tropical_fish.lua")
