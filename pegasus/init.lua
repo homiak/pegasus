@@ -154,7 +154,6 @@ if convert_mobs_redo then
 	minetest.register_alias_force("mobs:meat", "pegasus:beef_cooked")
 	minetest.register_alias_force("mobs:lasso", "pegasus:lasso")
 	minetest.register_alias_force("mobs:net", "pegasus:net")
-	minetest.register_alias_force("mobs:shears", "pegasus:shears")
 	minetest.register_alias_force("mobs:saddles", "pegasus:saddles")
 	minetest.register_alias_force("mobs:nametag", "pegasus:nametag")
 end

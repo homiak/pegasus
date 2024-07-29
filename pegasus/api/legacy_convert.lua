@@ -61,7 +61,6 @@ end)
 minetest.register_alias_force("better_fauna:net", "pegasus:net")
 minetest.register_alias_force("better_fauna:lasso", "pegasus:lasso")
 minetest.register_alias_force("better_fauna:saddle", "pegasus:saddle")
-minetest.register_alias_force("better_fauna:shears", "pegasus:shears")
 
 -- Drops
 

@@ -291,12 +291,6 @@ minetest.register_craftitem("pegasus:saddle", {
 	inventory_image = "pegasus_saddle.png",
 })
 
-minetest.register_tool("pegasus:shears", {
-	description = "Shears",
-	inventory_image = "pegasus_shears.png",
-	groups = {flammable = 2}
-})
-
 minetest.register_craftitem("pegasus:net", {
 	description = "Animal Net",
 	inventory_image = "pegasus_net.png",
