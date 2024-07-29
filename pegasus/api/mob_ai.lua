@@ -1601,23 +1601,6 @@ pegasus.mob_ai.tamed_stay = {
 	end
 }
 
--- Bat
-
-pegasus.mob_ai.bat_seek_home = {
-	utility = "pegasus:fly_seek_home",
-	get_score = function(self)
-		local pos = self.object:get_pos()
-		if not pos then return end
-		local home = pegasus.is_day and self.home_position
-		if (home
-		and home.x
-		and vec_dist(pos, home) < 8)
-		or self.is_landed then
-			return 0.4, {self}
-		end
-		return 0
-	end
-}
 
 -- Eagle
 

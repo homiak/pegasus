@@ -30,7 +30,6 @@ end
 local pages = {}
 
 local generate_mobs = {
-	["pegasus:bat"] = "Bat",
 	["pegasus:cow"] = "Cow",
 	["pegasus:opossum"] = "Opossum",
 	["pegasus:owl"] = "Owl",
@@ -46,7 +45,6 @@ local generate_mobs = {
 
 
 local spawn_biomes = {
-	["pegasus:bat"] = "cave",
 	["pegasus:cow"] = "grassland",
 	["pegasus:opossum"] = "temperate",
 	["pegasus:owl"] = "temperate",

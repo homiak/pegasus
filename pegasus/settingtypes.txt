@@ -10,8 +10,6 @@ spawn_mobs (Spawn Mobs) bool true
 #    If true, items from mobs_redo and mobs_animal will be converted to pegasus items
 convert_redo_items(Convert Mobs Redo Items) bool false
 
-#    If true, Guano will accumulate under resting bats
-guano_accumulation (Guano Accumulation) bool true
 
 #    If true, Guano can be used as fertilizer
 guano_fertilization (Guano Fertilization) bool true

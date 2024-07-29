@@ -103,7 +103,6 @@ dofile(path.."/api/lasso.lua")
 dofile(path.."/craftitems.lua")
 
 pegasus.animals = {
-	"pegasus:bat",
 	"pegasus:song_bird",
 	"pegasus:cat",
 	"pegasus:cow",
@@ -120,7 +119,6 @@ pegasus.animals = {
 
 dofile(path.."/api/api.lua")
 
-load_file(path .. "/mobs", "bat.lua")
 load_file(path .. "/mobs", "cow.lua")
 load_file(path .. "/mobs", "fox.lua")
 load_file(path .. "/mobs", "pegasus.lua")

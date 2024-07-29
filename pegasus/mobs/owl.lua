@@ -97,7 +97,6 @@ creatura.register_mob("pegasus:owl", {
 	utility_stack = {
 		pegasus.mob_ai.fly_wander,
 		pegasus.mob_ai.swim_seek_land,
-		pegasus.mob_ai.bat_seek_home,
 		pegasus.mob_ai.fly_seek_food,
 		pegasus.mob_ai.eagle_attack
 	},
