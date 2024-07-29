@@ -72,14 +72,14 @@ minetest.register_craftitem("waterdragon:dragon_water_drop", {
 
 		if not user or not pointed_thing then return false end
 		
-		local entity 
+		local entity
         if pointed_thing.type == "object" then
             -- If the player is pointing at an object, check if it's a mob
             local pointed_object = pointed_thing.ref
             entity = pointed_object:get_luaentity()
         end
 
-		if entity and entity.hp <= 0 then
+		if entity and entity.hp and entity.hp <= 0 then
 			local ent_pos = entity:get_center_pos()
 			local particle = "waterdragon_particle_green.png"
 			entity.hp = entity.max_health
