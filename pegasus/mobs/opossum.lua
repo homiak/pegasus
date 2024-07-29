@@ -35,16 +35,12 @@ creatura.register_mob("pegasus:opossum", {
 	},
 	follow = {
 		"pegasus:song_bird_egg",
-		"pegasus:rat_raw",
 		"pegasus:mutton_raw",
 		"pegasus:beef_raw",
 		"pegasus:porkchop_raw",
 		"pegasus:poultry_raw"
 	},
 
-	-- Behavior Parameters
-	is_skittish_mob = true,
-	attack_list = {"pegasus:rat"},
 
 	-- pegasus Props
 	flee_puncher = true,

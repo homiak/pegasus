@@ -1174,9 +1174,9 @@ creatura.register_utility("pegasus:fly_seek_food", function(self)
 	self:set_utility(func)
 end)
 
--- Horse --
+-- pegasus --
 
-creatura.register_utility("pegasus:horse_tame", function(self)
+creatura.register_utility("pegasus:pegasus_tame", function(self)
 	local trust = 5
 	local player = self.rider
 	local player_props = player and player:get_properties()
@@ -1197,7 +1197,7 @@ creatura.register_utility("pegasus:horse_tame", function(self)
 		if not pos then return end
 		if not player or not creatura.is_alive(player) then return true end
 
-		-- Increase Taming progress while Players view is aligned with the Horses
+		-- Increase Taming progress while Players view is aligned with the pegasuss
 		local yaw, plyr_yaw = _self.object:get_yaw(), player:get_look_horizontal()
 		local yaw_diff = abs(diff(yaw, plyr_yaw))
 
@@ -1232,7 +1232,7 @@ creatura.register_utility("pegasus:horse_tame", function(self)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("pegasus:horse_ride", function(self, player)
+creatura.register_utility("pegasus:pegasus_ride", function(self, player)
 	local player_props = player and player:get_properties()
 	if not player_props then return end
 	local player_size = player_props.visual_size
@@ -1387,77 +1387,6 @@ creatura.register_utility("pegasus:opossum_seek_crop", function(self)
 		if not mob:get_action() then
 			if crop_reached then return true, 10 end
 			pegasus.action_walk(mob, 2, 0.5, "walk", crop)
-		end
-
-		timeout = timeout - mob.dtime
-		if timeout <= 0 then
-			return true
-		end
-	end
-	self:set_utility(func)
-end)
-
--- Rat --
-
-local function find_chest(self)
-	local pos = self.object:get_pos()
-	if not pos then return end
-
-	local nodes = minetest.find_nodes_with_meta(vec_sub(pos, 6), vec_add(pos, 6)) or {}
-	local pos2
-	for _, node_pos in ipairs(nodes) do
-		local meta = minetest.get_meta(node_pos)
-		if meta:get_string("owner") == "" then
-			local inv = minetest.get_inventory({type = "node", pos = node_pos})
-			if inv
-			and inv:get_list("main") then
-				pos2 = node_pos
-			end
-		end
-	end
-	return pos2
-end
-
-local function take_food_from_chest(self, pos)
-	local inv = minetest.get_inventory({type = "node", pos = pos})
-	if inv
-	and inv:get_list("main") then
-		for i, stack in ipairs(inv:get_list("main")) do
-			local item_name = stack:get_name()
-			local def = minetest.registered_items[item_name]
-			for group in pairs(def.groups) do
-				if group:match("food_") then
-					stack:take_item()
-					inv:set_stack("main", i, stack)
-					pegasus.add_food_particle(self, item_name)
-					return true
-				end
-			end
-		end
-	end
-end
-
-creatura.register_utility("pegasus:rat_seek_chest", function(self)
-	local timeout = 12
-
-	local chest = find_chest(self)
-	local chest_reached = false
-	local function func(mob)
-		local pos = mob.object:get_pos()
-		if not pos or not chest then return true, 30 end
-
-		local dist = vec_dist(pos, chest)
-		if dist < mob.width + 0.5
-		and not chest_reached then
-			chest_reached = true
-
-			creatura.action_idle(mob, 1, "eat")
-			take_food_from_chest(mob, chest)
-		end
-
-		if not mob:get_action() then
-			if chest_reached then return true, 10 end
-			pegasus.action_walk(mob, 2, 0.5, "walk", chest)
 		end
 
 		timeout = timeout - mob.dtime
@@ -1760,15 +1689,3 @@ pegasus.mob_ai.opossum_seek_crop = {
 	end
 }
 
--- Rat
-
-pegasus.mob_ai.rat_seek_chest = {
-	utility = "pegasus:rat_seek_chest",
-	step_delay = 0.25,
-	get_score = function(self)
-		if random(8) < 2 then
-			return 0.3, {self}
-		end
-		return 0
-	end
-}

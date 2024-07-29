@@ -106,15 +106,12 @@ pegasus.animals = {
 	"pegasus:bat",
 	"pegasus:song_bird",
 	"pegasus:cat",
-	"pegasus:chicken",
 	"pegasus:cow",
 	"pegasus:fox",
-	"pegasus:horse",
+	"pegasus:pegasus",
 	"pegasus:opossum",
 	"pegasus:owl",
 	"pegasus:pig",
-	"pegasus:rat",
-	"pegasus:reindeer",
 	"pegasus:sheep",
 	"pegasus:turkey",
 	"pegasus:tropical_fish",
@@ -124,15 +121,12 @@ pegasus.animals = {
 dofile(path.."/api/api.lua")
 
 load_file(path .. "/mobs", "bat.lua")
-load_file(path .. "/mobs", "chicken.lua")
 load_file(path .. "/mobs", "cow.lua")
 load_file(path .. "/mobs", "fox.lua")
-load_file(path .. "/mobs", "horse.lua")
+load_file(path .. "/mobs", "pegasus.lua")
 load_file(path .. "/mobs", "opossum.lua")
 load_file(path .. "/mobs", "owl.lua")
 load_file(path .. "/mobs", "pig.lua")
-load_file(path .. "/mobs", "rat.lua")
-load_file(path .. "/mobs", "reindeer.lua")
 load_file(path .. "/mobs", "sheep.lua")
 load_file(path .. "/mobs", "song_bird.lua")
 load_file(path .. "/mobs", "turkey.lua")

@@ -23,7 +23,6 @@ local predator_spawn_chance = tonumber(minetest.settings:get("pegasus_predator_c
 
 -- Get Biomes --
 
-local chicken_biomes = {}
 
 
 local pig_biomes = {}
@@ -35,26 +34,12 @@ local function insert_all(tbl, tbl2)
 end
 
 minetest.register_on_mods_loaded(function()
-	insert_all(chicken_biomes, pegasus.registered_biome_groups["grassland"].biomes)
-	insert_all(chicken_biomes, pegasus.registered_biome_groups["tropical"].biomes)
 	insert_all(pig_biomes, pegasus.registered_biome_groups["temperate"].biomes)
 	insert_all(pig_biomes, pegasus.registered_biome_groups["boreal"].biomes)
 end)
 
-creatura.register_abm_spawn("pegasus:chicken", {
-	chance = common_spawn_chance,
-	spawn_active = true,
-	min_height = 0,
-	max_height = 1024,
-	min_group = 3,
-	max_group = 5,
-	spawn_cap = 3,
-	biomes = chicken_biomes,
-	nodes = {"group:soil"},
-})
 
-
-creatura.register_abm_spawn("pegasus:cow", {
+creatura.register_abm_spawn("pegasus:pegasus", {
 	chance = common_spawn_chance,
 	spawn_active = true,
 	min_height = 0,
@@ -67,181 +52,6 @@ creatura.register_abm_spawn("pegasus:cow", {
 	neighbors = {"air", "group:grass", "group:flora"}
 })
 
-creatura.register_abm_spawn("pegasus:fox", {
-	chance = predator_spawn_chance,
-	min_height = 0,
-	max_height = 1024,
-	min_group = 1,
-	max_group = 2,
-	biomes = pegasus.registered_biome_groups["boreal"].biomes,
-	nodes = {"group:soil"},
-})
-
-creatura.register_abm_spawn("pegasus:horse", {
-	chance = common_spawn_chance,
-	spawn_active = true,
-	min_height = 0,
-	max_height = 1024,
-	min_group = 3,
-	max_group = 4,
-	spawn_cap = 3,
-	biomes = pegasus.registered_biome_groups["grassland"].biomes,
-	nodes = {"group:soil"},
-	neighbors = {"air", "group:grass", "group:flora"}
-})
-
-creatura.register_abm_spawn("pegasus:rat", {
-	chance = pest_spawn_chance,
-	interval = 60,
-	min_height = -1,
-	max_height = 1024,
-	min_group = 1,
-	max_group = 3,
-	spawn_in_nodes = true,
-	nodes = {"group:crop"}
-})
-
-creatura.register_abm_spawn("pegasus:owl", {
-	chance = predator_spawn_chance,
-	interval = 60,
-	min_height = 3,
-	max_height = 1024,
-	min_group = 1,
-	max_group = 1,
-	spawn_cap = 1,
-	nodes = {"group:leaves"}
-})
-
-creatura.register_abm_spawn("pegasus:opossum", {
-	chance = predator_spawn_chance,
-	interval = 60,
-	min_height = -1,
-	max_height = 1024,
-	min_group = 1,
-	max_group = 2,
-	biomes = pegasus.registered_biome_groups["boreal"].biomes,
-	nodes = {"group:soil", "group:leaves"}
-})
-
-creatura.register_abm_spawn("pegasus:pig", {
-	chance = common_spawn_chance,
-	spawn_active = true,
-	min_height = 0,
-	max_height = 1024,
-	min_group = 2,
-	max_group = 3,
-	spawn_cap = 3,
-	biomes = pig_biomes,
-	nodes = {"group:soil"},
-})
-
-creatura.register_abm_spawn("pegasus:reindeer", {
-	chance = common_spawn_chance,
-	spawn_active = true,
-	min_height = 0,
-	max_height = 1024,
-	min_group = 6,
-	max_group = 8,
-	spawn_cap = 3,
-	biomes = pegasus.registered_biome_groups["boreal"].biomes,
-	nodes = {"group:soil"},
-})
-
-creatura.register_abm_spawn("pegasus:sheep", {
-	chance = common_spawn_chance,
-	spawn_active = true,
-	min_height = 0,
-	max_height = 1024,
-	min_group = 3,
-	max_group = 6,
-	spawn_cap = 3,
-	biomes = pegasus.registered_biome_groups["grassland"].biomes,
-	nodes = {"group:soil"},
-	neighbors = {"air", "group:grass", "group:flora"}
-})
-
-creatura.register_abm_spawn("pegasus:turkey", {
-	chance = common_spawn_chance,
-	spawn_active = true,
-	min_height = 0,
-	max_height = 1024,
-	min_group = 3,
-	max_group = 4,
-	spawn_cap = 3,
-	biomes = pegasus.registered_biome_groups["boreal"].biomes,
-	nodes = {"group:soil"},
-})
-
-creatura.register_abm_spawn("pegasus:wolf", {
-	chance = predator_spawn_chance,
-	min_height = 0,
-	max_height = 1024,
-	min_group = 2,
-	max_group = 3,
-	biomes = pegasus.registered_biome_groups["boreal"].biomes,
-	nodes = {"group:soil"},
-})
-
--- Ambient Spawning
-
-creatura.register_abm_spawn("pegasus:bat", {
-	chance = ambient_spawn_chance,
-	interval = 30,
-	min_light = 0,
-	min_height = -31000,
-	max_height = 1,
-	min_group = 3,
-	max_group = 5,
-	spawn_cap = 6,
-	nodes = {"group:stone"}
-})
-
-creatura.register_abm_spawn("pegasus:song_bird", {
-	chance = ambient_spawn_chance,
-	interval = 60,
-	min_light = 0,
-	min_height = 1,
-	max_height = 1024,
-	min_group = 6,
-	max_group = 12,
-	spawn_cap = 6,
-	nodes = {"group:leaves", "pegasus:nest_song_bird"},
-	neighbors = {"group:leaves"}
-})
-
-creatura.register_on_spawn("pegasus:song_bird", function(self, pos)
-	local nests = minetest.find_nodes_in_area_under_air(
-		{x = pos.x - 16, y = pos.y - 16, z = pos.z - 16},
-		{x = pos.x + 16, y = pos.y + 16, z = pos.z + 16},
-		"pegasus:nest_song_bird"
-	)
-	if nests[1] then return end
-	local node = minetest.get_node(pos)
-	if node.name == "air" then
-		minetest.set_node(pos, {name = "pegasus:nest_song_bird"})
-	else
-		local nodes = minetest.find_nodes_in_area_under_air(
-			{x = pos.x - 3, y = pos.y - 3, z = pos.z - 3},
-			{x = pos.x + 3, y = pos.y + 7, z = pos.z + 3},
-			"group:leaves"
-		)
-		if nodes[1] then
-			pos = nodes[1]
-			minetest.set_node({x = pos.x, y = pos.y + 1, z = pos.z}, {name = "pegasus:nest_song_bird"})
-		end
-	end
-end)
-
-
-creatura.register_abm_spawn("pegasus:tropical_fish", {
-	chance = ambient_spawn_chance,
-	min_height = -128,
-	max_height = 1,
-	min_group = 6,
-	max_group = 12,
-	nodes = {"group:water"},
-	neighbors = {"group:coral"}
-})
 
 -- World Gen Spawning
 

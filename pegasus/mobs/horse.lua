@@ -1,16 +1,16 @@
 -----------
--- Horse --
+-- pegasus --
 -----------
 
 local random = math.random
 
--- Horse Inventory
+-- pegasus Inventory
 
 local form_obj = {}
 
-local function create_horse_inventory(self)
+local function create_pegasus_inventory(self)
 	if not self.owner then return end
-	local inv_name = "pegasus:horse_" .. self.owner
+	local inv_name = "pegasus:pegasus_" .. self.owner
 	local inv = minetest.create_detached_inventory(inv_name, {
 		allow_move = function(_, _, _, _, _, count)
 			return count
@@ -27,9 +27,9 @@ local function create_horse_inventory(self)
 	return inv
 end
 
-local function serialize_horse_inventory(self)
+local function serialize_pegasus_inventory(self)
 	if not self.owner then return end
-	local inv_name = "pegasus:horse_" .. self.owner
+	local inv_name = "pegasus:pegasus_" .. self.owner
 	local inv = minetest.get_inventory({type = "detached", name = inv_name})
 	if not inv then return end
 	local list = inv:get_list("main")
@@ -44,7 +44,7 @@ local function serialize_horse_inventory(self)
 end
 
 local function get_form(self, player_name)
-	local inv = create_horse_inventory(self)
+	local inv = create_pegasus_inventory(self)
 	if inv
 	and self._inventory then
 		inv:set_list("main", minetest.deserialize(self._inventory))
@@ -56,9 +56,9 @@ local function get_form(self, player_name)
 	local form = {
 		"formspec_version[3]",
 		"size[10.5,10]",
-		"image[0,0;10.5,5.25;pegasus_form_horse_bg.png]",
-		"model[0,0.5;5,3.5;mob_mesh;pegasus_horse.b3d;" .. texture .. ";-10,-130;false;false;" .. frame_loop .. ";15]",
-		"list[detached:pegasus:horse_" .. player_name .. ";main;5.4,0.5;4,3;]",
+		"image[0,0;10.5,5.25;pegasus_form_pegasus_bg.png]",
+		"model[0,0.5;5,3.5;mob_mesh;pegasus_pegasus.b3d;" .. texture .. ";-10,-130;false;false;" .. frame_loop .. ";15]",
+		"list[detached:pegasus:pegasus_" .. player_name .. ";main;5.4,0.5;4,3;]",
 		"list[current_player;main;0.4,4.9;8,4;]",
 		"listring[current_player;main]"
 	}
@@ -71,7 +71,7 @@ local function close_form(player)
 
 	if form_obj[name] then
 		form_obj[name] = nil
-		minetest.remove_detached_inventory("pegasus:horse_" .. name)
+		minetest.remove_detached_inventory("pegasus:pegasus_" .. name)
 	end
 end
 
@@ -81,25 +81,25 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		return
 	end
 	local obj = form_obj[name]
-	if formname == "pegasus:horse_forms" then
+	if formname == "pegasus:pegasus_forms" then
 		local ent = obj and obj:get_luaentity()
 		if not ent then return end
 
 		if fields.quit or fields.key_enter then
 			form_obj[name] = nil
-			serialize_horse_inventory(ent)
-			minetest.remove_detached_inventory("animlaia:horse_" .. name)
+			serialize_pegasus_inventory(ent)
+			minetest.remove_detached_inventory("animlaia:pegasus_" .. name)
 		end
 	end
 
-	if formname == "pegasus:horse_inv" then
+	if formname == "pegasus:pegasus_inv" then
 		local ent = obj and obj:get_luaentity()
 		if not ent then return end
 
 		if fields.quit or fields.key_enter then
 			form_obj[name] = nil
-			serialize_horse_inventory(ent)
-			minetest.remove_detached_inventory("pegasus:horse_" .. name)
+			serialize_pegasus_inventory(ent)
+			minetest.remove_detached_inventory("pegasus:pegasus_" .. name)
 		end
 	end
 end)
@@ -109,32 +109,32 @@ minetest.register_on_leaveplayer(close_form)
 -- Pattern
 
 local patterns = {
-	"pegasus_horse_pattern_1.png",
-	"pegasus_horse_pattern_2.png",
-	"pegasus_horse_pattern_3.png"
+	"pegasus_pegasus_pattern_1.png",
+	"pegasus_pegasus_pattern_2.png",
+	"pegasus_pegasus_pattern_3.png"
 }
 
 local avlbl_colors = {
 	[1] = {
-		"pegasus_horse_2.png",
-		"pegasus_horse_3.png",
-		"pegasus_horse_5.png"
+		"pegasus_pegasus_2.png",
+		"pegasus_pegasus_3.png",
+		"pegasus_pegasus_5.png"
 	},
 	[2] = {
-		"pegasus_horse_1.png",
-		"pegasus_horse_5.png"
+		"pegasus_pegasus_1.png",
+		"pegasus_pegasus_5.png"
 	},
 	[3] = {
-		"pegasus_horse_2.png",
-		"pegasus_horse_1.png"
+		"pegasus_pegasus_2.png",
+		"pegasus_pegasus_1.png"
 	},
 	[4] = {
-		"pegasus_horse_2.png",
-		"pegasus_horse_1.png"
+		"pegasus_pegasus_2.png",
+		"pegasus_pegasus_1.png"
 	},
 	[5] = {
-		"pegasus_horse_2.png",
-		"pegasus_horse_1.png"
+		"pegasus_pegasus_2.png",
+		"pegasus_pegasus_1.png"
 	}
 }
 
@@ -161,16 +161,16 @@ end
 
 -- Definition
 
-creatura.register_mob("pegasus:horse", {
+creatura.register_mob("pegasus:pegasus", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
-	mesh = "pegasus_horse.b3d",
+	mesh = "pegasus_pegasus.b3d",
 	textures = {
-		"pegasus_horse_1.png",
-		"pegasus_horse_2.png",
-		"pegasus_horse_3.png",
-		"pegasus_horse_4.png",
-		"pegasus_horse_5.png"
+		"pegasus_pegasus_1.png",
+		"pegasus_pegasus_2.png",
+		"pegasus_pegasus_3.png",
+		"pegasus_pegasus_4.png",
+		"pegasus_pegasus_5.png"
 	},
 	makes_footstep_sound = true,
 
@@ -187,17 +187,17 @@ creatura.register_mob("pegasus:horse", {
 	sounds = {
 		alter_child_pitch = true,
 		random = {
-			name = "pegasus_horse_idle",
+			name = "pegasus_pegasus_idle",
 			gain = 1.0,
 			distance = 8
 		},
 		hurt = {
-			name = "pegasus_horse_hurt",
+			name = "pegasus_pegasus_hurt",
 			gain = 1.0,
 			distance = 8
 		},
 		death = {
-			name = "pegasus_horse_death",
+			name = "pegasus_pegasus_death",
 			gain = 1.0,
 			distance = 8
 		}
@@ -245,7 +245,7 @@ creatura.register_mob("pegasus:horse", {
 		pegasus.mob_ai.basic_breed,
 		pegasus.mob_ai.basic_flee,
 		{
-			utility = "pegasus:horse_tame",
+			utility = "pegasus:pegasus_tame",
 			get_score = function(self)
 				local rider = not self.owner and self.rider
 				if rider
@@ -256,7 +256,7 @@ creatura.register_mob("pegasus:horse", {
 			end
 		},
 		{
-			utility = "pegasus:horse_ride",
+			utility = "pegasus:pegasus_ride",
 			get_score = function(self)
 				if not self.owner then return 0 end
 				local owner = self.owner and minetest.get_player_by_name(self.owner)
@@ -276,7 +276,7 @@ creatura.register_mob("pegasus:horse", {
 			self.saddled = self:memorize("saddled", true)
 			local texture = self.object:get_properties().textures[1]
 			self.object:set_properties({
-				textures = {texture .. "^pegasus_horse_saddle.png"}
+				textures = {texture .. "^pegasus_pegasus_saddle.png"}
 			})
 			self.drops = {
 				{name = "pegasus:leather", chance = 2, min = 1, max = 4},
@@ -386,7 +386,7 @@ creatura.register_mob("pegasus:horse", {
 
 		if clicker:get_player_control().sneak
 		and owner then
-			minetest.show_formspec(name, "pegasus:horse_forms", get_form(self, name))
+			minetest.show_formspec(name, "pegasus:pegasus_forms", get_form(self, name))
 			form_obj[name] = self.object
 		elseif wielded_name == "" then
 			pegasus.mount(self, clicker, {rot = {x = -65, y = 180, z = 0}, pos = {x = 0, y = 0.75, z = 0.6}})
@@ -419,7 +419,7 @@ creatura.register_mob("pegasus:horse", {
 	end
 })
 
-creatura.register_spawn_item("pegasus:horse", {
+creatura.register_spawn_item("pegasus:pegasus", {
 	col1 = "ebdfd8",
 	col2 = "653818"
 })

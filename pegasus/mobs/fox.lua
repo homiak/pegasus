@@ -31,18 +31,10 @@ creatura.register_mob("pegasus:fox", {
 		run = {range = {x = 41, y = 59}, speed = 45, frame_blend = 0.3, loop = true},
 	},
 	follow = {
-		"pegasus:rat_raw",
 		"pegasus:mutton_raw",
 		"pegasus:beef_raw",
 		"pegasus:porkchop_raw",
 		"pegasus:poultry_raw"
-	},
-
-	-- Behavior Parameters
-	is_skittish_mob = true,
-	attack_list = {
-		"pegasus:chicken",
-		"pegasus:rat"
 	},
 
 	-- pegasus Props

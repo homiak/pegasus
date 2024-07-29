@@ -212,25 +212,6 @@ minetest.register_craft({
 	output = "pegasus:mutton_cooked",
 })
 
-minetest.register_craftitem("pegasus:rat_raw", {
-	description = "Raw Rat",
-	inventory_image = "pegasus_rat_raw.png",
-	on_use = minetest.item_eat(1),
-	groups = {flammable = 2, meat = 1, food_meat = 1},
-})
-
-minetest.register_craftitem("pegasus:rat_cooked", {
-	description = "Cooked Rat",
-	inventory_image = "pegasus_rat_cooked.png",
-	on_use = minetest.item_eat(2),
-	groups = {flammable = 2, meat = 1, food_meat = 1},
-})
-
-minetest.register_craft({
-	type  =  "cooking",
-	recipe  = "pegasus:rat_raw",
-	output = "pegasus:rat_cooked",
-})
 
 minetest.register_craftitem("pegasus:porkchop_raw", {
 	description = "Raw Porkchop",
@@ -290,12 +271,6 @@ minetest.register_craft({
 	type  =  "cooking",
 	recipe  = "pegasus:venison_raw",
 	output = "pegasus:venison_cooked",
-})
-
-register_egg("pegasus:chicken_egg", {
-	description = "Chicken Egg",
-	inventory_image = "pegasus_egg",
-	mob = "pegasus:chicken"
 })
 
 register_egg("pegasus:turkey_egg", {
