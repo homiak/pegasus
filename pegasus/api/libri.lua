@@ -32,14 +32,12 @@ local pages = {}
 local generate_mobs = {
 
 	["pegasus:pegasus"] = "pegasus",
-	["pegasus:pig"] = "Pig",
 }
 
 
 local spawn_biomes = {
 
 	["pegasus:pegasus"] = "grassland",
-	["pegasus:pig"] = "temperate",
 }
 
 -----------

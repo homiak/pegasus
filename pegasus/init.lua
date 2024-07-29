@@ -104,14 +104,11 @@ dofile(path.."/craftitems.lua")
 
 pegasus.animals = {
 	"pegasus:pegasus",
-	"pegasus:pig",
 }
 
 dofile(path.."/api/api.lua")
 
 load_file(path .. "/mobs", "pegasus.lua")
-load_file(path .. "/mobs", "opossum.lua")
-load_file(path .. "/mobs", "pig.lua")
 
 if minetest.settings:get_bool("spawn_mobs", true) then
 	dofile(path.."/api/spawning.lua")

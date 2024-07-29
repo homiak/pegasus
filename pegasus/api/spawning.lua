@@ -23,22 +23,6 @@ local predator_spawn_chance = tonumber(minetest.settings:get("pegasus_predator_c
 
 -- Get Biomes --
 
-
-
-local pig_biomes = {}
-
-local function insert_all(tbl, tbl2)
-	for i = 1, #tbl2 do
-		table.insert(tbl, tbl2[i])
-	end
-end
-
-minetest.register_on_mods_loaded(function()
-	insert_all(pig_biomes, pegasus.registered_biome_groups["temperate"].biomes)
-	insert_all(pig_biomes, pegasus.registered_biome_groups["boreal"].biomes)
-end)
-
-
 creatura.register_abm_spawn("pegasus:pegasus", {
 	chance = common_spawn_chance,
 	spawn_active = true,

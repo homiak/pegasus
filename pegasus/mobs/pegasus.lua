@@ -4,7 +4,7 @@
 
 local random = math.random
 
--- pegasus Inventory
+-- Pegasus Inventory
 
 local form_obj = {}
 
@@ -116,25 +116,19 @@ local patterns = {
 
 local avlbl_colors = {
 	[1] = {
-		"pegasus_pegasus_2.png",
-		"pegasus_pegasus_3.png",
-		"pegasus_pegasus_5.png"
+		"pegasus.png"
 	},
 	[2] = {
-		"pegasus_pegasus_1.png",
-		"pegasus_pegasus_5.png"
+		"pegasus.png",
 	},
 	[3] = {
-		"pegasus_pegasus_2.png",
-		"pegasus_pegasus_1.png"
+		"pegasus.png"
 	},
 	[4] = {
-		"pegasus_pegasus_2.png",
-		"pegasus_pegasus_1.png"
+		"pegasus.png"
 	},
 	[5] = {
-		"pegasus_pegasus_2.png",
-		"pegasus_pegasus_1.png"
+		"pegasus.png"
 	}
 }
 
@@ -166,11 +160,7 @@ creatura.register_mob("pegasus:pegasus", {
 	visual_size = {x = 10, y = 10},
 	mesh = "pegasus_pegasus.b3d",
 	textures = {
-		"pegasus_pegasus_1.png",
-		"pegasus_pegasus_2.png",
-		"pegasus_pegasus_3.png",
-		"pegasus_pegasus_4.png",
-		"pegasus_pegasus_5.png"
+		"pegasus.png",
 	},
 	makes_footstep_sound = true,
 
