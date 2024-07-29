@@ -1290,7 +1290,7 @@ creatura.register_utility("pegasus:pegasus_ride", function(self, player)
 		and vel.y < 1 then
 			_self.object:add_velocity({
 				x = 0,
-				y = _self.jump_power * 170,
+				y = _self.jump_power * 17,
 				z = 0
 			})
 		elseif not _self.touching_ground then
