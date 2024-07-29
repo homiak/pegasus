@@ -28,7 +28,6 @@ local book_pages = {
 			text = "pegasus_book_icon_next.png;btn_next;;true;false"
 		},
 	},
-
 	{
 		{ -- Main Page
 			element_type = "label",

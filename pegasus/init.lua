@@ -158,4 +158,3 @@ if convert_mobs_redo then
 	minetest.register_alias_force("mobs:nametag", "pegasus:nametag")
 end
 
-minetest.log("action", "[MOD] pegasus [0.6] loaded")
