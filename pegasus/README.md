@@ -1,17 +1,17 @@
 # Pegasus Mod for Minetest
 
-This mod adds pegasuss to the Minetest game world.
+This mod adds pegasi to the Minetest game world.
 
 ## Description
 
-The Pegasus Mod allows players to encounter, tame, and fly on majestic winged horses - pegasuss. These mythical creatures will add magic and new exploration possibilities to your Minetest world.
+The Pegasus Mod allows players to encounter, tame, and fly on majestic winged horses - pegasi. These mythical creatures will add magic and new exploration possibilities to your Minetest world.
 
 ## Features
 
 - Pegasus spawn in specific biomes
-- Ability to tame pegasuss
-- Flying on pegasuss
-- Unique sounds and animations for pegasuss
+- Ability to tame pegasi
+- Flying on pegasi
+- Unique sounds and animations for pegasi
 
 ## Installation
 
