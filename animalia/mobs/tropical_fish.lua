@@ -2,20 +2,20 @@
 -- Fish --
 ----------
 
-creatura.register_mob("animalia:tropical_fish", {
+creatura.register_mob("pegasus:tropical_fish", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
 	meshes = {
-		"animalia_clownfish.b3d",
-		"animalia_angelfish.b3d"
+		"pegasus_clownfish.b3d",
+		"pegasus_angelfish.b3d"
 	},
 	mesh_textures = {
 		{
-			"animalia_clownfish.png",
-			"animalia_blue_tang.png"
+			"pegasus_clownfish.png",
+			"pegasus_blue_tang.png"
 		},
 		{
-			"animalia_angelfish.png"
+			"pegasus_angelfish.png"
 		}
 	},
 
@@ -42,50 +42,50 @@ creatura.register_mob("animalia:tropical_fish", {
 	liquid_submergence = 1,
 	liquid_drag = 0,
 
-	-- Animalia Behaviors
+	-- pegasus Behaviors
 	is_aquatic_mob = true,
 
-	-- Animalia Props
+	-- pegasus Props
 	flee_puncher = false,
 	catch_with_net = true,
 	catch_with_lasso = false,
 
 	-- Functions
 	utility_stack = {
-		animalia.mob_ai.swim_wander
+		pegasus.mob_ai.swim_wander
 	},
 
 	activate_func = function(self)
-		animalia.initialize_api(self)
-		animalia.initialize_lasso(self)
+		pegasus.initialize_api(self)
+		pegasus.initialize_lasso(self)
 	end,
 
 	step_func = function(self)
-		animalia.step_timers(self)
-		animalia.do_growth(self, 60)
-		animalia.update_lasso_effects(self)
+		pegasus.step_timers(self)
+		pegasus.do_growth(self, 60)
+		pegasus.update_lasso_effects(self)
 	end,
 
 	death_func = function(self)
-		if self:get_utility() ~= "animalia:die" then
-			self:initiate_utility("animalia:die", self)
+		if self:get_utility() ~= "pegasus:die" then
+			self:initiate_utility("pegasus:die", self)
 		end
 	end,
 
 	on_rightclick = function(self, clicker)
-		if animalia.set_nametag(self, clicker) then
+		if pegasus.set_nametag(self, clicker) then
 			return
 		end
 	end,
 
-	on_punch = animalia.punch
+	on_punch = pegasus.punch
 })
 
-creatura.register_spawn_item("animalia:tropical_fish", {
+creatura.register_spawn_item("pegasus:tropical_fish", {
 	col1 = "e28821",
 	col2 = "f6e5d2"
 })
 
-animalia.alias_mob("animalia:clownfish", "animalia:tropical_fish")
-animalia.alias_mob("animalia:blue_tang", "animalia:tropical_fish")
-animalia.alias_mob("animalia:angelfish", "animalia:tropical_fish")
+pegasus.alias_mob("pegasus:clownfish", "pegasus:tropical_fish")
+pegasus.alias_mob("pegasus:blue_tang", "pegasus:tropical_fish")
+pegasus.alias_mob("pegasus:angelfish", "pegasus:tropical_fish")

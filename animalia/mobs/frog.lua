@@ -45,30 +45,30 @@ local animations = {
 
 local utility_stacks = {
 	{ -- Tree Frog
-		animalia.mob_ai.basic_wander,
-		animalia.mob_ai.swim_wander,
-		animalia.mob_ai.frog_seek_bug,
-		animalia.mob_ai.frog_breed,
-		animalia.mob_ai.basic_flee,
-		animalia.mob_ai.frog_flop,
-		animalia.mob_ai.frog_seek_water
+		pegasus.mob_ai.basic_wander,
+		pegasus.mob_ai.swim_wander,
+		pegasus.mob_ai.frog_seek_bug,
+		pegasus.mob_ai.frog_breed,
+		pegasus.mob_ai.basic_flee,
+		pegasus.mob_ai.frog_flop,
+		pegasus.mob_ai.frog_seek_water
 	},
 	{ -- Bull Frog
-		animalia.mob_ai.basic_wander,
-		animalia.mob_ai.swim_wander,
-		animalia.mob_ai.basic_seek_food,
-		animalia.mob_ai.basic_attack,
-		animalia.mob_ai.frog_breed,
-		animalia.mob_ai.frog_flop,
-		animalia.mob_ai.frog_seek_water
+		pegasus.mob_ai.basic_wander,
+		pegasus.mob_ai.swim_wander,
+		pegasus.mob_ai.basic_seek_food,
+		pegasus.mob_ai.basic_attack,
+		pegasus.mob_ai.frog_breed,
+		pegasus.mob_ai.frog_flop,
+		pegasus.mob_ai.frog_seek_water
 	},
 	{ -- Poison Dart Frog
-		animalia.mob_ai.basic_wander,
-		animalia.mob_ai.swim_wander,
-		animalia.mob_ai.frog_breed,
-		animalia.mob_ai.basic_flee,
-		animalia.mob_ai.frog_flop,
-		animalia.mob_ai.frog_seek_water
+		pegasus.mob_ai.basic_wander,
+		pegasus.mob_ai.swim_wander,
+		pegasus.mob_ai.frog_breed,
+		pegasus.mob_ai.basic_flee,
+		pegasus.mob_ai.frog_flop,
+		pegasus.mob_ai.frog_seek_water
 	}
 }
 
@@ -100,35 +100,35 @@ local follow = {
 		"butterflies:butterfly_red"
 	},
 	{
-		"animalia:rat_raw"
+		"pegasus:rat_raw"
 	},
 	{}
 }
 
-creatura.register_mob("animalia:frog", {
+creatura.register_mob("pegasus:frog", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
 	meshes = {
-		"animalia_frog.b3d",
-		"animalia_bull_frog.b3d",
-		"animalia_dart_frog.b3d"
+		"pegasus_frog.b3d",
+		"pegasus_bull_frog.b3d",
+		"pegasus_dart_frog.b3d"
 	},
-	child_mesh = "animalia_tadpole.b3d",
+	child_mesh = "pegasus_tadpole.b3d",
 	mesh_textures = {
 		{
-			"animalia_tree_frog.png"
+			"pegasus_tree_frog.png"
 		},
 		{
-			"animalia_bull_frog.png"
+			"pegasus_bull_frog.png"
 		},
 		{
-			"animalia_dart_frog_1.png",
-			"animalia_dart_frog_2.png",
-			"animalia_dart_frog_3.png"
+			"pegasus_dart_frog_1.png",
+			"pegasus_dart_frog_2.png",
+			"pegasus_dart_frog_3.png"
 		}
 	},
 	child_textures = {
-		"animalia_tadpole.png"
+		"pegasus_tadpole.png"
 	},
 	makes_footstep_sound = true,
 
@@ -155,7 +155,7 @@ creatura.register_mob("animalia:frog", {
 	bouyancy_multiplier = 0,
 	hydrodynamics_multiplier = 0.3,
 
-	-- Animalia Props
+	-- pegasus Props
 	flee_puncher = true,
 	catch_with_net = true,
 	catch_with_lasso = false,
@@ -175,7 +175,7 @@ creatura.register_mob("animalia:frog", {
 	end,
 
 	activate_func = function(self)
-		animalia.initialize_api(self)
+		pegasus.initialize_api(self)
 		self.trust = self:recall("trust") or {}
 
 		local mesh_no = self.mesh_no
@@ -209,9 +209,9 @@ creatura.register_mob("animalia:frog", {
 	end,
 
 	step_func = function(self)
-		animalia.step_timers(self)
-		animalia.head_tracking(self, 0.2, 0.2)
-		animalia.do_growth(self, 60)
+		pegasus.step_timers(self)
+		pegasus.head_tracking(self, 0.2, 0.2)
+		pegasus.do_growth(self, 60)
 		if self:timer(random(5, 15)) then
 			self:play_sound("random")
 		end
@@ -222,18 +222,18 @@ creatura.register_mob("animalia:frog", {
 	end,
 
 	death_func = function(self)
-		if self:get_utility() ~= "animalia:die" then
-			self:initiate_utility("animalia:die", self)
+		if self:get_utility() ~= "pegasus:die" then
+			self:initiate_utility("pegasus:die", self)
 		end
 	end,
 
 	on_rightclick = function(self, clicker)
 		if self.mesh_no ~= 2 then return end
-		if animalia.feed(self, clicker, false, true) then
-			animalia.add_trust(self, clicker, 1)
+		if pegasus.feed(self, clicker, false, true) then
+			pegasus.add_trust(self, clicker, 1)
 			return
 		end
-		if animalia.set_nametag(self, clicker) then
+		if pegasus.set_nametag(self, clicker) then
 			return
 		end
 	end,
@@ -245,13 +245,13 @@ creatura.register_mob("animalia:frog", {
 			self.trust[name] = 0
 			self:memorize("trust", self.trust)
 			if self.mesh_no == 3 then
-				animalia.set_player_effect(name, poison_effect, 3)
+				pegasus.set_player_effect(name, poison_effect, 3)
 			end
 		end
 	end
 })
 
-creatura.register_spawn_item("animalia:frog", {
+creatura.register_spawn_item("pegasus:frog", {
 	col1 = "67942e",
 	col2 = "294811"
 })

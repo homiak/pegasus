@@ -132,7 +132,7 @@ local function get_obstacle(pos, water)
 	end
 end
 
-function animalia.get_steering_context(self, goal, steer_dir, interest, danger, range)
+function pegasus.get_steering_context(self, goal, steer_dir, interest, danger, range)
 	local pos = self.object:get_pos()
 	if not pos then return end
 	pos = vec_round(pos)
@@ -161,8 +161,8 @@ end
 
 -- Obstacle Avoidance
 
-function animalia.obstacle_avoidance(self, goal, water)
-	local steer_method = water and creatura.get_context_small_aquatic or animalia.get_steering_context
+function pegasus.obstacle_avoidance(self, goal, water)
+	local steer_method = water and creatura.get_context_small_aquatic or pegasus.get_steering_context
 	local dir = creatura.calc_steering(self, goal, steer_method)
 
 	local lift_method = water and creatura.get_avoidance_lift_aquatic or creatura.get_avoidance_lift
@@ -174,7 +174,7 @@ end
 
 -- Methods
 
-creatura.register_movement_method("animalia:fly_wide", function(self)
+creatura.register_movement_method("pegasus:fly_wide", function(self)
 	local steer_to
 	local steer_int = 0
 	self:set_gravity(0)
@@ -207,7 +207,7 @@ end)
 
 -- Steering Methods
 
-creatura.register_movement_method("animalia:steer", function(self)
+creatura.register_movement_method("pegasus:steer", function(self)
 	local steer_to
 	local steer_int = 0
 
@@ -230,7 +230,7 @@ creatura.register_movement_method("animalia:steer", function(self)
 
 		-- Steering
 		steer_int = (steer_int > 0 and steer_int - _self.dtime) or 1 / max(vel, 1)
-		steer_to = steer_int <= 0 and animalia.obstacle_avoidance(_self, goal) or steer_to
+		steer_to = steer_int <= 0 and pegasus.obstacle_avoidance(_self, goal) or steer_to
 
 		-- Apply Movement
 		_self:turn_to(minetest.dir_to_yaw(steer_to or dir), turn_rate)
@@ -239,7 +239,7 @@ creatura.register_movement_method("animalia:steer", function(self)
 	return func
 end)
 
-creatura.register_movement_method("animalia:steer_no_gravity", function(self)
+creatura.register_movement_method("pegasus:steer_no_gravity", function(self)
 	local steer_to
 	local steer_int = 0
 
@@ -262,7 +262,7 @@ creatura.register_movement_method("animalia:steer_no_gravity", function(self)
 
 		-- Steering
 		steer_int = (steer_int > 0 and steer_int - _self.dtime) or 1 / max(vel, 1)
-		steer_to = steer_int <= 0 and animalia.obstacle_avoidance(_self, goal, _self.max_breath == 0) or steer_to
+		steer_to = steer_int <= 0 and pegasus.obstacle_avoidance(_self, goal, _self.max_breath == 0) or steer_to
 
 		-- Apply Movement
 		_self:turn_to(minetest.dir_to_yaw(steer_to or dir), turn_rate)
@@ -274,7 +274,7 @@ end)
 
 -- Simple Methods
 
-creatura.register_movement_method("animalia:move", function(self)
+creatura.register_movement_method("pegasus:move", function(self)
 	local radius = 2 -- Arrival Radius
 
 	self:set_gravity(-9.8)
@@ -299,7 +299,7 @@ creatura.register_movement_method("animalia:move", function(self)
 	return func
 end)
 
-creatura.register_movement_method("animalia:move_no_gravity", function(self)
+creatura.register_movement_method("pegasus:move_no_gravity", function(self)
 	local radius = 2 -- Arrival Radius
 
 	self:set_gravity(0)
@@ -329,7 +329,7 @@ end)
 -- Actions --
 -------------
 
-function animalia.action_walk(self, time, speed, animation, pos2)
+function pegasus.action_walk(self, time, speed, animation, pos2)
 	local timeout = time or 3
 	local speed_factor = speed or 0.5
 	local anim = animation or "walk"
@@ -354,7 +354,7 @@ function animalia.action_walk(self, time, speed, animation, pos2)
 
 		if timeout <= 0
 		or not safe
-		or mob:move_to(goal, "animalia:steer", speed_factor) then
+		or mob:move_to(goal, "pegasus:steer", speed_factor) then
 			mob:halt()
 			return true
 		end
@@ -367,7 +367,7 @@ function animalia.action_walk(self, time, speed, animation, pos2)
 	self:set_action(func)
 end
 
-function animalia.action_swim(self, time, speed, animation, pos2)
+function pegasus.action_swim(self, time, speed, animation, pos2)
 	local timeout = time or 3
 	local speed_factor = speed or 0.5
 	local anim = animation or "swim"
@@ -410,7 +410,7 @@ function animalia.action_swim(self, time, speed, animation, pos2)
 		local goal = vec_add(pos, vec_multi(steer_direction, mob.width + 2))
 
 		if timeout <= 0
-		or mob:move_to(goal, "animalia:steer_no_gravity", speed_factor) then
+		or mob:move_to(goal, "pegasus:steer_no_gravity", speed_factor) then
 			mob:halt()
 			return true
 		end
@@ -423,7 +423,7 @@ function animalia.action_swim(self, time, speed, animation, pos2)
 	self:set_action(func)
 end
 
-function animalia.action_fly(self, time, speed, animation, pos2, turn)
+function pegasus.action_fly(self, time, speed, animation, pos2, turn)
 	local timeout = time or 3
 	local speed_factor = speed or 0.5
 	local anim = animation or "fly"
@@ -465,7 +465,7 @@ function animalia.action_fly(self, time, speed, animation, pos2, turn)
 		local goal = vec_add(pos, vec_multi(steer_direction, mob.width + 2))
 
 		if timeout <= 0
-		or mob:move_to(goal, "animalia:steer_no_gravity", speed_factor) then
+		or mob:move_to(goal, "pegasus:steer_no_gravity", speed_factor) then
 			mob:halt()
 			return true
 		end
@@ -491,7 +491,7 @@ local latch_wall_offset = {
 }
 
 
-function animalia.action_latch(self)
+function pegasus.action_latch(self)
 	local pos = self.object:get_pos()
 	if not pos then return end
 
@@ -536,7 +536,7 @@ function animalia.action_latch(self)
 	self:set_action(func)
 end
 
-function animalia.action_pursue(self, target, timeout, method, speed_factor, anim)
+function pegasus.action_pursue(self, target, timeout, method, speed_factor, anim)
 	local timer = timeout or 4
 	local goal
 	local function func(_self)
@@ -567,7 +567,7 @@ function animalia.action_pursue(self, target, timeout, method, speed_factor, ani
 	self:set_action(func)
 end
 
-function animalia.action_melee(self, target)
+function pegasus.action_melee(self, target)
 	local stage = 1
 	local is_animated = self.animations["melee"] ~= nil
 	local timeout = 1
@@ -613,7 +613,7 @@ function animalia.action_melee(self, target)
 	self:set_action(func)
 end
 
-function animalia.action_play(self, target)
+function pegasus.action_play(self, target)
 	local stage = 1
 	local is_animated = self.animations["play"] ~= nil
 	local timeout = 1
@@ -636,7 +636,7 @@ function animalia.action_play(self, target)
 
 		if stage == 2
 		and dist < mob.width + 1 then
-			animalia.add_trust(mob, target, 1)
+			pegasus.add_trust(mob, target, 1)
 
 			stage = 3
 		end
@@ -653,7 +653,7 @@ function animalia.action_play(self, target)
 	self:set_action(func)
 end
 
-function animalia.action_float(self, time, anim)
+function pegasus.action_float(self, time, anim)
 	local timer = time
 	local function func(_self)
 		_self:set_gravity(-0.14)
@@ -667,7 +667,7 @@ function animalia.action_float(self, time, anim)
 	self:set_action(func)
 end
 
-function animalia.action_dive_attack(self, target, timeout)
+function pegasus.action_dive_attack(self, target, timeout)
 	timeout = timeout or 12
 	local timer = timeout
 	local width = self.width or 0.5
@@ -692,9 +692,9 @@ function animalia.action_dive_attack(self, target, timeout)
 		end
 
 		if dist > width + 1 then
-			local method = "animalia:move_no_gravity"
+			local method = "pegasus:move_no_gravity"
 			if dist > 4 then
-				method = "animalia:steer_no_gravity"
+				method = "pegasus:steer_no_gravity"
 			end
 			_self:move_to(tgt_pos, method, 1)
 		elseif not punch_init then
@@ -707,7 +707,7 @@ end
 
 -- Behaviors
 
-creatura.register_utility("animalia:die", function(self)
+creatura.register_utility("pegasus:die", function(self)
 	local timer = 1.5
 	local init = false
 	local function func(_self)
@@ -751,7 +751,7 @@ end)
 
 -- Basic --
 
-creatura.register_utility("animalia:basic_idle", function(self, timeout, anim)
+creatura.register_utility("pegasus:basic_idle", function(self, timeout, anim)
 	local timer = timeout or 1
 	local init = false
 	local function func(mob)
@@ -766,7 +766,7 @@ creatura.register_utility("animalia:basic_idle", function(self, timeout, anim)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:basic_wander", function(self)
+creatura.register_utility("pegasus:basic_wander", function(self)
 	local idle_max = 4
 	local move_chance = 3
 	local graze_chance = 16
@@ -793,15 +793,15 @@ creatura.register_utility("animalia:basic_wander", function(self)
 					z = pos.z + cos(yaw) * mob.width
 				}
 
-				if animalia.eat_turf(mob, turf_pos) then
-					animalia.add_break_particle(turf_pos)
+				if pegasus.eat_turf(mob, turf_pos) then
+					pegasus.add_break_particle(turf_pos)
 					creatura.action_idle(mob, 1, "eat")
 				end
 			end
 
 			-- Herding Behavior
 			if mob.is_herding_mob then
-				center = animalia.get_average_pos(get_group_positions(mob)) or pos
+				center = pegasus.get_average_pos(get_group_positions(mob)) or pos
 
 				if vec_dist(pos, center) < range / 4 then
 					center = false
@@ -821,7 +821,7 @@ creatura.register_utility("animalia:basic_wander", function(self)
 
 		if not mob:get_action() then
 			if random(move_chance) < 2 then
-				animalia.action_walk(mob, 3, 0.2, "walk", center)
+				pegasus.action_walk(mob, 3, 0.2, "walk", center)
 				center = false
 			else
 				creatura.action_idle(mob, random(idle_max), "stand")
@@ -831,7 +831,7 @@ creatura.register_utility("animalia:basic_wander", function(self)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:basic_seek_pos", function(self, pos2, timeout)
+creatura.register_utility("pegasus:basic_seek_pos", function(self, pos2, timeout)
 	timeout = timeout or 3
 	local function func(mob)
 		local pos = mob.object:get_pos()
@@ -839,7 +839,7 @@ creatura.register_utility("animalia:basic_seek_pos", function(self, pos2, timeou
 
 		if not mob:get_action() then
 			local anim = (mob.animations["run"] and "run") or "walk"
-			animalia.action_walk(mob, 1, 1, anim, pos2)
+			pegasus.action_walk(mob, 1, 1, anim, pos2)
 		end
 
 		timeout = timeout - mob.dtime
@@ -850,10 +850,10 @@ creatura.register_utility("animalia:basic_seek_pos", function(self, pos2, timeou
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:basic_seek_food", function(self)
+creatura.register_utility("pegasus:basic_seek_food", function(self)
 	local timeout = 3
 
-	local food = animalia.get_dropped_food(self)
+	local food = pegasus.get_dropped_food(self)
 	local food_reached = false
 	local function func(mob)
 		local pos = mob.object:get_pos()
@@ -867,13 +867,13 @@ creatura.register_utility("animalia:basic_seek_food", function(self)
 
 			local anim = (mob.animations["eat"] and "eat") or "stand"
 			creatura.action_idle(mob, 1, anim)
-			animalia.eat_dropped_item(mob, food)
+			pegasus.eat_dropped_item(mob, food)
 		end
 
 		if not mob:get_action() then
 			if food_reached then return true, 10 end
 			local anim = (mob.animations["run"] and "run") or "walk"
-			animalia.action_walk(mob, 1, 1, anim, food_pos)
+			pegasus.action_walk(mob, 1, 1, anim, food_pos)
 		end
 
 		timeout = timeout - mob.dtime
@@ -884,10 +884,10 @@ creatura.register_utility("animalia:basic_seek_food", function(self)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:basic_seek_crop", function(self)
+creatura.register_utility("pegasus:basic_seek_crop", function(self)
 	local timeout = 12
 
-	local crop = animalia.find_crop(self)
+	local crop = pegasus.find_crop(self)
 	local crop_reached = false
 	local function func(mob)
 		local pos = mob.object:get_pos()
@@ -900,12 +900,12 @@ creatura.register_utility("animalia:basic_seek_crop", function(self)
 
 			local anim = (mob.animations["eat"] and "eat") or "stand"
 			creatura.action_idle(mob, 1, anim)
-			animalia.eat_crop(mob, crop)
+			pegasus.eat_crop(mob, crop)
 		end
 
 		if not mob:get_action() then
 			if crop_reached then return true, 10 end
-			animalia.action_walk(mob, 2, 0.5, "walk", crop)
+			pegasus.action_walk(mob, 2, 0.5, "walk", crop)
 		end
 
 		timeout = timeout - mob.dtime
@@ -916,19 +916,19 @@ creatura.register_utility("animalia:basic_seek_crop", function(self)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:basic_flee", function(self, target)
+creatura.register_utility("pegasus:basic_flee", function(self, target)
 	local function func(mob)
 		local pos, target_pos = mob.object:get_pos(), target:get_pos()
 		if not pos or not target_pos then return true end
 
 		if not mob:get_action() then
-			animalia.action_walk(mob, 0.5, 1, "run", vec_add(pos, vec_dir(target_pos, pos)))
+			pegasus.action_walk(mob, 0.5, 1, "run", vec_add(pos, vec_dir(target_pos, pos)))
 		end
 	end
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:basic_attack", function(self, target)
+creatura.register_utility("pegasus:basic_attack", function(self, target)
 	local has_attacked = false
 	local has_warned = not self.warn_before_attack
 	local function func(mob)
@@ -950,16 +950,16 @@ creatura.register_utility("animalia:basic_attack", function(self, target)
 					local yaw_to_target = minetest.dir_to_yaw(vec_dir(pos, target_pos))
 
 					if abs(diff(yaw, yaw_to_target)) > pi / 2 then
-						animalia.action_pursue(mob, target)
+						pegasus.action_pursue(mob, target)
 					else
 						creatura.action_idle(mob, 0.5, "warn")
 					end
 					return
 				else
-					animalia.action_pursue(mob, target, 0.5)
+					pegasus.action_pursue(mob, target, 0.5)
 				end
 			else
-				animalia.action_melee(mob, target)
+				pegasus.action_melee(mob, target)
 				has_attacked = true
 			end
 		end
@@ -967,8 +967,8 @@ creatura.register_utility("animalia:basic_attack", function(self, target)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:basic_breed", function(self)
-	local mate = animalia.get_nearby_mate(self, self.name)
+creatura.register_utility("pegasus:basic_breed", function(self)
+	local mate = pegasus.get_nearby_mate(self, self.name)
 
 	local timer = 0
 	local function func(mob)
@@ -988,7 +988,7 @@ creatura.register_utility("animalia:basic_breed", function(self)
 			mate_entity.breeding = mate_entity:memorize("breeding", false)
 			mate_entity.breeding_cooldown = mate_entity:memorize("breeding_cooldown", 300)
 
-			animalia.particle_spawner(pos, "heart.png", "float")
+			pegasus.particle_spawner(pos, "heart.png", "float")
 
 			for _ = 1, mob.birth_count or 1 do
 				if mob.add_child then
@@ -997,15 +997,15 @@ creatura.register_utility("animalia:basic_breed", function(self)
 					local object = minetest.add_entity(pos, mob.name)
 					local ent = object:get_luaentity()
 					ent.growth_scale = 0.7
-					animalia.initialize_api(ent)
-					animalia.protect_from_despawn(ent)
+					pegasus.initialize_api(ent)
+					pegasus.protect_from_despawn(ent)
 				end
 			end
 			return true, 60
 		end
 
 		if not mob:get_action() then
-			animalia.action_pursue(mob, mate)
+			pegasus.action_pursue(mob, mate)
 		end
 	end
 	self:set_utility(func)
@@ -1013,7 +1013,7 @@ end)
 
 -- Swim --
 
-creatura.register_utility("animalia:swim_wander", function(self)
+creatura.register_utility("pegasus:swim_wander", function(self)
 	local move_chance = 2
 	local idle_max = 4
 
@@ -1026,23 +1026,23 @@ creatura.register_utility("animalia:swim_wander", function(self)
 
 			if not mob.idle_in_water
 			or random(move_chance) < 2 then
-				animalia.action_swim(mob, 0.5)
+				pegasus.action_swim(mob, 0.5)
 			else
-				animalia.action_float(mob, random(idle_max), "float")
+				pegasus.action_float(mob, random(idle_max), "float")
 			end
 		end
 	end
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:swim_seek_land", function(self)
+creatura.register_utility("pegasus:swim_seek_land", function(self)
 	local land_pos
 
 	self:set_gravity(-9.8)
 	local function func(mob)
 		if not land_pos then
 			for i = 0, 330, 30 do
-				land_pos = animalia.find_collision(mob, yaw2dir(rad(i)))
+				land_pos = pegasus.find_collision(mob, yaw2dir(rad(i)))
 
 				if land_pos then
 					land_pos.y = land_pos.y + 1
@@ -1077,7 +1077,7 @@ end)
 
 -- Fly --
 
-creatura.register_utility("animalia:fly_wander", function(self, turn_rate)
+creatura.register_utility("pegasus:fly_wander", function(self, turn_rate)
 	local move_chance = 2
 	local idle_max = 4
 
@@ -1085,16 +1085,16 @@ creatura.register_utility("animalia:fly_wander", function(self, turn_rate)
 		if not mob:get_action() then
 			if not mob.idle_while_flying
 			or random(move_chance) < 2 then
-				animalia.action_fly(mob, 1, 0.5, "fly", nil, turn_rate)
+				pegasus.action_fly(mob, 1, 0.5, "fly", nil, turn_rate)
 			else
-				animalia.action_hover(mob, random(idle_max), "hover")
+				pegasus.action_hover(mob, random(idle_max), "hover")
 			end
 		end
 	end
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:fly_seek_home", function(self)
+creatura.register_utility("pegasus:fly_seek_home", function(self)
 	local home = self.home_position
 	local roost = self.roost_action or creatura.action_idle
 	local is_home = self.is_roost or function(pos, home_pos)
@@ -1114,13 +1114,13 @@ creatura.register_utility("animalia:fly_seek_home", function(self)
 				roost(mob, 1)
 				return
 			end
-			creatura.action_move(mob, home, 3, "animalia:steer_no_gravity", 1, "fly")
+			creatura.action_move(mob, home, 3, "pegasus:steer_no_gravity", 1, "fly")
 		end
 	end
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:fly_seek_land", function(self)
+creatura.register_utility("pegasus:fly_seek_land", function(self)
 	local landed = false
 	local function func(_self)
 		if not _self:get_action() then
@@ -1133,7 +1133,7 @@ creatura.register_utility("animalia:fly_seek_land", function(self)
 				if pos2 then
 					local dist2floor = creatura.sensor_floor(_self, 10, true)
 					pos2.y = pos2.y - dist2floor
-					creatura.action_move(_self, pos2, 3, "animalia:move_no_gravity", 0.6, "fly")
+					creatura.action_move(_self, pos2, 3, "pegasus:move_no_gravity", 0.6, "fly")
 				end
 			end
 		end
@@ -1141,10 +1141,10 @@ creatura.register_utility("animalia:fly_seek_land", function(self)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:fly_seek_food", function(self)
+creatura.register_utility("pegasus:fly_seek_food", function(self)
 	local timeout = 3
 
-	local food = animalia.get_dropped_food(self)
+	local food = pegasus.get_dropped_food(self)
 	local food_reached = false
 	local function func(mob)
 		local pos = mob.object:get_pos()
@@ -1158,12 +1158,12 @@ creatura.register_utility("animalia:fly_seek_food", function(self)
 
 			local anim = (mob.animations["eat"] and "eat") or "stand"
 			creatura.action_idle(mob, 1, anim)
-			animalia.eat_dropped_item(mob, food)
+			pegasus.eat_dropped_item(mob, food)
 		end
 
 		if not mob:get_action() then
 			if food_reached then return true, 10 end
-			animalia.action_fly(mob, 1, 1, "fly", food_pos, 3)
+			pegasus.action_fly(mob, 1, 1, "fly", food_pos, 3)
 		end
 
 		timeout = timeout - mob.dtime
@@ -1176,7 +1176,7 @@ end)
 
 -- Horse --
 
-creatura.register_utility("animalia:horse_tame", function(self)
+creatura.register_utility("pegasus:horse_tame", function(self)
 	local trust = 5
 	local player = self.rider
 	local player_props = player and player:get_properties()
@@ -1205,12 +1205,12 @@ creatura.register_utility("animalia:horse_tame", function(self)
 
 		if trust >= 10 then -- Tame
 			_self.owner = _self:memorize("owner", player:get_player_name())
-			animalia.protect_from_despawn(_self)
-			animalia.mount(_self, player)
-			animalia.particle_spawner(pos, "creatura_particle_green.png", "float")
+			pegasus.protect_from_despawn(_self)
+			pegasus.mount(_self, player)
+			pegasus.particle_spawner(pos, "creatura_particle_green.png", "float")
 		elseif trust <= 0 then -- Fail
-			animalia.mount(_self, player)
-			animalia.particle_spawner(pos, "creatura_particle_red.png", "float")
+			pegasus.mount(_self, player)
+			pegasus.particle_spawner(pos, "creatura_particle_red.png", "float")
 		end
 
 		-- Actions
@@ -1218,21 +1218,21 @@ creatura.register_utility("animalia:horse_tame", function(self)
 			if random(3) < 2 then
 				creatura.action_idle(_self, 0.5, "punch_aoe")
 			else
-				animalia.action_walk(_self, 2, 0.75, "run")
+				pegasus.action_walk(_self, 2, 0.75, "run")
 			end
 		end
 
 		-- Dismount
 		if not player
 		or player:get_player_control().sneak then
-			animalia.mount(_self, player)
+			pegasus.mount(_self, player)
 			return true
 		end
 	end
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:horse_ride", function(self, player)
+creatura.register_utility("pegasus:horse_ride", function(self, player)
 	local player_props = player and player:get_properties()
 	if not player_props then return end
 	local player_size = player_props.visual_size
@@ -1260,7 +1260,7 @@ creatura.register_utility("animalia:horse_ride", function(self, player)
 
 		if control.sneak
 		or not _self.rider then
-			animalia.mount(_self, player)
+			pegasus.mount(_self, player)
 			return true
 		end
 
@@ -1308,7 +1308,7 @@ creatura.register_utility("animalia:horse_ride", function(self, player)
 		local yaw = _self.object:get_yaw()
 
 		_self.head_tracking = nil
-		animalia.move_head(_self, tyaw, 0)
+		pegasus.move_head(_self, tyaw, 0)
 
 		if speed_x > 0 and control.left then tyaw = tyaw + pi * 0.25 end
 		if speed_x > 0 and control.right then tyaw = tyaw - pi * 0.25 end
@@ -1324,7 +1324,7 @@ end)
 
 -- Eagle --
 
-creatura.register_utility("animalia:eagle_attack", function(self, target)
+creatura.register_utility("pegasus:eagle_attack", function(self, target)
 	local function func(mob)
 		local pos = mob.object:get_pos()
 		local _, is_visible, target_pos = mob:get_target(target)
@@ -1340,11 +1340,11 @@ creatura.register_utility("animalia:eagle_attack", function(self, target)
 			local dist = vec_dist(pos, vantage_pos)
 
 			if dist > 8 then
-				animalia.action_fly(mob, 1, 1, "fly", vantage_pos, 2)
+				pegasus.action_fly(mob, 1, 1, "fly", vantage_pos, 2)
 			elseif not is_visible then
-				animalia.action_fly(mob, 1, 0.5, "glide", vantage_pos, 4)
+				pegasus.action_fly(mob, 1, 0.5, "glide", vantage_pos, 4)
 			else
-				animalia.action_dive_attack(mob, target, 6)
+				pegasus.action_dive_attack(mob, target, 6)
 			end
 		end
 	end
@@ -1353,7 +1353,7 @@ end)
 
 -- Cat --
 
-creatura.register_utility("animalia:cat_seek_vessel", function(self)
+creatura.register_utility("pegasus:cat_seek_vessel", function(self)
 	local timeout = 12
 
 	local vessel
@@ -1387,7 +1387,7 @@ creatura.register_utility("animalia:cat_seek_vessel", function(self)
 		if not mob:get_action() then
 			if vessel_reached then return true end
 
-			animalia.action_walk(mob, 1, 1, "run", vessel)
+			pegasus.action_walk(mob, 1, 1, "run", vessel)
 		end
 
 		timeout = timeout - mob.dtime
@@ -1398,7 +1398,7 @@ creatura.register_utility("animalia:cat_seek_vessel", function(self)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:cat_follow_owner", function(self, player)
+creatura.register_utility("pegasus:cat_follow_owner", function(self, player)
 	local timeout = 6
 	local attack_chance = 6
 
@@ -1413,10 +1413,10 @@ creatura.register_utility("animalia:cat_follow_owner", function(self, player)
 			local dist = vec_dist(pos, target_pos)
 
 			if dist > mob.width + 0.5 then
-				animalia.action_pursue(mob, owner)
+				pegasus.action_pursue(mob, owner)
 			else
 				if random(attack_chance) < 2 then
-					animalia.action_melee(mob, owner)
+					pegasus.action_melee(mob, owner)
 				else
 					creatura.action_idle(mob, 1)
 				end
@@ -1431,7 +1431,7 @@ creatura.register_utility("animalia:cat_follow_owner", function(self, player)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:cat_play_with_owner", function(self)
+creatura.register_utility("pegasus:cat_play_with_owner", function(self)
 	local timeout = 6
 	--local attack_chance = 6
 
@@ -1444,7 +1444,7 @@ creatura.register_utility("animalia:cat_play_with_owner", function(self)
 		local item = owner:get_wielded_item()
 		local item_name = item and item:get_name()
 
-		if item_name ~= "animalia:cat_toy" then return true, 5 end
+		if item_name ~= "pegasus:cat_toy" then return true, 5 end
 
 		local pos, target_pos = mob.object:get_pos(), owner:get_pos()
 		if not pos or not target_pos then return true end
@@ -1454,9 +1454,9 @@ creatura.register_utility("animalia:cat_play_with_owner", function(self)
 			local dist = vec_dist(pos, target_pos)
 
 			if dist > mob.width + 0.5 then
-				animalia.action_pursue(mob, owner)
+				pegasus.action_pursue(mob, owner)
 			else
-				animalia.action_play(mob, owner)
+				pegasus.action_play(mob, owner)
 				has_played = true
 			end
 		end
@@ -1484,7 +1484,7 @@ local function get_bug_pos(self)
 	return #food > 0 and food[1]
 end
 
-creatura.register_utility("animalia:frog_seek_bug", function(self)
+creatura.register_utility("pegasus:frog_seek_bug", function(self)
 	local timeout = 12
 
 	local bug = get_bug_pos(self)
@@ -1502,7 +1502,7 @@ creatura.register_utility("animalia:frog_seek_bug", function(self)
 			local frame = floor(dist * 10)
 
 			self.object:set_yaw(dir2yaw(dir))
-			animalia.move_head(self, dir2yaw(dir), dir.y)
+			pegasus.move_head(self, dir2yaw(dir), dir.y)
 			creatura.action_idle(self, 0.4, "tongue_" .. frame)
 
 			minetest.remove_node(bug)
@@ -1510,7 +1510,7 @@ creatura.register_utility("animalia:frog_seek_bug", function(self)
 
 		if not mob:get_action() then
 			if bug_reached then return true, 10 end
-			animalia.action_walk(mob, 2, 0.5, "walk", bug)
+			pegasus.action_walk(mob, 2, 0.5, "walk", bug)
 		end
 
 		timeout = timeout - mob.dtime
@@ -1535,10 +1535,10 @@ local function grow_crop(crop)
 	end
 end
 
-creatura.register_utility("animalia:opossum_seek_crop", function(self)
+creatura.register_utility("pegasus:opossum_seek_crop", function(self)
 	local timeout = 12
 
-	local crop = animalia.find_crop(self)
+	local crop = pegasus.find_crop(self)
 	local crop_reached = false
 	local function func(mob)
 		local pos = mob.object:get_pos()
@@ -1555,7 +1555,7 @@ creatura.register_utility("animalia:opossum_seek_crop", function(self)
 
 		if not mob:get_action() then
 			if crop_reached then return true, 10 end
-			animalia.action_walk(mob, 2, 0.5, "walk", crop)
+			pegasus.action_walk(mob, 2, 0.5, "walk", crop)
 		end
 
 		timeout = timeout - mob.dtime
@@ -1598,7 +1598,7 @@ local function take_food_from_chest(self, pos)
 				if group:match("food_") then
 					stack:take_item()
 					inv:set_stack("main", i, stack)
-					animalia.add_food_particle(self, item_name)
+					pegasus.add_food_particle(self, item_name)
 					return true
 				end
 			end
@@ -1606,7 +1606,7 @@ local function take_food_from_chest(self, pos)
 	end
 end
 
-creatura.register_utility("animalia:rat_seek_chest", function(self)
+creatura.register_utility("pegasus:rat_seek_chest", function(self)
 	local timeout = 12
 
 	local chest = find_chest(self)
@@ -1626,7 +1626,7 @@ creatura.register_utility("animalia:rat_seek_chest", function(self)
 
 		if not mob:get_action() then
 			if chest_reached then return true, 10 end
-			animalia.action_walk(mob, 2, 0.5, "walk", chest)
+			pegasus.action_walk(mob, 2, 0.5, "walk", chest)
 		end
 
 		timeout = timeout - mob.dtime
@@ -1639,7 +1639,7 @@ end)
 
 -- Tamed --
 
-creatura.register_utility("animalia:tamed_idle", function(self)
+creatura.register_utility("pegasus:tamed_idle", function(self)
 	local function func(mob)
 		if not mob.owner or mob.order ~= "stay" then return true end
 
@@ -1650,7 +1650,7 @@ creatura.register_utility("animalia:tamed_idle", function(self)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("animalia:tamed_follow_owner", function(self, player)
+creatura.register_utility("pegasus:tamed_follow_owner", function(self, player)
 	local function func(mob)
 		local owner = player or (mob.owner and minetest.get_player_by_name(mob.owner))
 		if not owner then return true end
@@ -1662,7 +1662,7 @@ creatura.register_utility("animalia:tamed_follow_owner", function(self, player)
 			local dist = vec_dist(pos, target_pos)
 
 			if dist > mob.width + 1 then
-				animalia.action_pursue(mob, owner)
+				pegasus.action_pursue(mob, owner)
 			else
 				creatura.action_idle(mob, 1)
 			end
@@ -1675,18 +1675,18 @@ end)
 -- Mob AI --
 -------------
 
-animalia.mob_ai = {}
+pegasus.mob_ai = {}
 
-animalia.mob_ai.basic_wander = {
-	utility = "animalia:basic_wander",
+pegasus.mob_ai.basic_wander = {
+	utility = "pegasus:basic_wander",
 	step_delay = 0.25,
 	get_score = function(self)
 		return 0.1, {self}
 	end
 }
 
-animalia.mob_ai.basic_flee = {
-	utility = "animalia:basic_flee",
+pegasus.mob_ai.basic_flee = {
+	utility = "pegasus:basic_flee",
 	get_score = function(self)
 		local puncher = self._puncher
 		if puncher
@@ -1698,26 +1698,26 @@ animalia.mob_ai.basic_flee = {
 	end
 }
 
-animalia.mob_ai.basic_breed = {
-	utility = "animalia:basic_breed",
+pegasus.mob_ai.basic_breed = {
+	utility = "pegasus:basic_breed",
 	get_score = function(self)
 		if self.breeding
-		and animalia.get_nearby_mate(self, self.name) then
+		and pegasus.get_nearby_mate(self, self.name) then
 			return 0.6, {self}
 		end
 		return 0
 	end
 }
 
-animalia.mob_ai.basic_attack = {
-	utility = "animalia:basic_attack",
+pegasus.mob_ai.basic_attack = {
+	utility = "pegasus:basic_attack",
 	get_score = function(self)
-		return animalia.get_attack_score(self, self.attack_list)
+		return pegasus.get_attack_score(self, self.attack_list)
 	end
 }
 
-animalia.mob_ai.basic_seek_crop = {
-	utility = "animalia:basic_seek_crop",
+pegasus.mob_ai.basic_seek_crop = {
+	utility = "pegasus:basic_seek_crop",
 	step_delay = 0.25,
 	get_score = function(self)
 		if random(8) < 2 then
@@ -1727,8 +1727,8 @@ animalia.mob_ai.basic_seek_crop = {
 	end
 }
 
-animalia.mob_ai.basic_seek_food = {
-	utility = "animalia:basic_seek_food",
+pegasus.mob_ai.basic_seek_food = {
+	utility = "pegasus:basic_seek_food",
 	get_score = function(self)
 		if random(1) < 8 then
 			return 0.3, {self}
@@ -1739,16 +1739,16 @@ animalia.mob_ai.basic_seek_food = {
 
 -- Fly
 
-animalia.mob_ai.fly_wander = {
-	utility = "animalia:fly_wander",
+pegasus.mob_ai.fly_wander = {
+	utility = "pegasus:fly_wander",
 	step_delay = 0.25,
 	get_score = function(self)
 		return 0.1, {self}
 	end
 }
 
-animalia.mob_ai.fly_landing_wander = {
-	utility = "animalia:fly_wander",
+pegasus.mob_ai.fly_landing_wander = {
+	utility = "pegasus:fly_wander",
 	get_score = function(self)
 		if self.is_landed then
 			local player = creatura.get_nearby_player(self)
@@ -1764,8 +1764,8 @@ animalia.mob_ai.fly_landing_wander = {
 	end
 }
 
-animalia.mob_ai.fly_seek_food = {
-	utility = "animalia:fly_seek_food",
+pegasus.mob_ai.fly_seek_food = {
+	utility = "pegasus:fly_seek_food",
 	get_score = function(self)
 		if random(8) < 2 then
 			return 0.3, {self}
@@ -1774,8 +1774,8 @@ animalia.mob_ai.fly_seek_food = {
 	end
 }
 
-animalia.mob_ai.fly_seek_land = {
-	utility = "animalia:fly_seek_land",
+pegasus.mob_ai.fly_seek_land = {
+	utility = "pegasus:fly_seek_land",
 	get_score = function(self)
 		if self.is_landed
 		and not self.touching_ground
@@ -1789,8 +1789,8 @@ animalia.mob_ai.fly_seek_land = {
 
 -- Swim
 
-animalia.mob_ai.swim_seek_land = {
-	utility = "animalia:swim_seek_land",
+pegasus.mob_ai.swim_seek_land = {
+	utility = "pegasus:swim_seek_land",
 	step_delay = 0.25,
 	get_score = function(self)
 		if self.in_liquid then
@@ -1800,8 +1800,8 @@ animalia.mob_ai.swim_seek_land = {
 	end
 }
 
-animalia.mob_ai.swim_wander = {
-	utility = "animalia:swim_wander",
+pegasus.mob_ai.swim_wander = {
+	utility = "pegasus:swim_wander",
 	step_delay = 0.25,
 	get_score = function(self)
 		return 0.1, {self}
@@ -1810,8 +1810,8 @@ animalia.mob_ai.swim_wander = {
 
 -- Tamed
 
-animalia.mob_ai.tamed_follow_owner = {
-	utility = "animalia:tamed_follow_owner",
+pegasus.mob_ai.tamed_follow_owner = {
+	utility = "pegasus:tamed_follow_owner",
 	get_score = function(self)
 		if self.owner
 		and self.order == "follow" then
@@ -1829,8 +1829,8 @@ animalia.mob_ai.tamed_follow_owner = {
 	end
 }
 
-animalia.mob_ai.tamed_stay = {
-	utility = "animalia:basic_idle",
+pegasus.mob_ai.tamed_stay = {
+	utility = "pegasus:basic_idle",
 	step_delay = 0.25,
 	get_score = function(self)
 		local order = self.order or "wander"
@@ -1843,12 +1843,12 @@ animalia.mob_ai.tamed_stay = {
 
 -- Bat
 
-animalia.mob_ai.bat_seek_home = {
-	utility = "animalia:fly_seek_home",
+pegasus.mob_ai.bat_seek_home = {
+	utility = "pegasus:fly_seek_home",
 	get_score = function(self)
 		local pos = self.object:get_pos()
 		if not pos then return end
-		local home = animalia.is_day and self.home_position
+		local home = pegasus.is_day and self.home_position
 		if (home
 		and home.x
 		and vec_dist(pos, home) < 8)
@@ -1861,8 +1861,8 @@ animalia.mob_ai.bat_seek_home = {
 
 -- Cat
 
-animalia.mob_ai.cat_seek_vessel = {
-	utility = "animalia:cat_seek_vessel",
+pegasus.mob_ai.cat_seek_vessel = {
+	utility = "pegasus:cat_seek_vessel",
 	step_delay = 0.25,
 	get_score = function(self)
 		if random(8) < 2 then
@@ -1872,8 +1872,8 @@ animalia.mob_ai.cat_seek_vessel = {
 	end
 }
 
-animalia.mob_ai.cat_follow_owner = {
-	utility = "animalia:cat_follow_owner",
+pegasus.mob_ai.cat_follow_owner = {
+	utility = "pegasus:cat_follow_owner",
 	get_score = function(self)
 		local trust = (self.owner and self.trust[self.owner]) or 0
 
@@ -1892,8 +1892,8 @@ animalia.mob_ai.cat_follow_owner = {
 	end
 }
 
-animalia.mob_ai.cat_stay = {
-	utility = "animalia:basic_idle",
+pegasus.mob_ai.cat_stay = {
+	utility = "pegasus:basic_idle",
 	step_delay = 0.25,
 	get_score = function(self)
 		local trust = (self.owner and self.trust[self.owner]) or 0
@@ -1907,8 +1907,8 @@ animalia.mob_ai.cat_stay = {
 	end
 }
 
-animalia.mob_ai.cat_play_with_owner = {
-	utility = "animalia:cat_play_with_owner",
+pegasus.mob_ai.cat_play_with_owner = {
+	utility = "pegasus:cat_play_with_owner",
 	get_score = function(self)
 		local trust = (self.owner and self.trust[self.owner]) or 0
 
@@ -1923,15 +1923,15 @@ animalia.mob_ai.cat_play_with_owner = {
 
 -- Eagle
 
-animalia.mob_ai.eagle_attack = {
-	utility = "animalia:eagle_attack",
+pegasus.mob_ai.eagle_attack = {
+	utility = "pegasus:eagle_attack",
 	get_score = function(self)
 		if random(12) > 1
-		and (self:get_utility() or "") ~= "animalia:eagle_attack" then
+		and (self:get_utility() or "") ~= "pegasus:eagle_attack" then
 			return 0
 		end
 
-		local target = self._target or creatura.get_nearby_object(self, {"animalia:rat", "animalia:song_bird"})
+		local target = self._target or creatura.get_nearby_object(self, {"pegasus:rat", "pegasus:song_bird"})
 		local tgt_pos = target and target:get_pos()
 		if tgt_pos then
 			return 0.4, {self, target}
@@ -1942,8 +1942,8 @@ animalia.mob_ai.eagle_attack = {
 
 -- Fox
 
-animalia.mob_ai.fox_flee = {
-	utility = "animalia:basic_flee",
+pegasus.mob_ai.fox_flee = {
+	utility = "pegasus:basic_flee",
 	get_score = function(self)
 		local target = self._puncher or creatura.get_nearby_player(self)
 		local pos, target_pos = self.object:get_pos(), target and target:get_pos()
@@ -1961,12 +1961,12 @@ animalia.mob_ai.fox_flee = {
 
 -- Frog
 
-animalia.mob_ai.frog_breed = {
-	utility = "animalia:basic_breed",
+pegasus.mob_ai.frog_breed = {
+	utility = "pegasus:basic_breed",
 	step_delay = 0.25,
 	get_score = function(self)
 		if self.breeding
-		and animalia.get_nearby_mate(self, self.name)
+		and pegasus.get_nearby_mate(self, self.name)
 		and self.in_liquid then
 			return 1, {self}
 		end
@@ -1974,8 +1974,8 @@ animalia.mob_ai.frog_breed = {
 	end
 }
 
-animalia.mob_ai.frog_flop = {
-	utility = "animalia:basic_idle",
+pegasus.mob_ai.frog_flop = {
+	utility = "pegasus:basic_idle",
 	step_delay = 0.25,
 	get_score = function(self)
 		if not self.in_liquid
@@ -1986,8 +1986,8 @@ animalia.mob_ai.frog_flop = {
 	end
 }
 
-animalia.mob_ai.frog_seek_water = {
-	utility = "animalia:basic_seek_pos",
+pegasus.mob_ai.frog_seek_water = {
+	utility = "pegasus:basic_seek_pos",
 	get_score = function(self)
 		if self.in_liquid then return 0 end
 
@@ -2009,8 +2009,8 @@ animalia.mob_ai.frog_seek_water = {
 	end
 }
 
-animalia.mob_ai.frog_seek_bug = {
-	utility = "animalia:frog_seek_bug",
+pegasus.mob_ai.frog_seek_bug = {
+	utility = "pegasus:frog_seek_bug",
 	get_score = function(self)
 		if random(8) < 2 then
 			return 0.3, {self}
@@ -2021,8 +2021,8 @@ animalia.mob_ai.frog_seek_bug = {
 
 -- Opossum
 
-animalia.mob_ai.opossum_feint = {
-	utility = "animalia:basic_idle",
+pegasus.mob_ai.opossum_feint = {
+	utility = "pegasus:basic_idle",
 	get_score = function(self)
 		local target = self._puncher or creatura.get_nearby_player(self)
 		local pos, tgt_pos = self.object:get_pos(), target and target:get_pos()
@@ -2040,8 +2040,8 @@ animalia.mob_ai.opossum_feint = {
 	end
 }
 
-animalia.mob_ai.opossum_seek_crop = {
-	utility = "animalia:opossum_seek_crop",
+pegasus.mob_ai.opossum_seek_crop = {
+	utility = "pegasus:opossum_seek_crop",
 	step_delay = 0.25,
 	get_score = function(self)
 		if random(8) < 2 then
@@ -2053,8 +2053,8 @@ animalia.mob_ai.opossum_seek_crop = {
 
 -- Rat
 
-animalia.mob_ai.rat_seek_chest = {
-	utility = "animalia:rat_seek_chest",
+pegasus.mob_ai.rat_seek_chest = {
+	utility = "pegasus:rat_seek_chest",
 	step_delay = 0.25,
 	get_score = function(self)
 		if random(8) < 2 then

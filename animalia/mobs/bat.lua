@@ -30,14 +30,14 @@ local function get_home_pos(self)
 	end
 end
 
-creatura.register_mob("animalia:bat", {
+creatura.register_mob("pegasus:bat", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
-	mesh = "animalia_bat.b3d",
+	mesh = "pegasus_bat.b3d",
 	textures = {
-		"animalia_bat_1.png",
-		"animalia_bat_2.png",
-		"animalia_bat_3.png",
+		"pegasus_bat_1.png",
+		"pegasus_bat_2.png",
+		"pegasus_bat_3.png",
 	},
 	makes_footstep_sound = false,
 
@@ -52,7 +52,7 @@ creatura.register_mob("animalia:bat", {
 	max_fall = 0,
 	sounds = {
 		random = {
-			name = "animalia_bat",
+			name = "pegasus_bat",
 			gain = 0.5,
 			distance = 16
 		}
@@ -73,17 +73,17 @@ creatura.register_mob("animalia:bat", {
 		"butterflies:butterfly_violet"
 	},
 
-	-- Animalia Props
+	-- pegasus Props
 	flee_puncher = true,
 	catch_with_net = true,
 	catch_with_lasso = false,
-	roost_action = animalia.action_latch,
+	roost_action = pegasus.action_latch,
 
 	-- Functions
 	utility_stack = {
-		animalia.mob_ai.fly_wander,
-		animalia.mob_ai.swim_seek_land,
-		animalia.mob_ai.bat_seek_home
+		pegasus.mob_ai.fly_wander,
+		pegasus.mob_ai.swim_seek_land,
+		pegasus.mob_ai.bat_seek_home
 	},
 
 	is_home = function(pos, home_pos)
@@ -99,7 +99,7 @@ creatura.register_mob("animalia:bat", {
 	end,
 
 	activate_func = function(self)
-		animalia.initialize_api(self)
+		pegasus.initialize_api(self)
 		self.home_position = self:recall("home_position") or nil
 		local home_pos = self.home_position
 		self.is_landed = self:recall("is_landed") or false
@@ -111,10 +111,10 @@ creatura.register_mob("animalia:bat", {
 	end,
 
 	step_func = function(self)
-		animalia.step_timers(self)
-		animalia.do_growth(self, 60)
-		animalia.rotate_to_pitch(self)
-		animalia.random_sound(self)
+		pegasus.step_timers(self)
+		pegasus.do_growth(self, 60)
+		pegasus.rotate_to_pitch(self)
+		pegasus.random_sound(self)
 		if not self.is_landed
 		or not self.touching_ground then
 			self.speed = 4
@@ -146,7 +146,7 @@ creatura.register_mob("animalia:bat", {
 					local under = {x = center.x, y = center.y - 1, z = center.z}
 					if creatura.get_node_def(under).walkable
 					and not minetest.is_protected(center, "") then
-						minetest.set_node(center, {name = "animalia:guano"})
+						minetest.set_node(center, {name = "pegasus:guano"})
 					end
 				end
 			end
@@ -154,25 +154,25 @@ creatura.register_mob("animalia:bat", {
 	end,
 
 	death_func = function(self)
-		if self:get_utility() ~= "animalia:die" then
-			self:initiate_utility("animalia:die", self)
+		if self:get_utility() ~= "pegasus:die" then
+			self:initiate_utility("pegasus:die", self)
 		end
 	end,
 
 	on_rightclick = function(self, clicker)
-		if animalia.feed(self, clicker, false, false) then
-			animalia.add_trust(self, clicker, 1)
+		if pegasus.feed(self, clicker, false, false) then
+			pegasus.add_trust(self, clicker, 1)
 			return
 		end
-		if animalia.set_nametag(self, clicker) then
+		if pegasus.set_nametag(self, clicker) then
 			return
 		end
 	end,
 
-	on_punch = animalia.punch
+	on_punch = pegasus.punch
 })
 
-creatura.register_spawn_item("animalia:bat", {
+creatura.register_spawn_item("pegasus:bat", {
 	col1 = "392517",
 	col2 = "321b0b"
 })

@@ -2,12 +2,12 @@
 -- Bear --
 ----------
 
-creatura.register_mob("animalia:grizzly_bear", {
+creatura.register_mob("pegasus:grizzly_bear", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
-	mesh = "animalia_bear.b3d",
+	mesh = "pegasus_bear.b3d",
 	textures = {
-		"animalia_bear_grizzly.png"
+		"pegasus_bear_grizzly.png"
 	},
 	makes_footstep_sound = true,
 
@@ -22,17 +22,17 @@ creatura.register_mob("animalia:grizzly_bear", {
 	stepheight = 1.1,
 	sounds = {
 		random = {
-			name = "animalia_bear",
+			name = "pegasus_bear",
 			gain = 0.5,
 			distance = 8
 		},
 		hurt = {
-			name = "animalia_bear_hurt",
+			name = "pegasus_bear_hurt",
 			gain = 0.5,
 			distance = 8
 		},
 		death = {
-			name = "animalia_bear_death",
+			name = "pegasus_bear_death",
 			gain = 0.5,
 			distance = 8
 		}
@@ -47,16 +47,16 @@ creatura.register_mob("animalia:grizzly_bear", {
 		run = {range = {x = 81, y = 99}, speed = 20, frame_blend = 0.3, loop = true},
 		melee = {range = {x = 101, y = 120}, speed = 30, frame_blend = 0.3, loop = false}
 	},
-	follow = animalia.food_bear,
+	follow = pegasus.food_bear,
 	drops = {
-		{name = "animalia:pelt_bear", min = 1, max = 3, chance = 1}
+		{name = "pegasus:pelt_bear", min = 1, max = 3, chance = 1}
 	},
 	fancy_collide = false,
 
 	-- Behavior Parameters
 	attacks_players = true,
 
-	-- Animalia Parameters
+	-- pegasus Parameters
 	catch_with_net = true,
 	catch_with_lasso = true,
 	head_data = {
@@ -68,11 +68,11 @@ creatura.register_mob("animalia:grizzly_bear", {
 
 	-- Functions
 	utility_stack = {
-		animalia.mob_ai.basic_wander,
-		animalia.mob_ai.swim_seek_land,
-		animalia.mob_ai.basic_seek_food,
-		animalia.mob_ai.basic_attack,
-		animalia.mob_ai.basic_breed
+		pegasus.mob_ai.basic_wander,
+		pegasus.mob_ai.swim_seek_land,
+		pegasus.mob_ai.basic_seek_food,
+		pegasus.mob_ai.basic_attack,
+		pegasus.mob_ai.basic_breed
 	},
 
 	on_eat_drop = function(self)
@@ -85,7 +85,7 @@ creatura.register_mob("animalia:grizzly_bear", {
             if self.breeding_cooldown <= 0 then
                  self.breeding = true
                 self.breeding_cooldown = 60
-                animalia.particle_spawner(self.stand_pos, "heart.png", "float")
+                pegasus.particle_spawner(self.stand_pos, "heart.png", "float")
 			end
 
 			self._despawn = self:memorize("_despawn", false)
@@ -95,28 +95,28 @@ creatura.register_mob("animalia:grizzly_bear", {
 	end,
 
 	activate_func = function(self)
-		animalia.initialize_api(self)
-		animalia.initialize_lasso(self)
+		pegasus.initialize_api(self)
+		pegasus.initialize_lasso(self)
 	end,
 
 	step_func = function(self)
-		animalia.step_timers(self)
-		animalia.head_tracking(self, 0.75, 0.75)
-		animalia.do_growth(self, 60)
-		animalia.update_lasso_effects(self)
-		animalia.random_sound(self)
+		pegasus.step_timers(self)
+		pegasus.head_tracking(self, 0.75, 0.75)
+		pegasus.do_growth(self, 60)
+		pegasus.update_lasso_effects(self)
+		pegasus.random_sound(self)
 	end,
 
 	death_func = function(self)
-		if self:get_utility() ~= "animalia:die" then
-			self:initiate_utility("animalia:die", self)
+		if self:get_utility() ~= "pegasus:die" then
+			self:initiate_utility("pegasus:die", self)
 		end
 	end,
 
-	on_punch = animalia.punch
+	on_punch = pegasus.punch
 })
 
-creatura.register_spawn_item("animalia:grizzly_bear", {
+creatura.register_spawn_item("pegasus:grizzly_bear", {
 	col1 = "64361d",
 	col2 = "2c0d03"
 })

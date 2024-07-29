@@ -43,7 +43,7 @@ local function register_egg(name, def)
 							maxacc = {x = 0, y = -9.8, z = 0},
 							collisiondetection = true,
 							collision_removal = true,
-							texture = "animalia_egg_fragment.png"
+							texture = "pegasus_egg_fragment.png"
 						})
 						break
 					elseif collision.type == "object" then
@@ -56,8 +56,8 @@ local function register_egg(name, def)
 					local ent = object and object:get_luaentity()
 					if not ent then return end
 					ent.growth_scale = 0.7
-					animalia.initialize_api(ent)
-					animalia.protect_from_despawn(ent)
+					pegasus.initialize_api(ent)
+					pegasus.protect_from_despawn(ent)
 				end
 				self.object:remove()
 			end
@@ -115,7 +115,7 @@ end
 local function mob_storage_use(itemstack, player, pointed)
 	local ent = pointed.ref and pointed.ref:get_luaentity()
 	if ent
-	and (ent.name:match("^animalia:")
+	and (ent.name:match("^pegasus:")
 	or ent.name:match("^monstrum:")) then
 		local desc = itemstack:get_short_description()
 		if itemstack:get_count() > 1 then
@@ -131,7 +131,7 @@ local function mob_storage_use(itemstack, player, pointed)
 		local meta = itemstack:get_meta()
 		local mob = meta:get_string("mob") or ""
 		if mob == "" then
-			animalia.protect_from_despawn(ent)
+			pegasus.protect_from_despawn(ent)
 			meta:set_string("mob", ent.name)
 			meta:set_string("staticdata", ent:get_staticdata())
 			local ent_name = correct_name(ent.name)
@@ -156,179 +156,179 @@ end
 -- Drops --
 -----------
 
-minetest.register_craftitem("animalia:leather", {
+minetest.register_craftitem("pegasus:leather", {
 	description = "Leather",
-	inventory_image = "animalia_leather.png",
+	inventory_image = "pegasus_leather.png",
 	groups = {flammable = 2, leather = 1},
 })
 
-minetest.register_craftitem("animalia:feather", {
+minetest.register_craftitem("pegasus:feather", {
 	description = "Feather",
-	inventory_image = "animalia_feather.png",
+	inventory_image = "pegasus_feather.png",
 	groups = {flammable = 2, feather = 1},
 })
 
-minetest.register_craftitem("animalia:pelt_bear", {
+minetest.register_craftitem("pegasus:pelt_bear", {
 	description = "Bear Pelt",
-	inventory_image = "animalia_pelt_bear.png",
+	inventory_image = "pegasus_pelt_bear.png",
 	groups = {flammable = 2, pelt = 1},
 })
 
 -- Meat --
 
-minetest.register_craftitem("animalia:beef_raw", {
+minetest.register_craftitem("pegasus:beef_raw", {
 	description = "Raw Beef",
-	inventory_image = "animalia_beef_raw.png",
+	inventory_image = "pegasus_beef_raw.png",
 	on_use = minetest.item_eat(1),
 	groups = {flammable = 2, meat = 1, food_meat = 1},
 })
 
-minetest.register_craftitem("animalia:beef_cooked", {
+minetest.register_craftitem("pegasus:beef_cooked", {
 	description = "Steak",
-	inventory_image = "animalia_beef_cooked.png",
+	inventory_image = "pegasus_beef_cooked.png",
 	on_use = minetest.item_eat(8),
 	groups = {flammable = 2, meat = 1, food_meat = 1},
 })
 
 minetest.register_craft({
 	type  =  "cooking",
-	recipe  = "animalia:beef_raw",
-	output = "animalia:beef_cooked",
+	recipe  = "pegasus:beef_raw",
+	output = "pegasus:beef_cooked",
 })
 
-minetest.register_craftitem("animalia:mutton_raw", {
+minetest.register_craftitem("pegasus:mutton_raw", {
 	description = "Raw Mutton",
-	inventory_image = "animalia_mutton_raw.png",
+	inventory_image = "pegasus_mutton_raw.png",
 	on_use = minetest.item_eat(1),
 	groups = {flammable = 2, meat = 1, food_meat = 1},
 })
 
-minetest.register_craftitem("animalia:mutton_cooked", {
+minetest.register_craftitem("pegasus:mutton_cooked", {
 	description = "Cooked Mutton",
-	inventory_image = "animalia_mutton_cooked.png",
+	inventory_image = "pegasus_mutton_cooked.png",
 	on_use = minetest.item_eat(6),
 	groups = {flammable = 2, meat = 1, food_meat = 1},
 })
 
 minetest.register_craft({
 	type  =  "cooking",
-	recipe  = "animalia:mutton_raw",
-	output = "animalia:mutton_cooked",
+	recipe  = "pegasus:mutton_raw",
+	output = "pegasus:mutton_cooked",
 })
 
-minetest.register_craftitem("animalia:rat_raw", {
+minetest.register_craftitem("pegasus:rat_raw", {
 	description = "Raw Rat",
-	inventory_image = "animalia_rat_raw.png",
+	inventory_image = "pegasus_rat_raw.png",
 	on_use = minetest.item_eat(1),
 	groups = {flammable = 2, meat = 1, food_meat = 1},
 })
 
-minetest.register_craftitem("animalia:rat_cooked", {
+minetest.register_craftitem("pegasus:rat_cooked", {
 	description = "Cooked Rat",
-	inventory_image = "animalia_rat_cooked.png",
+	inventory_image = "pegasus_rat_cooked.png",
 	on_use = minetest.item_eat(2),
 	groups = {flammable = 2, meat = 1, food_meat = 1},
 })
 
 minetest.register_craft({
 	type  =  "cooking",
-	recipe  = "animalia:rat_raw",
-	output = "animalia:rat_cooked",
+	recipe  = "pegasus:rat_raw",
+	output = "pegasus:rat_cooked",
 })
 
-minetest.register_craftitem("animalia:porkchop_raw", {
+minetest.register_craftitem("pegasus:porkchop_raw", {
 	description = "Raw Porkchop",
-	inventory_image = "animalia_porkchop_raw.png",
+	inventory_image = "pegasus_porkchop_raw.png",
 	on_use = minetest.item_eat(1),
 	groups = {flammable = 2, meat = 1, food_meat = 1},
 })
 
-minetest.register_craftitem("animalia:porkchop_cooked", {
+minetest.register_craftitem("pegasus:porkchop_cooked", {
 	description = "Cooked Porkchop",
-	inventory_image = "animalia_porkchop_cooked.png",
+	inventory_image = "pegasus_porkchop_cooked.png",
 	on_use = minetest.item_eat(7),
 	groups = {flammable = 2, meat = 1, food_meat = 1},
 })
 
 minetest.register_craft({
 	type  =  "cooking",
-	recipe  = "animalia:porkchop_raw",
-	output = "animalia:porkchop_cooked",
+	recipe  = "pegasus:porkchop_raw",
+	output = "pegasus:porkchop_cooked",
 })
 
-minetest.register_craftitem("animalia:poultry_raw", {
+minetest.register_craftitem("pegasus:poultry_raw", {
 	description = "Raw Poultry",
-	inventory_image = "animalia_poultry_raw.png",
+	inventory_image = "pegasus_poultry_raw.png",
 	on_use = minetest.item_eat(1),
 	groups = {flammable = 2, meat = 1, food_meat = 1},
 })
 
-minetest.register_craftitem("animalia:poultry_cooked", {
+minetest.register_craftitem("pegasus:poultry_cooked", {
 	description = "Cooked Poultry",
-	inventory_image = "animalia_poultry_cooked.png",
+	inventory_image = "pegasus_poultry_cooked.png",
 	on_use = minetest.item_eat(6),
 	groups = {flammable = 2, meat = 1, food_meat = 1},
 })
 
 minetest.register_craft({
 	type  =  "cooking",
-	recipe  = "animalia:poultry_raw",
-	output = "animalia:poultry_cooked",
+	recipe  = "pegasus:poultry_raw",
+	output = "pegasus:poultry_cooked",
 })
 
-minetest.register_craftitem("animalia:venison_raw", {
+minetest.register_craftitem("pegasus:venison_raw", {
 	description = "Raw Venison",
-	inventory_image = "animalia_venison_raw.png",
+	inventory_image = "pegasus_venison_raw.png",
 	on_use = minetest.item_eat(1),
 	groups = {flammable = 2, meat = 1, food_meat = 1},
 })
 
-minetest.register_craftitem("animalia:venison_cooked", {
+minetest.register_craftitem("pegasus:venison_cooked", {
 	description = "Venison Steak",
-	inventory_image = "animalia_venison_cooked.png",
+	inventory_image = "pegasus_venison_cooked.png",
 	on_use = minetest.item_eat(10),
 	groups = {flammable = 2, meat = 1, food_meat = 1},
 })
 
 minetest.register_craft({
 	type  =  "cooking",
-	recipe  = "animalia:venison_raw",
-	output = "animalia:venison_cooked",
+	recipe  = "pegasus:venison_raw",
+	output = "pegasus:venison_cooked",
 })
 
-register_egg("animalia:chicken_egg", {
+register_egg("pegasus:chicken_egg", {
 	description = "Chicken Egg",
-	inventory_image = "animalia_egg",
-	mob = "animalia:chicken"
+	inventory_image = "pegasus_egg",
+	mob = "pegasus:chicken"
 })
 
-register_egg("animalia:turkey_egg", {
+register_egg("pegasus:turkey_egg", {
 	description = "Turkey Egg",
-	inventory_image = "animalia_egg",
-	mob = "animalia:turkey"
+	inventory_image = "pegasus_egg",
+	mob = "pegasus:turkey"
 })
 
-register_egg("animalia:song_bird_egg", {
+register_egg("pegasus:song_bird_egg", {
 	description = "Song Bird Egg",
-	inventory_image = "animalia_song_bird_egg",
-	mob = "animalia:bird"
+	inventory_image = "pegasus_song_bird_egg",
+	mob = "pegasus:bird"
 })
 
 ----------
 -- Misc --
 ----------
 
-minetest.register_craftitem("animalia:bucket_milk", {
+minetest.register_craftitem("pegasus:bucket_milk", {
 	description = "Bucket of Milk",
-	inventory_image = "animalia_milk_bucket.png",
+	inventory_image = "pegasus_milk_bucket.png",
 	stack_max = 1,
 	on_use = minetest.item_eat(8, "bucket:bucket_empty"),
 	groups = {food_milk = 1, flammable = 3},
 })
 
-minetest.register_craftitem("animalia:bucket_guano", {
+minetest.register_craftitem("pegasus:bucket_guano", {
 	description = "Bucket of Guano",
-	inventory_image = "animalia_guano_bucket.png",
+	inventory_image = "pegasus_guano_bucket.png",
 	stack_max = 1,
 	groups = {flammable = 3},
 	on_place = function(itemstack, placer, pointed)
@@ -358,7 +358,7 @@ minetest.register_craftitem("animalia:bucket_guano", {
 				crops_grown = crops_grown + 1
 			end
 		end
-		if crops_grown < 1 then minetest.set_node(pointed.above, {name = "animalia:guano"}) end
+		if crops_grown < 1 then minetest.set_node(pointed.above, {name = "pegasus:guano"}) end
 		local meta = itemstack:get_meta()
 		local og_item = meta:get_string("original_item")
 		if og_item == "" then og_item = "bucket:bucket_empty" end
@@ -367,12 +367,12 @@ minetest.register_craftitem("animalia:bucket_guano", {
 	end
 })
 
-minetest.register_node("animalia:nest_song_bird", {
+minetest.register_node("pegasus:nest_song_bird", {
 	description = "Song Bird Nest",
 	paramtype = "light",
 	drawtype = "mesh",
-	mesh = "animalia_nest.obj",
-	tiles = {"animalia_nest.png"},
+	mesh = "pegasus_nest.obj",
+	tiles = {"pegasus_nest.png"},
 	sunlight_propagates = true,
 	walkable = false,
 	stack_max = 1,
@@ -388,11 +388,11 @@ minetest.register_node("animalia:nest_song_bird", {
 	drop = {
 		items = {
 			{
-				items = {"animalia:song_bird_egg"},
+				items = {"pegasus:song_bird_egg"},
 				rarity = 2,
 			},
 			{
-				items = {"animalia:song_bird_egg 2"},
+				items = {"pegasus:song_bird_egg 2"},
 				rarity = 4,
 			},
 			{
@@ -406,10 +406,10 @@ minetest.register_node("animalia:nest_song_bird", {
 -- Tools --
 -----------
 
-minetest.register_craftitem("animalia:cat_toy", {
+minetest.register_craftitem("pegasus:cat_toy", {
 	description = "Cat Toy",
-	inventory_image = "animalia_cat_toy.png",
-	wield_image = "animalia_cat_toy.png^[transformFYR90",
+	inventory_image = "pegasus_cat_toy.png",
+	wield_image = "pegasus_cat_toy.png^[transformFYR90",
 	stack_max = 1
 })
 
@@ -426,7 +426,7 @@ local function get_rename_formspec(meta)
 end
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-	if formname == "animalia:set_name" and fields.name then
+	if formname == "pegasus:set_name" and fields.name then
 		local name = player:get_player_name()
 		if not nametag[name] then
 			return
@@ -453,30 +453,30 @@ local function nametag_rightclick(itemstack, player, pointed_thing)
 	local name = player:get_player_name()
 	nametag[name] = itemstack
 	local meta = itemstack:get_meta()
-	minetest.show_formspec(name, "animalia:set_name", get_rename_formspec(meta))
+	minetest.show_formspec(name, "pegasus:set_name", get_rename_formspec(meta))
 end
 
-minetest.register_craftitem("animalia:nametag", {
+minetest.register_craftitem("pegasus:nametag", {
 	description = "Nametag",
-	inventory_image = "animalia_nametag.png",
+	inventory_image = "pegasus_nametag.png",
 	on_rightclick = nametag_rightclick,
 	on_secondary_use = nametag_rightclick
 })
 
-minetest.register_craftitem("animalia:saddle", {
+minetest.register_craftitem("pegasus:saddle", {
 	description = "Saddle",
-	inventory_image = "animalia_saddle.png",
+	inventory_image = "pegasus_saddle.png",
 })
 
-minetest.register_tool("animalia:shears", {
+minetest.register_tool("pegasus:shears", {
 	description = "Shears",
-	inventory_image = "animalia_shears.png",
+	inventory_image = "pegasus_shears.png",
 	groups = {flammable = 2}
 })
 
-minetest.register_craftitem("animalia:net", {
+minetest.register_craftitem("pegasus:net", {
 	description = "Animal Net",
-	inventory_image = "animalia_net.png",
+	inventory_image = "pegasus_net.png",
 	stack_max = 1,
 	on_secondary_use = mob_storage_use,
 	on_place = function(itemstack, placer, pointed_thing)
@@ -539,9 +539,9 @@ if minetest.get_modpath("3d_armor") then
 		end)
 	end
 
-	armor:register_armor("animalia:coat_bear_pelt", {
+	armor:register_armor("pegasus:coat_bear_pelt", {
 		description = "Bear Pelt Coat",
-		inventory_image = "animalia_inv_coat_bear_pelt.png",
+		inventory_image = "pegasus_inv_coat_bear_pelt.png",
 		groups = {armor_torso = 1, armor_heal = 0, armor_heavy_pelt = 1, armor_use = 1000},
 		armor_groups = {fleshy = 5}
 	})
@@ -549,11 +549,11 @@ if minetest.get_modpath("3d_armor") then
 
 
 	minetest.register_craft({
-		output = "animalia:coat_bear_pelt",
+		output = "pegasus:coat_bear_pelt",
 		recipe = {
-			{"animalia:pelt_bear", "", "animalia:pelt_bear"},
-			{"animalia:pelt_bear", "animalia:pelt_bear", "animalia:pelt_bear"},
-			{"animalia:pelt_bear", "animalia:pelt_bear", "animalia:pelt_bear"}
+			{"pegasus:pelt_bear", "", "pegasus:pelt_bear"},
+			{"pegasus:pelt_bear", "pegasus:pelt_bear", "pegasus:pelt_bear"},
+			{"pegasus:pelt_bear", "pegasus:pelt_bear", "pegasus:pelt_bear"}
 		}
 	})
 end
@@ -562,9 +562,9 @@ end
 -- Nodes --
 -----------
 
-minetest.register_node("animalia:guano", {
+minetest.register_node("pegasus:guano", {
 	description = "Guano",
-	tiles = {"animalia_guano.png"},
+	tiles = {"pegasus_guano.png"},
 	paramtype = "light",
 	buildable_to = true,
 	floodable = true,
@@ -579,7 +579,7 @@ minetest.register_node("animalia:guano", {
 	groups = {crumbly = 3, falling_node = 1, not_in_creative_inventory = 1},
 	on_punch = function(pos, _, player)
 		local inv = player:get_inventory()
-		local stack = ItemStack("animalia:bucket_guano")
+		local stack = ItemStack("pegasus:bucket_guano")
 		if not inv:room_for_item("main", stack) then return end
 		local item = player:get_wielded_item()
 		local item_name = item:get_name()
@@ -593,15 +593,15 @@ minetest.register_node("animalia:guano", {
 	end
 })
 
-minetest.register_node("animalia:crate", {
+minetest.register_node("pegasus:crate", {
 	description = "Animal Crate",
-	tiles = {"animalia_crate.png", "animalia_crate.png", "animalia_crate_side.png"},
+	tiles = {"pegasus_crate.png", "pegasus_crate.png", "pegasus_crate_side.png"},
 	groups = {choppy = 2},
 	stack_max = 1,
 	on_secondary_use = mob_storage_use,
 	preserve_metadata = function(_, _, oldmeta, drops)
 		for _, stack in pairs(drops) do
-			if stack:get_name() == "animalia:crate" then
+			if stack:get_name() == "pegasus:crate" then
 				local meta = stack:get_meta()
 				meta:set_string("mob", oldmeta["mob"])
 				meta:set_string("staticdata", oldmeta["staticdata"])
@@ -666,7 +666,7 @@ minetest.register_on_mods_loaded(function()
 end)
 
 minetest.register_craft({
-	output = "animalia:cat_toy",
+	output = "pegasus:cat_toy",
 	recipe = {
 		{"", "", "group:thread"},
 		{"", "group:stick", "group:thread"},
@@ -675,7 +675,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "animalia:cat_toy",
+	output = "pegasus:cat_toy",
 	recipe = {
 		{"", "", "farming:string"},
 		{"", "group:stick", "farming:string"},
@@ -684,7 +684,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "animalia:lasso",
+	output = "pegasus:lasso",
 	recipe = {
 		{"", "group:thread", "group:thread"},
 		{"", "group:leather", "group:thread"},
@@ -693,7 +693,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "animalia:lasso",
+	output = "pegasus:lasso",
 	recipe = {
 		{"", "farming:string", "farming:string"},
 		{"", "group:leather", "farming:string"},
@@ -702,7 +702,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "animalia:net",
+	output = "pegasus:net",
 	recipe = {
 		{"group:thread", "", "group:thread"},
 		{"group:thread", "", "group:thread"},
@@ -711,7 +711,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "animalia:net",
+	output = "pegasus:net",
 	recipe = {
 		{"farming:string", "", "farming:string"},
 		{"farming:string", "", "farming:string"},
@@ -720,16 +720,16 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "animalia:crate",
+	output = "pegasus:crate",
 	recipe = {
 		{"group:wood", "group:wood", "group:wood"},
-		{"group:wood", "animalia:net", "group:wood"},
+		{"group:wood", "pegasus:net", "group:wood"},
 		{"group:wood", "group:wood", "group:wood"}
 	}
 })
 
 minetest.register_craft({
-	output = "animalia:saddle",
+	output = "pegasus:saddle",
 	recipe = {
 		{"group:leather", "group:leather", "group:leather"},
 		{"group:leather", steel_ingot, "group:leather"},
@@ -738,7 +738,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "animalia:saddle",
+	output = "pegasus:saddle",
 	recipe = {
 		{"group:leather", "group:leather", "group:leather"},
 		{"group:leather", steel_ingot, "group:leather"},
@@ -748,7 +748,7 @@ minetest.register_craft({
 
 
 minetest.register_craft({
-	output = "animalia:shears",
+	output = "pegasus:shears",
 	recipe = {
 		{"", steel_ingot, ""},
 		{"", "group:leather", steel_ingot}
@@ -756,34 +756,34 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "animalia:libri_animalia",
+	output = "pegasus:libri_pegasus",
 	recipe = {
 		{"", "", ""},
-		{"animalia:feather", "", ""},
+		{"pegasus:feather", "", ""},
 		{"group:book", "group:color_green", ""}
 	}
 })
 
 minetest.register_craft({
-	output = "animalia:libri_animalia",
+	output = "pegasus:libri_pegasus",
 	recipe = {
 		{"", "", ""},
-		{"animalia:feather", "", ""},
+		{"pegasus:feather", "", ""},
 		{"group:book", "group:unicolor_green", ""}
 	}
 })
 
 minetest.register_craft({
-	output = "animalia:libri_animalia 2",
+	output = "pegasus:libri_pegasus 2",
 	recipe = {
 		{"", "", ""},
-		{"animalia:libri_animalia", "group:book", ""},
+		{"pegasus:libri_pegasus", "group:book", ""},
 		{"", "", ""}
 	}
 })
 
 minetest.register_on_craft(function(itemstack, _, old_craft_grid)
-	if itemstack:get_name() == "animalia:libri_animalia"
+	if itemstack:get_name() == "pegasus:libri_pegasus"
 	and itemstack:get_count() > 1 then
 		for _, old_libri in pairs(old_craft_grid) do
 			if old_libri:get_meta():get_string("chapters") then

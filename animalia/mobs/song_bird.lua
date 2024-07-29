@@ -4,14 +4,14 @@
 
 local random = math.random
 
-creatura.register_mob("animalia:song_bird", {
+creatura.register_mob("pegasus:song_bird", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
-	mesh = "animalia_bird.b3d",
+	mesh = "pegasus_bird.b3d",
 	textures = {
-		"animalia_cardinal.png",
-		"animalia_bluebird.png",
-		"animalia_goldfinch.png"
+		"pegasus_cardinal.png",
+		"pegasus_bluebird.png",
+		"pegasus_goldfinch.png"
 	},
 
 	-- Creatura Props
@@ -25,17 +25,17 @@ creatura.register_mob("animalia:song_bird", {
 	stepheight = 1.1,
 	sounds = {
 		cardinal = {
-			name = "animalia_cardinal",
+			name = "pegasus_cardinal",
 			gain = 0.5,
 			distance = 63
 		},
 		eastern_blue = {
-			name = "animalia_bluebird",
+			name = "pegasus_bluebird",
 			gain = 0.5,
 			distance = 63
 		},
 		goldfinch = {
-			name = "animalia_goldfinch",
+			name = "pegasus_goldfinch",
 			gain = 0.5,
 			distance = 63
 		},
@@ -51,40 +51,40 @@ creatura.register_mob("animalia:song_bird", {
 	},
 	--follow = {},
 	drops = {
-		{name = "animalia:feather", min = 1, max = 1, chance = 2}
+		{name = "pegasus:feather", min = 1, max = 1, chance = 2}
 	},
 
 	-- Behavior Parameters
 	uses_boids = true,
 
-	-- Animalia Props
+	-- pegasus Props
 	flee_puncher = true,
 	catch_with_net = true,
 	catch_with_lasso = false,
-	wander_action = animalia.action_boid_move,
-	--roost_action = animalia.action_roost,
+	wander_action = pegasus.action_boid_move,
+	--roost_action = pegasus.action_roost,
 
 	-- Functions
 	utility_stack = {
-		animalia.mob_ai.basic_wander,
-		animalia.mob_ai.fly_landing_wander,
-		animalia.mob_ai.fly_seek_land
+		pegasus.mob_ai.basic_wander,
+		pegasus.mob_ai.fly_landing_wander,
+		pegasus.mob_ai.fly_seek_land
 	},
 
 	activate_func = function(self)
-		if animalia.despawn_inactive_mob(self) then return end
-		animalia.initialize_api(self)
-		animalia.initialize_lasso(self)
+		if pegasus.despawn_inactive_mob(self) then return end
+		pegasus.initialize_api(self)
+		pegasus.initialize_lasso(self)
 		self.is_landed = (random(2) < 2 and true) or false
 	end,
 
 	step_func = function(self)
-		animalia.step_timers(self)
-		animalia.do_growth(self, 60)
-		--animalia.update_lasso_effects(self)
-		animalia.rotate_to_pitch(self)
+		pegasus.step_timers(self)
+		pegasus.do_growth(self, 60)
+		--pegasus.update_lasso_effects(self)
+		pegasus.rotate_to_pitch(self)
 		if self:timer(random(6, 12)) then
-			if animalia.is_day then
+			if pegasus.is_day then
 				if self.texture_no == 1 then
 					self:play_sound("cardinal")
 				elseif self.texture_no == 2 then
@@ -102,26 +102,26 @@ creatura.register_mob("animalia:song_bird", {
 		end
 	end,
 
-	death_func = animalia.death_func,
+	death_func = pegasus.death_func,
 
 	on_rightclick = function(self, clicker)
-		--[[if animalia.feed(self, clicker, false, false) then
+		--[[if pegasus.feed(self, clicker, false, false) then
 			return
 		end]]
-		if animalia.set_nametag(self, clicker) then
+		if pegasus.set_nametag(self, clicker) then
 			return
 		end
 	end,
 
-	on_punch = animalia.punch
+	on_punch = pegasus.punch
 })
 
-creatura.register_spawn_item("animalia:song_bird", {
+creatura.register_spawn_item("pegasus:song_bird", {
 	col1 = "ae2f2f",
 	col2 = "f3ac1c"
 })
 
-minetest.register_entity("animalia:bird", {
+minetest.register_entity("pegasus:bird", {
 	static_save = false,
 	on_activate = function(self)
 		self.object:remove()
@@ -129,8 +129,8 @@ minetest.register_entity("animalia:bird", {
 })
 
 minetest.register_abm({
-	label = "animalia:nest_cleanup",
-	nodenames = "animalia:nest_song_bird",
+	label = "pegasus:nest_cleanup",
+	nodenames = "pegasus:nest_song_bird",
 	interval = 900,
 	action = function(pos)
 		minetest.remove_node(pos)

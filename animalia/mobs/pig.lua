@@ -2,24 +2,24 @@
 -- Pig --
 ---------
 
-creatura.register_mob("animalia:pig", {
+creatura.register_mob("pegasus:pig", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
-	mesh = "animalia_pig.b3d",
+	mesh = "pegasus_pig.b3d",
 	female_textures = {
-		"animalia_pig_1.png",
-		"animalia_pig_2.png",
-		"animalia_pig_3.png"
+		"pegasus_pig_1.png",
+		"pegasus_pig_2.png",
+		"pegasus_pig_3.png"
 	},
 	male_textures = {
-		"animalia_pig_1.png^animalia_pig_tusks.png",
-		"animalia_pig_2.png^animalia_pig_tusks.png",
-		"animalia_pig_3.png^animalia_pig_tusks.png"
+		"pegasus_pig_1.png^pegasus_pig_tusks.png",
+		"pegasus_pig_2.png^pegasus_pig_tusks.png",
+		"pegasus_pig_3.png^pegasus_pig_tusks.png"
 	},
 	child_textures = {
-		"animalia_pig_1.png",
-		"animalia_pig_2.png",
-		"animalia_pig_3.png"
+		"pegasus_pig_1.png",
+		"pegasus_pig_2.png",
+		"pegasus_pig_3.png"
 	},
 	makes_footstep_sound = true,
 
@@ -32,17 +32,17 @@ creatura.register_mob("animalia:pig", {
 	stepheight = 1.1,
 	sounds = {
 		random = {
-			name = "animalia_pig",
+			name = "pegasus_pig",
 			gain = 1.0,
 			distance = 8
 		},
 		hurt = {
-			name = "animalia_pig_hurt",
+			name = "pegasus_pig_hurt",
 			gain = 1.0,
 			distance = 8
 		},
 		death = {
-			name = "animalia_pig_death",
+			name = "pegasus_pig_death",
 			gain = 1.0,
 			distance = 8
 		}
@@ -56,15 +56,15 @@ creatura.register_mob("animalia:pig", {
 		walk = {range = {x = 70, y = 89}, speed = 30, frame_blend = 0.3, loop = true},
 		run = {range = {x = 100, y = 119}, speed = 40, frame_blend = 0.3, loop = true},
 	},
-	follow = animalia.food_crops,
+	follow = pegasus.food_crops,
 	drops = {
-		{name = "animalia:porkchop_raw", min = 1, max = 3, chance = 1}
+		{name = "pegasus:porkchop_raw", min = 1, max = 3, chance = 1}
 	},
 
 	-- Behavior Parameters
 	is_herding_mob = true,
 
-	-- Animalia Props
+	-- pegasus Props
 	flee_puncher = true,
 	catch_with_net = true,
 	catch_with_lasso = true,
@@ -78,42 +78,42 @@ creatura.register_mob("animalia:pig", {
 
 	-- Functions
 	utility_stack = {
-		animalia.mob_ai.basic_wander,
-		animalia.mob_ai.swim_seek_land,
-		animalia.mob_ai.basic_seek_crop,
-		animalia.mob_ai.tamed_follow_owner,
-		animalia.mob_ai.basic_breed,
-		animalia.mob_ai.basic_flee
+		pegasus.mob_ai.basic_wander,
+		pegasus.mob_ai.swim_seek_land,
+		pegasus.mob_ai.basic_seek_crop,
+		pegasus.mob_ai.tamed_follow_owner,
+		pegasus.mob_ai.basic_breed,
+		pegasus.mob_ai.basic_flee
 	},
 
 	activate_func = function(self)
-		animalia.initialize_api(self)
-		animalia.initialize_lasso(self)
+		pegasus.initialize_api(self)
+		pegasus.initialize_lasso(self)
 	end,
 
 	step_func = function(self)
-		animalia.step_timers(self)
-		animalia.do_growth(self, 60)
-		animalia.head_tracking(self)
-		animalia.update_lasso_effects(self)
-		animalia.random_sound(self)
+		pegasus.step_timers(self)
+		pegasus.do_growth(self, 60)
+		pegasus.head_tracking(self)
+		pegasus.update_lasso_effects(self)
+		pegasus.random_sound(self)
 	end,
 
-	death_func = animalia.death_func,
+	death_func = pegasus.death_func,
 
 	on_rightclick = function(self, clicker)
-		if animalia.feed(self, clicker, false, true) then
+		if pegasus.feed(self, clicker, false, true) then
 			return
 		end
-		if animalia.set_nametag(self, clicker) then
+		if pegasus.set_nametag(self, clicker) then
 			return
 		end
 	end,
 
-	on_punch = animalia.punch
+	on_punch = pegasus.punch
 })
 
-creatura.register_spawn_item("animalia:pig", {
+creatura.register_spawn_item("pegasus:pig", {
 	col1 = "e0b1a7",
 	col2 = "cc9485"
 })

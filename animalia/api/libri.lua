@@ -11,12 +11,12 @@ local color = minetest.colorize
 local libri_bg = {
 	"formspec_version[3]",
 	"size[16,10]",
-	"background[-0.7,-0.5;17.5,11.5;animalia_libri_bg.png]"
+	"background[-0.7,-0.5;17.5,11.5;pegasus_libri_bg.png]"
 }
 
-local libri_btn_next = "image_button[15,9;1,1;animalia_libri_icon_next.png;btn_next;;true;false]"
+local libri_btn_next = "image_button[15,9;1,1;pegasus_libri_icon_next.png;btn_next;;true;false]"
 
-local libri_btn_last = "image_button[1,9;1,1;animalia_libri_icon_last.png;btn_last;;true;false]"
+local libri_btn_last = "image_button[1,9;1,1;pegasus_libri_icon_last.png;btn_last;;true;false]"
 
 local libri_drp_font_scale = "dropdown[17,0;0.75,0.5;drp_font_scale;0.25,0.5,0.75,1;1]"
 
@@ -30,46 +30,46 @@ end
 local pages = {}
 
 local generate_mobs = {
-	["animalia:bat"] = "Bat",
-	["animalia:cat"] = "Cat",
-	["animalia:chicken"] = "Chicken",
-	["animalia:cow"] = "Cow",
-	["animalia:opossum"] = "Opossum",
-	["animalia:owl"] = "Owl",
-	["animalia:tropical_fish"] = "Tropical Fish",
-	["animalia:fox"] = "Fox",
-	["animalia:frog"] = "Frog",
-	["animalia:grizzly_bear"] = "Grizzly Bear",
-	["animalia:horse"] = "Horse",
-	["animalia:pig"] = "Pig",
-	["animalia:rat"] = "Rat",
-	["animalia:reindeer"] = "Reindeer",
-	["animalia:sheep"] = "Sheep",
-	["animalia:song_bird"] = "Song Bird",
-	["animalia:turkey"] = "Turkey",
-	["animalia:wolf"] = "Wolf",
+	["pegasus:bat"] = "Bat",
+	["pegasus:cat"] = "Cat",
+	["pegasus:chicken"] = "Chicken",
+	["pegasus:cow"] = "Cow",
+	["pegasus:opossum"] = "Opossum",
+	["pegasus:owl"] = "Owl",
+	["pegasus:tropical_fish"] = "Tropical Fish",
+	["pegasus:fox"] = "Fox",
+	["pegasus:frog"] = "Frog",
+	["pegasus:grizzly_bear"] = "Grizzly Bear",
+	["pegasus:horse"] = "Horse",
+	["pegasus:pig"] = "Pig",
+	["pegasus:rat"] = "Rat",
+	["pegasus:reindeer"] = "Reindeer",
+	["pegasus:sheep"] = "Sheep",
+	["pegasus:song_bird"] = "Song Bird",
+	["pegasus:turkey"] = "Turkey",
+	["pegasus:wolf"] = "Wolf",
 }
 
 
 local spawn_biomes = {
-	["animalia:bat"] = "cave",
-	["animalia:cat"] = "urban",
-	["animalia:chicken"] = "tropical",
-	["animalia:cow"] = "grassland",
-	["animalia:opossum"] = "temperate",
-	["animalia:owl"] = "temperate",
-	["animalia:tropical_fish"] = "ocean",
-	["animalia:fox"] = "boreal",
-	["animalia:frog"] = "swamp",
-	["animalia:grizzly_bear"] = "boreal",
-	["animalia:horse"] = "grassland",
-	["animalia:pig"] = "temperate",
-	["animalia:rat"] = "urban",
-	["animalia:reindeer"] = "boreal",
-	["animalia:sheep"] = "grassland",
-	["animalia:song_bird"] = "temperate",
-	["animalia:turkey"] = "boreal",
-	["animalia:wolf"] = "boreal",
+	["pegasus:bat"] = "cave",
+	["pegasus:cat"] = "urban",
+	["pegasus:chicken"] = "tropical",
+	["pegasus:cow"] = "grassland",
+	["pegasus:opossum"] = "temperate",
+	["pegasus:owl"] = "temperate",
+	["pegasus:tropical_fish"] = "ocean",
+	["pegasus:fox"] = "boreal",
+	["pegasus:frog"] = "swamp",
+	["pegasus:grizzly_bear"] = "boreal",
+	["pegasus:horse"] = "grassland",
+	["pegasus:pig"] = "temperate",
+	["pegasus:rat"] = "urban",
+	["pegasus:reindeer"] = "boreal",
+	["pegasus:sheep"] = "grassland",
+	["pegasus:song_bird"] = "temperate",
+	["pegasus:turkey"] = "boreal",
+	["pegasus:wolf"] = "boreal",
 }
 
 -----------
@@ -79,7 +79,7 @@ local spawn_biomes = {
 
 local function get_spawn_biomes(name)
 	local biome_group = spawn_biomes[name]
-	local biomes = animalia.registered_biome_groups[biome_group].biomes
+	local biomes = pegasus.registered_biome_groups[biome_group].biomes
 	return (#biomes > 0 and biomes) or {"grassland"}
 end
 
@@ -120,7 +120,7 @@ local function generate_page(mob)
 			center_text = true,
 			font_size = 20,
 			offset = {x = 8, y = 1.5},
-			file = "animalia_libri_" .. name .. ".txt"
+			file = "pegasus_libri_" .. name .. ".txt"
 		},
 		{ -- Image
 			element_type = "model",
@@ -148,7 +148,7 @@ local function generate_page(mob)
 			element_type = "image",
 			offset = {x = 2.535, y = 8.15},
 			size = {x = 1, y = 1},
-			text = "animalia_libri_health_fg.png"
+			text = "pegasus_libri_health_fg.png"
 		}),
 		libri.render_element({ -- Health Amount
 			element_type = "label",
@@ -159,31 +159,31 @@ local function generate_page(mob)
 			element_type = "item_image",
 			offset = {x = 4.25, y = 8.15},
 			size = {x = 1, y = 1},
-			text = "animalia:lasso"
+			text = "pegasus:lasso"
 		}),
 		libri.render_element({ -- Lasso Indication Icon
 			element_type = "image",
 			offset = {x = 4.75, y = 8.75},
 			size = {x = 0.5, y = 0.5},
-			text = "animalia_libri_" .. can_lasso(mob) .. "_icon.png"
+			text = "pegasus_libri_" .. can_lasso(mob) .. "_icon.png"
 		}),
 		libri.render_element({ -- Net Icon
 			element_type = "item_image",
 			offset = {x = 6, y = 8.15},
 			size = {x = 1, y = 1},
-			text = "animalia:net"
+			text = "pegasus:net"
 		}),
 		libri.render_element({ -- Net Indication Icon
 			element_type = "image",
 			offset = {x = 6.5, y = 8.75},
 			size = {x = 0.5, y = 0.5},
-			text = "animalia_libri_" .. can_net(mob) .. "_icon.png"
+			text = "pegasus_libri_" .. can_net(mob) .. "_icon.png"
 		}),
 		libri.render_element({ -- Styling
 			element_type = "image",
 			offset = {x = -0.7, y = -0.5},
 			size = {x = 17.5, y = 11.5},
-			text = "animalia_libri_info_fg.png"
+			text = "pegasus_libri_info_fg.png"
 		})
 	}
 	pages[mob] = page
@@ -220,7 +220,7 @@ minetest.register_on_mods_loaded(function()
 				center_text = true,
 				font_size = 24,
 				offset = {x = 0, y = 1.5},
-				file = "animalia_libri_home.txt"
+				file = "pegasus_libri_home.txt"
 			},
 			{
 				element_type = "mobs",
@@ -307,7 +307,7 @@ function libri.render_element(def, meta, playername)
 	local form = ""
 	-- Add text
 	if def.element_type == "label" then
-		local font_size_x = (animalia.libri_font_size[playername] or 1)
+		local font_size_x = (pegasus.libri_font_size[playername] or 1)
 		local font_size = (def.font_size or 16) * font_size_x
 		if def.file then
 			local filename = path .. "/libri/" .. def.file
@@ -417,7 +417,7 @@ local function iterate_libri_images()
 				end
 				if info.biome_iter then
 					local biome_group = spawn_biomes[page]
-					local registered_groups = animalia.registered_biome_groups
+					local registered_groups = pegasus.registered_biome_groups
 					if registered_groups[biome_group].biomes[info.biome_iter + 1] then
 						info.biome_iter = info.biome_iter + 1
 					else
@@ -438,7 +438,7 @@ local function iterate_libri_images()
 		if player
 		and spawn_biomes[page] then
 			local meta = player:get_wielded_item():get_meta()
-			minetest.show_formspec(name, "animalia:libri_" .. page:split(":")[2], get_page(page, meta, name))
+			minetest.show_formspec(name, "pegasus:libri_" .. page:split(":")[2], get_page(page, meta, name))
 		end
 	end
 	minetest.after(2, iterate_libri_images)
@@ -448,9 +448,9 @@ iterate_libri_images()
 
 -- Craftitem
 
-minetest.register_craftitem("animalia:libri_animalia", {
-	description = "Libri Animalia",
-	inventory_image = "animalia_libri_animalia.png",
+minetest.register_craftitem("pegasus:libri_pegasus", {
+	description = "Libri pegasus",
+	inventory_image = "pegasus_libri_pegasus.png",
 	stack_max = 1,
 	groups = {book = 1},
 
@@ -458,7 +458,7 @@ minetest.register_craftitem("animalia:libri_animalia", {
 		local meta = itemstack:get_meta()
 		if meta:get_string("pages") ~= "" then meta:set_string("pages", "") end
 		local name = player:get_player_name()
-		minetest.show_formspec(name, "animalia:libri_home_1", get_page("home_1", meta, name))
+		minetest.show_formspec(name, "pegasus:libri_home_1", get_page("home_1", meta, name))
 		libri_players[name] = "home_1"
 	end,
 	on_secondary_use = function(itemstack, player, pointed)
@@ -478,7 +478,7 @@ minetest.register_craftitem("animalia:libri_animalia", {
 			return itemstack
 		end
 		local name = player:get_player_name()
-		minetest.show_formspec(name, "animalia:libri_home_1", get_page("home_1", meta, name))
+		minetest.show_formspec(name, "pegasus:libri_home_1", get_page("home_1", meta, name))
 		libri_players[name] = "home_1"
 	end
 })
@@ -487,12 +487,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local plyr_name = player:get_player_name()
 	local wielded_item = player:get_wielded_item()
 	local meta = wielded_item:get_meta()
-	if formname:match("animalia:libri_") then
+	if formname:match("pegasus:libri_") then
 		for page in pairs(pages) do
 			if not page:match("^home") then
 				local name = page:split(":")[2]
 				if fields["btn_" .. name] then
-					minetest.show_formspec(plyr_name, "animalia:libri_" .. name, get_page(page, meta, plyr_name))
+					minetest.show_formspec(plyr_name, "pegasus:libri_" .. name, get_page(page, meta, plyr_name))
 					libri_players[plyr_name] = page
 					return true
 				end
@@ -502,7 +502,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local current_no = tonumber(formname:sub(-1))
 			local page = "home_" .. current_no + 1
 			if pages[page] then
-				minetest.show_formspec(plyr_name, "animalia:libri_" .. page, get_page(page, meta, plyr_name))
+				minetest.show_formspec(plyr_name, "pegasus:libri_" .. page, get_page(page, meta, plyr_name))
 				libri_players[plyr_name] = page
 				return true
 			end
@@ -511,16 +511,16 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local current_no = tonumber(formname:sub(-1))
 			local page = "home_" .. current_no - 1
 			if pages[page] then
-				minetest.show_formspec(plyr_name, "animalia:libri_" .. page, get_page(page, meta, plyr_name))
+				minetest.show_formspec(plyr_name, "pegasus:libri_" .. page, get_page(page, meta, plyr_name))
 				libri_players[plyr_name] = page
 				return true
 			end
 		end
 		if fields.drp_font_scale then
-			animalia.libri_font_size[plyr_name] = fields.drp_font_scale
+			pegasus.libri_font_size[plyr_name] = fields.drp_font_scale
 			local page = libri_players[plyr_name]
 			if not page then return end
-			minetest.show_formspec(plyr_name, "animalia:libri_" .. page, get_page(page, meta, plyr_name))
+			minetest.show_formspec(plyr_name, "pegasus:libri_" .. page, get_page(page, meta, plyr_name))
 		end
 		if fields.quit or fields.key_enter then
 			libri_players[plyr_name] = nil

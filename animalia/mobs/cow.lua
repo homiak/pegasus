@@ -2,30 +2,30 @@
 -- Cow --
 ---------
 
-creatura.register_mob("animalia:cow", {
+creatura.register_mob("pegasus:cow", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
-	mesh = "animalia_cow.b3d",
+	mesh = "pegasus_cow.b3d",
 	female_textures = {
-		"animalia_cow_1.png^animalia_cow_udder.png",
-		"animalia_cow_2.png^animalia_cow_udder.png",
-		"animalia_cow_3.png^animalia_cow_udder.png",
-		"animalia_cow_4.png^animalia_cow_udder.png",
-		"animalia_cow_5.png^animalia_cow_udder.png"
+		"pegasus_cow_1.png^pegasus_cow_udder.png",
+		"pegasus_cow_2.png^pegasus_cow_udder.png",
+		"pegasus_cow_3.png^pegasus_cow_udder.png",
+		"pegasus_cow_4.png^pegasus_cow_udder.png",
+		"pegasus_cow_5.png^pegasus_cow_udder.png"
 	},
 	male_textures = {
-		"animalia_cow_1.png",
-		"animalia_cow_2.png",
-		"animalia_cow_3.png",
-		"animalia_cow_4.png",
-		"animalia_cow_5.png"
+		"pegasus_cow_1.png",
+		"pegasus_cow_2.png",
+		"pegasus_cow_3.png",
+		"pegasus_cow_4.png",
+		"pegasus_cow_5.png"
 	},
 	child_textures = {
-		"animalia_cow_1.png",
-		"animalia_cow_2.png",
-		"animalia_cow_3.png",
-		"animalia_cow_4.png",
-		"animalia_cow_5.png"
+		"pegasus_cow_1.png",
+		"pegasus_cow_2.png",
+		"pegasus_cow_3.png",
+		"pegasus_cow_4.png",
+		"pegasus_cow_5.png"
 	},
 	makes_footstep_sound = true,
 
@@ -41,17 +41,17 @@ creatura.register_mob("animalia:cow", {
 	stepheight = 1.1,
 	sounds = {
 		random = {
-			name = "animalia_cow",
+			name = "pegasus_cow",
 			gain = 0.5,
 			distance = 8
 		},
 		hurt = {
-			name = "animalia_cow_hurt",
+			name = "pegasus_cow_hurt",
 			gain = 0.5,
 			distance = 8
 		},
 		death = {
-			name = "animalia_cow_death",
+			name = "pegasus_cow_death",
 			gain = 0.5,
 			distance = 8
 		}
@@ -65,10 +65,10 @@ creatura.register_mob("animalia:cow", {
 		walk = {range = {x = 71, y = 89}, speed = 15, frame_blend = 0.3, loop = true},
 		run = {range = {x = 71, y = 89}, speed = 30, frame_blend = 0.3, loop = true},
 	},
-	follow = animalia.food_wheat,
+	follow = pegasus.food_wheat,
 	drops = {
-		{name = "animalia:beef_raw", min = 1, max = 3, chance = 1},
-		{name = "animalia:leather", min = 1, max = 3, chance = 2}
+		{name = "pegasus:beef_raw", min = 1, max = 3, chance = 1},
+		{name = "pegasus:leather", min = 1, max = 3, chance = 2}
 	},
 	fancy_collide = false,
 
@@ -76,7 +76,7 @@ creatura.register_mob("animalia:cow", {
 	is_grazing_mob = true,
 	is_herding_mob = true,
 
-	-- Animalia Props
+	-- pegasus Props
 	flee_puncher = true,
 	catch_with_net = true,
 	catch_with_lasso = true,
@@ -90,40 +90,40 @@ creatura.register_mob("animalia:cow", {
 		pivot_h = 0.75,
 		pivot_v = 1
 	},
-	wander_action = animalia.action_boid_move,
+	wander_action = pegasus.action_boid_move,
 
 	-- Functions
 	utility_stack = {
-		animalia.mob_ai.basic_wander,
-		animalia.mob_ai.swim_seek_land,
-		animalia.mob_ai.tamed_follow_owner,
-		animalia.mob_ai.basic_breed,
-		animalia.mob_ai.basic_flee
+		pegasus.mob_ai.basic_wander,
+		pegasus.mob_ai.swim_seek_land,
+		pegasus.mob_ai.tamed_follow_owner,
+		pegasus.mob_ai.basic_breed,
+		pegasus.mob_ai.basic_flee
 	},
 
 	activate_func = function(self)
-		animalia.initialize_api(self)
-		animalia.initialize_lasso(self)
+		pegasus.initialize_api(self)
+		pegasus.initialize_lasso(self)
 		self.collected = self:recall("collected") or false
 	end,
 
 	step_func = function(self)
-		animalia.step_timers(self)
-		animalia.head_tracking(self, 0.75, 0.75)
-		animalia.do_growth(self, 60)
-		animalia.update_lasso_effects(self)
-		animalia.random_sound(self)
+		pegasus.step_timers(self)
+		pegasus.head_tracking(self, 0.75, 0.75)
+		pegasus.do_growth(self, 60)
+		pegasus.update_lasso_effects(self)
+		pegasus.random_sound(self)
 	end,
 
 	death_func = function(self)
-		if self:get_utility() ~= "animalia:die" then
-			self:initiate_utility("animalia:die", self)
+		if self:get_utility() ~= "pegasus:die" then
+			self:initiate_utility("pegasus:die", self)
 		end
 	end,
 
 	on_rightclick = function(self, clicker)
-		if animalia.feed(self, clicker, false, true)
-		or animalia.set_nametag(self, clicker) then
+		if pegasus.feed(self, clicker, false, true)
+		or pegasus.set_nametag(self, clicker) then
 			return
 		end
 
@@ -146,12 +146,12 @@ creatura.register_mob("animalia:cow", {
 			tool:take_item()
 			clicker:set_wielded_item(tool)
 
-			if inv:room_for_item("main", {name = "animalia:bucket_milk"}) then
-				clicker:get_inventory():add_item("main", "animalia:bucket_milk")
+			if inv:room_for_item("main", {name = "pegasus:bucket_milk"}) then
+				clicker:get_inventory():add_item("main", "pegasus:bucket_milk")
 			else
 				local pos = self.object:get_pos()
 				pos.y = pos.y + 0.5
-				minetest.add_item(pos, {name = "animalia:bucket_milk"})
+				minetest.add_item(pos, {name = "pegasus:bucket_milk"})
 			end
 
 			self.collected = self:memorize("collected", true)
@@ -159,10 +159,10 @@ creatura.register_mob("animalia:cow", {
 		end
 	end,
 
-	on_punch = animalia.punch
+	on_punch = pegasus.punch
 })
 
-creatura.register_spawn_item("animalia:cow", {
+creatura.register_spawn_item("pegasus:cow", {
 	col1 = "cac3a1",
 	col2 = "464438"
 })

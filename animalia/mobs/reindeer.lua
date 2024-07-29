@@ -2,12 +2,12 @@
 -- Reindeer --
 --------------
 
-creatura.register_mob("animalia:reindeer", {
+creatura.register_mob("pegasus:reindeer", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
-	mesh = "animalia_reindeer.b3d",
-	textures = {"animalia_reindeer.png"},
-	child_textures = {"animalia_reindeer_calf.png"},
+	mesh = "pegasus_reindeer.b3d",
+	textures = {"pegasus_reindeer.png"},
+	child_textures = {"pegasus_reindeer_calf.png"},
 	makes_footstep_sound = true,
 
 	-- Creatura Props
@@ -20,17 +20,17 @@ creatura.register_mob("animalia:reindeer", {
 	stepheight = 1.1,
 	sounds = {
 		random = {
-			name = "animalia_reindeer",
+			name = "pegasus_reindeer",
 			gain = 0.5,
 			distance = 8
 		},
 		hurt = {
-			name = "animalia_reindeer_hurt",
+			name = "pegasus_reindeer_hurt",
 			gain = 0.5,
 			distance = 8
 		},
 		death = {
-			name = "animalia_reindeer_death",
+			name = "pegasus_reindeer_death",
 			gain = 0.5,
 			distance = 8
 		}
@@ -45,17 +45,17 @@ creatura.register_mob("animalia:reindeer", {
 		run = {range = {x = 100, y = 119}, speed = 40, frame_blend = 0.3, loop = true},
 		eat = {range = {x = 130, y = 150}, speed = 20, frame_blend = 0.3, loop = false}
 	},
-	follow = animalia.food_wheat,
+	follow = pegasus.food_wheat,
 	drops = {
-		{name = "animalia:venison_raw", min = 1, max = 3, chance = 1},
-		{name = "animalia:leather", min = 1, max = 3, chance = 2}
+		{name = "pegasus:venison_raw", min = 1, max = 3, chance = 1},
+		{name = "pegasus:leather", min = 1, max = 3, chance = 2}
 	},
 
 	-- Behavior Parameters
 	is_grazing_mob = true,
 	is_herding_mob = true,
 
-	-- Animalia Props
+	-- pegasus Props
 	flee_puncher = true,
 	catch_with_net = true,
 	catch_with_lasso = true,
@@ -78,41 +78,41 @@ creatura.register_mob("animalia:reindeer", {
 
 	-- Functions
 	utility_stack = {
-		animalia.mob_ai.basic_wander,
-		animalia.mob_ai.swim_seek_land,
-		animalia.mob_ai.tamed_follow_owner,
-		animalia.mob_ai.basic_breed,
-		animalia.mob_ai.basic_flee
+		pegasus.mob_ai.basic_wander,
+		pegasus.mob_ai.swim_seek_land,
+		pegasus.mob_ai.tamed_follow_owner,
+		pegasus.mob_ai.basic_breed,
+		pegasus.mob_ai.basic_flee
 	},
 
 	activate_func = function(self)
-		animalia.initialize_api(self)
-		animalia.initialize_lasso(self)
+		pegasus.initialize_api(self)
+		pegasus.initialize_lasso(self)
 	end,
 
 	step_func = function(self)
-		animalia.step_timers(self)
-		animalia.head_tracking(self)
-		animalia.do_growth(self, 60)
-		animalia.update_lasso_effects(self)
-		animalia.random_sound(self)
+		pegasus.step_timers(self)
+		pegasus.head_tracking(self)
+		pegasus.do_growth(self, 60)
+		pegasus.update_lasso_effects(self)
+		pegasus.random_sound(self)
 	end,
 
-	death_func = animalia.death_func,
+	death_func = pegasus.death_func,
 
 	on_rightclick = function(self, clicker)
-		if animalia.feed(self, clicker, false, true) then
+		if pegasus.feed(self, clicker, false, true) then
 			return
 		end
-		if animalia.set_nametag(self, clicker) then
+		if pegasus.set_nametag(self, clicker) then
 			return
 		end
 	end,
 
-	on_punch = animalia.punch
+	on_punch = pegasus.punch
 })
 
-creatura.register_spawn_item("animalia:reindeer", {
+creatura.register_spawn_item("pegasus:reindeer", {
 	col1 = "413022",
 	col2 = "d5c0a3"
 })

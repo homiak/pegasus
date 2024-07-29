@@ -10,7 +10,7 @@ local form_obj = {}
 
 local function create_horse_inventory(self)
 	if not self.owner then return end
-	local inv_name = "animalia:horse_" .. self.owner
+	local inv_name = "pegasus:horse_" .. self.owner
 	local inv = minetest.create_detached_inventory(inv_name, {
 		allow_move = function(_, _, _, _, _, count)
 			return count
@@ -29,7 +29,7 @@ end
 
 local function serialize_horse_inventory(self)
 	if not self.owner then return end
-	local inv_name = "animalia:horse_" .. self.owner
+	local inv_name = "pegasus:horse_" .. self.owner
 	local inv = minetest.get_inventory({type = "detached", name = inv_name})
 	if not inv then return end
 	local list = inv:get_list("main")
@@ -56,9 +56,9 @@ local function get_form(self, player_name)
 	local form = {
 		"formspec_version[3]",
 		"size[10.5,10]",
-		"image[0,0;10.5,5.25;animalia_form_horse_bg.png]",
-		"model[0,0.5;5,3.5;mob_mesh;animalia_horse.b3d;" .. texture .. ";-10,-130;false;false;" .. frame_loop .. ";15]",
-		"list[detached:animalia:horse_" .. player_name .. ";main;5.4,0.5;4,3;]",
+		"image[0,0;10.5,5.25;pegasus_form_horse_bg.png]",
+		"model[0,0.5;5,3.5;mob_mesh;pegasus_horse.b3d;" .. texture .. ";-10,-130;false;false;" .. frame_loop .. ";15]",
+		"list[detached:pegasus:horse_" .. player_name .. ";main;5.4,0.5;4,3;]",
 		"list[current_player;main;0.4,4.9;8,4;]",
 		"listring[current_player;main]"
 	}
@@ -71,7 +71,7 @@ local function close_form(player)
 
 	if form_obj[name] then
 		form_obj[name] = nil
-		minetest.remove_detached_inventory("animalia:horse_" .. name)
+		minetest.remove_detached_inventory("pegasus:horse_" .. name)
 	end
 end
 
@@ -81,7 +81,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		return
 	end
 	local obj = form_obj[name]
-	if formname == "animalia:horse_forms" then
+	if formname == "pegasus:horse_forms" then
 		local ent = obj and obj:get_luaentity()
 		if not ent then return end
 
@@ -92,14 +92,14 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		end
 	end
 
-	if formname == "animalia:horse_inv" then
+	if formname == "pegasus:horse_inv" then
 		local ent = obj and obj:get_luaentity()
 		if not ent then return end
 
 		if fields.quit or fields.key_enter then
 			form_obj[name] = nil
 			serialize_horse_inventory(ent)
-			minetest.remove_detached_inventory("animalia:horse_" .. name)
+			minetest.remove_detached_inventory("pegasus:horse_" .. name)
 		end
 	end
 end)
@@ -109,32 +109,32 @@ minetest.register_on_leaveplayer(close_form)
 -- Pattern
 
 local patterns = {
-	"animalia_horse_pattern_1.png",
-	"animalia_horse_pattern_2.png",
-	"animalia_horse_pattern_3.png"
+	"pegasus_horse_pattern_1.png",
+	"pegasus_horse_pattern_2.png",
+	"pegasus_horse_pattern_3.png"
 }
 
 local avlbl_colors = {
 	[1] = {
-		"animalia_horse_2.png",
-		"animalia_horse_3.png",
-		"animalia_horse_5.png"
+		"pegasus_horse_2.png",
+		"pegasus_horse_3.png",
+		"pegasus_horse_5.png"
 	},
 	[2] = {
-		"animalia_horse_1.png",
-		"animalia_horse_5.png"
+		"pegasus_horse_1.png",
+		"pegasus_horse_5.png"
 	},
 	[3] = {
-		"animalia_horse_2.png",
-		"animalia_horse_1.png"
+		"pegasus_horse_2.png",
+		"pegasus_horse_1.png"
 	},
 	[4] = {
-		"animalia_horse_2.png",
-		"animalia_horse_1.png"
+		"pegasus_horse_2.png",
+		"pegasus_horse_1.png"
 	},
 	[5] = {
-		"animalia_horse_2.png",
-		"animalia_horse_1.png"
+		"pegasus_horse_2.png",
+		"pegasus_horse_1.png"
 	}
 }
 
@@ -161,16 +161,16 @@ end
 
 -- Definition
 
-creatura.register_mob("animalia:horse", {
+creatura.register_mob("pegasus:horse", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
-	mesh = "animalia_horse.b3d",
+	mesh = "pegasus_horse.b3d",
 	textures = {
-		"animalia_horse_1.png",
-		"animalia_horse_2.png",
-		"animalia_horse_3.png",
-		"animalia_horse_4.png",
-		"animalia_horse_5.png"
+		"pegasus_horse_1.png",
+		"pegasus_horse_2.png",
+		"pegasus_horse_3.png",
+		"pegasus_horse_4.png",
+		"pegasus_horse_5.png"
 	},
 	makes_footstep_sound = true,
 
@@ -187,17 +187,17 @@ creatura.register_mob("animalia:horse", {
 	sounds = {
 		alter_child_pitch = true,
 		random = {
-			name = "animalia_horse_idle",
+			name = "pegasus_horse_idle",
 			gain = 1.0,
 			distance = 8
 		},
 		hurt = {
-			name = "animalia_horse_hurt",
+			name = "pegasus_horse_hurt",
 			gain = 1.0,
 			distance = 8
 		},
 		death = {
-			name = "animalia_horse_death",
+			name = "pegasus_horse_death",
 			gain = 1.0,
 			distance = 8
 		}
@@ -214,9 +214,9 @@ creatura.register_mob("animalia:horse", {
 		rear = {range = {x = 130, y = 160}, speed = 20, frame_blend = 0.1, loop = false},
 		eat = {range = {x = 210, y = 240}, speed = 30, frame_blend = 0.3, loop = false}
 	},
-	follow = animalia.food_wheat,
+	follow = pegasus.food_wheat,
 	drops = {
-		{name = "animalia:leather", min = 1, max = 4, chance = 2}
+		{name = "pegasus:leather", min = 1, max = 4, chance = 2}
 	},
 	fancy_collide = false,
 
@@ -224,7 +224,7 @@ creatura.register_mob("animalia:horse", {
 	is_grazing_mob = true,
 	is_herding_mob = true,
 
-	-- Animalia Props
+	-- pegasus Props
 	catch_with_net = true,
 	catch_with_lasso = true,
 	consumable_nodes = {
@@ -239,13 +239,13 @@ creatura.register_mob("animalia:horse", {
 		pivot_v = 1.75
 	},
 	utility_stack = {
-		animalia.mob_ai.basic_wander,
-		animalia.mob_ai.swim_seek_land,
-		animalia.mob_ai.tamed_follow_owner,
-		animalia.mob_ai.basic_breed,
-		animalia.mob_ai.basic_flee,
+		pegasus.mob_ai.basic_wander,
+		pegasus.mob_ai.swim_seek_land,
+		pegasus.mob_ai.tamed_follow_owner,
+		pegasus.mob_ai.basic_breed,
+		pegasus.mob_ai.basic_flee,
 		{
-			utility = "animalia:horse_tame",
+			utility = "pegasus:horse_tame",
 			get_score = function(self)
 				local rider = not self.owner and self.rider
 				if rider
@@ -256,7 +256,7 @@ creatura.register_mob("animalia:horse", {
 			end
 		},
 		{
-			utility = "animalia:horse_ride",
+			utility = "pegasus:horse_ride",
 			get_score = function(self)
 				if not self.owner then return 0 end
 				local owner = self.owner and minetest.get_player_by_name(self.owner)
@@ -276,11 +276,11 @@ creatura.register_mob("animalia:horse", {
 			self.saddled = self:memorize("saddled", true)
 			local texture = self.object:get_properties().textures[1]
 			self.object:set_properties({
-				textures = {texture .. "^animalia_horse_saddle.png"}
+				textures = {texture .. "^pegasus_horse_saddle.png"}
 			})
 			self.drops = {
-				{name = "animalia:leather", chance = 2, min = 1, max = 4},
-				{name = "animalia:saddle", chance = 1, min = 1, max = 1}
+				{name = "pegasus:leather", chance = 2, min = 1, max = 4},
+				{name = "pegasus:saddle", chance = 1, min = 1, max = 1}
 			}
 		else
 			local pos = self.object:get_pos()
@@ -288,9 +288,9 @@ creatura.register_mob("animalia:horse", {
 			self.saddled = self:memorize("saddled", false)
 			set_pattern(self)
 			self.drops = {
-				{name = "animalia:leather", chance = 2, min = 1, max = 4}
+				{name = "pegasus:leather", chance = 2, min = 1, max = 4}
 			}
-			minetest.add_item(pos, "animalia:saddle")
+			minetest.add_item(pos, "pegasus:saddle")
 		end
 	end,
 
@@ -319,13 +319,13 @@ creatura.register_mob("animalia:horse", {
 		ent.speed = ent:recall("speed")
 		ent.jump_power = ent:recall("jump_power")
 		ent.max_health = ent:recall("max_health")
-		animalia.initialize_api(ent)
-		animalia.protect_from_despawn(ent)
+		pegasus.initialize_api(ent)
+		pegasus.protect_from_despawn(ent)
 	end,
 
 	activate_func = function(self)
-		animalia.initialize_api(self)
-		animalia.initialize_lasso(self)
+		pegasus.initialize_api(self)
+		pegasus.initialize_lasso(self)
 		set_pattern(self)
 
 		self.owner = self:recall("owner") or nil
@@ -348,24 +348,24 @@ creatura.register_mob("animalia:horse", {
 	end,
 
 	step_func = function(self)
-		animalia.step_timers(self)
-		animalia.head_tracking(self)
-		animalia.do_growth(self, 60)
-		animalia.update_lasso_effects(self)
-		animalia.random_sound(self)
+		pegasus.step_timers(self)
+		pegasus.head_tracking(self)
+		pegasus.do_growth(self, 60)
+		pegasus.update_lasso_effects(self)
+		pegasus.random_sound(self)
 	end,
 
 	death_func = function(self)
 		if self.rider then
-			animalia.mount(self, self.rider)
+			pegasus.mount(self, self.rider)
 		end
-		if self:get_utility() ~= "animalia:die" then
-			self:initiate_utility("animalia:die", self)
+		if self:get_utility() ~= "pegasus:die" then
+			self:initiate_utility("pegasus:die", self)
 		end
 	end,
 
 	on_rightclick = function(self, clicker)
-		if animalia.feed(self, clicker, false, true) then
+		if pegasus.feed(self, clicker, false, true) then
 			return
 		end
 
@@ -373,25 +373,25 @@ creatura.register_mob("animalia:horse", {
 		local name = clicker and clicker:get_player_name()
 		if owner and name ~= owner then return end
 
-		if animalia.set_nametag(self, clicker) then
+		if pegasus.set_nametag(self, clicker) then
 			return
 		end
 
 		local wielded_name = clicker:get_wielded_item():get_name()
 
-		if wielded_name == "animalia:saddle" then
+		if wielded_name == "pegasus:saddle" then
 			self:set_saddle(true)
 			return
 		end
 
 		if clicker:get_player_control().sneak
 		and owner then
-			minetest.show_formspec(name, "animalia:horse_forms", get_form(self, name))
+			minetest.show_formspec(name, "pegasus:horse_forms", get_form(self, name))
 			form_obj[name] = self.object
 		elseif wielded_name == "" then
-			animalia.mount(self, clicker, {rot = {x = -65, y = 180, z = 0}, pos = {x = 0, y = 0.75, z = 0.6}})
+			pegasus.mount(self, clicker, {rot = {x = -65, y = 180, z = 0}, pos = {x = 0, y = 0.75, z = 0.6}})
 			if self.saddled then
-				self:initiate_utility("animalia:mount", self, clicker)
+				self:initiate_utility("pegasus:mount", self, clicker)
 			end
 		end
 	end,
@@ -405,7 +405,7 @@ creatura.register_mob("animalia:horse", {
 			self:set_saddle(false)
 			return
 		end
-		animalia.punch(self, puncher, ...)
+		pegasus.punch(self, puncher, ...)
 	end,
 
 	on_detach_child = function(self, child)
@@ -414,12 +414,12 @@ creatura.register_mob("animalia:horse", {
 			self.rider = nil
 			child:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
 			child:set_properties({visual_size = {x = 1, y = 1}})
-			animalia.animate_player(child, "stand", 30)
+			pegasus.animate_player(child, "stand", 30)
 		end
 	end
 })
 
-creatura.register_spawn_item("animalia:horse", {
+creatura.register_spawn_item("pegasus:horse", {
 	col1 = "ebdfd8",
 	col2 = "653818"
 })

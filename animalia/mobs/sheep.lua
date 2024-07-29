@@ -22,15 +22,15 @@ local palette  = {
 	yellow = {"Yellow", "#e3ff0070"},
 }
 
-creatura.register_mob("animalia:sheep", {
+creatura.register_mob("pegasus:sheep", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
-	mesh = "animalia_sheep.b3d",
+	mesh = "pegasus_sheep.b3d",
 	textures = {
-		"animalia_sheep.png^animalia_sheep_wool.png"
+		"pegasus_sheep.png^pegasus_sheep_wool.png"
 	},
 	child_textures = {
-		"animalia_sheep.png"
+		"pegasus_sheep.png"
 	},
 	makes_footstep_sound = true,
 
@@ -45,17 +45,17 @@ creatura.register_mob("animalia:sheep", {
 	stepheight = 1.1,
 	sounds = {
 		random = {
-			name = "animalia_sheep",
+			name = "pegasus_sheep",
 			gain = 1.0,
 			distance = 8
 		},
 		hurt = {
-			name = "animalia_sheep_hurt",
+			name = "pegasus_sheep_hurt",
 			gain = 1.0,
 			distance = 8
 		},
 		death = {
-			name = "animalia_sheep_death",
+			name = "pegasus_sheep_death",
 			gain = 1.0,
 			distance = 8
 		}
@@ -70,9 +70,9 @@ creatura.register_mob("animalia:sheep", {
 		run = {range = {x = 100, y = 119}, speed = 30, frame_blend = 0.3, loop = true},
 		eat = {range = {x = 130, y = 150}, speed = 20, frame_blend = 0.3, loop = false}
 	},
-	follow = animalia.food_wheat,
+	follow = pegasus.food_wheat,
 	drops = {
-		{name = "animalia:mutton_raw", min = 1, max = 3, chance = 1},
+		{name = "pegasus:mutton_raw", min = 1, max = 3, chance = 1},
 		minetest.get_modpath("wool") and {name = "wool:white", min = 1, max = 3, chance = 2} or nil
 	},
 
@@ -80,7 +80,7 @@ creatura.register_mob("animalia:sheep", {
 	is_grazing_mob = true,
 	is_herding_mob = true,
 
-	-- Animalia Props
+	-- pegasus Props
 	flee_puncher = true,
 	catch_with_net = true,
 	catch_with_lasso = true,
@@ -97,45 +97,45 @@ creatura.register_mob("animalia:sheep", {
 
 	-- Functions
 	utility_stack = {
-		animalia.mob_ai.basic_wander,
-		animalia.mob_ai.swim_seek_land,
-		animalia.mob_ai.tamed_follow_owner,
-		animalia.mob_ai.basic_breed,
-		animalia.mob_ai.basic_flee
+		pegasus.mob_ai.basic_wander,
+		pegasus.mob_ai.swim_seek_land,
+		pegasus.mob_ai.tamed_follow_owner,
+		pegasus.mob_ai.basic_breed,
+		pegasus.mob_ai.basic_flee
 	},
 
 	activate_func = function(self)
-		animalia.initialize_api(self)
-		animalia.initialize_lasso(self)
+		pegasus.initialize_api(self)
+		pegasus.initialize_lasso(self)
 
 		self.collected = self:recall("collected") or false
 		self.dye_color = self:recall("dye_color") or "white"
 		if self.collected then
 			self.object:set_properties({
-				textures = {"animalia_sheep.png"},
+				textures = {"pegasus_sheep.png"},
 			})
 		elseif self.dye_color ~= "white" then
 			self.object:set_properties({
-				textures = {"animalia_sheep.png^(animalia_sheep_wool.png^[multiply:" .. palette[self.dye_color][2] .. ")"},
+				textures = {"pegasus_sheep.png^(pegasus_sheep_wool.png^[multiply:" .. palette[self.dye_color][2] .. ")"},
 			})
 		end
 	end,
 
 	step_func = function(self)
-		animalia.step_timers(self)
-		animalia.head_tracking(self)
-		animalia.do_growth(self, 60)
-		animalia.update_lasso_effects(self)
-		animalia.random_sound(self)
+		pegasus.step_timers(self)
+		pegasus.head_tracking(self)
+		pegasus.do_growth(self, 60)
+		pegasus.update_lasso_effects(self)
+		pegasus.random_sound(self)
 	end,
 
-	death_func = animalia.death_func,
+	death_func = pegasus.death_func,
 
 	on_rightclick = function(self, clicker)
-		if animalia.feed(self, clicker, false, true) then
+		if pegasus.feed(self, clicker, false, true) then
 			return
 		end
-		if animalia.set_nametag(self, clicker) then
+		if pegasus.set_nametag(self, clicker) then
 			return
 		end
 		if self.collected
@@ -147,7 +147,7 @@ creatura.register_mob("animalia:sheep", {
 		local tool_name = tool:get_name()
 		local creative = minetest.is_creative_enabled(clicker:get_player_name())
 
-		if tool_name == "animalia:shears" then
+		if tool_name == "pegasus:shears" then
 			if not minetest.get_modpath("wool") then
 				return
 			end
@@ -161,7 +161,7 @@ creatura.register_mob("animalia:sheep", {
 			self.dye_color = self:memorize("dye_color", "white")
 
 			self.object:set_properties({
-				textures = {"animalia_sheep.png"},
+				textures = {"pegasus_sheep.png"},
 			})
 
 			if not creative then
@@ -175,11 +175,11 @@ creatura.register_mob("animalia:sheep", {
 			if palette[dye_color] then
 				self.dye_color = self:memorize("dye_color", dye_color)
 				self.drops = {
-					{name = "animalia:mutton_raw", chance = 1, min = 1, max = 4},
+					{name = "pegasus:mutton_raw", chance = 1, min = 1, max = 4},
 					{name = "wool:" .. dye_color, chance = 2, min = 1, max = 2},
 				}
 				self.object:set_properties({
-					textures = {"animalia_sheep.png^(animalia_sheep_wool.png^[multiply:" .. palette[dye_color][2] .. ")"},
+					textures = {"pegasus_sheep.png^(pegasus_sheep_wool.png^[multiply:" .. palette[dye_color][2] .. ")"},
 				})
 				if not creative then
 					tool:take_item()
@@ -189,10 +189,10 @@ creatura.register_mob("animalia:sheep", {
 		end
 	end,
 
-	on_punch = animalia.punch
+	on_punch = pegasus.punch
 })
 
-creatura.register_spawn_item("animalia:sheep", {
+creatura.register_spawn_item("pegasus:sheep", {
 	col1 = "f4e6cf",
 	col2 = "e1ca9b"
 })

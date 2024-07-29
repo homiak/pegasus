@@ -3,32 +3,32 @@
 ---------
 
 local follow = {
-	"animalia:poultry_raw"
+	"pegasus:poultry_raw"
 }
 
 if minetest.registered_items["ethereal:fish_raw"] then
 	follow = {
 		"ethereal:fish_raw",
-		"animalia:poultry_raw"
+		"pegasus:poultry_raw"
 	}
 end
 
-creatura.register_mob("animalia:cat", {
+creatura.register_mob("pegasus:cat", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
-	mesh = "animalia_cat.b3d",
+	mesh = "pegasus_cat.b3d",
 	textures = {
-		"animalia_cat_1.png",
-		"animalia_cat_2.png",
-		"animalia_cat_3.png",
-		"animalia_cat_4.png",
-		"animalia_cat_5.png",
-		"animalia_cat_6.png",
-		"animalia_cat_7.png",
-		"animalia_cat_8.png",
-		"animalia_cat_9.png",
-		"animalia_cat_ash.png",
-		"animalia_cat_birch.png",
+		"pegasus_cat_1.png",
+		"pegasus_cat_2.png",
+		"pegasus_cat_3.png",
+		"pegasus_cat_4.png",
+		"pegasus_cat_5.png",
+		"pegasus_cat_6.png",
+		"pegasus_cat_7.png",
+		"pegasus_cat_8.png",
+		"pegasus_cat_9.png",
+		"pegasus_cat_ash.png",
+		"pegasus_cat_birch.png",
 	},
 	use_texture_alpha = false,
 	makes_footstep_sound = false,
@@ -46,22 +46,22 @@ creatura.register_mob("animalia:cat", {
 	stepheight = 1.1,
 	sounds = {
 		random = {
-			name = "animalia_cat",
+			name = "pegasus_cat",
 			gain = 0.25,
 			distance = 8
 		},
 		purr = {
-			name = "animalia_cat_purr",
+			name = "pegasus_cat_purr",
 			gain = 0.6,
 			distance = 8
 		},
 		hurt = {
-			name = "animalia_cat_hurt",
+			name = "pegasus_cat_hurt",
 			gain = 0.25,
 			distance = 8
 		},
 		death = {
-			name = "animalia_cat_hurt",
+			name = "pegasus_cat_hurt",
 			gain = 0.25,
 			distance = 8
 		}
@@ -82,7 +82,7 @@ creatura.register_mob("animalia:cat", {
 	-- Behavior Parameters
 	is_skittish_mob = true,
 
-	-- Animalia Props
+	-- pegasus Props
 	flee_puncher = true,
 	catch_with_net = true,
 	catch_with_lasso = true,
@@ -95,19 +95,19 @@ creatura.register_mob("animalia:cat", {
 
 	-- Functions
 	utility_stack = {
-		animalia.mob_ai.basic_wander,
-		animalia.mob_ai.swim_seek_land,
-		animalia.mob_ai.cat_seek_vessel,
-		animalia.mob_ai.cat_stay,
-		animalia.mob_ai.cat_play_with_owner,
-		animalia.mob_ai.cat_follow_owner,
-		animalia.mob_ai.basic_attack,
-		animalia.mob_ai.basic_breed
+		pegasus.mob_ai.basic_wander,
+		pegasus.mob_ai.swim_seek_land,
+		pegasus.mob_ai.cat_seek_vessel,
+		pegasus.mob_ai.cat_stay,
+		pegasus.mob_ai.cat_play_with_owner,
+		pegasus.mob_ai.cat_follow_owner,
+		pegasus.mob_ai.basic_attack,
+		pegasus.mob_ai.basic_breed
 	},
 
 	activate_func = function(self)
-		animalia.initialize_api(self)
-		animalia.initialize_lasso(self)
+		pegasus.initialize_api(self)
+		pegasus.initialize_lasso(self)
 		self.interact_sound_cooldown = 0
 		self.trust_cooldown = self:recall("trust_cooldown") or 0
 		self.order = self:recall("order") or "wander"
@@ -115,18 +115,18 @@ creatura.register_mob("animalia:cat", {
 		self.trust = self:recall("trust") or {}
 		if self.owner
 		and minetest.get_player_by_name(self.owner) then
-			if not animalia.pets[self.owner][self.object] then
-				table.insert(animalia.pets[self.owner], self.object)
+			if not pegasus.pets[self.owner][self.object] then
+				table.insert(pegasus.pets[self.owner], self.object)
 			end
 		end
 	end,
 
 	step_func = function(self)
-		animalia.step_timers(self)
-		animalia.head_tracking(self, 0.75, 0.75)
-		animalia.do_growth(self, 60)
-		animalia.update_lasso_effects(self)
-		animalia.random_sound(self)
+		pegasus.step_timers(self)
+		pegasus.head_tracking(self, 0.75, 0.75)
+		pegasus.do_growth(self, 60)
+		pegasus.update_lasso_effects(self)
+		pegasus.random_sound(self)
 		if self:timer(1) then
 			if self.interact_sound_cooldown > 0 then
 				self.interact_sound_cooldown = self.interact_sound_cooldown - 1
@@ -134,13 +134,13 @@ creatura.register_mob("animalia:cat", {
 		end
 	end,
 
-	death_func = animalia.death_func,
+	death_func = pegasus.death_func,
 
 	deactivate_func = function(self)
 		if self.owner then
-			for i, object in ipairs(animalia.pets[self.owner] or {}) do
+			for i, object in ipairs(pegasus.pets[self.owner] or {}) do
 				if object == self.object then
-					animalia.pets[self.owner][i] = nil
+					pegasus.pets[self.owner][i] = nil
 				end
 			end
 		end
@@ -154,16 +154,16 @@ creatura.register_mob("animalia:cat", {
 
 	on_rightclick = function(self, clicker)
 		local item_name = clicker:get_wielded_item():get_name()
-		if item_name == "animalia:net" then return end
+		if item_name == "pegasus:net" then return end
 		local trust = self.trust[clicker:get_player_name()] or 0
 		local pos = self.object:get_pos()
 		if not pos then return end
-		if animalia.feed(self, clicker, true, true) then
-			animalia.add_trust(self, clicker, 1)
-			animalia.particle_spawner(pos, "creatura_particle_green.png", "float")
+		if pegasus.feed(self, clicker, true, true) then
+			pegasus.add_trust(self, clicker, 1)
+			pegasus.particle_spawner(pos, "creatura_particle_green.png", "float")
 			return
 		end
-		if animalia.set_nametag(self, clicker) then
+		if pegasus.set_nametag(self, clicker) then
 			return
 		end
 		-- Purr to indicate trust level (louder = more trust)
@@ -195,12 +195,12 @@ creatura.register_mob("animalia:cat", {
 			if order == "wander" then
 				minetest.chat_send_player(clicker:get_player_name(), "Cat is following")
 				self.order = "follow"
-				self:initiate_utility("animalia:follow_player", self, clicker, true)
+				self:initiate_utility("pegasus:follow_player", self, clicker, true)
 				self:set_utility_score(0.7)
 			elseif order == "follow" then
 				minetest.chat_send_player(clicker:get_player_name(), "Cat is sitting")
 				self.order = "sit"
-				self:initiate_utility("animalia:stay", self)
+				self:initiate_utility("pegasus:stay", self)
 				self:set_utility_score(0.5)
 			else
 				minetest.chat_send_player(clicker:get_player_name(), "Cat is wandering")
@@ -213,15 +213,15 @@ creatura.register_mob("animalia:cat", {
 
 	on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, direction, damage)
 		creatura.basic_punch_func(self, puncher, time_from_last_punch, tool_capabilities, direction, damage)
-		self:initiate_utility("animalia:flee_from_player", self, puncher)
+		self:initiate_utility("pegasus:flee_from_player", self, puncher)
 		self:set_utility_score(1)
-		animalia.add_trust(self, puncher, -1)
+		pegasus.add_trust(self, puncher, -1)
 		local pos = self.object:get_pos()
-		animalia.particle_spawner(pos, "creatura_particle_red.png", "float")
+		pegasus.particle_spawner(pos, "creatura_particle_red.png", "float")
 	end
 })
 
-creatura.register_spawn_item("animalia:cat", {
+creatura.register_spawn_item("pegasus:cat", {
 	col1 = "db9764",
 	col2 = "cf8d5a"
 })

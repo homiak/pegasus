@@ -5,19 +5,19 @@
 
 
 local follow = {
-	"animalia:mutton_raw",
-	"animalia:beef_raw",
-	"animalia:porkchop_raw",
-	"animalia:poultry_raw"
+	"pegasus:mutton_raw",
+	"pegasus:beef_raw",
+	"pegasus:porkchop_raw",
+	"pegasus:poultry_raw"
 }
 
 if minetest.registered_items["bonemeal:bone"] then
 	follow = {
 		"bonemeal:bone",
-		"animalia:beef_raw",
-		"animalia:porkchop_raw",
-		"animalia:mutton_raw",
-		"animalia:poultry_raw"
+		"pegasus:beef_raw",
+		"pegasus:porkchop_raw",
+		"pegasus:mutton_raw",
+		"pegasus:poultry_raw"
 	}
 end
 
@@ -30,15 +30,15 @@ local function is_value_in_table(tbl, val)
 	return false
 end
 
-creatura.register_mob("animalia:wolf", {
+creatura.register_mob("pegasus:wolf", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
-	mesh = "animalia_wolf.b3d",
+	mesh = "pegasus_wolf.b3d",
 	textures = {
-		"animalia_wolf_1.png",
-		"animalia_wolf_2.png",
-		"animalia_wolf_3.png",
-		"animalia_wolf_4.png"
+		"pegasus_wolf_1.png",
+		"pegasus_wolf_2.png",
+		"pegasus_wolf_3.png",
+		"pegasus_wolf_4.png"
 	},
 	makes_footstep_sound = true,
 
@@ -66,7 +66,7 @@ creatura.register_mob("animalia:wolf", {
 	is_skittish_mob = true,
 	is_herding_mob = true,
 
-	-- Animalia Props
+	-- pegasus Props
 	assist_owner = true,
 	flee_puncher = false,
 	catch_with_net = true,
@@ -81,46 +81,46 @@ creatura.register_mob("animalia:wolf", {
 
 	-- Functions
 	utility_stack = {
-		animalia.mob_ai.basic_wander,
-		animalia.mob_ai.swim_seek_land,
-		animalia.mob_ai.tamed_stay,
-		animalia.mob_ai.tamed_follow_owner,
-		animalia.mob_ai.basic_attack,
-		animalia.mob_ai.basic_breed
+		pegasus.mob_ai.basic_wander,
+		pegasus.mob_ai.swim_seek_land,
+		pegasus.mob_ai.tamed_stay,
+		pegasus.mob_ai.tamed_follow_owner,
+		pegasus.mob_ai.basic_attack,
+		pegasus.mob_ai.basic_breed
 	},
 
 	activate_func = function(self)
-		animalia.initialize_api(self)
-		animalia.initialize_lasso(self)
+		pegasus.initialize_api(self)
+		pegasus.initialize_lasso(self)
 		self.order = self:recall("order") or "wander"
 		self.owner = self:recall("owner") or nil
 		self.enemies = self:recall("enemies") or {}
 		if self.owner
 		and minetest.get_player_by_name(self.owner) then
-			if not is_value_in_table(animalia.pets[self.owner], self.object) then
-				table.insert(animalia.pets[self.owner], self.object)
+			if not is_value_in_table(pegasus.pets[self.owner], self.object) then
+				table.insert(pegasus.pets[self.owner], self.object)
 			end
 		end
 	end,
 
 	step_func = function(self)
-		animalia.step_timers(self)
-		animalia.head_tracking(self)
-		animalia.do_growth(self, 60)
-		animalia.update_lasso_effects(self)
+		pegasus.step_timers(self)
+		pegasus.head_tracking(self)
+		pegasus.do_growth(self, 60)
+		pegasus.update_lasso_effects(self)
 	end,
 
 	death_func = function(self)
-		if self:get_utility() ~= "animalia:die" then
-			self:initiate_utility("animalia:die", self)
+		if self:get_utility() ~= "pegasus:die" then
+			self:initiate_utility("pegasus:die", self)
 		end
 	end,
 
 	deactivate_func = function(self)
 		if self.owner then
-			for i, object in ipairs(animalia.pets[self.owner] or {}) do
+			for i, object in ipairs(pegasus.pets[self.owner] or {}) do
 				if object == self.object then
-					animalia.pets[self.owner][i] = nil
+					pegasus.pets[self.owner][i] = nil
 				end
 			end
 		end
@@ -137,10 +137,10 @@ creatura.register_mob("animalia:wolf", {
 		local name = clicker:get_player_name()
 		local passive = true
 		if is_value_in_table(self.enemies, name) then passive = false end
-		if animalia.feed(self, clicker, passive, passive) then
+		if pegasus.feed(self, clicker, passive, passive) then
 			return
 		end
-		if animalia.set_nametag(self, clicker) then
+		if pegasus.set_nametag(self, clicker) then
 			return
 		end
 		if self.owner
@@ -150,12 +150,12 @@ creatura.register_mob("animalia:wolf", {
 			if order == "wander" then
 				minetest.chat_send_player(name, "Wolf is following")
 				self.order = "follow"
-				self:initiate_utility("animalia:follow_player", self, clicker, true)
+				self:initiate_utility("pegasus:follow_player", self, clicker, true)
 				self:set_utility_score(0.7)
 			elseif order == "follow" then
 				minetest.chat_send_player(name, "Wolf is sitting")
 				self.order = "sit"
-				self:initiate_utility("animalia:stay", self)
+				self:initiate_utility("pegasus:stay", self)
 				self:set_utility_score(0.5)
 			else
 				minetest.chat_send_player(name, "Wolf is wandering")
@@ -189,7 +189,7 @@ creatura.register_mob("animalia:wolf", {
 	end,
 })
 
-creatura.register_spawn_item("animalia:wolf", {
+creatura.register_spawn_item("pegasus:wolf", {
 	col1 = "a19678",
 	col2 = "231b13"
 })

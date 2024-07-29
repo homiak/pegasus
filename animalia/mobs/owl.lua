@@ -30,12 +30,12 @@ local function get_home_pos(self)
 	end
 end
 
-creatura.register_mob("animalia:owl", {
+creatura.register_mob("pegasus:owl", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
-	mesh = "animalia_owl.b3d",
+	mesh = "pegasus_owl.b3d",
 	textures = {
-		"animalia_owl.png"
+		"pegasus_owl.png"
 	},
 	makes_footstep_sound = false,
 
@@ -59,20 +59,20 @@ creatura.register_mob("animalia:owl", {
 		fly_punch = {range = {x = 131, y = 149}, speed = 20, frame_blend = 0.1, loop = false},
 		eat = {range = {x = 161, y = 179}, speed = 20, frame_blend = 0.1, loop = false}
 	},
-	follow = {"animalia:rat_raw"},
+	follow = {"pegasus:rat_raw"},
 	drops = {
-		{name = "animalia:feather", min = 1, max = 2, chance = 1}
+		{name = "pegasus:feather", min = 1, max = 2, chance = 1}
 	},
 
-	-- Animalia Props
+	-- pegasus Props
 	flee_puncher = true, -- TODO
 	catch_with_net = true,
 	catch_with_lasso = false,
-	roost_action = animalia.action_roost,
+	roost_action = pegasus.action_roost,
 
 	-- Functions
 	on_eat_drop = function(self)
-		animalia.protect_from_despawn(self)
+		pegasus.protect_from_despawn(self)
 		get_home_pos(self)
 	end,
 
@@ -95,16 +95,16 @@ creatura.register_mob("animalia:owl", {
 	wander_action = creatura.action_move,
 
 	utility_stack = {
-		animalia.mob_ai.fly_wander,
-		animalia.mob_ai.swim_seek_land,
-		animalia.mob_ai.bat_seek_home,
-		animalia.mob_ai.fly_seek_food,
-		animalia.mob_ai.eagle_attack
+		pegasus.mob_ai.fly_wander,
+		pegasus.mob_ai.swim_seek_land,
+		pegasus.mob_ai.bat_seek_home,
+		pegasus.mob_ai.fly_seek_food,
+		pegasus.mob_ai.eagle_attack
 	},
 
 	activate_func = function(self)
-		animalia.initialize_api(self)
-		animalia.initialize_lasso(self)
+		pegasus.initialize_api(self)
+		pegasus.initialize_lasso(self)
 		self._tp2home = self:recall("_tp2home") or nil
 		self.home_position = self:recall("home_position") or nil
 		local home_pos = self.home_position
@@ -120,10 +120,10 @@ creatura.register_mob("animalia:owl", {
 	end,
 
 	step_func = function(self)
-		animalia.step_timers(self)
-		animalia.do_growth(self, 60)
-		animalia.update_lasso_effects(self)
-		animalia.rotate_to_pitch(self)
+		pegasus.step_timers(self)
+		pegasus.do_growth(self, 60)
+		pegasus.update_lasso_effects(self)
+		pegasus.rotate_to_pitch(self)
 		if not self.is_landed
 		or not self.touching_ground then
 			self.speed = 5
@@ -133,14 +133,14 @@ creatura.register_mob("animalia:owl", {
 	end,
 
 	death_func = function(self)
-		if self:get_utility() ~= "animalia:die" then
-			self:initiate_utility("animalia:die", self)
+		if self:get_utility() ~= "pegasus:die" then
+			self:initiate_utility("pegasus:die", self)
 		end
 	end,
 
 	deactivate_func = function(self)
 		if self:get_utility()
-		and self:get_utility() == "animalia:fly_to_roost" then
+		and self:get_utility() == "pegasus:fly_to_roost" then
 			local pos = self.home_position
 			local node = minetest.get_node_or_nil(pos)
 			if node
@@ -152,18 +152,18 @@ creatura.register_mob("animalia:owl", {
 	end,
 
 	on_rightclick = function(self, clicker)
-		if animalia.feed(self, clicker, false, false) then
+		if pegasus.feed(self, clicker, false, false) then
 			return
 		end
-		if animalia.set_nametag(self, clicker) then
+		if pegasus.set_nametag(self, clicker) then
 			return
 		end
 	end,
 
-	on_punch = animalia.punch
+	on_punch = pegasus.punch
 })
 
-creatura.register_spawn_item("animalia:owl", {
+creatura.register_spawn_item("pegasus:owl", {
 	col1 = "412918",
 	col2 = "735b46"
 })

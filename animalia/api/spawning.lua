@@ -13,13 +13,13 @@ local function table_contains(tbl, val)
 	return false
 end
 
-local common_spawn_chance = tonumber(minetest.settings:get("animalia_common_chance")) or 60000
+local common_spawn_chance = tonumber(minetest.settings:get("pegasus_common_chance")) or 60000
 
-local ambient_spawn_chance = tonumber(minetest.settings:get("animalia_ambient_chance")) or 9000
+local ambient_spawn_chance = tonumber(minetest.settings:get("pegasus_ambient_chance")) or 9000
 
-local pest_spawn_chance = tonumber(minetest.settings:get("animalia_pest_chance")) or 3000
+local pest_spawn_chance = tonumber(minetest.settings:get("pegasus_pest_chance")) or 3000
 
-local predator_spawn_chance = tonumber(minetest.settings:get("animalia_predator_chance")) or 45000
+local predator_spawn_chance = tonumber(minetest.settings:get("pegasus_predator_chance")) or 45000
 
 -- Get Biomes --
 
@@ -36,25 +36,25 @@ local function insert_all(tbl, tbl2)
 end
 
 minetest.register_on_mods_loaded(function()
-	insert_all(chicken_biomes, animalia.registered_biome_groups["grassland"].biomes)
-	insert_all(chicken_biomes, animalia.registered_biome_groups["tropical"].biomes)
-	insert_all(pig_biomes, animalia.registered_biome_groups["temperate"].biomes)
-	insert_all(pig_biomes, animalia.registered_biome_groups["boreal"].biomes)
-	insert_all(frog_biomes, animalia.registered_biome_groups["swamp"].biomes)
-	insert_all(frog_biomes, animalia.registered_biome_groups["tropical"].biomes)
+	insert_all(chicken_biomes, pegasus.registered_biome_groups["grassland"].biomes)
+	insert_all(chicken_biomes, pegasus.registered_biome_groups["tropical"].biomes)
+	insert_all(pig_biomes, pegasus.registered_biome_groups["temperate"].biomes)
+	insert_all(pig_biomes, pegasus.registered_biome_groups["boreal"].biomes)
+	insert_all(frog_biomes, pegasus.registered_biome_groups["swamp"].biomes)
+	insert_all(frog_biomes, pegasus.registered_biome_groups["tropical"].biomes)
 end)
 
-creatura.register_abm_spawn("animalia:grizzly_bear", {
+creatura.register_abm_spawn("pegasus:grizzly_bear", {
 	chance = predator_spawn_chance,
 	min_height = -1,
 	max_height = 1024,
 	min_group = 1,
 	max_group = 1,
-	biomes = animalia.registered_biome_groups["boreal"].biomes,
+	biomes = pegasus.registered_biome_groups["boreal"].biomes,
 	nodes = {"group:sand"},
 })
 
-creatura.register_abm_spawn("animalia:chicken", {
+creatura.register_abm_spawn("pegasus:chicken", {
 	chance = common_spawn_chance,
 	spawn_active = true,
 	min_height = 0,
@@ -66,7 +66,7 @@ creatura.register_abm_spawn("animalia:chicken", {
 	nodes = {"group:soil"},
 })
 
-creatura.register_abm_spawn("animalia:cat", {
+creatura.register_abm_spawn("pegasus:cat", {
 	chance = common_spawn_chance,
 	min_height = 0,
 	max_height = 1024,
@@ -76,7 +76,7 @@ creatura.register_abm_spawn("animalia:cat", {
 	neighbors = {"group:wood"}
 })
 
-creatura.register_abm_spawn("animalia:cow", {
+creatura.register_abm_spawn("pegasus:cow", {
 	chance = common_spawn_chance,
 	spawn_active = true,
 	min_height = 0,
@@ -84,22 +84,22 @@ creatura.register_abm_spawn("animalia:cow", {
 	min_group = 3,
 	max_group = 4,
 	spawn_cap = 3,
-	biomes = animalia.registered_biome_groups["grassland"].biomes,
+	biomes = pegasus.registered_biome_groups["grassland"].biomes,
 	nodes = {"group:soil"},
 	neighbors = {"air", "group:grass", "group:flora"}
 })
 
-creatura.register_abm_spawn("animalia:fox", {
+creatura.register_abm_spawn("pegasus:fox", {
 	chance = predator_spawn_chance,
 	min_height = 0,
 	max_height = 1024,
 	min_group = 1,
 	max_group = 2,
-	biomes = animalia.registered_biome_groups["boreal"].biomes,
+	biomes = pegasus.registered_biome_groups["boreal"].biomes,
 	nodes = {"group:soil"},
 })
 
-creatura.register_abm_spawn("animalia:horse", {
+creatura.register_abm_spawn("pegasus:horse", {
 	chance = common_spawn_chance,
 	spawn_active = true,
 	min_height = 0,
@@ -107,12 +107,12 @@ creatura.register_abm_spawn("animalia:horse", {
 	min_group = 3,
 	max_group = 4,
 	spawn_cap = 3,
-	biomes = animalia.registered_biome_groups["grassland"].biomes,
+	biomes = pegasus.registered_biome_groups["grassland"].biomes,
 	nodes = {"group:soil"},
 	neighbors = {"air", "group:grass", "group:flora"}
 })
 
-creatura.register_abm_spawn("animalia:rat", {
+creatura.register_abm_spawn("pegasus:rat", {
 	chance = pest_spawn_chance,
 	interval = 60,
 	min_height = -1,
@@ -123,7 +123,7 @@ creatura.register_abm_spawn("animalia:rat", {
 	nodes = {"group:crop"}
 })
 
-creatura.register_abm_spawn("animalia:owl", {
+creatura.register_abm_spawn("pegasus:owl", {
 	chance = predator_spawn_chance,
 	interval = 60,
 	min_height = 3,
@@ -134,18 +134,18 @@ creatura.register_abm_spawn("animalia:owl", {
 	nodes = {"group:leaves"}
 })
 
-creatura.register_abm_spawn("animalia:opossum", {
+creatura.register_abm_spawn("pegasus:opossum", {
 	chance = predator_spawn_chance,
 	interval = 60,
 	min_height = -1,
 	max_height = 1024,
 	min_group = 1,
 	max_group = 2,
-	biomes = animalia.registered_biome_groups["boreal"].biomes,
+	biomes = pegasus.registered_biome_groups["boreal"].biomes,
 	nodes = {"group:soil", "group:leaves"}
 })
 
-creatura.register_abm_spawn("animalia:pig", {
+creatura.register_abm_spawn("pegasus:pig", {
 	chance = common_spawn_chance,
 	spawn_active = true,
 	min_height = 0,
@@ -157,7 +157,7 @@ creatura.register_abm_spawn("animalia:pig", {
 	nodes = {"group:soil"},
 })
 
-creatura.register_abm_spawn("animalia:reindeer", {
+creatura.register_abm_spawn("pegasus:reindeer", {
 	chance = common_spawn_chance,
 	spawn_active = true,
 	min_height = 0,
@@ -165,11 +165,11 @@ creatura.register_abm_spawn("animalia:reindeer", {
 	min_group = 6,
 	max_group = 8,
 	spawn_cap = 3,
-	biomes = animalia.registered_biome_groups["boreal"].biomes,
+	biomes = pegasus.registered_biome_groups["boreal"].biomes,
 	nodes = {"group:soil"},
 })
 
-creatura.register_abm_spawn("animalia:sheep", {
+creatura.register_abm_spawn("pegasus:sheep", {
 	chance = common_spawn_chance,
 	spawn_active = true,
 	min_height = 0,
@@ -177,12 +177,12 @@ creatura.register_abm_spawn("animalia:sheep", {
 	min_group = 3,
 	max_group = 6,
 	spawn_cap = 3,
-	biomes = animalia.registered_biome_groups["grassland"].biomes,
+	biomes = pegasus.registered_biome_groups["grassland"].biomes,
 	nodes = {"group:soil"},
 	neighbors = {"air", "group:grass", "group:flora"}
 })
 
-creatura.register_abm_spawn("animalia:turkey", {
+creatura.register_abm_spawn("pegasus:turkey", {
 	chance = common_spawn_chance,
 	spawn_active = true,
 	min_height = 0,
@@ -190,23 +190,23 @@ creatura.register_abm_spawn("animalia:turkey", {
 	min_group = 3,
 	max_group = 4,
 	spawn_cap = 3,
-	biomes = animalia.registered_biome_groups["boreal"].biomes,
+	biomes = pegasus.registered_biome_groups["boreal"].biomes,
 	nodes = {"group:soil"},
 })
 
-creatura.register_abm_spawn("animalia:wolf", {
+creatura.register_abm_spawn("pegasus:wolf", {
 	chance = predator_spawn_chance,
 	min_height = 0,
 	max_height = 1024,
 	min_group = 2,
 	max_group = 3,
-	biomes = animalia.registered_biome_groups["boreal"].biomes,
+	biomes = pegasus.registered_biome_groups["boreal"].biomes,
 	nodes = {"group:soil"},
 })
 
 -- Ambient Spawning
 
-creatura.register_abm_spawn("animalia:bat", {
+creatura.register_abm_spawn("pegasus:bat", {
 	chance = ambient_spawn_chance,
 	interval = 30,
 	min_light = 0,
@@ -218,7 +218,7 @@ creatura.register_abm_spawn("animalia:bat", {
 	nodes = {"group:stone"}
 })
 
-creatura.register_abm_spawn("animalia:song_bird", {
+creatura.register_abm_spawn("pegasus:song_bird", {
 	chance = ambient_spawn_chance,
 	interval = 60,
 	min_light = 0,
@@ -227,20 +227,20 @@ creatura.register_abm_spawn("animalia:song_bird", {
 	min_group = 6,
 	max_group = 12,
 	spawn_cap = 6,
-	nodes = {"group:leaves", "animalia:nest_song_bird"},
+	nodes = {"group:leaves", "pegasus:nest_song_bird"},
 	neighbors = {"group:leaves"}
 })
 
-creatura.register_on_spawn("animalia:song_bird", function(self, pos)
+creatura.register_on_spawn("pegasus:song_bird", function(self, pos)
 	local nests = minetest.find_nodes_in_area_under_air(
 		{x = pos.x - 16, y = pos.y - 16, z = pos.z - 16},
 		{x = pos.x + 16, y = pos.y + 16, z = pos.z + 16},
-		"animalia:nest_song_bird"
+		"pegasus:nest_song_bird"
 	)
 	if nests[1] then return end
 	local node = minetest.get_node(pos)
 	if node.name == "air" then
-		minetest.set_node(pos, {name = "animalia:nest_song_bird"})
+		minetest.set_node(pos, {name = "pegasus:nest_song_bird"})
 	else
 		local nodes = minetest.find_nodes_in_area_under_air(
 			{x = pos.x - 3, y = pos.y - 3, z = pos.z - 3},
@@ -249,12 +249,12 @@ creatura.register_on_spawn("animalia:song_bird", function(self, pos)
 		)
 		if nodes[1] then
 			pos = nodes[1]
-			minetest.set_node({x = pos.x, y = pos.y + 1, z = pos.z}, {name = "animalia:nest_song_bird"})
+			minetest.set_node({x = pos.x, y = pos.y + 1, z = pos.z}, {name = "pegasus:nest_song_bird"})
 		end
 	end
 end)
 
-creatura.register_abm_spawn("animalia:frog", {
+creatura.register_abm_spawn("pegasus:frog", {
 	chance = ambient_spawn_chance * 0.75,
 	interval = 60,
 	min_light = 0,
@@ -266,16 +266,16 @@ creatura.register_abm_spawn("animalia:frog", {
 	nodes = {"group:soil"}
 })
 
-creatura.register_on_spawn("animalia:frog", function(self, pos)
+creatura.register_on_spawn("pegasus:frog", function(self, pos)
 	local biome_data = minetest.get_biome_data(pos)
 	local biome_name = minetest.get_biome_name(biome_data.biome)
 
-	if table_contains(animalia.registered_biome_groups["tropical"].biomes, biome_name) then
+	if table_contains(pegasus.registered_biome_groups["tropical"].biomes, biome_name) then
 		self:set_mesh(3)
-	elseif table_contains(animalia.registered_biome_groups["temperate"].biomes, biome_name)
-	or table_contains(animalia.registered_biome_groups["boreal"].biomes, biome_name) then
+	elseif table_contains(pegasus.registered_biome_groups["temperate"].biomes, biome_name)
+	or table_contains(pegasus.registered_biome_groups["boreal"].biomes, biome_name) then
 		self:set_mesh(1)
-	elseif table_contains(animalia.registered_biome_groups["grassland"].biomes, biome_name) then
+	elseif table_contains(pegasus.registered_biome_groups["grassland"].biomes, biome_name) then
 		self:set_mesh(2)
 	else
 		self.object:remove()
@@ -286,7 +286,7 @@ creatura.register_on_spawn("animalia:frog", function(self, pos)
 	activate(self)
 end)
 
-creatura.register_abm_spawn("animalia:tropical_fish", {
+creatura.register_abm_spawn("pegasus:tropical_fish", {
 	chance = ambient_spawn_chance,
 	min_height = -128,
 	max_height = 1,
@@ -298,7 +298,7 @@ creatura.register_abm_spawn("animalia:tropical_fish", {
 
 -- World Gen Spawning
 
-minetest.register_node("animalia:spawner", {
+minetest.register_node("pegasus:spawner", {
 	description = "???",
 	drawtype = "airlike",
 	walkable = false,
@@ -308,12 +308,12 @@ minetest.register_node("animalia:spawner", {
 })
 
 minetest.register_decoration({
-	name = "animalia:world_gen_spawning",
+	name = "pegasus:world_gen_spawning",
 	deco_type = "simple",
 	place_on = {"group:stone", "group:sand", "group:soil"},
 	sidelen = 1,
 	fill_ratio = 0.0001, -- One node per chunk
-	decoration = "animalia:spawner"
+	decoration = "pegasus:spawner"
 })
 
 local function do_on_spawn(pos, obj)
@@ -330,8 +330,8 @@ local function do_on_spawn(pos, obj)
 end
 
 minetest.register_abm({
-	label = "[animalia] World Gen Spawning",
-	nodenames = {"animalia:spawner"},
+	label = "[pegasus] World Gen Spawning",
+	nodenames = {"pegasus:spawner"},
 	interval = 10, -- TODO: Set this to 1 if world is singleplayer and just started
 	chance = 16,
 
@@ -347,7 +347,7 @@ minetest.register_abm({
 		local spawn_definitions = creatura.registered_mob_spawns
 
 		for mob, def in pairs(spawn_definitions) do
-			if mob:match("^animalia:")
+			if mob:match("^pegasus:")
 			and def.biomes
 			and table_contains(def.biomes, current_biome) then
 				table.insert(spawnable_mobs, mob)

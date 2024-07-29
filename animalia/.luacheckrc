@@ -5,7 +5,7 @@ globals = {
 	"VoxelArea",
 	"mob_core",
 	"creatura",
-	"animalia",
+	"pegasus",
 	"farming",
 	"mcl_player",
 	"player_api",

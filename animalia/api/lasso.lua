@@ -11,10 +11,10 @@ local dir2rot = vector.dir_to_rotation
 
 local using_lasso = {}
 
-minetest.register_entity("animalia:lasso_entity", {
+minetest.register_entity("pegasus:lasso_entity", {
 	visual = "mesh",
-	mesh = "animalia_lasso_entity.b3d",
-	textures = {"animalia_lasso_entity.png"},
+	mesh = "pegasus_lasso_entity.b3d",
+	textures = {"pegasus_lasso_entity.png"},
 	pointable = false,
 	on_activate = function(self)
 		self.object:set_armor_groups({immortal = 1})
@@ -76,25 +76,25 @@ local function remove_from_fence(self)
 	for i = 1, 6 do
 		local i_pos = vec_add(pos, dirs[i])
 		if not creatura.get_node_def(i_pos).walkable then
-			minetest.add_item(i_pos, "animalia:lasso")
+			minetest.add_item(i_pos, "pegasus:lasso")
 			break
 		end
 	end
 	self.object:remove()
 end
 
-minetest.register_entity("animalia:tied_lasso_entity", {
+minetest.register_entity("pegasus:tied_lasso_entity", {
 	collisionbox = {-0.25,-0.25,-0.25, 0.25,0.25,0.25},
 	visual = "cube",
 	visual_size = {x = 0.3, y = 0.3},
 	mesh = "model",
 	textures = {
-		"animalia_tied_lasso_entity.png",
-		"animalia_tied_lasso_entity.png",
-		"animalia_tied_lasso_entity.png",
-		"animalia_tied_lasso_entity.png",
-		"animalia_tied_lasso_entity.png",
-		"animalia_tied_lasso_entity.png",
+		"pegasus_tied_lasso_entity.png",
+		"pegasus_tied_lasso_entity.png",
+		"pegasus_tied_lasso_entity.png",
+		"pegasus_tied_lasso_entity.png",
+		"pegasus_tied_lasso_entity.png",
+		"pegasus_tied_lasso_entity.png",
 	},
 	on_activate = function(self)
 		self.object:set_armor_groups({immortal = 1})
@@ -112,7 +112,7 @@ minetest.register_entity("animalia:tied_lasso_entity", {
 local function add_lasso(self, origin)
 	local pos = self.object:get_pos()
 	if not pos then return end
-	local object = minetest.add_entity(pos, "animalia:lasso_entity")
+	local object = minetest.add_entity(pos, "pegasus:lasso_entity")
 	local ent = object and object:get_luaentity()
 	if not ent then return end
 	-- Attachment point of entity
@@ -135,13 +135,13 @@ local function get_rope_velocity(pos1, pos2, dist)
 	return vel
 end
 
-function animalia.initialize_lasso(self)
+function pegasus.initialize_lasso(self)
 	self._lassod_to = self:recall("_lassod_to") or self:recall("lasso_origin")
 	if self._lassod_to then
 		local origin = self._lassod_to
 		if type(origin) == "table"
 		and minetest.get_item_group(minetest.get_node(origin).name, "fence") > 0 then
-			local object = minetest.add_entity(origin, "animalia:tied_lasso_entity")
+			local object = minetest.add_entity(origin, "pegasus:tied_lasso_entity")
 			object:get_luaentity()._mob = self.object
 			self._lasso_ent = add_lasso(self, origin)
 		elseif type(origin) == "string" then
@@ -153,7 +153,7 @@ function animalia.initialize_lasso(self)
 	end
 end
 
-function animalia.update_lasso_effects(self)
+function pegasus.update_lasso_effects(self)
 	local pos = self.object:get_pos()
 	if not creatura.is_alive(self) then return end
 	if self._lassod_to then
@@ -164,7 +164,7 @@ function animalia.update_lasso_effects(self)
 			local name = lasso
 			lasso = minetest.get_player_by_name(lasso)
 			if lasso then
-				if lasso:get_wielded_item():get_name() ~= "animalia:lasso" then
+				if lasso:get_wielded_item():get_name() ~= "pegasus:lasso" then
 					using_lasso[name] = nil
 					self._lasso_ent:remove()
 					self._lasso_ent = nil
@@ -201,13 +201,13 @@ end
 
 -- Item
 
-minetest.register_craftitem("animalia:lasso", {
+minetest.register_craftitem("pegasus:lasso", {
 	description = "Lasso",
-	inventory_image = "animalia_lasso.png",
+	inventory_image = "pegasus_lasso.png",
 	on_secondary_use = function(_, placer, pointed)
 		local ent = pointed.ref and pointed.ref:get_luaentity()
 		if ent
-		and (ent.name:match("^animalia:")
+		and (ent.name:match("^pegasus:")
 		or ent.name:match("^monstrum:")) then
 			if not ent.catch_with_lasso then return end
 			local name = placer:get_player_name()
@@ -239,7 +239,7 @@ minetest.register_craftitem("animalia:lasso", {
 					ent._lasso_ent:get_luaentity()._attached = pos
 					ent._lassod_to = pos
 					ent:memorize("_lassod_to", pos)
-					local fence_obj = minetest.add_entity(pos, "animalia:tied_lasso_entity")
+					local fence_obj = minetest.add_entity(pos, "pegasus:tied_lasso_entity")
 					fence_obj:get_luaentity()._mob = ent.object
 					fence_obj:get_luaentity()._lasso_obj = ent._lasso_ent
 					itemstack:take_item(1)

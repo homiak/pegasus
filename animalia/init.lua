@@ -1,31 +1,31 @@
-animalia = {}
+pegasus = {}
 
-local path = minetest.get_modpath("animalia")
+local path = minetest.get_modpath("pegasus")
 
 local storage = dofile(path .. "/api/storage.lua")
 
-animalia.spawn_points = storage.spawn_points
-animalia.libri_font_size = storage.libri_font_size
+pegasus.spawn_points = storage.spawn_points
+pegasus.libri_font_size = storage.libri_font_size
 
-animalia.pets = {}
+pegasus.pets = {}
 
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
-	animalia.pets[name] = {}
+	pegasus.pets[name] = {}
 end)
 
 minetest.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
-	animalia.pets[name] = nil
+	pegasus.pets[name] = nil
 end)
 
 -- Daytime Tracking
 
-animalia.is_day = true
+pegasus.is_day = true
 
 local function is_day()
 	local time = (minetest.get_timeofday() or 0) * 24000
-	animalia.is_day = time < 19500 and time > 4500
+	pegasus.is_day = time < 19500 and time > 4500
 	minetest.after(10, is_day)
 end
 
@@ -33,17 +33,17 @@ is_day()
 
 -- Player Effects
 
-animalia.player_effects = {}
+pegasus.player_effects = {}
 
 local function player_effect_step()
-	for player, data in pairs(animalia.player_effects) do
+	for player, data in pairs(pegasus.player_effects) do
 		if player then
 			local timer = data.timer - 1
-			animalia.player_effects[player].timer = timer
+			pegasus.player_effects[player].timer = timer
 			local func = data.func
 			func(minetest.get_player_by_name(player))
 			if timer <= 0 then
-				animalia.player_effects[player] = nil
+				pegasus.player_effects[player] = nil
 			end
 		end
 	end
@@ -52,8 +52,8 @@ end
 
 player_effect_step()
 
-function animalia.set_player_effect(player_name, effect, timer)
-	animalia.player_effects[player_name] = {
+function pegasus.set_player_effect(player_name, effect, timer)
+	pegasus.player_effects[player_name] = {
 		func = effect,
 		timer = timer or 5
 	}
@@ -61,17 +61,17 @@ end
 
 -- Create lists of items for reuse
 
-animalia.food_wheat = {}
-animalia.food_seeds = {}
-animalia.food_crops = {}
-animalia.food_bear = {}
+pegasus.food_wheat = {}
+pegasus.food_seeds = {}
+pegasus.food_crops = {}
+pegasus.food_bear = {}
 
 minetest.register_on_mods_loaded(function()
 	if minetest.get_modpath("farming")
 	and farming.registered_plants then
 		for _, def in pairs(farming.registered_plants) do
 			if def.crop then
-				table.insert(animalia.food_crops, def.crop)
+				table.insert(pegasus.food_crops, def.crop)
 			end
 		end
 	end
@@ -79,16 +79,16 @@ minetest.register_on_mods_loaded(function()
 		if (name:match(":wheat")
 		or minetest.get_item_group(name, "food_wheat") > 0)
 		and not name:find("seed") then
-			table.insert(animalia.food_wheat, name)
+			table.insert(pegasus.food_wheat, name)
 		end
 		if name:match(":seed_")
 		or name:match("_seed") then
-			table.insert(animalia.food_seeds, name)
+			table.insert(pegasus.food_seeds, name)
 		end
 		if (minetest.get_item_group(name, "food_berry") > 0
 		and not name:find("seed"))
 		or minetest.get_item_group(name, "food_fish") > 0 then
-			table.insert(animalia.food_bear, name)
+			table.insert(pegasus.food_bear, name)
 		end
 	end
 end)
@@ -108,25 +108,25 @@ dofile(path.."/api/mob_ai.lua")
 dofile(path.."/api/lasso.lua")
 dofile(path.."/craftitems.lua")
 
-animalia.animals = {
-	"animalia:bat",
-	"animalia:song_bird",
-	"animalia:cat",
-	"animalia:chicken",
-	"animalia:cow",
-	"animalia:fox",
-	"animalia:frog",
-	"animalia:grizzly_bear",
-	"animalia:horse",
-	"animalia:opossum",
-	"animalia:owl",
-	"animalia:pig",
-	"animalia:rat",
-	"animalia:reindeer",
-	"animalia:sheep",
-	"animalia:turkey",
-	"animalia:tropical_fish",
-	"animalia:wolf",
+pegasus.animals = {
+	"pegasus:bat",
+	"pegasus:song_bird",
+	"pegasus:cat",
+	"pegasus:chicken",
+	"pegasus:cow",
+	"pegasus:fox",
+	"pegasus:frog",
+	"pegasus:grizzly_bear",
+	"pegasus:horse",
+	"pegasus:opossum",
+	"pegasus:owl",
+	"pegasus:pig",
+	"pegasus:rat",
+	"pegasus:reindeer",
+	"pegasus:sheep",
+	"pegasus:turkey",
+	"pegasus:tropical_fish",
+	"pegasus:wolf",
 }
 
 dofile(path.."/api/api.lua")
@@ -171,7 +171,7 @@ minetest.register_on_mods_loaded(function()
 				local pos = self.object:get_pos()
 				if not pos then return end
 				local plyr_name = puncher:is_player() and puncher:get_player_name()
-				local pets = (plyr_name and animalia.pets[plyr_name]) or {}
+				local pets = (plyr_name and pegasus.pets[plyr_name]) or {}
 				for _, obj in ipairs(pets) do
 					local ent = obj and obj:get_luaentity()
 					if ent
@@ -189,14 +189,14 @@ end)
 local convert_mobs_redo = minetest.settings:get_bool("convert_redo_items", false)
 
 if convert_mobs_redo then
-	minetest.register_alias_force("mobs:leather", "animalia:leather")
-	minetest.register_alias_force("mobs:meat_raw", "animalia:beef_raw")
-	minetest.register_alias_force("mobs:meat", "animalia:beef_cooked")
-	minetest.register_alias_force("mobs:lasso", "animalia:lasso")
-	minetest.register_alias_force("mobs:net", "animalia:net")
-	minetest.register_alias_force("mobs:shears", "animalia:shears")
-	minetest.register_alias_force("mobs:saddles", "animalia:saddles")
-	minetest.register_alias_force("mobs:nametag", "animalia:nametag")
+	minetest.register_alias_force("mobs:leather", "pegasus:leather")
+	minetest.register_alias_force("mobs:meat_raw", "pegasus:beef_raw")
+	minetest.register_alias_force("mobs:meat", "pegasus:beef_cooked")
+	minetest.register_alias_force("mobs:lasso", "pegasus:lasso")
+	minetest.register_alias_force("mobs:net", "pegasus:net")
+	minetest.register_alias_force("mobs:shears", "pegasus:shears")
+	minetest.register_alias_force("mobs:saddles", "pegasus:saddles")
+	minetest.register_alias_force("mobs:nametag", "pegasus:nametag")
 end
 
-minetest.log("action", "[MOD] Animalia [0.6] loaded")
+minetest.log("action", "[MOD] pegasus [0.6] loaded")
