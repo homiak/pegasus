@@ -64,7 +64,6 @@ end
 pegasus.food_wheat = {}
 pegasus.food_seeds = {}
 pegasus.food_crops = {}
-pegasus.food_bear = {}
 
 minetest.register_on_mods_loaded(function()
 	if minetest.get_modpath("farming")
@@ -84,11 +83,6 @@ minetest.register_on_mods_loaded(function()
 		if name:match(":seed_")
 		or name:match("_seed") then
 			table.insert(pegasus.food_seeds, name)
-		end
-		if (minetest.get_item_group(name, "food_berry") > 0
-		and not name:find("seed"))
-		or minetest.get_item_group(name, "food_fish") > 0 then
-			table.insert(pegasus.food_bear, name)
 		end
 	end
 end)
@@ -115,7 +109,6 @@ pegasus.animals = {
 	"pegasus:chicken",
 	"pegasus:cow",
 	"pegasus:fox",
-	"pegasus:grizzly_bear",
 	"pegasus:horse",
 	"pegasus:opossum",
 	"pegasus:owl",
@@ -131,8 +124,6 @@ pegasus.animals = {
 dofile(path.."/api/api.lua")
 
 load_file(path .. "/mobs", "bat.lua")
-load_file(path .. "/mobs", "bear.lua")
-load_file(path .. "/mobs", "cat.lua")
 load_file(path .. "/mobs", "chicken.lua")
 load_file(path .. "/mobs", "cow.lua")
 load_file(path .. "/mobs", "fox.lua")

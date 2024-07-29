@@ -41,16 +41,6 @@ minetest.register_on_mods_loaded(function()
 	insert_all(pig_biomes, pegasus.registered_biome_groups["boreal"].biomes)
 end)
 
-creatura.register_abm_spawn("pegasus:grizzly_bear", {
-	chance = predator_spawn_chance,
-	min_height = -1,
-	max_height = 1024,
-	min_group = 1,
-	max_group = 1,
-	biomes = pegasus.registered_biome_groups["boreal"].biomes,
-	nodes = {"group:sand"},
-})
-
 creatura.register_abm_spawn("pegasus:chicken", {
 	chance = common_spawn_chance,
 	spawn_active = true,
@@ -63,15 +53,6 @@ creatura.register_abm_spawn("pegasus:chicken", {
 	nodes = {"group:soil"},
 })
 
-creatura.register_abm_spawn("pegasus:cat", {
-	chance = common_spawn_chance,
-	min_height = 0,
-	max_height = 1024,
-	min_group = 1,
-	max_group = 2,
-	nodes = {"group:soil"},
-	neighbors = {"group:wood"}
-})
 
 creatura.register_abm_spawn("pegasus:cow", {
 	chance = common_spawn_chance,

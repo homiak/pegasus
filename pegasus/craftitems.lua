@@ -168,11 +168,7 @@ minetest.register_craftitem("pegasus:feather", {
 	groups = {flammable = 2, feather = 1},
 })
 
-minetest.register_craftitem("pegasus:pelt_bear", {
-	description = "Bear Pelt",
-	inventory_image = "pegasus_pelt_bear.png",
-	groups = {flammable = 2, pelt = 1},
-})
+
 
 -- Meat --
 
@@ -406,12 +402,6 @@ minetest.register_node("pegasus:nest_song_bird", {
 -- Tools --
 -----------
 
-minetest.register_craftitem("pegasus:cat_toy", {
-	description = "Cat Toy",
-	inventory_image = "pegasus_cat_toy.png",
-	wield_image = "pegasus_cat_toy.png^[transformFYR90",
-	stack_max = 1
-})
 
 local nametag = {}
 
@@ -539,24 +529,6 @@ if minetest.get_modpath("3d_armor") then
 		end)
 	end
 
-	armor:register_armor("pegasus:coat_bear_pelt", {
-		description = "Bear Pelt Coat",
-		inventory_image = "pegasus_inv_coat_bear_pelt.png",
-		groups = {armor_torso = 1, armor_heal = 0, armor_heavy_pelt = 1, armor_use = 1000},
-		armor_groups = {fleshy = 5}
-	})
-
-
-
-	minetest.register_craft({
-		output = "pegasus:coat_bear_pelt",
-		recipe = {
-			{"pegasus:pelt_bear", "", "pegasus:pelt_bear"},
-			{"pegasus:pelt_bear", "pegasus:pelt_bear", "pegasus:pelt_bear"},
-			{"pegasus:pelt_bear", "pegasus:pelt_bear", "pegasus:pelt_bear"}
-		}
-	})
-end
 
 -----------
 -- Nodes --
@@ -665,23 +637,6 @@ minetest.register_on_mods_loaded(function()
 	end
 end)
 
-minetest.register_craft({
-	output = "pegasus:cat_toy",
-	recipe = {
-		{"", "", "group:thread"},
-		{"", "group:stick", "group:thread"},
-		{"group:stick", "", "group:feather"}
-	}
-})
-
-minetest.register_craft({
-	output = "pegasus:cat_toy",
-	recipe = {
-		{"", "", "farming:string"},
-		{"", "group:stick", "farming:string"},
-		{"group:stick", "", "group:feather"}
-	}
-})
 
 minetest.register_craft({
 	output = "pegasus:lasso",
@@ -794,3 +749,4 @@ minetest.register_on_craft(function(itemstack, _, old_craft_grid)
 		end
 	end
 end)
+end
