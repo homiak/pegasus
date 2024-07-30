@@ -165,14 +165,14 @@ creatura.register_mob("pegasus:pegasus", {
 	makes_footstep_sound = true,
 
 	-- Creatura Props
-	max_health = 60,
+	max_health = 200,
 	armor_groups = {fleshy = 100},
-	damage = 10,
+	damage = 40,
 	speed = 200000,
 	tracking_range = 16,
 	max_boids = 7,
-	despawn_after = 1000000,
-	max_fall = 4,
+	despawn_after = false,
+	max_fall = 0,
 	stepheight = 1.2,
 	sounds = {
 		alter_child_pitch = true,

@@ -1286,15 +1286,14 @@ creatura.register_utility("pegasus:pegasus_ride", function(self, player)
 
 		-- Jump Control
 		if control.jump
-		and _self.touching_ground
 		and vel.y < 1 then
 			_self.object:add_velocity({
 				x = 0,
-				y = _self.jump_power * 17,
+				y = _self.jump_power * 6,
 				z = 0
 			})
 		elseif not _self.touching_ground then
-			speed_x = speed_x * 0.75
+			speed_x = speed_x * 1
 		end
 
 		-- Rear Animation when jumping

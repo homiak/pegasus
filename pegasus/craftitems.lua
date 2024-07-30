@@ -292,7 +292,7 @@ minetest.register_craftitem("pegasus:saddle", {
 })
 
 minetest.register_craftitem("pegasus:net", {
-	description = "Animal Net",
+	description = "Pegasus Net",
 	inventory_image = "pegasus_net.png",
 	stack_max = 1,
 	on_secondary_use = mob_storage_use,
@@ -393,7 +393,7 @@ minetest.register_node("pegasus:guano", {
 })
 
 minetest.register_node("pegasus:crate", {
-	description = "Animal Crate",
+	description = "Pegasus Crate",
 	tiles = {"pegasus_crate.png", "pegasus_crate.png", "pegasus_crate_side.png"},
 	groups = {choppy = 2},
 	stack_max = 1,
