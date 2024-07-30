@@ -175,7 +175,7 @@ minetest.register_craftitem("pegasus:net", {
 					minetest.add_entity(pos, mob, staticdata)
 					itemstack:get_meta():set_string("mob", nil)
 					itemstack:get_meta():set_string("staticdata", nil)
-					itemstack:get_meta():set_string("description", "Animal Net")
+					itemstack:get_meta():set_string("description", S("Pegasus Net"))
 				end
 			end
 		end
@@ -269,7 +269,7 @@ minetest.register_node("pegasus:crate", {
 			meta:set_string("mob", nil)
 			meta:set_string("infotext", nil)
 			meta:set_string("staticdata", nil)
-			meta:set_string("description", "Animal Crate")
+			meta:set_string("description", S("Pegasus Crate"))
 		end
 	end
 })

@@ -22,6 +22,13 @@ local book_pages = {
 			offset = {x = 0, y = 1.5},
 			file = "pegasus_book_home.txt"
 		},
+		{ -- Image
+			element_type = "image",
+			font_size = 24,
+			offset = {x = 8.5, y = 2.5},
+			size = {x = 7.5, y = 5.25,},
+			text = "pegasus_book_img1.png"
+		},
 		{ -- Next Page
 			element_type = "image_button",
 			font_size = 24,
@@ -36,6 +43,13 @@ local book_pages = {
 			font_size = 24,
 			offset = {x = 0, y = 1.5},
 			file = "pegasus_book_pegasus2.txt"
+		},
+		{ -- Image
+			element_type = "image",
+			font_size = 24,
+			offset = {x = 8.5, y = 2.5},
+			size = {x = 7.5, y = 6},
+			text = "pegasus_book_img2.png"
 		},
 		{ -- Last Page
 			element_type = "image_button",
