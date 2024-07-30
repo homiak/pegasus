@@ -2,6 +2,8 @@
 -- Book --
 -----------
 
+local S = pegasus.S
+
 local color = minetest.colorize
 
 local book_bg = {
@@ -156,7 +158,7 @@ end
 ---------------
 
 minetest.register_craftitem("pegasus:book_pegasus", {
-	description = "Book of Pegasus",
+	description = S("Book of Pegasus"),
 	inventory_image = "pegasus_book_pegasus.png",
 	stack_max = 1,
 	on_place = function(itemstack, player)

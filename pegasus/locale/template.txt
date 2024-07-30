@@ -1,0 +1,13 @@
+# textdomian: pegasus
+# Template
+
+Lasso=
+Pegasus Crate=
+Pegasus Net=
+Book of Pegasus=
+Nametag=
+Saddle=
+Steak=
+Raw Pegasusbeef=
+Leather=
+Contains a Pegasus=

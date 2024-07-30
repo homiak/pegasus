@@ -1,3 +1,11 @@
+pegasus.S = nil
+
+if(minetest.get_translator ~= nil) then
+    pegasus.S = minetest.get_translator(minetest.get_current_modname())
+else
+    pegasus.S = function ( s ) return s end
+end
+
 local mod_storage = minetest.get_mod_storage()
 
 local data = {

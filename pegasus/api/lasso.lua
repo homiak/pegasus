@@ -2,6 +2,8 @@
 -- Lasso --
 -----------
 
+local S = pegasus.S
+
 local abs = math.abs
 
 local vec_add, vec_dir, vec_dist, vec_len = vector.add, vector.direction, vector.distance, vector.length
@@ -202,7 +204,7 @@ end
 -- Item
 
 minetest.register_craftitem("pegasus:lasso", {
-	description = "Lasso",
+	description = S("Lasso"),
 	inventory_image = "pegasus_lasso.png",
 	on_secondary_use = function(_, placer, pointed)
 		local ent = pointed.ref and pointed.ref:get_luaentity()
