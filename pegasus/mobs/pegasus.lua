@@ -271,6 +271,7 @@ creatura.register_mob("pegasus:pegasus", {
 			})
 			self.drops = {
 				{name = "pegasus:leather", chance = 2, min = 1, max = 4},
+				{name = "pegasus:beef_raw", chance = 2, min = 1, max = 4},
 				{name = "pegasus:saddle", chance = 1, min = 1, max = 1}
 			}
 		else
@@ -279,7 +280,8 @@ creatura.register_mob("pegasus:pegasus", {
 			self.saddled = self:memorize("saddled", false)
 			set_pattern(self)
 			self.drops = {
-				{name = "pegasus:leather", chance = 2, min = 1, max = 4}
+				{name = "pegasus:leather", chance = 2, min = 1, max = 4},
+				{name = "pegasus:beef_raw", chance = 2, min = 1, max = 4},
 			}
 			minetest.add_item(pos, "pegasus:saddle")
 		end

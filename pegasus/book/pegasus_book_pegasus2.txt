@@ -1,8 +1,10 @@
-To tame one, you must mount it
+To tame one, you must feed it with wheat and
+mount it (one or more times, if the Pegasus
+does not listen to your commands)
 and remain seated until the Pegasus
 throws you off. Once tamed, a Pegasus 
 can be saddled (or not) and ridden. Not
 all Pegasi are created equal, some 
 can jump great heights, while others can 
-run faster. Pegasuss will pass on these 
+run faster. Pegasi will pass on these 
 qualities to their offspring.
