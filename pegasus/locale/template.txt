@@ -1,6 +1,5 @@
 # textdomian: pegasus
 # Template
-
 Lasso=
 Pegasus Crate=
 Pegasus Net=

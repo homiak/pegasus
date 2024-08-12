@@ -1,7 +1,15 @@
 pegasus = {}
 
-local path = minetest.get_modpath("pegasus")
+pegasus.S = nil
 
+if(minetest.get_translator ~= nil) then
+    pegasus.S = minetest.get_translator(minetest.get_current_modname())
+else
+	pegasus.S = function ( s ) return s end
+end
+
+
+local path = minetest.get_modpath("pegasus")
 local storage = dofile(path .. "/api/storage.lua")
 
 pegasus.spawn_points = storage.spawn_points
@@ -92,8 +100,6 @@ end)
 local function load_file(filepath, filename)
     if io.open(filepath .. "/" .. filename, "r") then
         dofile(filepath .. "/" .. filename)
-    else
-        minetest.log("action", "[Creatura] The file " .. filename .. " could not be loaded.")
     end
 end
 

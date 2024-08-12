@@ -4,10 +4,6 @@
 
 local S = pegasus.S
 
-local random = math.random
-
-local vec_add, vec_sub = vector.add, vector.subtract
-
 local color = minetest.colorize
 
 local function correct_name(str)

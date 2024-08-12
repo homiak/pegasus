@@ -38,4 +38,4 @@ Initial release
 
 
 
-The mod is created by Scottii and based on Animalia (by ElCeejo) and on Dragon Uisge (by Scottii).
+The mod is created by Scottii and based on "Animalia" (by ElCeejo) and on "Dragon Uisge (waterdragon)"(by Scottii).
