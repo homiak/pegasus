@@ -1197,7 +1197,7 @@ creatura.register_utility("pegasus:pegasus_tame", function(self)
 		if not pos then return end
 		if not player or not creatura.is_alive(player) then return true end
 
-		-- Increase Taming progress while Players view is aligned with the pegasuss
+		-- Increase Taming progress while Players view is aligned with the pegasi
 		local yaw, plyr_yaw = _self.object:get_yaw(), player:get_look_horizontal()
 		local yaw_diff = abs(diff(yaw, plyr_yaw))
 

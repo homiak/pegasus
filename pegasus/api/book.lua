@@ -221,7 +221,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			end
 		end
 	end
-	if fields.btn_pegasuss then
+	if fields.btn_pegasi then
 		minetest.show_formspec(plyr_name, "pegasus:book_page_" .. 2, getPage(2, meta, plyr_name))
 		return true
 	end
@@ -243,7 +243,7 @@ minetest.register_globalstep(function()
         local inv = minetest.get_inventory({type = "player", name = name})
         if pegasus.contains_book(inv) then
 			if contains_item(inv, "pegasus:pegasus") then
-				pegasus.add_page(inv, "pegasuss")
+				pegasus.add_page(inv, "pegasi")
 			end
         end
     end
