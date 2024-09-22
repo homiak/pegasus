@@ -718,6 +718,8 @@ pegasus.step_func = function(self, dtime)
     end
 end
 
+-- Flight
+
 -- Функция для поиска ближайшего Пегаса
 function pegasus.find_nearest_pegasus(pos)
     local nearest_pegasus = nil
@@ -769,6 +771,9 @@ local function dragon_pegasus_flight(dragon, pegasus)
 
     -- Устанавливаем пропорциональный размер для Пегаса при полете на Драконе
     pegasus.object:set_properties({visual_size = {x = 1.5, y = 1.5}})
+    
+    -- Устанавливаем Пегасу анимацию "stand" (чтобы он не двигался)
+    pegasus:animate("stand")
     
     -- Прикрепляем Пегаса к Дракону
     pegasus.object:set_attach(dragon.object, "", {x = 0, y = 5, z = 0}, {x = 0, y = 0, z = 0})
