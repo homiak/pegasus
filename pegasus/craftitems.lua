@@ -560,3 +560,77 @@ minetest.register_on_craft(function(itemstack, _, old_craft_grid)
 end)
 end
 
+-- Функция для поиска ближайшего Пегаса
+function pegasus.find_nearest_pegasus(player)
+    local player_pos = player:get_pos()
+    local nearest_pegasus = nil
+    local min_distance = math.huge
+
+    for _, obj in pairs(minetest.luaentities) do
+        if obj.name == "pegasus:pegasus" then
+            local distance = vector.distance(player_pos, obj.object:get_pos())
+            if distance < min_distance then
+                min_distance = distance
+                nearest_pegasus = obj
+            end
+        end
+    end
+
+    return nearest_pegasus
+end
+
+-- Улучшенная функция "Небесный вихрь"
+local function smooth_sky_whirl(self)
+    local start_pos = self.object:get_pos()
+    local radius = 5
+    local height = 10
+    local duration = 5  -- секунды
+    local steps = 150   -- увеличенное количество шагов для большей плавности
+    local current_step = 0
+
+    minetest.chat_send_all("A Pegasus creates a Smooth Sky Whirl!")
+
+    local function move_step()
+        current_step = current_step + 1
+        if current_step <= steps then
+            local progress = current_step / steps
+            local angle = progress * math.pi * 4  -- Два полных оборота
+            local vertical_progress = math.sin(progress * math.pi)  -- Плавный подъем и спуск
+            
+            local new_pos = {
+                x = start_pos.x + radius * math.cos(angle),
+                y = start_pos.y + height * vertical_progress,
+                z = start_pos.z + radius * math.sin(angle)
+            }
+            
+            self.object:move_to(new_pos)
+            
+            -- Эффект притяжения для ближайших объектов
+            for _, obj in pairs(minetest.get_objects_inside_radius(new_pos, radius * 2)) do
+                if obj ~= self.object and obj:get_luaentity() and obj:get_luaentity().name ~= "pegasus:pegasus" then
+                    local entity_pos = obj:get_pos()
+                    local dir = vector.direction(entity_pos, new_pos)
+                    obj:add_velocity(vector.multiply(dir, 0.2))  -- Уменьшенная сила притяжения
+                end
+            end
+            
+            minetest.after(duration / steps, move_step)
+        end
+    end
+
+    move_step()
+end
+
+-- Добавляем случайную активацию способности в шаг Пегаса
+local old_pegasus_step = pegasus.step_func
+pegasus.step_func = function(self, dtime)
+    if old_pegasus_step then
+        old_pegasus_step(self, dtime)
+    end
+
+    -- Шанс активации "Небесного вихря" примерно раз в 5 минут
+    if math.random(1, 18000) == 1 then  -- при 60 FPS
+        smooth_sky_whirl(self)
+    end
+end
+
