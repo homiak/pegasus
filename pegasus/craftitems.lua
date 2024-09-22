@@ -588,7 +588,6 @@ local function smooth_sky_whirl(self)
     local steps = 150   -- увеличенное количество шагов для большей плавности
     local current_step = 0
 
-    minetest.chat_send_all("A Pegasus creates a Smooth Sky Whirl!")
 
     local function move_step()
         current_step = current_step + 1
@@ -631,6 +630,91 @@ pegasus.step_func = function(self, dtime)
     -- Шанс активации "Небесного вихря" примерно раз в 5 минут
     if math.random(1, 18000) == 1 then  -- при 60 FPS
         smooth_sky_whirl(self)
+    end
+end
+
+-- Функция для поиска ближайшего Пегаса
+function pegasus.find_nearest_pegasus(player)
+    local player_pos = player:get_pos()
+    local nearest_pegasus = nil
+    local min_distance = math.huge
+
+    for _, obj in pairs(minetest.luaentities) do
+        if obj.name == "pegasus:pegasus" then
+            local distance = vector.distance(player_pos, obj.object:get_pos())
+            if distance < min_distance then
+                min_distance = distance
+                nearest_pegasus = obj
+            end
+        end
+    end
+
+    return nearest_pegasus
+end
+
+-- Функция "Звездный след"
+local function star_trail(self)
+    local duration = 10  -- секунды
+    local interval = 0.5 -- интервал между звездами
+    local star_lifetime = 5 -- время жизни каждой звезды
+
+
+    local function place_star()
+        local pos = self.object:get_pos()
+        if pos then
+            -- Создаем временную звезду
+            local star_pos = {x = pos.x, y = pos.y - 0.5, z = pos.z}
+            minetest.set_node(star_pos, {name = "pegasus:star_node"})
+            
+            -- Удаляем звезду через некоторое время
+            minetest.after(star_lifetime, function()
+                minetest.remove_node(star_pos)
+            end)
+        end
+    end
+
+    -- Запускаем создание звезд
+    local star_timer = 0
+    minetest.register_globalstep(function(dtime)
+        star_timer = star_timer + dtime
+        if star_timer > duration then
+            return true -- Останавливаем глобальный шаг
+        end
+        
+        if star_timer % interval < dtime then
+            place_star()
+        end
+    end)
+end
+
+-- Регистрируем новый узел для звезды
+minetest.register_node("pegasus:star_node", {
+    description = "Star",
+    tiles = {"pegasus_star.png"},
+    light_source = 14,
+    walkable = false,
+    buildable_to = true,
+    sunlight_propagates = true,
+    groups = {cracky = 3, not_in_creative_inventory = 1},
+    on_construct = function(pos)
+        minetest.get_node_timer(pos):start(5)
+    end,
+    on_timer = function(pos, elapsed)
+        minetest.remove_node(pos)
+        return false
+    end,
+})
+
+-- Добавляем случайную активацию способности в шаг Пегаса
+local old_pegasus_step = pegasus.step_func
+pegasus.step_func = function(self, dtime)
+    if old_pegasus_step then
+        old_pegasus_step(self, dtime)
+    end
+
+    -- Шанс активации "Звездного следа" примерно раз в 5 минут
+    if math.random(1, 18000) == 1 then  -- при 60 FPS
+        star_trail(self)
     end
 end
 
