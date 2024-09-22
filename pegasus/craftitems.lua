@@ -314,7 +314,6 @@ minetest.register_globalstep(function(dtime)
 end)
 
 
--- Команда чата для остановки парада
 minetest.register_chatcommand("stop_parade", {
     description = S("Stops the parade of the nearest Pegasus"),
     func = function(name)
@@ -560,7 +559,6 @@ minetest.register_on_craft(function(itemstack, _, old_craft_grid)
 end)
 end
 
--- Функция для поиска ближайшего Пегаса
 function pegasus.find_nearest_pegasus(player)
     local player_pos = player:get_pos()
     local nearest_pegasus = nil
@@ -579,13 +577,12 @@ function pegasus.find_nearest_pegasus(player)
     return nearest_pegasus
 end
 
--- Улучшенная функция "Небесный вихрь"
 local function smooth_sky_whirl(self)
     local start_pos = self.object:get_pos()
     local radius = 5
     local height = 10
-    local duration = 5  -- секунды
-    local steps = 150   -- увеличенное количество шагов для большей плавности
+    local duration = 5
+    local steps = 150
     local current_step = 0
 
 
@@ -593,8 +590,8 @@ local function smooth_sky_whirl(self)
         current_step = current_step + 1
         if current_step <= steps then
             local progress = current_step / steps
-            local angle = progress * math.pi * 4  -- Два полных оборота
-            local vertical_progress = math.sin(progress * math.pi)  -- Плавный подъем и спуск
+            local angle = progress * math.pi * 4
+            local vertical_progress = math.sin(progress * math.pi)
             
             local new_pos = {
                 x = start_pos.x + radius * math.cos(angle),
@@ -604,12 +601,11 @@ local function smooth_sky_whirl(self)
             
             self.object:move_to(new_pos)
             
-            -- Эффект притяжения для ближайших объектов
             for _, obj in pairs(minetest.get_objects_inside_radius(new_pos, radius * 2)) do
                 if obj ~= self.object and obj:get_luaentity() and obj:get_luaentity().name ~= "pegasus:pegasus" then
                     local entity_pos = obj:get_pos()
                     local dir = vector.direction(entity_pos, new_pos)
-                    obj:add_velocity(vector.multiply(dir, 0.2))  -- Уменьшенная сила притяжения
+                    obj:add_velocity(vector.multiply(dir, 0.2))
                 end
             end
             
@@ -620,20 +616,17 @@ local function smooth_sky_whirl(self)
     move_step()
 end
 
--- Добавляем случайную активацию способности в шаг Пегаса
 local old_pegasus_step = pegasus.step_func
 pegasus.step_func = function(self, dtime)
     if old_pegasus_step then
         old_pegasus_step(self, dtime)
     end
 
-    -- Шанс активации "Небесного вихря" примерно раз в 5 минут
-    if math.random(1, 18000) == 1 then  -- при 60 FPS
+    if math.random(1, 18000) == 1 then
         smooth_sky_whirl(self)
     end
 end
 
--- Функция для поиска ближайшего Пегаса
 function pegasus.find_nearest_pegasus(player)
     local player_pos = player:get_pos()
     local nearest_pegasus = nil
@@ -652,33 +645,29 @@ function pegasus.find_nearest_pegasus(player)
     return nearest_pegasus
 end
 
--- Функция "Звездный след"
 local function star_trail(self)
-    local duration = 10  -- секунды
-    local interval = 0.5 -- интервал между звездами
-    local star_lifetime = 5 -- время жизни каждой звезды
+    local duration = 10
+    local interval = 0.5
+    local star_lifetime = 5
 
 
     local function place_star()
         local pos = self.object:get_pos()
         if pos then
-            -- Создаем временную звезду
             local star_pos = {x = pos.x, y = pos.y - 0.5, z = pos.z}
             minetest.set_node(star_pos, {name = "pegasus:star_node"})
             
-            -- Удаляем звезду через некоторое время
             minetest.after(star_lifetime, function()
                 minetest.remove_node(star_pos)
             end)
         end
     end
 
-    -- Запускаем создание звезд
     local star_timer = 0
     minetest.register_globalstep(function(dtime)
         star_timer = star_timer + dtime
         if star_timer > duration then
-            return true -- Останавливаем глобальный шаг
+            return true
         end
         
         if star_timer % interval < dtime then
@@ -687,7 +676,6 @@ local function star_trail(self)
     end)
 end
 
--- Регистрируем новый узел для звезды
 minetest.register_node("pegasus:star_node", {
     description = "Star",
     tiles = {"pegasus_star.png"},
@@ -705,22 +693,19 @@ minetest.register_node("pegasus:star_node", {
     end,
 })
 
--- Добавляем случайную активацию способности в шаг Пегаса
 local old_pegasus_step = pegasus.step_func
 pegasus.step_func = function(self, dtime)
     if old_pegasus_step then
         old_pegasus_step(self, dtime)
     end
 
-    -- Шанс активации "Звездного следа" примерно раз в 5 минут
-    if math.random(1, 18000) == 1 then  -- при 60 FPS
+    if math.random(1, 18000) == 1 then
         star_trail(self)
     end
 end
 
 -- Flight
 
--- Функция для поиска ближайшего Пегаса
 function pegasus.find_nearest_pegasus(pos)
     local nearest_pegasus = nil
     local min_distance = math.huge
@@ -738,7 +723,6 @@ function pegasus.find_nearest_pegasus(pos)
     return nearest_pegasus
 end
 
--- Функция для поиска ближайшего Шотландского Дракона
 local function find_nearest_scottish_dragon(pos)
     local nearest_dragon = nil
     local min_distance = math.huge
@@ -756,45 +740,37 @@ local function find_nearest_scottish_dragon(pos)
     return nearest_dragon
 end
 
--- Функция для совместного полета Дракона и Пегаса
 local function dragon_pegasus_flight(dragon, pegasus)
     if not dragon or not pegasus then return end
 
     local start_pos = dragon.object:get_pos()
     local flight_height = 20
     local flight_radius = 10
-    local flight_duration = 20 -- секунды
+    local flight_duration = 20
     local steps = 200
 
-    minetest.chat_send_all("A Scottish Dragon takes off with a Pegasus on its back!")
     dragon:animate("fly")
 
-    -- Устанавливаем пропорциональный размер для Пегаса при полете на Драконе
     pegasus.object:set_properties({visual_size = {x = 1.5, y = 1.5}})
     
-    -- Устанавливаем Пегасу анимацию "stand"
     pegasus:animate("stand")
     
-    -- Прикрепляем Пегаса к Дракону
-    pegasus.object:set_attach(dragon.object, "", {x = 0, y = 5, z = 0}, {x = 0, y = 0, z = 0})
+    pegasus.object:set_attach(dragon.object, "", {x = 0, y = 2.1, z = 0}, {x = 0, y = 0, z = 0})
 
-    -- Начинаем плавное движение Дракона
-    local speed = 5  -- Скорость движения дракона
-    local angle_speed = math.pi * 4 / flight_duration  -- Скорость вращения (для кругового полета)
+    local speed = 4
     
     local time = 0
     local function update_dragon_position()
-        time = time + 0.1 -- Обновляем время с шагом 0.1 сек
+        time = time + 0.1
         if time > flight_duration then
-            -- Завершаем полет после flight_duration секунд
+
             pegasus.object:set_detach()
-            pegasus.object:set_pos(vector.add(start_pos, {x = 0, y = 1, z = 0})) -- Ставим Пегаса рядом с Драконом
-            -- Возвращаем Пегасу обычный размер после полета
+            pegasus.object:set_pos(vector.add(start_pos, {x = 0, y = 1, z = 0}))
+
             pegasus.object:set_properties({visual_size = {x = 10, y = 10}})
             return
         end
 
-        -- Вычисляем новую позицию и угол для Дракона
         local progress = time / flight_duration
         local angle = progress * math.pi * 4
         local height_factor = math.sin(progress * math.pi)
@@ -805,26 +781,21 @@ local function dragon_pegasus_flight(dragon, pegasus)
             z = start_pos.z + flight_radius * math.sin(angle)
         }
 
-        -- Плавно меняем позицию
         local velocity = vector.direction(dragon.object:get_pos(), new_pos)
         dragon.object:set_velocity(vector.multiply(velocity, speed))
 
-        -- Поворачиваем Дракона в направлении движения
         local look_dir = vector.direction(dragon.object:get_pos(), new_pos)
         dragon.object:set_yaw(minetest.dir_to_yaw(look_dir))
 
-        -- Обновляем через 0.1 секунды
         minetest.after(0.1, update_dragon_position)
     end
 
-    -- Запускаем процесс обновления позиции
     update_dragon_position()
 end
 
--- Добавляем случайную активацию совместного полета
 minetest.register_globalstep(function(dtime)
-    if math.random(1, 18000) == 1 then -- примерно раз в 5 минут при 60 FPS
-        local pos = {x = 0, y = 0, z = 0} -- Используйте подходящую начальную позицию
+    if math.random(1, 18000) == 1 then
+        local pos = {x = 0, y = 0, z = 0}
         local dragon = find_nearest_scottish_dragon(pos)
         local pegasus = pegasus.find_nearest_pegasus(pos)
         if dragon and pegasus then
@@ -833,27 +804,3 @@ minetest.register_globalstep(function(dtime)
     end
 end)
 
--- Команда для активации совместного полета
-minetest.register_chatcommand("dragon_pegasus_flight", {
-    description = "Initiate a flight with the nearest Scottish Dragon and Pegasus",
-    func = function(name)
-        local player = minetest.get_player_by_name(name)
-        if not player then
-            return false, "Player not found"
-        end
-
-        local pos = player:get_pos()
-        local dragon = find_nearest_scottish_dragon(pos)
-        local pegasus = pegasus.find_nearest_pegasus(pos)
-
-        if not dragon then
-            return false, "No Scottish Dragon found nearby"
-        end
-        if not pegasus then
-            return false, "No Pegasus found nearby"
-        end
-
-        dragon_pegasus_flight(dragon, pegasus)
-        return true, "Flight initiated between Scottish Dragon and Pegasus!"
-    end,
-})
