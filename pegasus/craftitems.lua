@@ -772,39 +772,53 @@ local function dragon_pegasus_flight(dragon, pegasus)
     -- Устанавливаем пропорциональный размер для Пегаса при полете на Драконе
     pegasus.object:set_properties({visual_size = {x = 1.5, y = 1.5}})
     
-    -- Устанавливаем Пегасу анимацию "stand" (чтобы он не двигался)
+    -- Устанавливаем Пегасу анимацию "stand"
     pegasus:animate("stand")
     
     -- Прикрепляем Пегаса к Дракону
     pegasus.object:set_attach(dragon.object, "", {x = 0, y = 5, z = 0}, {x = 0, y = 0, z = 0})
 
-    for i = 1, steps do
-        minetest.after(i * flight_duration / steps, function()
-            local progress = i / steps
-            local angle = progress * math.pi * 4 -- Два полных круга
-            local height_factor = math.sin(progress * math.pi) -- Плавный подъем и спуск
+    -- Начинаем плавное движение Дракона
+    local speed = 5  -- Скорость движения дракона
+    local angle_speed = math.pi * 4 / flight_duration  -- Скорость вращения (для кругового полета)
+    
+    local time = 0
+    local function update_dragon_position()
+        time = time + 0.1 -- Обновляем время с шагом 0.1 сек
+        if time > flight_duration then
+            -- Завершаем полет после flight_duration секунд
+            pegasus.object:set_detach()
+            pegasus.object:set_pos(vector.add(start_pos, {x = 0, y = 1, z = 0})) -- Ставим Пегаса рядом с Драконом
+            -- Возвращаем Пегасу обычный размер после полета
+            pegasus.object:set_properties({visual_size = {x = 10, y = 10}})
+            return
+        end
 
-            local new_pos = {
-                x = start_pos.x + flight_radius * math.cos(angle),
-                y = start_pos.y + flight_height * height_factor,
-                z = start_pos.z + flight_radius * math.sin(angle)
-            }
+        -- Вычисляем новую позицию и угол для Дракона
+        local progress = time / flight_duration
+        local angle = progress * math.pi * 4
+        local height_factor = math.sin(progress * math.pi)
 
-            dragon.object:move_to(new_pos)
+        local new_pos = {
+            x = start_pos.x + flight_radius * math.cos(angle),
+            y = start_pos.y + flight_height * height_factor,
+            z = start_pos.z + flight_radius * math.sin(angle)
+        }
 
-            -- Поворачиваем Дракона в направлении движения
-            local look_dir = vector.direction(dragon.object:get_pos(), new_pos)
-            dragon.object:set_yaw(minetest.dir_to_yaw(look_dir))
-        end)
+        -- Плавно меняем позицию
+        local velocity = vector.direction(dragon.object:get_pos(), new_pos)
+        dragon.object:set_velocity(vector.multiply(velocity, speed))
+
+        -- Поворачиваем Дракона в направлении движения
+        local look_dir = vector.direction(dragon.object:get_pos(), new_pos)
+        dragon.object:set_yaw(minetest.dir_to_yaw(look_dir))
+
+        -- Обновляем через 0.1 секунды
+        minetest.after(0.1, update_dragon_position)
     end
 
-    -- Отсоединяем Пегаса после полета
-    minetest.after(flight_duration, function()
-        pegasus.object:set_detach()
-        pegasus.object:set_pos(vector.add(start_pos, {x = 0, y = 1, z = 0})) -- Ставим Пегаса рядом с Драконом
-        -- Возвращаем Пегасу обычный размер после полета
-        pegasus.object:set_properties({visual_size = {x = 10, y = 10}})
-    end)
+    -- Запускаем процесс обновления позиции
+    update_dragon_position()
 end
 
 -- Добавляем случайную активацию совместного полета
