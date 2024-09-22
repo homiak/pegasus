@@ -1232,93 +1232,265 @@ creatura.register_utility("pegasus:pegasus_tame", function(self)
 	self:set_utility(func)
 end)
 
+-- Modified fire block definition
+minetest.register_node("pegasus:fire_animated", {
+    description = "Pegasi Fire",
+    drawtype = "firelike",
+    tiles = {
+        {
+            name = "pegasus_fire_animated.png",
+            animation = {
+                type = "vertical_frames",
+                aspect_w = 16,
+                aspect_h = 16,
+                length = 1
+            },
+        },
+    },
+    inventory_image = "pegasus_fire_1.png",
+    paramtype = "light",
+    light_source = 14,
+    walkable = false,
+    pointable = false,
+    diggable = false,
+    buildable_to = true,
+    floodable = true,
+    damage_per_second = 4,
+    groups = {igniter = 2, not_in_creative_inventory = 1},
+    drop = "",
+    on_timer = function(pos, elapsed)
+        -- Check for entities and damage them
+        local objects = minetest.get_objects_inside_radius(pos, 1.5)
+        for _, obj in ipairs(objects) do
+            local ent = obj:get_luaentity()
+            if obj:is_player() or (ent and ent.name ~= "pegasus:pegasus") then
+                obj:punch(obj, 1.0, {
+                    full_punch_interval = 1.0,
+                    damage_groups = {fleshy = 4},
+                }, vector.new(0, 0, 0))
+            end
+        end
+        
+        -- Remove the fire after some time
+        if math.random(1, 5) == 1 then  -- 20% chance to remove each tick
+            minetest.remove_node(pos)
+            return false
+        end
+        return true
+    end,
+    on_construct = function(pos)
+        minetest.get_node_timer(pos):start(0.5)  -- Check every 0.5 seconds
+    end,
+    on_flood = function(pos, oldnode, newnode)
+        minetest.remove_node(pos)
+        return false
+    end,
+})
+
+function pegasus_breathe_fire(self, player)
+    local pos = self.object:get_pos()
+    if not pos then return end
+    
+    local dir = player:get_look_dir()
+    local start_pos = vector.add(pos, vector.new(0, 1.2, 0))
+    local end_pos = vector.add(start_pos, vector.multiply(dir, 20))  -- Increased range to 20
+    
+    local particle_types = {
+        {
+            texture = "pegasus_fire_1.png",
+            size = {min = 2, max = 4},
+            velocity = {min = 15, max = 20},  -- Increased velocity
+            acceleration = {y = {min = 2, max = 4}},
+            exptime = {min = 0.8, max = 1.2},
+            glow = 14  -- Maximum glow
+        },
+        {
+            texture = "pegasus_fire_2.png",
+            size = {min = 2, max = 4},
+            velocity = {min = 15, max = 20},
+            acceleration = {y = {min = 2, max = 4}},
+            exptime = {min = 0.8, max = 1.2},
+            glow = 14
+        },
+        {
+            texture = "pegasus_fire_3.png",
+            size = {min = 2, max = 4},
+            velocity = {min = 15, max = 20},
+            acceleration = {y = {min = 2, max = 4}},
+            exptime = {min = 0.8, max = 1.2},
+            glow = 14
+        },
+    }
+    
+    -- Spawn particles
+    for i = 1, 50 do  -- Increased number of particles
+        local particle = particle_types[math.random(#particle_types)]
+        
+        minetest.add_particle({
+            pos = vector.add(start_pos, vector.new(
+                math.random(-5, 5) / 10,
+                math.random(-5, 5) / 10,
+                math.random(-5, 5) / 10
+            )),  -- Add some randomness to the starting position
+            velocity = vector.multiply(vector.add(dir, vector.new(
+                math.random(-2, 2) / 10,
+                math.random(-2, 2) / 10,
+                math.random(-2, 2) / 10
+            )), math.random(particle.velocity.min, particle.velocity.max)),  -- Add some spread
+            acceleration = {x = 0, y = math.random(particle.acceleration.y.min, particle.acceleration.y.max), z = 0},
+            expirationtime = math.random(particle.exptime.min, particle.exptime.max),
+            size = math.random(particle.size.min, particle.size.max),
+            collisiondetection = true,
+            collision_removal = true,
+            vertical = false,
+            texture = particle.texture,
+            glow = particle.glow
+        })
+    end
+    
+    -- Check for block collisions and ignite blocks
+    local step = 0.5
+    for i = 0, 20, step do  -- Increased range to 20
+        local check_pos = vector.add(start_pos, vector.multiply(dir, i))
+        local node = minetest.get_node(check_pos)
+        if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
+            minetest.set_node(check_pos, {name = "pegasus:fire_animated"})
+            break
+        end
+    end
+    
+    -- Improved entity damage along the fire path
+    local step = 1  -- Check every block along the path
+    for i = 0, 20, step do
+        local check_pos = vector.add(start_pos, vector.multiply(dir, i))
+        local node = minetest.get_node(check_pos)
+        if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
+            minetest.set_node(check_pos, {name = "pegasus:fire_animated"})
+        end
+        
+        -- Check for entities at each step
+        local objects = minetest.get_objects_inside_radius(check_pos, 2)
+        for _, obj in ipairs(objects) do
+            if obj ~= self.object and obj ~= player then
+                local ent = obj:get_luaentity()
+                if ent and ent.name ~= self.name then
+                    obj:punch(self.object, 1.0, {
+                        full_punch_interval = 1.0,
+                        damage_groups = {fleshy = 8},
+                    }, nil)
+                end
+            end
+        end
+        
+        -- Stop if we hit a non-air block
+        if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
+            break
+        end
+    end
+end
+
+
+
+
+
+-- Modify the pegasus:pegasus_ride utility
 creatura.register_utility("pegasus:pegasus_ride", function(self, player)
-	local player_props = player and player:get_properties()
-	if not player_props then return end
-	local player_size = player_props.visual_size
-	local mob_size = self.visual_size
-	local adj_size = {
-		x = player_size.x / mob_size.x,
-		y = player_size.y / mob_size.y
-	}
-	if player_size.x ~= adj_size.x then
-		player:set_properties({
-			visual_size = adj_size
-		})
-	end
+    local player_props = player and player:get_properties()
+    if not player_props then return end
+    local player_size = player_props.visual_size
+    local mob_size = self.visual_size
+    local adj_size = {
+        x = player_size.x / mob_size.x,
+        y = player_size.y / mob_size.y
+    }
+    if player_size.x ~= adj_size.x then
+        player:set_properties({
+            visual_size = adj_size
+        })
+    end
 
-	local function func(_self)
-		if not creatura.is_alive(player) then
-			return true
-		end
-		local anim = "stand"
-		local speed_x = 0
-		local tyaw = player:get_look_horizontal()
-		local control = player:get_player_control()
-		local vel = _self.object:get_velocity()
-		if not tyaw then return true end
+    local fire_breath_cooldown = 0
 
-		if control.sneak
-		or not _self.rider then
-			pegasus.mount(_self, player)
-			return true
-		end
+    local function func(_self)
+        if not creatura.is_alive(player) then
+            return true
+        end
+        local anim = "stand"
+        local speed_x = 0
+        local tyaw = player:get_look_horizontal()
+        local control = player:get_player_control()
+        local vel = _self.object:get_velocity()
+        if not tyaw then return true end
 
-		animate_player(player, "sit", 30)
+        if control.sneak
+        or not _self.rider then
+            pegasus.mount(_self, player)
+            return true
+        end
 
-		if _self:timer(1) then
-			player_props = player and player:get_properties()
-			if player_props.visual_size.x ~= adj_size.x then
-				player:set_properties({
-					visual_size = adj_size
-				})
-			end
-		end
+        animate_player(player, "sit", 30)
 
-		if control.up then
-			speed_x = 2
-			anim = "walk"
-			if control.aux1 then
-				speed_x = 17
-				anim = "run"
-			end
-		end
+        if _self:timer(1) then
+            player_props = player and player:get_properties()
+            if player_props.visual_size.x ~= adj_size.x then
+                player:set_properties({
+                    visual_size = adj_size
+                })
+            end
+        end
 
-		-- Jump Control
-		if control.jump
-		and vel.y < 1 then
-			_self.object:add_velocity({
-				x = 0,
-				y = _self.jump_power * 6,
-				z = 0
-			})
-		elseif not _self.touching_ground then
-			speed_x = speed_x * 1
-		end
+        -- Fire breath logic
+        fire_breath_cooldown = math.max(0, fire_breath_cooldown - _self.dtime)
+        if control.RMB and fire_breath_cooldown == 0 then
+            pegasus_breathe_fire(_self, player)
+            fire_breath_cooldown = 0.5  -- 2 second cooldown
+            anim = "punch_aoe"  -- You might want to create a specific "breathe_fire" animation
+        end
 
-		-- Rear Animation when jumping
-		if not _self.touching_ground
-		and not _self.in_liquid
-		and vel.y > 0 then
-			anim = "rear"
-		end
+        if control.up then
+            speed_x = 2
+            anim = "walk"
+            if control.aux1 then
+                speed_x = 17
+                anim = "run"
+            end
+        end
 
-		-- Steering
-		local yaw = _self.object:get_yaw()
+        -- Jump Control
+        if control.jump
+        and vel.y < 1 then
+            _self.object:add_velocity({
+                x = 0,
+                y = _self.jump_power * 6,
+                z = 0
+            })
+        elseif not _self.touching_ground then
+            speed_x = speed_x * 1
+        end
 
-		_self.head_tracking = nil
-		pegasus.move_head(_self, tyaw, 0)
+        -- Rear Animation when jumping
+        if not _self.touching_ground
+        and not _self.in_liquid
+        and vel.y > 0 then
+            anim = "rear"
+        end
 
-		if speed_x > 0 and control.left then tyaw = tyaw + pi * 0.25 end
-		if speed_x > 0 and control.right then tyaw = tyaw - pi * 0.25 end
-		if abs(yaw - tyaw) > 0.1 then
-			_self:turn_to(tyaw, _self.turn_rate)
-		end
+        -- Steering
+        local yaw = _self.object:get_yaw()
 
-		_self:set_forward_velocity(_self.speed * speed_x)
-		_self:animate(anim)
-	end
-	self:set_utility(func)
+        _self.head_tracking = nil
+        pegasus.move_head(_self, tyaw, 0)
+
+        if speed_x > 0 and control.left then tyaw = tyaw + math.pi * 0.25 end
+        if speed_x > 0 and control.right then tyaw = tyaw - math.pi * 0.25 end
+        if math.abs(yaw - tyaw) > 0.1 then
+            _self:turn_to(tyaw, _self.turn_rate)
+        end
+
+        _self:set_forward_velocity(_self.speed * speed_x)
+        _self:animate(anim)
+    end
+    self:set_utility(func)
 end)
 
 -- Eagle --

@@ -368,3 +368,4 @@ minetest.register_on_craft(function(itemstack, _, old_craft_grid)
 	end
 end)
 end
+
