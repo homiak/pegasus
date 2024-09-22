@@ -10,3 +10,12 @@ Steak=
 Raw Pegasusbeef=
 Leather=
 Contains a Pegasus=
+No parading Pegasi found nearby=
+Pegasus parade stopped=
+Player not found=
+Stops the parade of the nearest Pegasus=
+Pegasus parade started=
+Pegasus parade stopped=
+Position 1 set to:
+Region set. Sneak near a Pegasus, to begin the parade=
+Pegasus Parade Wand=

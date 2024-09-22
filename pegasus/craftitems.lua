@@ -141,6 +141,197 @@ minetest.register_craftitem("pegasus:nametag", {
 	on_secondary_use = nametag_rightclick
 })
 
+-- Pegasus Parade --
+
+local wand_users = {}
+local parading_pegasi = {}
+
+minetest.register_craftitem("pegasus:parade_wand", {
+    description = S("Pegasus Parade Wand"),
+    inventory_image = "pegasus_parade_wand.png",
+    on_use = function(itemstack, user, pointed_thing)
+        local name = user:get_player_name()
+        if pointed_thing.type ~= "node" then return end
+
+        local pos = pointed_thing.under
+        if not wand_users[name] then
+            wand_users[name] = {pos1 = pos}
+            minetest.chat_send_player(name, S("Position 1 set to:") .. " ".. minetest.pos_to_string(pos))
+        else
+            wand_users[name].pos2 = pos
+            minetest.chat_send_player(name, S("Position 1 set to:") .. " " .. minetest.pos_to_string(pos))
+            minetest.chat_send_player(name, S("Region set. Sneak near a Pegasus, to begin the parade"))
+        end
+    end
+})
+
+local function start_animation(pegasus, anim)
+    local ent = pegasus:get_luaentity()
+    if ent and ent.animations and ent.animations[anim] then
+        local start_frame = ent.animations[anim].range.x
+        local end_frame = ent.animations[anim].range.y
+        local speed = ent.animations[anim].speed or 15
+        pegasus:set_animation({x = start_frame, y = end_frame}, speed, 0)
+    end
+end
+
+local function start_pegasus_parade(pegasus, pos1, pos2)
+    local parade_points = {
+        pos1,
+        {x=pos1.x, y=pos1.y, z=pos2.z},
+        pos2,
+        {x=pos2.x, y=pos2.y, z=pos1.z},
+        pos1
+    }
+    parading_pegasi[pegasus] = {
+        points = parade_points,
+        current_point = 1,
+        original_pos = pegasus.object:get_pos()
+    }
+    start_animation(pegasus.object, "walk")
+end
+
+local function stop_pegasus_parade(pegasus)
+    if parading_pegasi[pegasus] then
+        start_animation(pegasus.object, "stand")
+        parading_pegasi[pegasus] = nil
+        return true
+    end
+    return false
+end
+
+local function is_walkable(pos)
+    local node = minetest.get_node(pos)
+    local node_def = minetest.registered_nodes[node.name]
+    return node_def and node_def.walkable
+end
+
+local function can_jump_over(pos)
+    local above1 = {x = pos.x, y = pos.y + 1, z = pos.z}
+    local above2 = {x = pos.x, y = pos.y + 2, z = pos.z}
+    return not is_walkable(above1) and not is_walkable(above2)
+end
+
+local function find_path(start_pos, end_pos)
+    local direction = vector.direction(start_pos, end_pos)
+    local check_pos = vector.round(vector.add(start_pos, direction))
+    
+    if not is_walkable(check_pos) then
+        return check_pos
+    elseif can_jump_over(check_pos) then
+        return {x = check_pos.x, y = check_pos.y + 1, z = check_pos.z}
+    else
+
+        local side_dirs = {
+            {x = direction.z, y = 0, z = -direction.x},
+            {x = -direction.z, y = 0, z = direction.x}
+        }
+        for _, side_dir in ipairs(side_dirs) do
+            local side_pos = vector.add(start_pos, side_dir)
+            if not is_walkable(side_pos) then
+                return side_pos
+            end
+        end
+    end
+    
+
+    local below_pos = {x = start_pos.x, y = start_pos.y - 1, z = start_pos.z}
+    if not is_walkable(below_pos) then
+        return below_pos
+    end
+    
+    return start_pos
+end
+
+local function move_pegasus(pegasus, parade_info, dtime)
+    local target = parade_info.points[parade_info.current_point]
+    local pos = pegasus.object:get_pos()
+    local distance = vector.distance(pos, target)
+
+    if distance < 0.5 then
+        parade_info.current_point = parade_info.current_point % (#parade_info.points - 1) + 1
+        target = parade_info.points[parade_info.current_point]
+    end
+
+    local next_pos = find_path(pos, target)
+    local direction = vector.direction(pos, next_pos)
+    local speed = 4
+    local new_pos = vector.add(pos, vector.multiply(direction, dtime * speed))
+    
+
+    new_pos.x = math.floor(new_pos.x * 10) / 10
+    new_pos.y = math.floor(new_pos.y * 10) / 10
+    new_pos.z = math.floor(new_pos.z * 10) / 10
+    
+    pegasus.object:set_pos(new_pos)
+    pegasus.object:set_yaw(minetest.dir_to_yaw(direction))
+    
+
+    if vector.equals(pos, new_pos) then
+        start_animation(pegasus.object, "stand")
+    else
+        start_animation(pegasus.object, "walk")
+    end
+end
+
+minetest.register_globalstep(function(dtime)
+    for _, player in ipairs(minetest.get_connected_players()) do
+        local name = player:get_player_name()
+        if wand_users[name] and wand_users[name].pos1 and wand_users[name].pos2 then
+            if player:get_player_control().sneak then
+                local player_pos = player:get_pos()
+                local parade_action_taken = false
+                for _, obj in ipairs(minetest.get_objects_inside_radius(player_pos, 15)) do
+                    local ent = obj:get_luaentity()
+                    if ent and ent.name == "pegasus:pegasus" then
+                        if parading_pegasi[ent] then
+                            if stop_pegasus_parade(ent) then
+                                minetest.chat_send_player(name, S("Pegasus parade stopped"))
+                                parade_action_taken = true
+                            end
+                        else
+                            start_pegasus_parade(ent, wand_users[name].pos1, wand_users[name].pos2)
+                            minetest.chat_send_player(name, S("Pegasus parade started"))
+                            parade_action_taken = true
+                        end
+                        break
+                    end
+                end
+                if parade_action_taken then
+                    wand_users[name] = nil
+                end
+            end
+        end
+    end
+
+    for pegasus, parade_info in pairs(parading_pegasi) do
+        if not pegasus.object:get_pos() then
+            parading_pegasi[pegasus] = nil
+        else
+            move_pegasus(pegasus, parade_info, dtime)
+        end
+    end
+end)
+
+
+-- Команда чата для остановки парада
+minetest.register_chatcommand("stop_parade", {
+    description = S("Stops the parade of the nearest Pegasus"),
+    func = function(name)
+        local player = minetest.get_player_by_name(name)
+        if not player then return false, S("Player not found") end
+
+        local player_pos = player:get_pos()
+        for pegasus, _ in pairs(parading_pegasi) do
+            if vector.distance(player_pos, pegasus.object:get_pos()) < 15 then
+                stop_pegasus_parade(pegasus)
+                return true, S("Pegasus parade stopped")
+            end
+        end
+        return false, S("No parading Pegasi found nearby")
+    end
+})
+
 minetest.register_craftitem("pegasus:saddle", {
 	description = S("Saddle"),
 	inventory_image = "pegasus_saddle.png",
