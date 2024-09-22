@@ -718,3 +718,123 @@ pegasus.step_func = function(self, dtime)
     end
 end
 
+-- Функция для поиска ближайшего Пегаса
+function pegasus.find_nearest_pegasus(pos)
+    local nearest_pegasus = nil
+    local min_distance = math.huge
+
+    for _, obj in pairs(minetest.luaentities) do
+        if obj.name == "pegasus:pegasus" then
+            local distance = vector.distance(pos, obj.object:get_pos())
+            if distance < min_distance then
+                min_distance = distance
+                nearest_pegasus = obj
+            end
+        end
+    end
+
+    return nearest_pegasus
+end
+
+-- Функция для поиска ближайшего Шотландского Дракона
+local function find_nearest_scottish_dragon(pos)
+    local nearest_dragon = nil
+    local min_distance = math.huge
+
+    for _, obj in pairs(minetest.luaentities) do
+        if obj.name == "waterdragon:scottish_dragon" then
+            local distance = vector.distance(pos, obj.object:get_pos())
+            if distance < min_distance then
+                min_distance = distance
+                nearest_dragon = obj
+            end
+        end
+    end
+
+    return nearest_dragon
+end
+
+-- Функция для совместного полета Дракона и Пегаса
+local function dragon_pegasus_flight(dragon, pegasus)
+    if not dragon or not pegasus then return end
+
+    local start_pos = dragon.object:get_pos()
+    local flight_height = 20
+    local flight_radius = 10
+    local flight_duration = 20 -- секунды
+    local steps = 200
+
+    minetest.chat_send_all("A Scottish Dragon takes off with a Pegasus on its back!")
+    dragon:animate("fly")
+
+    -- Устанавливаем пропорциональный размер для Пегаса при полете на Драконе
+    pegasus.object:set_properties({visual_size = {x = 1.5, y = 1.5}})
+    
+    -- Прикрепляем Пегаса к Дракону
+    pegasus.object:set_attach(dragon.object, "", {x = 0, y = 5, z = 0}, {x = 0, y = 0, z = 0})
+
+    for i = 1, steps do
+        minetest.after(i * flight_duration / steps, function()
+            local progress = i / steps
+            local angle = progress * math.pi * 4 -- Два полных круга
+            local height_factor = math.sin(progress * math.pi) -- Плавный подъем и спуск
+
+            local new_pos = {
+                x = start_pos.x + flight_radius * math.cos(angle),
+                y = start_pos.y + flight_height * height_factor,
+                z = start_pos.z + flight_radius * math.sin(angle)
+            }
+
+            dragon.object:move_to(new_pos)
+
+            -- Поворачиваем Дракона в направлении движения
+            local look_dir = vector.direction(dragon.object:get_pos(), new_pos)
+            dragon.object:set_yaw(minetest.dir_to_yaw(look_dir))
+        end)
+    end
+
+    -- Отсоединяем Пегаса после полета
+    minetest.after(flight_duration, function()
+        pegasus.object:set_detach()
+        pegasus.object:set_pos(vector.add(start_pos, {x = 0, y = 1, z = 0})) -- Ставим Пегаса рядом с Драконом
+        -- Возвращаем Пегасу обычный размер после полета
+        pegasus.object:set_properties({visual_size = {x = 10, y = 10}})
+    end)
+end
+
+-- Добавляем случайную активацию совместного полета
+minetest.register_globalstep(function(dtime)
+    if math.random(1, 18000) == 1 then -- примерно раз в 5 минут при 60 FPS
+        local pos = {x = 0, y = 0, z = 0} -- Используйте подходящую начальную позицию
+        local dragon = find_nearest_scottish_dragon(pos)
+        local pegasus = pegasus.find_nearest_pegasus(pos)
+        if dragon and pegasus then
+            dragon_pegasus_flight(dragon, pegasus)
+        end
+    end
+end)
+
+-- Команда для активации совместного полета
+minetest.register_chatcommand("dragon_pegasus_flight", {
+    description = "Initiate a flight with the nearest Scottish Dragon and Pegasus",
+    func = function(name)
+        local player = minetest.get_player_by_name(name)
+        if not player then
+            return false, "Player not found"
+        end
+
+        local pos = player:get_pos()
+        local dragon = find_nearest_scottish_dragon(pos)
+        local pegasus = pegasus.find_nearest_pegasus(pos)
+
+        if not dragon then
+            return false, "No Scottish Dragon found nearby"
+        end
+        if not pegasus then
+            return false, "No Pegasus found nearby"
+        end
+
+        dragon_pegasus_flight(dragon, pegasus)
+        return true, "Flight initiated between Scottish Dragon and Pegasus!"
+    end,
+})
