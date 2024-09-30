@@ -4,8 +4,8 @@ spawn_mobs (Spawn Pegasi) bool true
 #   If true, by riding a Pegasus it will be able to push off the air
 pegasus_air_jump (Pegasus Air Jump) bool true
 
-# Pegasus jump height multiplier (default is 50)
-pegasus_jump_height (Pegasus Jump Height) int 50 1 100
+# Pegasus jump height multiplier (30 - 100)
+pegasus_jump_height (Pegasus Jump Height) int 50 30 100
 
-# Pegasus running speed multiplier (default is 50)
-pegasus_run_speed (Pegasus Gallop Speed) int 50 1 100
+# Pegasus running speed multiplier (20 - 100)
+pegasus_run_speed (Pegasus Gallop Speed) int 50 20 100
