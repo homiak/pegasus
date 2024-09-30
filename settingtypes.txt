@@ -1,12 +1,11 @@
 #    If true, Pegasi will spawn in the wild
 spawn_mobs (Spawn Pegasi) bool true
 
-#   Pegasus gallop speed
-gallop_speed (Pegasus gallop speed) int 5 1 10
-
-
-#   If not touching ground then the Pegasus can jump
-touching_ground (Not Touching Ground) bool true
-
 #   If true, by riding a Pegasus it will be able to push off the air
 pegasus_air_jump (Pegasus Air Jump) bool true
+
+# Pegasus jump height multiplier (default is 50)
+pegasus_jump_height (Pegasus Jump Height) int 50 1 100
+
+# Pegasus running speed multiplier (default is 50)
+pegasus_run_speed (Pegasus Gallop Speed) int 50 1 100

@@ -32,7 +32,7 @@ end
 -- Vector Math --
 
 local vec_add, vec_dot, vec_dir, vec_dist, vec_multi, vec_normal,
-	vec_round, vec_sub = vector.add, vector.dot, vector.direction, vector.distance,
+vec_round, vec_sub = vector.add, vector.dot, vector.direction, vector.distance,
 	vector.multiply, vector.normalize, vector.round, vector.subtract
 
 local dir2yaw = minetest.dir_to_yaw
@@ -51,7 +51,7 @@ if farming_enabled then
 			local item_name = item_string:split(":")[2]
 			local growth_stage = tonumber(name:sub(-1)) or 1
 			if farming.registered_plants[item_string]
-			or farming.registered_plants[item_name] then
+				or farming.registered_plants[item_name] then
 				def.groups.crop = growth_stage
 			end
 			minetest.register_node(":" .. name, def)
@@ -62,7 +62,7 @@ end
 local animate_player = {}
 
 if minetest.get_modpath("default")
-and minetest.get_modpath("player_api") then
+	and minetest.get_modpath("player_api") then
 	animate_player = player_api.set_animation
 elseif minetest.get_modpath("mcl_player") then
 	animate_player = mcl_player.player_set_animation
@@ -81,9 +81,9 @@ end
 local function calc_altitude(self, pos2)
 	local height_half = self.height * 0.5
 	local center_y = pos2.y + height_half
-	local calc_pos = {x = pos2.x, y = center_y, z = pos2.z}
+	local calc_pos = { x = pos2.x, y = center_y, z = pos2.z }
 	local range = (height_half + 2)
-	local offset = {x = 0, y = range, z = 0}
+	local offset = { x = 0, y = range, z = 0 }
 	local ceil_pos, floor_pos = vec_add(calc_pos, offset), vec_sub(calc_pos, offset)
 	local ray_up = minetest.raycast(calc_pos, ceil_pos, false, true):next()
 	local ray_down = minetest.raycast(calc_pos, floor_pos, false, true):next()
@@ -114,10 +114,10 @@ local function calc_steering_and_lift_aquatic(self, pos, pos2, dir, steer_method
 end]]
 
 local function get_obstacle(pos, water)
-	local pos2 = {x = pos.x, y = pos.y, z = pos.z}
+	local pos2 = { x = pos.x, y = pos.y, z = pos.z }
 	local n_def = creatura.get_node_def(pos2)
 	if n_def.walkable
-	or (water and (n_def.groups.liquid or 0) > 0) then
+		or (water and (n_def.groups.liquid or 0) > 0) then
 		pos2.y = pos.y + 1
 		n_def = creatura.get_node_def(pos2)
 		local col_max = n_def.walkable or (water and (n_def.groups.liquid or 0) > 0)
@@ -143,7 +143,7 @@ function pegasus.get_steering_context(self, goal, steer_dir, interest, danger, r
 	local unsafe_pos = not collision and not self:is_pos_safe(check_pos) and check_pos
 
 	if collision
-	or unsafe_pos then
+		or unsafe_pos then
 		local dir2goal = vec_normal(vec_dir(pos, goal))
 		local dir2col = vec_normal(vec_dir(pos, collision or unsafe_pos))
 		local dist2col = vec_dist(pos, collision or unsafe_pos) - width
@@ -353,8 +353,8 @@ function pegasus.action_walk(self, time, speed, animation, pos2)
 		end
 
 		if timeout <= 0
-		or not safe
-		or mob:move_to(goal, "pegasus:steer", speed_factor) then
+			or not safe
+			or mob:move_to(goal, "pegasus:steer", speed_factor) then
 			mob:halt()
 			return true
 		end
@@ -403,14 +403,14 @@ function pegasus.action_swim(self, time, speed, animation, pos2)
 			steer_direction = {
 				x = (steer_direction.x + boid_dir.x) / 2,
 				y = (steer_direction.y + boid_dir.y) / 2,
-				z =	(steer_direction.z + boid_dir.z) / 2
+				z = (steer_direction.z + boid_dir.z) / 2
 			}
 		end
 
 		local goal = vec_add(pos, vec_multi(steer_direction, mob.width + 2))
 
 		if timeout <= 0
-		or mob:move_to(goal, "pegasus:steer_no_gravity", speed_factor) then
+			or mob:move_to(goal, "pegasus:steer_no_gravity", speed_factor) then
 			mob:halt()
 			return true
 		end
@@ -458,14 +458,14 @@ function pegasus.action_fly(self, time, speed, animation, pos2, turn)
 			steer_direction = {
 				x = (steer_direction.x + boid_dir.x) / 2,
 				y = (steer_direction.y + boid_dir.y) / 2,
-				z =	(steer_direction.z + boid_dir.z) / 2
+				z = (steer_direction.z + boid_dir.z) / 2
 			}
 		end
 
 		local goal = vec_add(pos, vec_multi(steer_direction, mob.width + 2))
 
 		if timeout <= 0
-		or mob:move_to(goal, "pegasus:steer_no_gravity", speed_factor) then
+			or mob:move_to(goal, "pegasus:steer_no_gravity", speed_factor) then
 			mob:halt()
 			return true
 		end
@@ -482,12 +482,12 @@ end
 --  if self.animations["latch_ceiling"] then latch to ceiling end
 -- 	if self.animations["latch_wall"] then latch to wall end
 
-local latch_ceil_offset = {x = 0, y = 1, z = 0}
+local latch_ceil_offset = { x = 0, y = 1, z = 0 }
 local latch_wall_offset = {
-	{x = 1, y = 0, z = 0},
-	{x = 0, y = 0, z = 1},
-	{x = -1, y = 0, z = 0},
-	{x = 0, y = 0, z = -1}
+	{ x = 1,  y = 0, z = 0 },
+	{ x = 0,  y = 0, z = 1 },
+	{ x = -1, y = 0, z = 0 },
+	{ x = 0,  y = 0, z = -1 }
 }
 
 
@@ -549,18 +549,18 @@ function pegasus.action_pursue(self, target, timeout, method, speed_factor, anim
 		self:animate(anim or "walk")
 		local safe = true
 		if _self.max_fall
-		and _self.max_fall > 0 then
+			and _self.max_fall > 0 then
 			local pos = self.object:get_pos()
 			if not pos then return end
 			safe = _self:is_pos_safe(goal)
 		end
 		if line_of_sight
-		and vec_dist(goal, tgt_pos) > 3 then
+			and vec_dist(goal, tgt_pos) > 3 then
 			goal = tgt_pos
 		end
 		if timer <= 0
-		or not safe
-		or _self:move_to(goal, method or "creatura:obstacle_avoidance", speed_factor or 0.5) then
+			or not safe
+			or _self:move_to(goal, method or "creatura:obstacle_avoidance", speed_factor or 0.5) then
 			return true
 		end
 	end
@@ -583,27 +583,27 @@ function pegasus.action_melee(self, target)
 		local anim = is_animated and mob:animate("melee", "stand")
 
 		if stage == 1 then
-			mob.object:add_velocity({x = dir.x * 3, y = 2, z = dir.z * 3})
+			mob.object:add_velocity({ x = dir.x * 3, y = 2, z = dir.z * 3 })
 
 			stage = 2
 		end
 
 		if stage == 2
-		and dist < mob.width + 1 then
+			and dist < mob.width + 1 then
 			mob:punch_target(target)
 			local knockback = minetest.calculate_knockback(
 				target, mob.object, 1.0,
-				{damage_groups = {fleshy = mob.damage}},
+				{ damage_groups = { fleshy = mob.damage } },
 				dir, 2.0, mob.damage
 			)
-			target:add_velocity({x = dir.x * knockback, y = dir.y * knockback, z = dir.z * knockback})
+			target:add_velocity({ x = dir.x * knockback, y = dir.y * knockback, z = dir.z * knockback })
 
 			stage = 3
 		end
 
 		if stage == 3
-		and (not is_animated
-		or anim == "stand") then
+			and (not is_animated
+				or anim == "stand") then
 			return true
 		end
 
@@ -629,21 +629,21 @@ function pegasus.action_play(self, target)
 		local anim = is_animated and mob:animate("play", "stand")
 
 		if stage == 1 then
-			mob.object:add_velocity({x = dir.x * 3, y = 2, z = dir.z * 3})
+			mob.object:add_velocity({ x = dir.x * 3, y = 2, z = dir.z * 3 })
 
 			stage = 2
 		end
 
 		if stage == 2
-		and dist < mob.width + 1 then
+			and dist < mob.width + 1 then
 			pegasus.add_trust(mob, target, 1)
 
 			stage = 3
 		end
 
 		if stage == 3
-		and (not is_animated
-		or anim == "stand") then
+			and (not is_animated
+				or anim == "stand") then
 			return true
 		end
 
@@ -723,12 +723,12 @@ creatura.register_utility("pegasus:die", function(self)
 			minetest.add_particlespawner({
 				amount = 8,
 				time = 0.25,
-				minpos = {x = pos.x - 0.1, y = pos.y, z = pos.z - 0.1},
-				maxpos = {x = pos.x + 0.1, y = pos.y + 0.1, z = pos.z + 0.1},
-				minacc = {x = 0, y = 2, z = 0},
-				maxacc = {x = 0, y = 3, z = 0},
-				minvel = {x = random(-1, 1), y = -0.25, z = random(-1, 1)},
-				maxvel = {x = random(-2, 2), y = -0.25, z = random(-2, 2)},
+				minpos = { x = pos.x - 0.1, y = pos.y, z = pos.z - 0.1 },
+				maxpos = { x = pos.x + 0.1, y = pos.y + 0.1, z = pos.z + 0.1 },
+				minacc = { x = 0, y = 2, z = 0 },
+				maxacc = { x = 0, y = 3, z = 0 },
+				minvel = { x = random(-1, 1), y = -0.25, z = random(-1, 1) },
+				maxvel = { x = random(-2, 2), y = -0.25, z = random(-2, 2) },
 				minexptime = 0.75,
 				maxexptime = 1,
 				minsize = 4,
@@ -783,7 +783,7 @@ creatura.register_utility("pegasus:basic_wander", function(self)
 
 			-- Grazing Behavior
 			if mob.is_grazing_mob
-			and random(graze_chance) < 2 then
+				and random(graze_chance) < 2 then
 				local yaw = mob.object:get_yaw()
 				if not yaw then return true end
 
@@ -813,7 +813,7 @@ creatura.register_utility("pegasus:basic_wander", function(self)
 				local plyr = creatura.get_nearby_player(mob)
 				local plyr_alive, los, plyr_pos = mob:get_target(plyr)
 				if plyr_alive
-				and los then
+					and los then
 					center = vec_add(pos, vec_dir(plyr_pos, pos))
 				end
 			end
@@ -862,7 +862,7 @@ creatura.register_utility("pegasus:basic_seek_food", function(self)
 
 		local dist = vec_dist(pos, food_pos)
 		if dist < mob.width + 0.5
-		and not food_reached then
+			and not food_reached then
 			food_reached = true
 
 			local anim = (mob.animations["eat"] and "eat") or "stand"
@@ -895,7 +895,7 @@ creatura.register_utility("pegasus:basic_seek_crop", function(self)
 
 		local dist = vec_dist(pos, crop)
 		if dist < mob.width + 0.5
-		and not crop_reached then
+			and not crop_reached then
 			crop_reached = true
 
 			local anim = (mob.animations["eat"] and "eat") or "stand"
@@ -945,7 +945,7 @@ creatura.register_utility("pegasus:basic_attack", function(self, target)
 
 			if dist > mob.width + 1 then
 				if not has_warned
-				and dist > mob.width + 2 then
+					and dist > mob.width + 2 then
 					local yaw = mob.object:get_yaw()
 					local yaw_to_target = minetest.dir_to_yaw(vec_dir(pos, target_pos))
 
@@ -1025,7 +1025,7 @@ creatura.register_utility("pegasus:swim_wander", function(self)
 			end
 
 			if not mob.idle_in_water
-			or random(move_chance) < 2 then
+				or random(move_chance) < 2 then
 				pegasus.action_swim(mob, 0.5)
 			else
 				pegasus.action_float(mob, random(idle_max), "float")
@@ -1067,8 +1067,8 @@ creatura.register_utility("pegasus:swim_seek_land", function(self)
 		mob:set_forward_velocity(mob.speed * 0.5)
 		mob:animate("walk")
 		if vec_dist(pos, land_pos) < 1
-		or (not mob.in_liquid
-		and mob.touching_ground) then
+			or (not mob.in_liquid
+				and mob.touching_ground) then
 			return true
 		end
 	end
@@ -1084,7 +1084,7 @@ creatura.register_utility("pegasus:fly_wander", function(self, turn_rate)
 	local function func(mob)
 		if not mob:get_action() then
 			if not mob.idle_while_flying
-			or random(move_chance) < 2 then
+				or random(move_chance) < 2 then
 				pegasus.action_fly(mob, 1, 0.5, "fly", nil, turn_rate)
 			else
 				pegasus.action_hover(mob, random(idle_max), "hover")
@@ -1099,8 +1099,8 @@ creatura.register_utility("pegasus:fly_seek_home", function(self)
 	local roost = self.roost_action or creatura.action_idle
 	local is_home = self.is_roost or function(pos, home_pos)
 		if abs(pos.x - home_pos.x) < 0.5
-		and abs(pos.z - home_pos.z) < 0.5
-		and abs(pos.y - home_pos.y) < 0.75 then
+			and abs(pos.z - home_pos.z) < 0.5
+			and abs(pos.y - home_pos.y) < 0.75 then
 			return true
 		end
 		return false
@@ -1153,7 +1153,7 @@ creatura.register_utility("pegasus:fly_seek_food", function(self)
 
 		local dist = vec_dist(pos, food_pos)
 		if dist < mob.width + 0.5
-		and not food_reached then
+			and not food_reached then
 			food_reached = true
 
 			local anim = (mob.animations["eat"] and "eat") or "stand"
@@ -1224,7 +1224,7 @@ creatura.register_utility("pegasus:pegasus_tame", function(self)
 
 		-- Dismount
 		if not player
-		or player:get_player_control().sneak then
+			or player:get_player_control().sneak then
 			pegasus.mount(_self, player)
 			return true
 		end
@@ -1234,265 +1234,266 @@ end)
 
 -- Modified fire block definition
 minetest.register_node("pegasus:fire_animated", {
-    description = "Pegasi Fire",
-    drawtype = "firelike",
-    tiles = {
-        {
-            name = "pegasus_fire_animated.png",
-            animation = {
-                type = "vertical_frames",
-                aspect_w = 16,
-                aspect_h = 16,
-                length = 1
-            },
-        },
-    },
-    inventory_image = "pegasus_fire_1.png",
-    paramtype = "light",
-    light_source = 14,
-    walkable = false,
-    pointable = false,
-    diggable = false,
-    buildable_to = true,
-    floodable = true,
-    damage_per_second = 4,
-    groups = {igniter = 2, not_in_creative_inventory = 1},
-    drop = "",
-    on_timer = function(pos, elapsed)
-        -- Check for entities and damage them
-        local objects = minetest.get_objects_inside_radius(pos, 1.5)
-        for _, obj in ipairs(objects) do
-            local ent = obj:get_luaentity()
-            if obj:is_player() or (ent and ent.name ~= "pegasus:pegasus") then
-                obj:punch(obj, 1.0, {
-                    full_punch_interval = 1.0,
-                    damage_groups = {fleshy = 4},
-                }, vector.new(0, 0, 0))
-            end
-        end
-        
-        -- Remove the fire after some time
-        if math.random(1, 5) == 1 then  -- 20% chance to remove each tick
-            minetest.remove_node(pos)
-            return false
-        end
-        return true
-    end,
-    on_construct = function(pos)
-        minetest.get_node_timer(pos):start(0.5)  -- Check every 0.5 seconds
-    end,
-    on_flood = function(pos, oldnode, newnode)
-        minetest.remove_node(pos)
-        return false
-    end,
+	description = "Pegasi Fire",
+	drawtype = "firelike",
+	tiles = {
+		{
+			name = "pegasus_fire_animated.png",
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 1
+			},
+		},
+	},
+	inventory_image = "pegasus_fire_1.png",
+	paramtype = "light",
+	light_source = 14,
+	walkable = false,
+	pointable = false,
+	diggable = false,
+	buildable_to = true,
+	floodable = true,
+	damage_per_second = 4,
+	groups = { igniter = 2, not_in_creative_inventory = 1 },
+	drop = "",
+	on_timer = function(pos, elapsed)
+		-- Check for entities and damage them
+		local objects = minetest.get_objects_inside_radius(pos, 1.5)
+		for _, obj in ipairs(objects) do
+			local ent = obj:get_luaentity()
+			if obj:is_player() or (ent and ent.name ~= "pegasus:pegasus") then
+				obj:punch(obj, 1.0, {
+					full_punch_interval = 1.0,
+					damage_groups = { fleshy = 4 },
+				}, vector.new(0, 0, 0))
+			end
+		end
+
+		-- Remove the fire after some time
+		if math.random(1, 5) == 1 then -- 20% chance to remove each tick
+			minetest.remove_node(pos)
+			return false
+		end
+		return true
+	end,
+	on_construct = function(pos)
+		minetest.get_node_timer(pos):start(0.5) -- Check every 0.5 seconds
+	end,
+	on_flood = function(pos, oldnode, newnode)
+		minetest.remove_node(pos)
+		return false
+	end,
 })
 
 function pegasus_breathe_fire(self, player)
-    local pos = self.object:get_pos()
-    if not pos then return end
-    
-    local dir = player:get_look_dir()
-    local start_pos = vector.add(pos, vector.new(0, 1.2, 0))
-    local end_pos = vector.add(start_pos, vector.multiply(dir, 20))  -- Increased range to 20
-    
-    local particle_types = {
-        {
-            texture = "pegasus_fire_1.png",
-            size = {min = 2, max = 4},
-            velocity = {min = 15, max = 20},  -- Increased velocity
-            acceleration = {y = {min = 2, max = 4}},
-            exptime = {min = 0.8, max = 1.2},
-            glow = 14  -- Maximum glow
-        },
-        {
-            texture = "pegasus_fire_2.png",
-            size = {min = 2, max = 4},
-            velocity = {min = 15, max = 20},
-            acceleration = {y = {min = 2, max = 4}},
-            exptime = {min = 0.8, max = 1.2},
-            glow = 14
-        },
-        {
-            texture = "pegasus_fire_3.png",
-            size = {min = 2, max = 4},
-            velocity = {min = 15, max = 20},
-            acceleration = {y = {min = 2, max = 4}},
-            exptime = {min = 0.8, max = 1.2},
-            glow = 14
-        },
-    }
-    
-    -- Spawn particles
-    for i = 1, 50 do  -- Increased number of particles
-        local particle = particle_types[math.random(#particle_types)]
-        
-        minetest.add_particle({
-            pos = vector.add(start_pos, vector.new(
-                math.random(-5, 5) / 10,
-                math.random(-5, 5) / 10,
-                math.random(-5, 5) / 10
-            )),  -- Add some randomness to the starting position
-            velocity = vector.multiply(vector.add(dir, vector.new(
-                math.random(-2, 2) / 10,
-                math.random(-2, 2) / 10,
-                math.random(-2, 2) / 10
-            )), math.random(particle.velocity.min, particle.velocity.max)),  -- Add some spread
-            acceleration = {x = 0, y = math.random(particle.acceleration.y.min, particle.acceleration.y.max), z = 0},
-            expirationtime = math.random(particle.exptime.min, particle.exptime.max),
-            size = math.random(particle.size.min, particle.size.max),
-            collisiondetection = true,
-            collision_removal = true,
-            vertical = false,
-            texture = particle.texture,
-            glow = particle.glow
-        })
-    end
-    
-    -- Check for block collisions and ignite blocks
-    local step = 0.5
-    for i = 0, 20, step do  -- Increased range to 20
-        local check_pos = vector.add(start_pos, vector.multiply(dir, i))
-        local node = minetest.get_node(check_pos)
-        if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
-            minetest.set_node(check_pos, {name = "pegasus:fire_animated"})
-            break
-        end
-    end
-    
-    -- Improved entity damage along the fire path
-    local step = 1  -- Check every block along the path
-    for i = 0, 20, step do
-        local check_pos = vector.add(start_pos, vector.multiply(dir, i))
-        local node = minetest.get_node(check_pos)
-        if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
-            minetest.set_node(check_pos, {name = "pegasus:fire_animated"})
-        end
-        
-        -- Check for entities at each step
-        local objects = minetest.get_objects_inside_radius(check_pos, 2)
-        for _, obj in ipairs(objects) do
-            if obj ~= self.object and obj ~= player then
-                local ent = obj:get_luaentity()
-                if ent and ent.name ~= self.name then
-                    obj:punch(self.object, 1.0, {
-                        full_punch_interval = 1.0,
-                        damage_groups = {fleshy = 8},
-                    }, nil)
-                end
-            end
-        end
-        
-        -- Stop if we hit a non-air block
-        if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
-            break
-        end
-    end
+	local pos = self.object:get_pos()
+	if not pos then return end
+
+	local dir = player:get_look_dir()
+	local start_pos = vector.add(pos, vector.new(0, 1.2, 0))
+	local end_pos = vector.add(start_pos, vector.multiply(dir, 20)) -- Increased range to 20
+
+	local particle_types = {
+		{
+			texture = "pegasus_fire_1.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 }, -- Increased velocity
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14 -- Maximum glow
+		},
+		{
+			texture = "pegasus_fire_2.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+		{
+			texture = "pegasus_fire_3.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+	}
+
+	-- Spawn particles
+	for i = 1, 50 do -- Increased number of particles
+		local particle = particle_types[math.random(#particle_types)]
+
+		minetest.add_particle({
+			pos = vector.add(start_pos, vector.new(
+				math.random(-5, 5) / 10,
+				math.random(-5, 5) / 10,
+				math.random(-5, 5) / 10
+			)), -- Add some randomness to the starting position
+			velocity = vector.multiply(vector.add(dir, vector.new(
+				math.random(-2, 2) / 10,
+				math.random(-2, 2) / 10,
+				math.random(-2, 2) / 10
+			)), math.random(particle.velocity.min, particle.velocity.max)), -- Add some spread
+			acceleration = { x = 0, y = math.random(particle.acceleration.y.min, particle.acceleration.y.max), z = 0 },
+			expirationtime = math.random(particle.exptime.min, particle.exptime.max),
+			size = math.random(particle.size.min, particle.size.max),
+			collisiondetection = true,
+			collision_removal = true,
+			vertical = false,
+			texture = particle.texture,
+			glow = particle.glow
+		})
+	end
+
+	-- Check for block collisions and ignite blocks
+	local step = 0.5
+	for i = 0, 20, step do -- Increased range to 20
+		local check_pos = vector.add(start_pos, vector.multiply(dir, i))
+		local node = minetest.get_node(check_pos)
+		if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
+			minetest.set_node(check_pos, { name = "pegasus:fire_animated" })
+			break
+		end
+	end
+
+	-- Improved entity damage along the fire path
+	local step = 1 -- Check every block along the path
+	for i = 0, 20, step do
+		local check_pos = vector.add(start_pos, vector.multiply(dir, i))
+		local node = minetest.get_node(check_pos)
+		if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
+			minetest.set_node(check_pos, { name = "pegasus:fire_animated" })
+		end
+
+		-- Check for entities at each step
+		local objects = minetest.get_objects_inside_radius(check_pos, 2)
+		for _, obj in ipairs(objects) do
+			if obj ~= self.object and obj ~= player then
+				local ent = obj:get_luaentity()
+				if ent and ent.name ~= self.name then
+					obj:punch(self.object, 1.0, {
+						full_punch_interval = 1.0,
+						damage_groups = { fleshy = 8 },
+					}, nil)
+				end
+			end
+		end
+
+		-- Stop if we hit a non-air block
+		if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
+			break
+		end
+	end
 end
-
-
-
-
 
 -- Modify the pegasus:pegasus_ride utility
 creatura.register_utility("pegasus:pegasus_ride", function(self, player)
-    local player_props = player and player:get_properties()
-    if not player_props then return end
-    local player_size = player_props.visual_size
-    local mob_size = self.visual_size
-    local adj_size = {
-        x = player_size.x / mob_size.x,
-        y = player_size.y / mob_size.y
-    }
-    if player_size.x ~= adj_size.x then
-        player:set_properties({
-            visual_size = adj_size
-        })
-    end
+	local player_props = player and player:get_properties()
+	if not player_props then return end
+	local player_size = player_props.visual_size
+	local mob_size = self.visual_size
+	local adj_size = {
+		x = player_size.x / mob_size.x,
+		y = player_size.y / mob_size.y
+	}
+	if player_size.x ~= adj_size.x then
+		player:set_properties({
+			visual_size = adj_size
+		})
+	end
 
-    local fire_breath_cooldown = 0
+	local fire_breath_cooldown = 0
 
-    local function func(_self)
-        if not creatura.is_alive(player) then
-            return true
-        end
-        local anim = "stand"
-        local speed_x = 0
-        local tyaw = player:get_look_horizontal()
-        local control = player:get_player_control()
-        local vel = _self.object:get_velocity()
-        if not tyaw then return true end
+	local function func(_self)
+		if not creatura.is_alive(player) then
+			return true
+		end
+		local anim = "stand"
+		local speed_x = 0
+		local tyaw = player:get_look_horizontal()
+		local control = player:get_player_control()
+		local vel = _self.object:get_velocity()
+		if not tyaw then return true end
 
-        if control.sneak
-        or not _self.rider then
-            pegasus.mount(_self, player)
-            return true
-        end
+		if control.sneak
+			or not _self.rider then
+			pegasus.mount(_self, player)
+			return true
+		end
 
-        animate_player(player, "sit", 30)
+		animate_player(player, "sit", 30)
 
-        if _self:timer(1) then
-            player_props = player and player:get_properties()
-            if player_props.visual_size.x ~= adj_size.x then
-                player:set_properties({
-                    visual_size = adj_size
-                })
-            end
-        end
+		if _self:timer(1) then
+			player_props = player and player:get_properties()
+			if player_props.visual_size.x ~= adj_size.x then
+				player:set_properties({
+					visual_size = adj_size
+				})
+			end
+		end
 
-        -- Fire breath logic
-        fire_breath_cooldown = math.max(0, fire_breath_cooldown - _self.dtime)
-        if control.RMB and fire_breath_cooldown == 0 then
-            pegasus_breathe_fire(_self, player)
-            fire_breath_cooldown = 0.5  -- 2 second cooldown
-            anim = "punch_aoe"  -- You might want to create a specific "breathe_fire" animation
-        end
+		-- Fire breath logic
+		fire_breath_cooldown = math.max(0, fire_breath_cooldown - _self.dtime)
+		if control.RMB and fire_breath_cooldown == 0 then
+			pegasus_breathe_fire(_self, player)
+			fire_breath_cooldown = 0.5
+			anim = "punch_aoe"
+		end
 
-        if control.up then
-            speed_x = 2
-            anim = "walk"
-            if control.aux1 then
-                speed_x = 17
-                anim = "run"
-            end
-        end
+
+		-- Get the user-defined settings for jump height and run speed as integers
+		local jump_height_multiplier = tonumber(minetest.settings:get("pegasus_jump_height")) or 50
+		local run_speed_multiplier = tonumber(minetest.settings:get("pegasus_run_speed")) or 50
+
+		-- Example of applying these settings directly in the control logic
+		if control.up then
+			speed_x = run_speed_multiplier / 50
+			anim = "walk"
+
+			if control.aux1 then
+				speed_x = 4 * run_speed_multiplier / 50 -- Adjust running speed
+				anim = "run"
+			end
+		end
+
 
 		local canPushOffAir = minetest.settings:get_bool("pegasus_air_jump", true)
 
-        -- Jump Control
-        if control.jump and (canPushOffAir or self.touching_ground)
-        and vel.y < 1 then
-            _self.object:add_velocity({
-                x = 0,
-                y = _self.jump_power * 6,
-                z = 0
-            })
-        elseif not _self.touching_ground then
-            speed_x = speed_x * 1
-        end
+		if control.jump and (canPushOffAir or self.touching_ground) and vel.y < 1 then
+			-- Apply the jump height multiplier
+			_self.object:add_velocity({
+				x = 0,
+				y = _self.jump_power * 6 * jump_height_multiplier / 50,  -- Adjust jump height
+				z = 0
+			})
+		end
 
-        -- Rear Animation when jumping
-        if not _self.touching_ground
-        and not _self.in_liquid
-        and vel.y > 0 then
-            anim = "rear"
-        end
+		-- Rear Animation when jumping
+		if not _self.touching_ground
+			and not _self.in_liquid
+			and vel.y > 0 then
+			anim = "rear"
+		end
 
-        -- Steering
-        local yaw = _self.object:get_yaw()
+		-- Steering
+		local yaw = _self.object:get_yaw()
 
-        _self.head_tracking = nil
-        pegasus.move_head(_self, tyaw, 0)
+		_self.head_tracking = nil
+		pegasus.move_head(_self, tyaw, 0)
 
-        if speed_x > 0 and control.left then tyaw = tyaw + math.pi * 0.25 end
-        if speed_x > 0 and control.right then tyaw = tyaw - math.pi * 0.25 end
-        if math.abs(yaw - tyaw) > 0.1 then
-            _self:turn_to(tyaw, _self.turn_rate)
-        end
+		if speed_x > 0 and control.left then tyaw = tyaw + math.pi * 0.25 end
+		if speed_x > 0 and control.right then tyaw = tyaw - math.pi * 0.25 end
+		if math.abs(yaw - tyaw) > 0.1 then
+			_self:turn_to(tyaw, _self.turn_rate)
+		end
 
-        _self:set_forward_velocity(_self.speed * speed_x)
-        _self:animate(anim)
-    end
-    self:set_utility(func)
+		_self:set_forward_velocity(_self.speed * speed_x)
+		_self:animate(anim)
+	end
+	self:set_utility(func)
 end)
 
 -- Eagle --
@@ -1507,7 +1508,7 @@ creatura.register_utility("pegasus:eagle_attack", function(self, target)
 		if not mob:get_action() then
 			local vantage_pos = {
 				x = target_pos.x,
-				y =  target_pos.y + 6,
+				y = target_pos.y + 6,
 				z = target_pos.z
 			}
 			local dist = vec_dist(pos, vantage_pos)
@@ -1535,7 +1536,7 @@ local function grow_crop(crop)
 
 	if new_def then
 		local p2 = new_def.place_param2 or 1
-		minetest.set_node(crop, {name = new_name, param2 = p2})
+		minetest.set_node(crop, { name = new_name, param2 = p2 })
 	end
 end
 
@@ -1550,7 +1551,7 @@ creatura.register_utility("pegasus:opossum_seek_crop", function(self)
 
 		local dist = vec_dist(pos, crop)
 		if dist < mob.width + 0.5
-		and not crop_reached then
+			and not crop_reached then
 			crop_reached = true
 
 			creatura.action_idle(mob, 1, "clean_crop")
@@ -1614,7 +1615,7 @@ pegasus.mob_ai.basic_wander = {
 	utility = "pegasus:basic_wander",
 	step_delay = 0.25,
 	get_score = function(self)
-		return 0.1, {self}
+		return 0.1, { self }
 	end
 }
 
@@ -1623,8 +1624,8 @@ pegasus.mob_ai.basic_flee = {
 	get_score = function(self)
 		local puncher = self._puncher
 		if puncher
-		and puncher:get_pos() then
-			return 0.6, {self, puncher}
+			and puncher:get_pos() then
+			return 0.6, { self, puncher }
 		end
 		self._puncher = nil
 		return 0
@@ -1635,8 +1636,8 @@ pegasus.mob_ai.basic_breed = {
 	utility = "pegasus:basic_breed",
 	get_score = function(self)
 		if self.breeding
-		and pegasus.get_nearby_mate(self, self.name) then
-			return 0.6, {self}
+			and pegasus.get_nearby_mate(self, self.name) then
+			return 0.6, { self }
 		end
 		return 0
 	end
@@ -1654,7 +1655,7 @@ pegasus.mob_ai.basic_seek_crop = {
 	step_delay = 0.25,
 	get_score = function(self)
 		if random(8) < 2 then
-			return 0.2, {self}
+			return 0.2, { self }
 		end
 		return 0
 	end
@@ -1664,7 +1665,7 @@ pegasus.mob_ai.basic_seek_food = {
 	utility = "pegasus:basic_seek_food",
 	get_score = function(self)
 		if random(1) < 8 then
-			return 0.3, {self}
+			return 0.3, { self }
 		end
 		return 0
 	end
@@ -1676,7 +1677,7 @@ pegasus.mob_ai.fly_wander = {
 	utility = "pegasus:fly_wander",
 	step_delay = 0.25,
 	get_score = function(self)
-		return 0.1, {self}
+		return 0.1, { self }
 	end
 }
 
@@ -1690,8 +1691,8 @@ pegasus.mob_ai.fly_landing_wander = {
 			end
 		end
 		if not self.is_landed
-		or self.in_liquid then
-			return 0.2, {self}
+			or self.in_liquid then
+			return 0.2, { self }
 		end
 		return 0
 	end
@@ -1701,7 +1702,7 @@ pegasus.mob_ai.fly_seek_food = {
 	utility = "pegasus:fly_seek_food",
 	get_score = function(self)
 		if random(8) < 2 then
-			return 0.3, {self}
+			return 0.3, { self }
 		end
 		return 0
 	end
@@ -1711,10 +1712,10 @@ pegasus.mob_ai.fly_seek_land = {
 	utility = "pegasus:fly_seek_land",
 	get_score = function(self)
 		if self.is_landed
-		and not self.touching_ground
-		and not self.in_liquid
-		and creatura.sensor_floor(self, 3, true) > 2 then
-			return 0.3, {self}
+			and not self.touching_ground
+			and not self.in_liquid
+			and creatura.sensor_floor(self, 3, true) > 2 then
+			return 0.3, { self }
 		end
 		return 0
 	end
@@ -1727,7 +1728,7 @@ pegasus.mob_ai.swim_seek_land = {
 	step_delay = 0.25,
 	get_score = function(self)
 		if self.in_liquid then
-			return 0.3, {self}
+			return 0.3, { self }
 		end
 		return 0
 	end
@@ -1737,7 +1738,7 @@ pegasus.mob_ai.swim_wander = {
 	utility = "pegasus:swim_wander",
 	step_delay = 0.25,
 	get_score = function(self)
-		return 0.1, {self}
+		return 0.1, { self }
 	end
 }
 
@@ -1747,16 +1748,16 @@ pegasus.mob_ai.tamed_follow_owner = {
 	utility = "pegasus:tamed_follow_owner",
 	get_score = function(self)
 		if self.owner
-		and self.order == "follow" then
-			return 0.4, {self}
+			and self.order == "follow" then
+			return 0.4, { self }
 		end
 
 		local lasso_holder = type(self._lassod_to) == "string" and minetest.get_player_by_name(self._lassod_to)
 		local player = lasso_holder or creatura.get_nearby_player(self)
 
 		if lasso_holder
-		or self:follow_wielded_item(player) then
-			return 0.4, {self, player}
+			or self:follow_wielded_item(player) then
+			return 0.4, { self, player }
 		end
 		return 0
 	end
@@ -1768,10 +1769,8 @@ pegasus.mob_ai.tamed_stay = {
 	get_score = function(self)
 		local order = self.order or "wander"
 		if order == "sit" then
-			return 0.5, {self}
+			return 0.5, { self }
 		end
 		return 0
 	end
 }
-
-
