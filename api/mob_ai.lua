@@ -1456,8 +1456,10 @@ creatura.register_utility("pegasus:pegasus_ride", function(self, player)
             end
         end
 
+		local canPushOffAir = minetest.settings:get_bool("pegasus_air_jump", true)
+
         -- Jump Control
-        if control.jump
+        if control.jump and (canPushOffAir or self.touching_ground)
         and vel.y < 1 then
             _self.object:add_velocity({
                 x = 0,

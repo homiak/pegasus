@@ -7,3 +7,6 @@ gallop_speed (Pegasus gallop speed) int 5 1 10
 
 #   If not touching ground then the Pegasus can jump
 touching_ground (Not Touching Ground) bool true
+
+#   If true, by riding a Pegasus it will be able to push off the air
+pegasus_air_jump (Pegasus Air Jump) bool true
