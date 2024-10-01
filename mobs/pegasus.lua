@@ -155,7 +155,7 @@ end
 
 -- Definition
 
-creatura.register_mob("pegasus:pegasus", {
+modding.register_mob("pegasus:pegasus", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
 	mesh = "pegasus_pegasus.b3d",
@@ -164,7 +164,7 @@ creatura.register_mob("pegasus:pegasus", {
 	},
 	makes_footstep_sound = true,
 
-	-- Creatura Props
+	-- modding Props
 	max_health = 200,
 	armor_groups = {fleshy = 100},
 	damage = 40,
@@ -412,7 +412,7 @@ creatura.register_mob("pegasus:pegasus", {
 	end
 })
 
-creatura.register_spawn_item("pegasus:pegasus", {
+modding.register_spawn_item("pegasus:pegasus", {
 	col1 = "ebdfd8",
 	col2 = "653818"
 })

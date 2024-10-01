@@ -174,7 +174,7 @@ function pegasus.head_tracking(self)
 	elseif self:timer(6)
 	and random(4) < 2 then
 
-		local players = creatura.get_nearby_players(self, 6)
+		local players = modding.get_nearby_players(self, 6)
 		self.head_tracking = #players > 0 and players[random(#players)]
 	end
 	pegasus.move_head(self, yaw, 0)
@@ -216,14 +216,14 @@ function pegasus.get_attack_score(entity, attack_list)
 	local order = entity.order or "wander"
 	if order ~= "wander" then return 0 end
 
-	local target = entity._target or (entity.attacks_players and creatura.get_nearby_player(entity))
+	local target = entity._target or (entity.attacks_players and modding.get_nearby_player(entity))
 	local tgt_pos = target and target:get_pos()
 
 	if not tgt_pos
 	or not entity:is_pos_safe(tgt_pos)
 	or (target:is_player()
 	and minetest.is_creative_enabled(target:get_player_name())) then
-		target = creatura.get_nearby_object(entity, attack_list)
+		target = modding.get_nearby_object(entity, attack_list)
 		tgt_pos = target and target:get_pos()
 	end
 
@@ -252,7 +252,7 @@ end
 function pegasus.get_nearby_mate(self)
 	local pos = self.object:get_pos()
 	if not pos then return end
-	local objects = creatura.get_nearby_objects(self, self.name)
+	local objects = modding.get_nearby_objects(self, self.name)
 	for _, object in ipairs(objects) do
 		local obj_pos = object and object:get_pos()
 		local ent = obj_pos and object:get_luaentity()
@@ -365,7 +365,7 @@ end
 
 function pegasus.add_break_particle(pos)
 	pos = vec_round(pos)
-	local def = creatura.get_node_def(pos)
+	local def = modding.get_node_def(pos)
 	local texture = (def.tiles and def.tiles[1]) or def.inventory_image
 	texture = texture .. "^[resize:8x8"
 	minetest.add_particlespawner({
@@ -653,7 +653,7 @@ function pegasus.feed(self, clicker, tame, breed)
 					vel = {min = {x = 0, y = 3, z = 0}, max = {x = 0, y = 4, z = 0}},
 					size = {min = 4, max = 6},
 					glow = 16,
-					texture = "creatura_particle_green.png"
+					texture = "modding_particle_green.png"
 				})
 			end
 			if breed then
@@ -678,7 +678,7 @@ function pegasus.feed(self, clicker, tame, breed)
 end
 
 function pegasus.mount(self, player, params)
-	if not creatura.is_alive(player)
+	if not modding.is_alive(player)
 	or (player:get_attach()
 	and player:get_attach() ~= self.object) then
 		return
@@ -717,7 +717,7 @@ end
 
 function pegasus.punch(self, puncher, ...)
 	if self.hp <= 0 then return end
-	creatura.basic_punch_func(self, puncher, ...)
+	modding.basic_punch_func(self, puncher, ...)
 	self._puncher = puncher
 	if self.flee_puncher
 	and (self:get_utility() or "") ~= "pegasus:flee_from_target" then
@@ -751,7 +751,7 @@ function pegasus.eat_turf(mob, pos)
 			--add_break_particle(turf_pos)
 			minetest.set_node(pos, {name = sub_name})
 			mob.collected = mob:memorize("collected", false)
-			--creatura.action_idle(mob, 1, "eat")
+			--modding.action_idle(mob, 1, "eat")
 			return true
 		end
 	end

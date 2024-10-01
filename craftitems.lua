@@ -448,7 +448,7 @@ minetest.register_node("pegasus:crate", {
 				y = pos.y + 1,
 				z = pos.z
 			}
-			if creatura.get_node_def(above).walkable then
+			if modding.get_node_def(above).walkable then
 				return
 			end
 			minetest.add_entity(above, mob, staticdata)

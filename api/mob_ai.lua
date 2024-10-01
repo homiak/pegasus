@@ -69,7 +69,7 @@ elseif minetest.get_modpath("mcl_player") then
 end
 
 local function get_group_positions(self)
-	local objects = creatura.get_nearby_objects(self, self.name)
+	local objects = modding.get_nearby_objects(self, self.name)
 	local group = {}
 	for _, object in ipairs(objects) do
 		local obj_pos = object and object:get_pos()
@@ -99,27 +99,27 @@ local function calc_altitude(self, pos2)
 end
 
 --[[local function calc_steering_and_lift(self, pos, pos2, dir, steer_method)
-	local steer_to = creatura.calc_steering(self, pos2, steer_method or creatura.get_context_small)
+	local steer_to = modding.calc_steering(self, pos2, steer_method or modding.get_context_small)
 	pos2 = vec_add(pos, steer_to)
-	local lift = creatura.get_avoidance_lift(self, pos2, 2)
+	local lift = modding.get_avoidance_lift(self, pos2, 2)
 	steer_to.y = (lift ~= 0 and lift) or dir.y
 	return steer_to
 end
 
 local function calc_steering_and_lift_aquatic(self, pos, pos2, dir, steer_method)
-	local steer_to = creatura.calc_steering(self, pos2, steer_method or creatura.get_context_small_aquatic)
-	local lift = creatura.get_avoidance_lift_aquatic(self, vec_add(pos, steer_to), 2)
+	local steer_to = modding.calc_steering(self, pos2, steer_method or modding.get_context_small_aquatic)
+	local lift = modding.get_avoidance_lift_aquatic(self, vec_add(pos, steer_to), 2)
 	steer_to.y = (lift ~= 0 and lift) or dir.y
 	return steer_to
 end]]
 
 local function get_obstacle(pos, water)
 	local pos2 = { x = pos.x, y = pos.y, z = pos.z }
-	local n_def = creatura.get_node_def(pos2)
+	local n_def = modding.get_node_def(pos2)
 	if n_def.walkable
 		or (water and (n_def.groups.liquid or 0) > 0) then
 		pos2.y = pos.y + 1
-		n_def = creatura.get_node_def(pos2)
+		n_def = modding.get_node_def(pos2)
 		local col_max = n_def.walkable or (water and (n_def.groups.liquid or 0) > 0)
 		pos2.y = pos.y - 1
 		local col_min = col_max and (n_def.walkable or (water and (n_def.groups.liquid or 0) > 0))
@@ -162,10 +162,10 @@ end
 -- Obstacle Avoidance
 
 function pegasus.obstacle_avoidance(self, goal, water)
-	local steer_method = water and creatura.get_context_small_aquatic or pegasus.get_steering_context
-	local dir = creatura.calc_steering(self, goal, steer_method)
+	local steer_method = water and modding.get_context_small_aquatic or pegasus.get_steering_context
+	local dir = modding.calc_steering(self, goal, steer_method)
 
-	local lift_method = water and creatura.get_avoidance_lift_aquatic or creatura.get_avoidance_lift
+	local lift_method = water and modding.get_avoidance_lift_aquatic or modding.get_avoidance_lift
 	local lift = lift_method(self, vec_add(self.stand_pos, dir), 2)
 	dir.y = (lift ~= 0 and lift) or dir.y
 
@@ -174,7 +174,7 @@ end
 
 -- Methods
 
-creatura.register_movement_method("pegasus:fly_wide", function(self)
+modding.register_movement_method("pegasus:fly_wide", function(self)
 	local steer_to
 	local steer_int = 0
 	self:set_gravity(0)
@@ -189,7 +189,7 @@ creatura.register_movement_method("pegasus:fly_wide", function(self)
 		local turn_rate = 2.5
 		local speed = abs(_self.speed or 2) * speed_factor or 0.5
 		steer_int = (steer_int > 0 and steer_int - _self.dtime) or 1 / max(speed, 1)
-		steer_to = (steer_int <= 0 and creatura.calc_steering(_self, goal)) or steer_to
+		steer_to = (steer_int <= 0 and modding.calc_steering(_self, goal)) or steer_to
 		local dir = steer_to or vec_dir(pos, goal)
 		local altitude = calc_altitude(self, vec_add(pos, dir))
 		dir.y = (altitude ~= 0 and altitude) or dir.y
@@ -207,7 +207,7 @@ end)
 
 -- Steering Methods
 
-creatura.register_movement_method("pegasus:steer", function(self)
+modding.register_movement_method("pegasus:steer", function(self)
 	local steer_to
 	local steer_int = 0
 
@@ -239,7 +239,7 @@ creatura.register_movement_method("pegasus:steer", function(self)
 	return func
 end)
 
-creatura.register_movement_method("pegasus:steer_no_gravity", function(self)
+modding.register_movement_method("pegasus:steer_no_gravity", function(self)
 	local steer_to
 	local steer_int = 0
 
@@ -274,7 +274,7 @@ end)
 
 -- Simple Methods
 
-creatura.register_movement_method("pegasus:move", function(self)
+modding.register_movement_method("pegasus:move", function(self)
 	local radius = 2 -- Arrival Radius
 
 	self:set_gravity(-9.8)
@@ -299,7 +299,7 @@ creatura.register_movement_method("pegasus:move", function(self)
 	return func
 end)
 
-creatura.register_movement_method("pegasus:move_no_gravity", function(self)
+modding.register_movement_method("pegasus:move_no_gravity", function(self)
 	local radius = 2 -- Arrival Radius
 
 	self:set_gravity(0)
@@ -398,7 +398,7 @@ function pegasus.action_swim(self, time, speed, animation, pos2)
 		end
 
 		-- Boids
-		local boid_dir = mob.uses_boids and creatura.get_boid_dir(mob)
+		local boid_dir = mob.uses_boids and modding.get_boid_dir(mob)
 		if boid_dir then
 			steer_direction = {
 				x = (steer_direction.x + boid_dir.x) / 2,
@@ -453,7 +453,7 @@ function pegasus.action_fly(self, time, speed, animation, pos2, turn)
 		end
 
 		-- Boids
-		local boid_dir = mob.uses_boids and creatura.get_boid_dir(mob)
+		local boid_dir = mob.uses_boids and modding.get_boid_dir(mob)
 		if boid_dir then
 			steer_direction = {
 				x = (steer_direction.x + boid_dir.x) / 2,
@@ -499,7 +499,7 @@ function pegasus.action_latch(self)
 	if self.animations["latch_ceiling"] then
 		ceiling = vec_add(pos, latch_ceil_offset)
 
-		if not creatura.get_node_def(ceiling).walkable then
+		if not modding.get_node_def(ceiling).walkable then
 			ceiling = nil
 		end
 	end
@@ -509,7 +509,7 @@ function pegasus.action_latch(self)
 		for n = 1, 4 do
 			wall = vec_add(self.stand_pos, latch_wall_offset[n])
 
-			if creatura.get_node_def(wall).walkable then
+			if modding.get_node_def(wall).walkable then
 				break
 			else
 				wall = nil
@@ -560,7 +560,7 @@ function pegasus.action_pursue(self, target, timeout, method, speed_factor, anim
 		end
 		if timer <= 0
 			or not safe
-			or _self:move_to(goal, method or "creatura:obstacle_avoidance", speed_factor or 0.5) then
+			or _self:move_to(goal, method or "modding:obstacle_avoidance", speed_factor or 0.5) then
 			return true
 		end
 	end
@@ -707,13 +707,13 @@ end
 
 -- Behaviors
 
-creatura.register_utility("pegasus:die", function(self)
+modding.register_utility("pegasus:die", function(self)
 	local timer = 1.5
 	local init = false
 	local function func(_self)
 		if not init then
 			_self:play_sound("death")
-			creatura.action_fallover(_self)
+			modding.action_fallover(_self)
 			init = true
 		end
 		timer = timer - _self.dtime
@@ -733,7 +733,7 @@ creatura.register_utility("pegasus:die", function(self)
 				maxexptime = 1,
 				minsize = 4,
 				maxsize = 4,
-				texture = "creatura_smoke_particle.png",
+				texture = "modding_smoke_particle.png",
 				animation = {
 					type = 'vertical_frames',
 					aspect_w = 4,
@@ -742,7 +742,7 @@ creatura.register_utility("pegasus:die", function(self)
 				},
 				glow = 1
 			})
-			creatura.drop_items(_self)
+			modding.drop_items(_self)
 			_self.object:remove()
 		end
 	end
@@ -751,12 +751,12 @@ end)
 
 -- Basic --
 
-creatura.register_utility("pegasus:basic_idle", function(self, timeout, anim)
+modding.register_utility("pegasus:basic_idle", function(self, timeout, anim)
 	local timer = timeout or 1
 	local init = false
 	local function func(mob)
 		if not init then
-			creatura.action_idle(mob, timeout, anim)
+			modding.action_idle(mob, timeout, anim)
 		end
 		timer = timer - mob.dtime
 		if timer <= 0 then
@@ -766,7 +766,7 @@ creatura.register_utility("pegasus:basic_idle", function(self, timeout, anim)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("pegasus:basic_wander", function(self)
+modding.register_utility("pegasus:basic_wander", function(self)
 	local idle_max = 4
 	local move_chance = 3
 	local graze_chance = 16
@@ -795,7 +795,7 @@ creatura.register_utility("pegasus:basic_wander", function(self)
 
 				if pegasus.eat_turf(mob, turf_pos) then
 					pegasus.add_break_particle(turf_pos)
-					creatura.action_idle(mob, 1, "eat")
+					modding.action_idle(mob, 1, "eat")
 				end
 			end
 
@@ -810,7 +810,7 @@ creatura.register_utility("pegasus:basic_wander", function(self)
 
 			-- Skittish Behavior
 			if mob.is_skittish_mob then
-				local plyr = creatura.get_nearby_player(mob)
+				local plyr = modding.get_nearby_player(mob)
 				local plyr_alive, los, plyr_pos = mob:get_target(plyr)
 				if plyr_alive
 					and los then
@@ -824,14 +824,14 @@ creatura.register_utility("pegasus:basic_wander", function(self)
 				pegasus.action_walk(mob, 3, 0.2, "walk", center)
 				center = false
 			else
-				creatura.action_idle(mob, random(idle_max), "stand")
+				modding.action_idle(mob, random(idle_max), "stand")
 			end
 		end
 	end
 	self:set_utility(func)
 end)
 
-creatura.register_utility("pegasus:basic_seek_pos", function(self, pos2, timeout)
+modding.register_utility("pegasus:basic_seek_pos", function(self, pos2, timeout)
 	timeout = timeout or 3
 	local function func(mob)
 		local pos = mob.object:get_pos()
@@ -850,7 +850,7 @@ creatura.register_utility("pegasus:basic_seek_pos", function(self, pos2, timeout
 	self:set_utility(func)
 end)
 
-creatura.register_utility("pegasus:basic_seek_food", function(self)
+modding.register_utility("pegasus:basic_seek_food", function(self)
 	local timeout = 3
 
 	local food = pegasus.get_dropped_food(self)
@@ -866,7 +866,7 @@ creatura.register_utility("pegasus:basic_seek_food", function(self)
 			food_reached = true
 
 			local anim = (mob.animations["eat"] and "eat") or "stand"
-			creatura.action_idle(mob, 1, anim)
+			modding.action_idle(mob, 1, anim)
 			pegasus.eat_dropped_item(mob, food)
 		end
 
@@ -884,7 +884,7 @@ creatura.register_utility("pegasus:basic_seek_food", function(self)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("pegasus:basic_seek_crop", function(self)
+modding.register_utility("pegasus:basic_seek_crop", function(self)
 	local timeout = 12
 
 	local crop = pegasus.find_crop(self)
@@ -899,7 +899,7 @@ creatura.register_utility("pegasus:basic_seek_crop", function(self)
 			crop_reached = true
 
 			local anim = (mob.animations["eat"] and "eat") or "stand"
-			creatura.action_idle(mob, 1, anim)
+			modding.action_idle(mob, 1, anim)
 			pegasus.eat_crop(mob, crop)
 		end
 
@@ -916,7 +916,7 @@ creatura.register_utility("pegasus:basic_seek_crop", function(self)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("pegasus:basic_flee", function(self, target)
+modding.register_utility("pegasus:basic_flee", function(self, target)
 	local function func(mob)
 		local pos, target_pos = mob.object:get_pos(), target:get_pos()
 		if not pos or not target_pos then return true end
@@ -928,7 +928,7 @@ creatura.register_utility("pegasus:basic_flee", function(self, target)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("pegasus:basic_attack", function(self, target)
+modding.register_utility("pegasus:basic_attack", function(self, target)
 	local has_attacked = false
 	local has_warned = not self.warn_before_attack
 	local function func(mob)
@@ -952,7 +952,7 @@ creatura.register_utility("pegasus:basic_attack", function(self, target)
 					if abs(diff(yaw, yaw_to_target)) > pi / 2 then
 						pegasus.action_pursue(mob, target)
 					else
-						creatura.action_idle(mob, 0.5, "warn")
+						modding.action_idle(mob, 0.5, "warn")
 					end
 					return
 				else
@@ -967,7 +967,7 @@ creatura.register_utility("pegasus:basic_attack", function(self, target)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("pegasus:basic_breed", function(self)
+modding.register_utility("pegasus:basic_breed", function(self)
 	local mate = pegasus.get_nearby_mate(self, self.name)
 
 	local timer = 0
@@ -1013,14 +1013,14 @@ end)
 
 -- Swim --
 
-creatura.register_utility("pegasus:swim_wander", function(self)
+modding.register_utility("pegasus:swim_wander", function(self)
 	local move_chance = 2
 	local idle_max = 4
 
 	local function func(mob)
 		if not mob:get_action() then
 			if not mob.in_liquid then
-				creatura.action_idle(mob, 1, "flop")
+				modding.action_idle(mob, 1, "flop")
 				return
 			end
 
@@ -1035,7 +1035,7 @@ creatura.register_utility("pegasus:swim_wander", function(self)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("pegasus:swim_seek_land", function(self)
+modding.register_utility("pegasus:swim_seek_land", function(self)
 	local land_pos
 
 	self:set_gravity(-9.8)
@@ -1077,7 +1077,7 @@ end)
 
 -- Fly --
 
-creatura.register_utility("pegasus:fly_wander", function(self, turn_rate)
+modding.register_utility("pegasus:fly_wander", function(self, turn_rate)
 	local move_chance = 2
 	local idle_max = 4
 
@@ -1094,9 +1094,9 @@ creatura.register_utility("pegasus:fly_wander", function(self, turn_rate)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("pegasus:fly_seek_home", function(self)
+modding.register_utility("pegasus:fly_seek_home", function(self)
 	local home = self.home_position
-	local roost = self.roost_action or creatura.action_idle
+	local roost = self.roost_action or modding.action_idle
 	local is_home = self.is_roost or function(pos, home_pos)
 		if abs(pos.x - home_pos.x) < 0.5
 			and abs(pos.z - home_pos.z) < 0.5
@@ -1114,26 +1114,26 @@ creatura.register_utility("pegasus:fly_seek_home", function(self)
 				roost(mob, 1)
 				return
 			end
-			creatura.action_move(mob, home, 3, "pegasus:steer_no_gravity", 1, "fly")
+			modding.action_move(mob, home, 3, "pegasus:steer_no_gravity", 1, "fly")
 		end
 	end
 	self:set_utility(func)
 end)
 
-creatura.register_utility("pegasus:fly_seek_land", function(self)
+modding.register_utility("pegasus:fly_seek_land", function(self)
 	local landed = false
 	local function func(_self)
 		if not _self:get_action() then
 			if landed then return true end
 			if _self.touching_ground then
-				creatura.action_idle(_self, 0.5, "stand")
+				modding.action_idle(_self, 0.5, "stand")
 				landed = true
 			else
 				local pos2 = _self:get_wander_pos_3d(3, 6)
 				if pos2 then
-					local dist2floor = creatura.sensor_floor(_self, 10, true)
+					local dist2floor = modding.sensor_floor(_self, 10, true)
 					pos2.y = pos2.y - dist2floor
-					creatura.action_move(_self, pos2, 3, "pegasus:move_no_gravity", 0.6, "fly")
+					modding.action_move(_self, pos2, 3, "pegasus:move_no_gravity", 0.6, "fly")
 				end
 			end
 		end
@@ -1141,7 +1141,7 @@ creatura.register_utility("pegasus:fly_seek_land", function(self)
 	self:set_utility(func)
 end)
 
-creatura.register_utility("pegasus:fly_seek_food", function(self)
+modding.register_utility("pegasus:fly_seek_food", function(self)
 	local timeout = 3
 
 	local food = pegasus.get_dropped_food(self)
@@ -1157,7 +1157,7 @@ creatura.register_utility("pegasus:fly_seek_food", function(self)
 			food_reached = true
 
 			local anim = (mob.animations["eat"] and "eat") or "stand"
-			creatura.action_idle(mob, 1, anim)
+			modding.action_idle(mob, 1, anim)
 			pegasus.eat_dropped_item(mob, food)
 		end
 
@@ -1176,7 +1176,7 @@ end)
 
 -- pegasus --
 
-creatura.register_utility("pegasus:pegasus_tame", function(self)
+modding.register_utility("pegasus:pegasus_tame", function(self)
 	local trust = 5
 	local player = self.rider
 	local player_props = player and player:get_properties()
@@ -1195,7 +1195,7 @@ creatura.register_utility("pegasus:pegasus_tame", function(self)
 	local function func(_self)
 		local pos = _self.object:get_pos()
 		if not pos then return end
-		if not player or not creatura.is_alive(player) then return true end
+		if not player or not modding.is_alive(player) then return true end
 
 		-- Increase Taming progress while Players view is aligned with the pegasi
 		local yaw, plyr_yaw = _self.object:get_yaw(), player:get_look_horizontal()
@@ -1207,16 +1207,16 @@ creatura.register_utility("pegasus:pegasus_tame", function(self)
 			_self.owner = _self:memorize("owner", player:get_player_name())
 			pegasus.protect_from_despawn(_self)
 			pegasus.mount(_self, player)
-			pegasus.particle_spawner(pos, "creatura_particle_green.png", "float")
+			pegasus.particle_spawner(pos, "modding_particle_green.png", "float")
 		elseif trust <= 0 then -- Fail
 			pegasus.mount(_self, player)
-			pegasus.particle_spawner(pos, "creatura_particle_red.png", "float")
+			pegasus.particle_spawner(pos, "modding_particle_red.png", "float")
 		end
 
 		-- Actions
 		if not _self:get_action() then
 			if random(3) < 2 then
-				creatura.action_idle(_self, 0.5, "punch_aoe")
+				modding.action_idle(_self, 0.5, "punch_aoe")
 			else
 				pegasus.action_walk(_self, 2, 0.75, "run")
 			end
@@ -1390,7 +1390,7 @@ function pegasus_breathe_fire(self, player)
 end
 
 -- Modify the pegasus:pegasus_ride utility
-creatura.register_utility("pegasus:pegasus_ride", function(self, player)
+modding.register_utility("pegasus:pegasus_ride", function(self, player)
 	local player_props = player and player:get_properties()
 	if not player_props then return end
 	local player_size = player_props.visual_size
@@ -1408,7 +1408,7 @@ creatura.register_utility("pegasus:pegasus_ride", function(self, player)
 	local fire_breath_cooldown = 0
 
 	local function func(_self)
-		if not creatura.is_alive(player) then
+		if not modding.is_alive(player) then
 			return true
 		end
 		local anim = "stand"
@@ -1498,7 +1498,7 @@ end)
 
 -- Eagle --
 
-creatura.register_utility("pegasus:eagle_attack", function(self, target)
+modding.register_utility("pegasus:eagle_attack", function(self, target)
 	local function func(mob)
 		local pos = mob.object:get_pos()
 		local _, is_visible, target_pos = mob:get_target(target)
@@ -1540,7 +1540,7 @@ local function grow_crop(crop)
 	end
 end
 
-creatura.register_utility("pegasus:opossum_seek_crop", function(self)
+modding.register_utility("pegasus:opossum_seek_crop", function(self)
 	local timeout = 12
 
 	local crop = pegasus.find_crop(self)
@@ -1554,7 +1554,7 @@ creatura.register_utility("pegasus:opossum_seek_crop", function(self)
 			and not crop_reached then
 			crop_reached = true
 
-			creatura.action_idle(mob, 1, "clean_crop")
+			modding.action_idle(mob, 1, "clean_crop")
 			grow_crop(crop)
 		end
 
@@ -1573,18 +1573,18 @@ end)
 
 -- Tamed --
 
-creatura.register_utility("pegasus:tamed_idle", function(self)
+modding.register_utility("pegasus:tamed_idle", function(self)
 	local function func(mob)
 		if not mob.owner or mob.order ~= "stay" then return true end
 
 		if not mob:get_action() then
-			creatura.action_idle(mob, 1)
+			modding.action_idle(mob, 1)
 		end
 	end
 	self:set_utility(func)
 end)
 
-creatura.register_utility("pegasus:tamed_follow_owner", function(self, player)
+modding.register_utility("pegasus:tamed_follow_owner", function(self, player)
 	local function func(mob)
 		local owner = player or (mob.owner and minetest.get_player_by_name(mob.owner))
 		if not owner then return true end
@@ -1598,7 +1598,7 @@ creatura.register_utility("pegasus:tamed_follow_owner", function(self, player)
 			if dist > mob.width + 1 then
 				pegasus.action_pursue(mob, owner)
 			else
-				creatura.action_idle(mob, 1)
+				modding.action_idle(mob, 1)
 			end
 		end
 	end
@@ -1685,7 +1685,7 @@ pegasus.mob_ai.fly_landing_wander = {
 	utility = "pegasus:fly_wander",
 	get_score = function(self)
 		if self.is_landed then
-			local player = creatura.get_nearby_player(self)
+			local player = modding.get_nearby_player(self)
 			if player then
 				self.is_landed = self:memorize("is_landed", false)
 			end
@@ -1714,7 +1714,7 @@ pegasus.mob_ai.fly_seek_land = {
 		if self.is_landed
 			and not self.touching_ground
 			and not self.in_liquid
-			and creatura.sensor_floor(self, 3, true) > 2 then
+			and modding.sensor_floor(self, 3, true) > 2 then
 			return 0.3, { self }
 		end
 		return 0
@@ -1753,7 +1753,7 @@ pegasus.mob_ai.tamed_follow_owner = {
 		end
 
 		local lasso_holder = type(self._lassod_to) == "string" and minetest.get_player_by_name(self._lassod_to)
-		local player = lasso_holder or creatura.get_nearby_player(self)
+		local player = lasso_holder or modding.get_nearby_player(self)
 
 		if lasso_holder
 			or self:follow_wielded_item(player) then
