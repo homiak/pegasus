@@ -286,7 +286,20 @@ modding.register_mob("pegasus:pegasus", {
 			minetest.add_item(pos, "pegasus:saddle")
 		end
 	end,
+	custom_name = "",  -- Use a custom attribute to store the name
 
+    on_activate = function(self, staticdata)
+        if staticdata and staticdata ~= "" then
+            self.custom_name = staticdata  -- Load the name from staticdata
+            self.object:set_nametag_attributes({
+                text = self.custom_name,
+                color = "#00FFFF"
+            })
+        end
+    end,
+	get_staticdata = function(self)
+        return self.custom_name  -- Save the name as staticdata
+    end,
 	add_child = function(self, mate)
 		local pos = self.object:get_pos()
 		if not pos then return end
@@ -362,6 +375,19 @@ modding.register_mob("pegasus:pegasus", {
 			return
 		end
 
+		if not clicker or not clicker:is_player() then return end
+
+        local itemstack = clicker:get_wielded_item()
+
+        if itemstack:get_name() == "pegasus:nametag" then
+            minetest.show_formspec(clicker:get_player_name(), "name_pegasus_form",
+                "field[name;Enter the name for your Pegasus:;]" ..
+                "button_exit[1,2;2,1;submit;Submit]")
+
+            self.last_clicked_by = clicker:get_player_name()  -- Store the player name
+            return
+        end
+
 		local owner = self.owner
 		local name = clicker and clicker:get_player_name()
 		if owner and name ~= owner then return end
@@ -411,6 +437,24 @@ modding.register_mob("pegasus:pegasus", {
 		end
 	end
 })
+
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+    if formname == "name_pegasus_form" and fields.name then
+        local pegasus_entities = minetest.get_objects_inside_radius(player:get_pos(), 5)  -- Adjust radius if needed
+        for _, obj in ipairs(pegasus_entities) do
+            local entity = obj:get_luaentity()
+            if entity and entity.name == "pegasus:pegasus" and entity.last_clicked_by == player:get_player_name() then
+                -- Set the name directly as an attribute
+                entity.custom_name = fields.name  -- Store the name in a custom attribute
+                entity.object:set_nametag_attributes({
+                    text = fields.name,
+                    color = "#9ff9fc"
+                })
+                break
+            end
+        end
+    end
+end)
 
 modding.register_spawn_item("pegasus:pegasus", {
 	col1 = "ebdfd8",
