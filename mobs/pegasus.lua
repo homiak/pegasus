@@ -60,10 +60,10 @@ local function get_form(self, player_name)
 		"list[detached:pegasus:pegasus_" .. player_name .. ";main;5.4,0.5;4,3;]",
 		"list[current_player;main;0.4,5.4;8,4;]",
 		"listring[current_player;main]",
-		"button[0.4,4.5;3,0.8;follow;Follow]",
-		"button[3.7,4.5;3,0.8;stay;Stay]",
-		"button[7,4.5;3,0.8;wander;Wander]",
-		"button[8.5,4.5;1.6,0.8;fire;Fire]"
+		"button[1,4.5;2.5,0.8;follow;Follow]",
+        "button[3.75,4.5;2.5,0.8;stay;Stay]",
+        "button[6.5,4.5;2.5,0.8;wander;Wander]",
+        "button[9.25,4.5;1.75,0.8;fire;Fire]"
 	}
 
 	return table.concat(form, "")
