@@ -7,6 +7,7 @@ if(minetest.get_translator ~= nil) then
 else
 	pegasus.S = function ( s ) return s end
 end
+local S = pegasus.S
 
 
 local path = minetest.get_modpath("pegasus")
