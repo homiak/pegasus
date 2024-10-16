@@ -30,7 +30,7 @@ end
 local function serialize_pegasus_inventory(self)
 	if not self.owner then return end
 	local inv_name = "pegasus:pegasus_" .. self.owner
-	local inv = minetest.get_inventory({type = "detached", name = inv_name})
+	local inv = minetest.get_inventory({ type = "detached", name = inv_name })
 	if not inv then return end
 	local list = inv:get_list("main")
 	local stored = {}
@@ -45,22 +45,25 @@ end
 
 local function get_form(self, player_name)
 	local inv = create_pegasus_inventory(self)
-	if inv
-	and self._inventory then
+	if inv and self._inventory then
 		inv:set_list("main", minetest.deserialize(self._inventory))
 	end
 
 	local frame_range = self.animations["stand"].range
-	local frame_loop = frame_range.x .. "," ..  frame_range.y
+	local frame_loop = frame_range.x .. "," .. frame_range.y
 	local texture = self:get_props().textures[1]
 	local form = {
 		"formspec_version[3]",
-		"size[10.5,10]",
+		"size[10.5,10.5]", -- Увеличили высоту формы
 		"image[0,0;10.5,5.25;pegasus_form_pegasus_bg.png]",
 		"model[0,0.5;5,3.5;mob_mesh;pegasus_pegasus.b3d;" .. texture .. ";-10,-130;false;false;" .. frame_loop .. ";15]",
 		"list[detached:pegasus:pegasus_" .. player_name .. ";main;5.4,0.5;4,3;]",
-		"list[current_player;main;0.4,4.9;8,4;]",
-		"listring[current_player;main]"
+		"list[current_player;main;0.4,5.4;8,4;]",
+		"listring[current_player;main]",
+		"button[0.4,4.5;3,0.8;follow;Follow]",
+		"button[3.7,4.5;3,0.8;stay;Stay]",
+		"button[7,4.5;3,0.8;wander;Wander]",
+		"button[8.5,4.5;1.6,0.8;fire;Fire]"
 	}
 
 	return table.concat(form, "")
@@ -149,7 +152,7 @@ local function set_pattern(self)
 	local pattern = "(" .. patterns[pattern_no] .. "^[mask:" .. colors[color_no] .. ")"
 	local texture = self.textures[self.texture_no]
 	self.object:set_properties({
-		textures = {texture .. "^" .. pattern}
+		textures = { texture .. "^" .. pattern }
 	})
 end
 
@@ -157,7 +160,7 @@ end
 
 modding.register_mob("pegasus:pegasus", {
 	-- Engine Props
-	visual_size = {x = 10, y = 10},
+	visual_size = { x = 10, y = 10 },
 	mesh = "pegasus_pegasus.b3d",
 	textures = {
 		"pegasus.png",
@@ -166,7 +169,7 @@ modding.register_mob("pegasus:pegasus", {
 
 	-- modding Props
 	max_health = 200,
-	armor_groups = {fleshy = 100},
+	armor_groups = { fleshy = 100 },
 	damage = 40,
 	speed = 200000,
 	tracking_range = 16,
@@ -197,17 +200,17 @@ modding.register_mob("pegasus:pegasus", {
 		height = 1.95
 	},
 	animations = {
-		stand = {range = {x = 1, y = 59}, speed = 10, frame_blend = 0.3, loop = true},
-		walk = {range = {x = 70, y = 89}, speed = 20, frame_blend = 0.3, loop = true},
-		run = {range = {x = 101, y = 119}, speed = 40, frame_blend = 0.3, loop = true},
-		punch_aoe = {range = {x = 170, y = 205}, speed = 30, frame_blend = 0.2, loop = false},
-		rear = {range = {x = 130, y = 160}, speed = 20, frame_blend = 0.1, loop = false},
-		eat = {range = {x = 210, y = 240}, speed = 30, frame_blend = 0.3, loop = false}
+		stand = { range = { x = 1, y = 59 }, speed = 10, frame_blend = 0.3, loop = true },
+		walk = { range = { x = 70, y = 89 }, speed = 20, frame_blend = 0.3, loop = true },
+		run = { range = { x = 101, y = 119 }, speed = 40, frame_blend = 0.3, loop = true },
+		punch_aoe = { range = { x = 170, y = 205 }, speed = 30, frame_blend = 0.2, loop = false },
+		rear = { range = { x = 130, y = 160 }, speed = 20, frame_blend = 0.1, loop = false },
+		eat = { range = { x = 210, y = 240 }, speed = 30, frame_blend = 0.3, loop = false }
 	},
 	follow = pegasus.food_wheat,
 	drops = {
-		{name = "pegasus:leather", min = 1, max = 4, chance = 2},
-		{name = "pegasus:beef_raw", min = 1, max = 4, chance = 2}
+		{ name = "pegasus:leather",  min = 1, max = 4, chance = 2 },
+		{ name = "pegasus:beef_raw", min = 1, max = 4, chance = 2 }
 	},
 	fancy_collide = false,
 
@@ -224,7 +227,7 @@ modding.register_mob("pegasus:pegasus", {
 	},
 	head_data = {
 		bone = "Neck.CTRL",
-		offset = {x = 0, y = 1.4, z = 0.0},
+		offset = { x = 0, y = 1.4, z = 0.0 },
 		pitch_correction = 15,
 		pivot_h = 1,
 		pivot_v = 1.75
@@ -240,8 +243,8 @@ modding.register_mob("pegasus:pegasus", {
 			get_score = function(self)
 				local rider = not self.owner and self.rider
 				if rider
-				and rider:get_pos() then
-					return 0.7, {self}
+					and rider:get_pos() then
+					return 0.7, { self }
 				end
 				return 0
 			end
@@ -253,8 +256,8 @@ modding.register_mob("pegasus:pegasus", {
 				local owner = self.owner and minetest.get_player_by_name(self.owner)
 				local rider = owner == self.rider and self.rider
 				if rider
-				and rider:get_pos() then
-					return 0.8, {self, rider}
+					and rider:get_pos() then
+					return 0.8, { self, rider }
 				end
 				return 0
 			end
@@ -267,12 +270,12 @@ modding.register_mob("pegasus:pegasus", {
 			self.saddled = self:memorize("saddled", true)
 			local texture = self.object:get_properties().textures[1]
 			self.object:set_properties({
-				textures = {texture .. "^pegasus_pegasus_saddle.png"}
+				textures = { texture .. "^pegasus_pegasus_saddle.png" }
 			})
 			self.drops = {
-				{name = "pegasus:leather", chance = 2, min = 1, max = 4},
-				{name = "pegasus:beef_raw", chance = 2, min = 1, max = 4},
-				{name = "pegasus:saddle", chance = 1, min = 1, max = 1}
+				{ name = "pegasus:leather",  chance = 2, min = 1, max = 4 },
+				{ name = "pegasus:beef_raw", chance = 2, min = 1, max = 4 },
+				{ name = "pegasus:saddle",   chance = 1, min = 1, max = 1 }
 			}
 		else
 			local pos = self.object:get_pos()
@@ -280,26 +283,26 @@ modding.register_mob("pegasus:pegasus", {
 			self.saddled = self:memorize("saddled", false)
 			set_pattern(self)
 			self.drops = {
-				{name = "pegasus:leather", chance = 2, min = 1, max = 4},
-				{name = "pegasus:beef_raw", chance = 2, min = 1, max = 4},
+				{ name = "pegasus:leather",  chance = 2, min = 1, max = 4 },
+				{ name = "pegasus:beef_raw", chance = 2, min = 1, max = 4 },
 			}
 			minetest.add_item(pos, "pegasus:saddle")
 		end
 	end,
-	custom_name = "",  -- Use a custom attribute to store the name
+	custom_name = "", -- Use a custom attribute to store the name
 
-    on_activate = function(self, staticdata)
-        if staticdata and staticdata ~= "" then
-            self.custom_name = staticdata  -- Load the name from staticdata
-            self.object:set_nametag_attributes({
-                text = self.custom_name,
-                color = "#00FFFF"
-            })
-        end
-    end,
+	on_activate = function(self, staticdata)
+		if staticdata and staticdata ~= "" then
+			self.custom_name = staticdata -- Load the name from staticdata
+			self.object:set_nametag_attributes({
+				text = self.custom_name,
+				color = "#00FFFF"
+			})
+		end
+	end,
 	get_staticdata = function(self)
-        return self.custom_name  -- Save the name as staticdata
-    end,
+		return self.custom_name -- Save the name as staticdata
+	end,
 	add_child = function(self, mate)
 		local pos = self.object:get_pos()
 		if not pos then return end
@@ -310,9 +313,9 @@ modding.register_mob("pegasus:pegasus", {
 		local tex_no = self.texture_no
 		local mate_ent = mate and mate:get_luaentity()
 		if mate_ent
-		or not mate_ent.speed
-		or not mate_ent.jump_power
-		or not mate_ent.max_health then
+			or not mate_ent.speed
+			or not mate_ent.jump_power
+			or not mate_ent.max_health then
 			return
 		end
 		if random(2) < 2 then
@@ -352,6 +355,7 @@ modding.register_mob("pegasus:pegasus", {
 		if self.saddled then
 			self:set_saddle(true)
 		end
+		self.mode = self:recall("mode") or "wander"
 	end,
 
 	step_func = function(self)
@@ -361,6 +365,35 @@ modding.register_mob("pegasus:pegasus", {
 		pegasus.update_lasso_effects(self)
 		pegasus.random_sound(self)
 		pegasus.eat_dropped_item(self, item)
+		if self.mode == "follow" and self.owner then
+            local owner = minetest.get_player_by_name(self.owner)
+            if owner then
+                local owner_pos = owner:get_pos()
+                local self_pos = self.object:get_pos()
+                if self_pos and owner_pos then
+                    local distance = vector.distance(self_pos, owner_pos)
+                    if distance > 3 then
+                        self:animate("run")
+                        self:move_to(owner_pos, "modding:obstacle_avoidance", 1)
+                    else
+                        self:animate("stand")
+                        self.object:set_velocity({x=0, y=0, z=0})
+                    end
+                end
+            end
+        elseif self.mode == "stay" then
+            self:animate("stand")
+            self.object:set_velocity({x=0, y=0, z=0})
+            if self:get_utility() then
+                self:set_utility(nil)
+            end
+            -- Prevent rotation in stay mode
+            self.object:set_yaw(self.object:get_yaw())
+        elseif self.mode == "wander" then
+            if not self:get_utility() then
+                self:initiate_utility("pegasus:basic_wander", self)
+            end
+        end
 	end,
 
 	death_func = function(self)
@@ -379,16 +412,16 @@ modding.register_mob("pegasus:pegasus", {
 		pegasus.eat_dropped_item(self, item)
 		if not clicker or not clicker:is_player() then return end
 
-        local itemstack = clicker:get_wielded_item()
+		local itemstack = clicker:get_wielded_item()
 
-        if itemstack:get_name() == "pegasus:nametag" then
-            minetest.show_formspec(clicker:get_player_name(), "name_pegasus_form",
-                "field[name;Enter the name for your Pegasus:;]" ..
-                "button_exit[1,2;2,1;submit;Submit]")
+		if itemstack:get_name() == "pegasus:nametag" then
+			minetest.show_formspec(clicker:get_player_name(), "name_pegasus_form",
+				"field[name;Enter the name for your Pegasus:;]" ..
+				"button_exit[1,2;2,1;submit;Submit]")
 
-            self.last_clicked_by = clicker:get_player_name()  -- Store the player name
-            return
-        end
+			self.last_clicked_by = clicker:get_player_name() -- Store the player name
+			return
+		end
 
 		local owner = self.owner
 		local name = clicker and clicker:get_player_name()
@@ -406,11 +439,11 @@ modding.register_mob("pegasus:pegasus", {
 		end
 
 		if clicker:get_player_control().sneak
-		and owner then
+			and owner then
 			minetest.show_formspec(name, "pegasus:pegasus_forms", get_form(self, name))
 			form_obj[name] = self.object
 		elseif wielded_name == "" then
-			pegasus.mount(self, clicker, {rot = {x = -65, y = 180, z = 0}, pos = {x = 0, y = 0.75, z = 0.6}})
+			pegasus.mount(self, clicker, { rot = { x = -65, y = 180, z = 0 }, pos = { x = 0, y = 0.75, z = 0.6 } })
 			if self.saddled then
 				self:initiate_utility("pegasus:mount", self, clicker)
 			end
@@ -421,8 +454,8 @@ modding.register_mob("pegasus:pegasus", {
 		if self.rider and puncher == self.rider then return end
 		local name = puncher:is_player() and puncher:get_player_name()
 		if name
-		and name == self.owner
-		and puncher:get_player_control().sneak then
+			and name == self.owner
+			and puncher:get_player_control().sneak then
 			self:set_saddle(false)
 			return
 		end
@@ -431,34 +464,77 @@ modding.register_mob("pegasus:pegasus", {
 
 	on_detach_child = function(self, child)
 		if child
-		and self.rider == child then
+			and self.rider == child then
 			self.rider = nil
-			child:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
-			child:set_properties({visual_size = {x = 1, y = 1}})
+			child:set_eye_offset({ x = 0, y = 0, z = 0 }, { x = 0, y = 0, z = 0 })
+			child:set_properties({ visual_size = { x = 1, y = 1 } })
 			pegasus.animate_player(child, "stand", 30)
 		end
 	end
 })
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-    if formname == "name_pegasus_form" and fields.name then
-        local pegasus_entities = minetest.get_objects_inside_radius(player:get_pos(), 5)  -- Adjust radius if needed
-        for _, obj in ipairs(pegasus_entities) do
-            local entity = obj:get_luaentity()
-            if entity and entity.name == "pegasus:pegasus" and entity.last_clicked_by == player:get_player_name() then
-                -- Set the name directly as an attribute
-                entity.custom_name = fields.name  -- Store the name in a custom attribute
-                entity.object:set_nametag_attributes({
-                    text = fields.name,
-                    color = "#9ff9fc"
-                })
-                break
-            end
-        end
-    end
+	if formname == "name_pegasus_form" and fields.name then
+		local pegasus_entities = minetest.get_objects_inside_radius(player:get_pos(), 5) -- Adjust radius if needed
+		for _, obj in ipairs(pegasus_entities) do
+			local entity = obj:get_luaentity()
+			if entity and entity.name == "pegasus:pegasus" and entity.last_clicked_by == player:get_player_name() then
+				-- Set the name directly as an attribute
+				entity.custom_name = fields.name -- Store the name in a custom attribute
+				entity.object:set_nametag_attributes({
+					text = fields.name,
+					color = "#9ff9fc"
+				})
+				break
+			end
+		end
+	end
 end)
 
 modding.register_spawn_item("pegasus:pegasus", {
 	col1 = "ebdfd8",
 	col2 = "653818"
 })
+
+-- Function to set the pegasus mode
+local function set_pegasus_mode(self, mode)
+	self.mode = mode
+	self:memorize("mode", mode)
+end
+
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+	local name = player:get_player_name()
+	if formname == "pegasus:pegasus_forms" then
+		local obj = form_obj[name]
+		if not obj or not obj:get_luaentity() then return end
+
+		local ent = obj:get_luaentity()
+
+		if fields.follow then
+            set_pegasus_mode(ent, "follow")
+            minetest.chat_send_player(name, "Pegasus set to Follow mode")
+        elseif fields.stay then
+            set_pegasus_mode(ent, "stay")
+            minetest.chat_send_player(name, "Pegasus set to Stay mode")
+        elseif fields.wander then
+            set_pegasus_mode(ent, "wander")
+            minetest.chat_send_player(name, "Pegasus set to Wander mode")
+        elseif fields.fire then
+            ent.fire_breathing = not ent.fire_breathing
+            if ent.fire_breathing then
+                minetest.chat_send_player(name, "Pegasus is now breathing fire!")
+                pegasus_breathe_fire(ent)
+            else
+                minetest.chat_send_player(name, "Pegasus stopped breathing fire.")
+            end
+        end
+
+		if fields.quit or fields.key_enter then
+			form_obj[name] = nil
+			serialize_pegasus_inventory(ent)
+			minetest.remove_detached_inventory("pegasus:pegasus_" .. name)
+		else
+			minetest.show_formspec(name, "pegasus:pegasus_forms", get_form(ent, name))
+		end
+	end
+end)

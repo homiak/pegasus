@@ -1287,109 +1287,109 @@ minetest.register_node("pegasus:fire_animated", {
 	end,
 })
 
-function pegasus_breathe_fire(self, player)
-	local pos = self.object:get_pos()
-	if not pos then return end
+function pegasus_breathe_fire(self)
+    if not self.fire_breathing then return end
 
-	local dir = player:get_look_dir()
-	local start_pos = vector.add(pos, vector.new(0, 1.2, 0))
-	local end_pos = vector.add(start_pos, vector.multiply(dir, 20)) -- Increased range to 20
+    local pos = self.object:get_pos()
+    if not pos then return end
 
-	local particle_types = {
-		{
-			texture = "pegasus_fire_1.png",
-			size = { min = 2, max = 4 },
-			velocity = { min = 15, max = 20 }, -- Increased velocity
-			acceleration = { y = { min = 2, max = 4 } },
-			exptime = { min = 0.8, max = 1.2 },
-			glow = 14 -- Maximum glow
-		},
-		{
-			texture = "pegasus_fire_2.png",
-			size = { min = 2, max = 4 },
-			velocity = { min = 15, max = 20 },
-			acceleration = { y = { min = 2, max = 4 } },
-			exptime = { min = 0.8, max = 1.2 },
-			glow = 14
-		},
-		{
-			texture = "pegasus_fire_3.png",
-			size = { min = 2, max = 4 },
-			velocity = { min = 15, max = 20 },
-			acceleration = { y = { min = 2, max = 4 } },
-			exptime = { min = 0.8, max = 1.2 },
-			glow = 14
-		},
-	}
+    local yaw = self.object:get_yaw()
+    local dir = vector.new(
+        -math.sin(yaw),
+        0,
+        math.cos(yaw)
+    )
+    local start_pos = vector.add(pos, vector.new(0, 1.2, 0))
+    local end_pos = vector.add(start_pos, vector.multiply(dir, 20))
 
-	-- Spawn particles
-	for i = 1, 50 do -- Increased number of particles
-		local particle = particle_types[math.random(#particle_types)]
+    local particle_types = {
+        {
+            texture = "pegasus_fire_1.png",
+            size = { min = 2, max = 4 },
+            velocity = { min = 15, max = 20 },
+            acceleration = { y = { min = 2, max = 4 } },
+            exptime = { min = 0.8, max = 1.2 },
+            glow = 14
+        },
+        {
+            texture = "pegasus_fire_2.png",
+            size = { min = 2, max = 4 },
+            velocity = { min = 15, max = 20 },
+            acceleration = { y = { min = 2, max = 4 } },
+            exptime = { min = 0.8, max = 1.2 },
+            glow = 14
+        },
+        {
+            texture = "pegasus_fire_3.png",
+            size = { min = 2, max = 4 },
+            velocity = { min = 15, max = 20 },
+            acceleration = { y = { min = 2, max = 4 } },
+            exptime = { min = 0.8, max = 1.2 },
+            glow = 14
+        },
+    }
 
-		minetest.add_particle({
-			pos = vector.add(start_pos, vector.new(
-				math.random(-5, 5) / 10,
-				math.random(-5, 5) / 10,
-				math.random(-5, 5) / 10
-			)), -- Add some randomness to the starting position
-			velocity = vector.multiply(vector.add(dir, vector.new(
-				math.random(-2, 2) / 10,
-				math.random(-2, 2) / 10,
-				math.random(-2, 2) / 10
-			)), math.random(particle.velocity.min, particle.velocity.max)), -- Add some spread
-			acceleration = { x = 0, y = math.random(particle.acceleration.y.min, particle.acceleration.y.max), z = 0 },
-			expirationtime = math.random(particle.exptime.min, particle.exptime.max),
-			size = math.random(particle.size.min, particle.size.max),
-			collisiondetection = true,
-			collision_removal = true,
-			vertical = false,
-			texture = particle.texture,
-			glow = particle.glow
-		})
-	end
+    -- Spawn particles
+    for i = 1, 50 do
+        local particle = particle_types[math.random(#particle_types)]
 
-	-- Check for block collisions and ignite blocks
-	local step = 0.5
-	for i = 0, 20, step do -- Increased range to 20
-		local check_pos = vector.add(start_pos, vector.multiply(dir, i))
-		local node = minetest.get_node(check_pos)
-		if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
-			minetest.set_node(check_pos, { name = "pegasus:fire_animated" })
-			break
-		end
-	end
+        minetest.add_particle({
+            pos = vector.add(start_pos, vector.new(
+                math.random(-5, 5) / 10,
+                math.random(-5, 5) / 10,
+                math.random(-5, 5) / 10
+            )),
+            velocity = vector.multiply(vector.add(dir, vector.new(
+                math.random(-2, 2) / 10,
+                math.random(-2, 2) / 10,
+                math.random(-2, 2) / 10
+            )), math.random(particle.velocity.min, particle.velocity.max)),
+            acceleration = { x = 0, y = math.random(particle.acceleration.y.min, particle.acceleration.y.max), z = 0 },
+            expirationtime = math.random(particle.exptime.min, particle.exptime.max),
+            size = math.random(particle.size.min, particle.size.max),
+            collisiondetection = true,
+            collision_removal = true,
+            vertical = false,
+            texture = particle.texture,
+            glow = particle.glow
+        })
+    end
 
-	-- Improved entity damage along the fire path
-	local step = 1 -- Check every block along the path
-	for i = 0, 20, step do
-		local check_pos = vector.add(start_pos, vector.multiply(dir, i))
-		local node = minetest.get_node(check_pos)
-		if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
-			minetest.set_node(check_pos, { name = "pegasus:fire_animated" })
-		end
+    -- Check for block collisions and ignite blocks
+    local step = 1
+    for i = 0, 20, step do
+        local check_pos = vector.add(start_pos, vector.multiply(dir, i))
+        local node = minetest.get_node(check_pos)
+        if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
+            minetest.set_node(check_pos, { name = "pegasus:fire_animated" })
+        end
 
-		-- Check for entities at each step
-		local objects = minetest.get_objects_inside_radius(check_pos, 2)
-		for _, obj in ipairs(objects) do
-			if obj ~= self.object and obj ~= player then
-				local ent = obj:get_luaentity()
-				if ent and ent.name ~= self.name then
-					obj:punch(self.object, 1.0, {
-						full_punch_interval = 1.0,
-						damage_groups = { fleshy = 8 },
-					}, nil)
-				end
-			end
-		end
+        -- Check for entities at each step
+        local objects = minetest.get_objects_inside_radius(check_pos, 2)
+        for _, obj in ipairs(objects) do
+            if obj ~= self.object then
+                local ent = obj:get_luaentity()
+                if ent and ent.name ~= self.name then
+                    obj:punch(self.object, 1.0, {
+                        full_punch_interval = 1.0,
+                        damage_groups = { fleshy = 8 },
+                    }, nil)
+                end
+            end
+        end
 
-		-- Stop if we hit a non-air block
-		if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
-			break
-		end
-	end
+        -- Stop if we hit a non-air block
+        if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
+            break
+        end
+    end
+
+    -- Schedule the next fire breath
+    minetest.after(0.1, function()
+        pegasus_breathe_fire(self)
+    end)
 end
 
--- Modify the pegasus:pegasus_ride utility
 modding.register_utility("pegasus:pegasus_ride", function(self, player)
 	local player_props = player and player:get_properties()
 	if not player_props then return end
