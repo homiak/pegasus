@@ -1,6 +1,6 @@
------------
--- pegasus --
------------
+-------------
+-- Pegasus --
+-------------
 
 local random = math.random
 
@@ -332,6 +332,7 @@ modding.register_mob("pegasus:pegasus", {
 	activate_func = function(self)
 		pegasus.initialize_api(self)
 		pegasus.initialize_lasso(self)
+		pegasus.eat_dropped_item(self, item)
 		set_pattern(self)
 
 		self.owner = self:recall("owner") or nil
@@ -359,6 +360,7 @@ modding.register_mob("pegasus:pegasus", {
 		pegasus.do_growth(self, 60)
 		pegasus.update_lasso_effects(self)
 		pegasus.random_sound(self)
+		pegasus.eat_dropped_item(self, item)
 	end,
 
 	death_func = function(self)
@@ -374,7 +376,7 @@ modding.register_mob("pegasus:pegasus", {
 		if pegasus.feed(self, clicker, false, true) then
 			return
 		end
-
+		pegasus.eat_dropped_item(self, item)
 		if not clicker or not clicker:is_player() then return end
 
         local itemstack = clicker:get_wielded_item()
