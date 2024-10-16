@@ -1210,7 +1210,7 @@ modding.register_utility("pegasus:pegasus_tame", function(self)
 			pegasus.particle_spawner(pos, "modding_particle_green.png", "float")
 		elseif trust <= 0 then -- Fail
 			pegasus.mount(_self, player)
-			pegasus.particle_spawner(pos, "modding_particle_red.png", "float")
+			pegasus.particle_spawner(pos, "modding_particle_blue.png", "float")
 		end
 
 		-- Actions
