@@ -397,7 +397,7 @@ modding.register_mob("pegasus:pegasus", {
             end
         end
 		local danger = check_for_danger(self)
-    if danger and not self.fire_breathing and self:timer(1) then  -- Проверяем каждые 3 секунды
+    if danger and not self.fire_breathing and self:timer(1) then
         local danger_pos = danger:get_pos()
         local self_pos = self.object:get_pos()
         local distance = vector.distance(self_pos, danger_pos)
@@ -416,7 +416,6 @@ modding.register_mob("pegasus:pegasus", {
                     self.fire_breathing = false
                 end)
             else
-                -- Отступаем от опасности
                 local retreat_pos = vector.subtract(self_pos, vector.multiply(dir, 5))
                 self:move_to(retreat_pos, "modding:obstacle_avoidance", 2)
             end
