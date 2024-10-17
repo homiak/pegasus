@@ -54,7 +54,7 @@ local function get_form(self, player_name)
 	local texture = self:get_props().textures[1]
 	local form = {
 		"formspec_version[3]",
-		"size[10.5,10.5]", -- Увеличили высоту формы
+		"size[10.5,10.5]",
 		"image[0,0;10.5,5.25;pegasus_form_pegasus_bg.png]",
 		"model[0,0.5;5,3.5;mob_mesh;pegasus_pegasus.b3d;" .. texture .. ";-10,-130;false;false;" .. frame_loop .. ";15]",
 		"list[detached:pegasus:pegasus_" .. player_name .. ";main;5.4,0.5;4,3;]",
@@ -394,6 +394,29 @@ modding.register_mob("pegasus:pegasus", {
                 self:initiate_utility("pegasus:basic_wander", self)
             end
         end
+		local danger = check_for_danger(self)
+    if danger and not self.fire_breathing and self:timer(1) then  -- Проверяем каждые 3 секунды
+        local danger_pos = danger:get_pos()
+        local self_pos = self.object:get_pos()
+        local dir = vector.direction(self_pos, danger_pos)
+        
+        -- Поворачиваемся к опасности
+        self.object:set_yaw(math.atan2(dir.z, dir.x) - math.pi/2)
+        
+        -- Шанс 50% на огненное дыхание или отступление
+        if math.random() < 0.9 then
+            self.fire_breathing = true
+            pegasus_breathe_fire(self)
+            minetest.after(2, function()
+                self.fire_breathing = false
+            end)
+        else
+            -- Отступаем от опасности
+            local retreat_pos = vector.subtract(self_pos, vector.multiply(dir, 5))
+            self:move_to(retreat_pos, "modding:obstacle_avoidance", 2)
+        end
+        return
+    end
 	end,
 
 	death_func = function(self)
@@ -496,7 +519,8 @@ modding.register_spawn_item("pegasus:pegasus", {
 	col2 = "653818"
 })
 
--- Function to set the pegasus mode
+-- Pegasus Orders
+
 local function set_pegasus_mode(self, mode)
 	self.mode = mode
 	self:memorize("mode", mode)
@@ -538,3 +562,49 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		end
 	end
 end)
+
+-- dangerous Entities
+
+local dangerous_entities = {
+    "mobs_monster:dirt_monster",
+    "mobs_monster:stone_monster",
+    "mobs_monster:lava_flan",
+	"dmobs:dragon1",
+	"dmobs:dragon",
+	"dmobs:dragon2",
+	"dmobs:dragon3",
+	"dmobs:dragon4",
+	"dmobs:dragon_great",
+	"dmobs:skeleton",
+	"dmobs:orc",
+	"dmobs:rat",
+	"dmobs:hedgehog",
+	"dmobs:golem",
+	"dmobs:gnorm",
+	"dmobs:treeman",
+	"dmobs:wasp",
+	"dmobs:wasp_leader",
+	"dmobs:waterdragon",
+	"dmobs:wyvern",
+	"dmobs:orc2",
+	"dmobs:ogre",
+}
+
+function check_for_danger(self)
+    local pos = self.object:get_pos()
+    if not pos then return false end
+
+    local objects = minetest.get_objects_inside_radius(pos, 100)
+    for _, obj in ipairs(objects) do
+        local ent = obj:get_luaentity()
+        if ent and ent.name then
+            for _, dangerous_name in ipairs(dangerous_entities) do
+                if ent.name == dangerous_name then
+                    return obj
+                end
+            end
+        end
+    end
+    return false
+end
+
