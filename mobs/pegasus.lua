@@ -367,6 +367,8 @@ modding.register_mob("pegasus:pegasus", {
 		pegasus.eat_dropped_item(self, item)
 		if self.mode == "follow" and self.owner then
             local owner = minetest.get_player_by_name(self.owner)
+			local max_chase_distance = 20
+			
             if owner then
                 local owner_pos = owner:get_pos()
                 local self_pos = self.object:get_pos()
@@ -398,22 +400,26 @@ modding.register_mob("pegasus:pegasus", {
     if danger and not self.fire_breathing and self:timer(1) then  -- Проверяем каждые 3 секунды
         local danger_pos = danger:get_pos()
         local self_pos = self.object:get_pos()
+        local distance = vector.distance(self_pos, danger_pos)
         local dir = vector.direction(self_pos, danger_pos)
         
-        -- Поворачиваемся к опасности
         self.object:set_yaw(math.atan2(dir.z, dir.x) - math.pi/2)
         
-        -- Шанс 50% на огненное дыхание или отступление
-        if math.random() < 0.9 then
-            self.fire_breathing = true
-            pegasus_breathe_fire(self)
-            minetest.after(2, function()
-                self.fire_breathing = false
-            end)
+        if distance > 8 then
+            self:animate("run")
+            self:move_to(danger_pos, "modding:obstacle_avoidance", 2)
         else
-            -- Отступаем от опасности
-            local retreat_pos = vector.subtract(self_pos, vector.multiply(dir, 5))
-            self:move_to(retreat_pos, "modding:obstacle_avoidance", 2)
+            if math.random() < 0.9 then
+                self.fire_breathing = true
+                pegasus_breathe_fire(self)
+                minetest.after(2, function()
+                    self.fire_breathing = false
+                end)
+            else
+                -- Отступаем от опасности
+                local retreat_pos = vector.subtract(self_pos, vector.multiply(dir, 5))
+                self:move_to(retreat_pos, "modding:obstacle_avoidance", 2)
+            end
         end
         return
     end
@@ -565,31 +571,6 @@ end)
 
 -- dangerous Entities
 
-local dangerous_entities = {
-    "mobs_monster:dirt_monster",
-    "mobs_monster:stone_monster",
-    "mobs_monster:lava_flan",
-	"dmobs:dragon1",
-	"dmobs:dragon",
-	"dmobs:dragon2",
-	"dmobs:dragon3",
-	"dmobs:dragon4",
-	"dmobs:dragon_great",
-	"dmobs:skeleton",
-	"dmobs:orc",
-	"dmobs:rat",
-	"dmobs:hedgehog",
-	"dmobs:golem",
-	"dmobs:gnorm",
-	"dmobs:treeman",
-	"dmobs:wasp",
-	"dmobs:wasp_leader",
-	"dmobs:waterdragon",
-	"dmobs:wyvern",
-	"dmobs:orc2",
-	"dmobs:ogre",
-}
-
 function check_for_danger(self)
     local pos = self.object:get_pos()
     if not pos then return false end
@@ -597,12 +578,8 @@ function check_for_danger(self)
     local objects = minetest.get_objects_inside_radius(pos, 100)
     for _, obj in ipairs(objects) do
         local ent = obj:get_luaentity()
-        if ent and ent.name then
-            for _, dangerous_name in ipairs(dangerous_entities) do
-                if ent.name == dangerous_name then
-                    return obj
-                end
-            end
+        if ent and ent.type == "monster" then
+            return obj
         end
     end
     return false
