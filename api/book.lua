@@ -19,7 +19,7 @@ local text_elements = {
 
 -- Define image elements with positions and sizes
 local image_elements = {
-    {filename = "pegasus_image1.png", x = 0.5, y = 7, w = 2, h = 2},
+    {filename = "pegasus_img1.png", x = 5, y = 10, w = 5, h = 7},
     {filename = "pegasus_image2.png", x = 9.5, y = 7, w = 2, h = 2},
 }
 
