@@ -606,91 +606,51 @@ end
 -- Rescue animals --
 
 modding.register_utility("pegasus:rescue_animal", function(self, victim, victim_ent)
-    local original_properties = {}
-    
     local function rescue_func(_self)
         if not victim or not victim:get_pos() then
-            return true -- End the utility if the victim is gone
+            return true
         end
 
         local victim_pos = victim:get_pos()
-        local self_pos = _self.object:get_pos()
-        local distance = vector.distance(self_pos, victim_pos)
+        local attacker = nil
 
-        if distance > 2 then
-            -- Move to the victim
-            _self:animate("run")
-            _self:move_to(victim_pos, "modding:obstacle_avoidance", 1)
-        else
-            -- Check for attacker
-            local attacker = nil
-            for _, obj in ipairs(minetest.get_objects_inside_radius(victim_pos, 5)) do
-                local ent = obj:get_luaentity()
-                if ent and ent.name ~= self.name and ent.name ~= victim_ent.name then
-                    attacker = obj
-                    break
-                end
+        for _, obj in ipairs(minetest.get_objects_inside_radius(victim_pos, 5)) do
+            if obj:is_player() and obj:get_player_name() ~= self.owner then
+                attacker = obj
+                break
             end
+        end
 
-            -- 50/50 chance to attack or rescue
-            if attacker and math.random() < 0.5 then
-                -- Fight the attacker
-                _self:animate("rear")
-                minetest.after(1, function()
-                    if _self.object:get_pos() then
-                        pegasus_breathe_fire(_self, attacker:get_pos())
+        if attacker then
+            _self:animate("rear")
+            
+            local function breathe_fire()
+                if _self.object:get_pos() and attacker:get_pos() then
+                    local attacker_pos = attacker:get_pos()
+                    if _self.breathe_fire then
+                        _self:breathe_fire(attacker_pos)
+                    elseif pegasus_breathe_fire then
+                        pegasus_breathe_fire(_self, attacker_pos)
                     end
-                end)
-            else
-                -- Rescue the victim
-                _self:animate("stand")
-                
-                if not victim:get_attach() then
-                    -- Save original properties
-                    original_properties = victim:get_properties()
                     
-                    -- Shrink the victim
-                    local new_visual_size = {
-                        x = original_properties.visual_size.x * 0.1,
-                        y = original_properties.visual_size.y * 0.1
-                    }
-                    local new_collisionbox = {
-                        original_properties.collisionbox[1] * 0.1,
-                        original_properties.collisionbox[2] * 0.1,
-                        original_properties.collisionbox[3] * 0.1,
-                        original_properties.collisionbox[4] * 0.1,
-                        original_properties.collisionbox[5] * 0.1,
-                        original_properties.collisionbox[6] * 0.1
-                    }
-                    
-                    victim:set_properties({
-                        visual_size = new_visual_size,
-                        collisionbox = new_collisionbox,
-                        automatic_rotate = 0
-                    })
-                    
-                    victim:set_attach(_self.object, "", {x=0, y=1.5, z=-0.5}, {x=0, y=0, z=0})
-                    victim:set_velocity({x=0, y=0, z=0})
-                end
-                
-                -- Fly away with the victim (faster)
-                local escape_pos = vector.add(self_pos, {
-                    x = math.random(-100, 100),
-                    y = math.random(50, 100),
-                    z = math.random(-100, 100)
-                })
-                _self:animate("run")
-                _self:move_to(escape_pos, "pegasus:run", 2)
-                
-                if vector.distance(_self.object:get_pos(), escape_pos) < 5 then
-                    -- We've escaped, detach the victim and restore its original properties
-                    victim:set_detach()
-                    victim:set_properties(original_properties)
-                    victim:set_velocity({x=0, y=0, z=0})
-                    
-                    return true
+                    if _self.fire_breath_count and _self.fire_breath_count < 5 then
+                        _self.fire_breath_count = _self.fire_breath_count + 1
+                        minetest.after(1, breathe_fire)
+                    else
+                        _self.fire_breath_count = nil
+                        minetest.after(1, function()
+                            _self:animate("stand")
+                            return true
+                        end)
+                    end
                 end
             end
+
+            _self.fire_breath_count = 1
+            minetest.after(1, breathe_fire)
+        else
+            _self:animate("stand")
+            return true
         end
     end
     
