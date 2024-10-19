@@ -25,7 +25,9 @@ end
 
 local function grow_nearby_crops(self)
     local pos = self.object:get_pos()
-    if not pos then return end
+    if not pos then
+        return
+    end
 
     local radius = 10  -- Radius around the Pegasus to check for crops
     for x = -radius, radius do
@@ -34,18 +36,20 @@ local function grow_nearby_crops(self)
                 local crop_pos = vector.add(pos, {x=x, y=y, z=z})
                 local node = minetest.get_node(crop_pos)
                 
-                -- List of crops and their growth stages
-                local crops = {
-					["farming:seed_wheat"] = "farming:wheat_8",
-                    ["farming:wheat_1"] = "farming:wheat_8",
-                    ["farming:wheat_2"] = "farming:wheat_8",
-                    ["farming:wheat_3"] = "farming:wheat_8",
-                    ["farming:wheat_4"] = "farming:wheat_8",
-                    ["farming:wheat_5"] = "farming:wheat_8",
-                    ["farming:wheat_6"] = "farming:wheat_8",
-                    ["farming:wheat_7"] = "farming:wheat_8",
-                    -- Add more crops as needed
-                }
+
+                -- Simplified crop growth logic
+                if node.name:find("farming:wheat_") and node.name ~= "farming:wheat_8" then
+                    local new_stage = tonumber(node.name:sub(-1)) + 1
+                    if new_stage > 8 then new_stage = 8 end
+                    local new_node_name = "farming:wheat_" .. new_stage
+                    minetest.set_node(crop_pos, {name = new_node_name})
+				end
+				if node.name:find("farming:cotton_") and node.name ~= "farming:cotton_8" then
+                    local new_stage = tonumber(node.name:sub(-1)) + 1
+                    if new_stage > 8 then new_stage = 8 end
+                    local new_node_name = "farming:cotton_" .. new_stage
+                    minetest.set_node(crop_pos, {name = new_node_name})
+				end
             end
         end
     end
