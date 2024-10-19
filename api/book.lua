@@ -18,6 +18,7 @@ end
 -- Define text elements with positions and sizes
 local text_elements = {
     {filename = "pegasus_intro.txt", x = 0.5, y = 1, w = 11, h = 20, page = 1},
+    {filename = "pegasus_wtd_interaction.txt", x = 0.5, y = 1, w = 11, h = 20, page = 2},
 }
 
 local image_elements = {
@@ -125,10 +126,6 @@ local function get_book_formspec()
     return table.concat(formspec, "")
 end
 
-local function show_book_formspec(player)
-    minetest.show_formspec(player:get_player_name(), "pegasus:book", get_book_formspec())
-end
-
 local animation_timer = 0
 minetest.register_globalstep(function(dtime)
     animation_timer = animation_timer + dtime
@@ -147,13 +144,45 @@ minetest.register_globalstep(function(dtime)
     end
 end)
 
+local book_open = {}
+
+local function update_animations()
+    if current_page == 1 then
+        current_animation = current_animation % #animations + 1
+    else
+        current_waterdragon_animation = current_waterdragon_animation % #waterdragon_animations + 1
+    end
+end
+
+function show_book_formspec(player)
+    local player_name = player:get_player_name()
+    if book_open[player_name] then
+        minetest.show_formspec(player_name, "pegasus:book", get_book_formspec())
+    end
+end
+
+minetest.register_globalstep(function(dtime)
+    animation_timer = animation_timer + dtime
+    if animation_timer >= 3 then
+        animation_timer = 0
+        update_animations()
+        for _, player in ipairs(minetest.get_connected_players()) do
+            if book_open[player:get_player_name()] then
+                show_book_formspec(player)
+            end
+        end
+    end
+end)
+
 minetest.register_craftitem("pegasus:book_pegasus", {
     description = S("Book of Pegasus"),
     inventory_image = "pegasus_book_pegasus.png",
     stack_max = 1,
     on_use = function(itemstack, user, pointed_thing)
+        local player_name = user:get_player_name()
+        book_open[player_name] = true
         current_animation = 1
-        animation_timer = 0
+        current_waterdragon_animation = 1
         show_book_formspec(user)
         return itemstack
     end
@@ -161,11 +190,11 @@ minetest.register_craftitem("pegasus:book_pegasus", {
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
     if formname == "pegasus:book" then
+        local player_name = player:get_player_name()
         if fields.quit then
-            -- Book closed, stop updating for this player
+            book_open[player_name] = nil
         elseif fields.btn_next then
             current_page = math.min(current_page + 1, total_pages)
-            -- Reset animation index when changing page
             if current_page == 1 then
                 current_animation = 1
             else
@@ -174,7 +203,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
             show_book_formspec(player)
         elseif fields.btn_prev then
             current_page = math.max(current_page - 1, 1)
-            -- Reset animation index when changing page
             if current_page == 1 then
                 current_animation = 1
             else
@@ -183,4 +211,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
             show_book_formspec(player)
         end
     end
+end)
+
+minetest.register_on_leaveplayer(function(player)
+    book_open[player:get_player_name()] = nil
 end)
