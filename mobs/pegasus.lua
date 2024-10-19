@@ -107,7 +107,7 @@ local function get_form(self, player_name)
 		"formspec_version[3]",
 		"size[10.5,10.5]",
 		"image[0,0;10.5,5.25;pegasus_form_pegasus_bg.png]",
-		"model[0,0.5;5,3.5;mob_mesh;pegasus_pegasus.b3d;" .. texture .. ";-10,-130;false;false;" .. frame_loop .. ";15]",
+		"model[0,0.5;5,3.5;mob_mesh;pegasus_pegasus.b3d;" .. texture .. ";-10,-130;false;true;" .. frame_loop .. ";15]",
 		"list[detached:pegasus:pegasus_" .. player_name .. ";main;5.4,0.5;4,3;]",
 		"list[current_player;main;0.4,5.4;8,4;]",
 		"listring[current_player;main]",
