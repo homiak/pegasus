@@ -153,15 +153,5 @@ minetest.register_on_mods_loaded(function()
 	end
 end)
 
-local convert_mobs_redo = minetest.settings:get_bool("convert_redo_items", false)
 
-if convert_mobs_redo then
-	minetest.register_alias_force("mobs:leather", "pegasus:leather")
-	minetest.register_alias_force("mobs:meat_raw", "pegasus:beef_raw")
-	minetest.register_alias_force("mobs:meat", "pegasus:beef_cooked")
-	minetest.register_alias_force("mobs:lasso", "pegasus:lasso")
-	minetest.register_alias_force("mobs:net", "pegasus:net")
-	minetest.register_alias_force("mobs:saddles", "pegasus:saddles")
-	minetest.register_alias_force("mobs:nametag", "pegasus:nametag")
-end
 
