@@ -6,82 +6,49 @@ local random = math.random
 
 -- Glowing in the night
 
-local light_blocks = {}
-
-function pegasus.register_node(name, def)
-    minetest.register_node(name, def)
+local function is_night()
+    local time = minetest.get_timeofday()
+    return time < 0.2 or time > 0.8
 end
 
-pegasus.register_node("pegasus:light_source", {
-    description = "Light Source (from Pegasus mod)",
-    drawtype = "airlike",
-    paramtype = "light",
-    sunlight_propagates = true,
-    walkable = false,
-    pointable = false,
-    diggable = false,
-    buildable_to = true,
-    drop = "",
-    light_source = 14,
-    groups = {not_in_creative_inventory = 1},
-})
-
-local function set_node_light(pos, light_level)
-    local node = minetest.get_node(pos)
-    if node.name == "air" then
-        minetest.set_node(pos, {name = "pegasus:light_source", param2 = light_level})
-        table.insert(light_blocks, pos)
-    elseif node.name == "pegasus:light_source" then
-        minetest.set_node(pos, {name = "pegasus:light_source", param2 = light_level})
-    end
-end
-
-local function remove_light_blocks(keep_radius, center_pos)
-    local new_light_blocks = {}
-    for _, pos in ipairs(light_blocks) do
-        if vector.distance(center_pos, pos) > keep_radius then
-            local node = minetest.get_node(pos)
-            if node.name == "pegasus:light_source" then
-                minetest.set_node(pos, {name = "air"})
-            end
-        else
-            table.insert(new_light_blocks, pos)
-        end
-    end
-    light_blocks = new_light_blocks
-end
-
-local function update_pegasus_lighting(dragon, is_night)
-    local pos = dragon.object:get_pos()
-    local radius = 5
-    local light_level = is_night and 14 or 0
-
-    for x = -radius, radius do
-        for y = -radius, radius do
-            for z = -radius, radius do
-                local block_pos = {x = math.floor(pos.x + x), y = math.floor(pos.y + y), z = math.floor(pos.z + z)}
-                if vector.distance(pos, block_pos) <= radius then
-                    set_node_light(block_pos, light_level)
-                end
-            end
-        end
-    end
-
-    remove_light_blocks(radius, pos)
-end
-
-local function on_pegasus_step(self, dtime)
-    local time_of_day = minetest.get_timeofday()
-    local is_night = time_of_day >= 0.5 and time_of_day < 1
-
-    if is_night then
-        self.object:set_properties({glow = 14})
+local function set_glowing_eyes(self)
+    local props = self.object:get_properties()
+    if is_night() then
+        props.glow = 14
     else
-        self.object:set_properties({glow = 7})
+        props.glow = 0
     end
+    self.object:set_properties(props)
+end
 
-    update_pegasus_lighting(self, is_night)
-    
+-- Grow crops --
+
+local function grow_nearby_crops(self)
+    local pos = self.object:get_pos()
+    if not pos then return end
+
+    local radius = 10  -- Radius around the Pegasus to check for crops
+    for x = -radius, radius do
+        for y = -1, 1 do  -- Check one block below and above
+            for z = -radius, radius do
+                local crop_pos = vector.add(pos, {x=x, y=y, z=z})
+                local node = minetest.get_node(crop_pos)
+                
+                -- List of crops and their growth stages
+                local crops = {
+					["farming:seed_wheat"] = "farming:wheat_8",
+                    ["farming:wheat_1"] = "farming:wheat_8",
+                    ["farming:wheat_2"] = "farming:wheat_8",
+                    ["farming:wheat_3"] = "farming:wheat_8",
+                    ["farming:wheat_4"] = "farming:wheat_8",
+                    ["farming:wheat_5"] = "farming:wheat_8",
+                    ["farming:wheat_6"] = "farming:wheat_8",
+                    ["farming:wheat_7"] = "farming:wheat_8",
+                    -- Add more crops as needed
+                }
+            end
+        end
+    end
 end
 
 -- Pegasus Inventory
@@ -435,6 +402,7 @@ modding.register_mob("pegasus:pegasus", {
 		pegasus.initialize_lasso(self)
 		pegasus.eat_dropped_item(self, item)
 		set_pattern(self)
+		set_glowing_eyes(self)
 
 		self.owner = self:recall("owner") or nil
 
@@ -457,13 +425,16 @@ modding.register_mob("pegasus:pegasus", {
 	end,
 
 	step_func = function(self)
-		on_pegasus_step(self, dtime)
 		pegasus.step_timers(self)
 		pegasus.head_tracking(self)
 		pegasus.do_growth(self, 60)
 		pegasus.update_lasso_effects(self)
 		pegasus.random_sound(self)
 		pegasus.eat_dropped_item(self, item)
+		if self:timer(2) then  -- Check every 2 seconds to reduce performance impact
+			grow_nearby_crops(self)
+		end
+		set_glowing_eyes(self)
 		if self.rider then
 			-- If there's a rider, prioritize the riding utility
 			if self:get_utility() ~= "pegasus:pegasus_ride" then
