@@ -12,7 +12,7 @@ end
 
 -- Define text elements with positions and sizes
 local text_elements = {
-    {filename = "pegasus_intro.txt", x = 0.5, y = 1, w = 11, h = 2},
+    {filename = "pegasus_intro.txt", x = 0.5, y = 1, w = 11, h = 20},
     {filename = "characteristics.txt", x = 0.5, y = 3.5, w = 5.5, h = 3},
     {filename = "interaction.txt", x = 6, y = 3.5, w = 5.5, h = 4},
 }
@@ -26,8 +26,8 @@ local image_elements = {
 local function get_book_formspec()
     local formspec = {
         "formspec_version[4]",
-        "size[12,10]",
-        "background[-0.7,-0.5;13.5,11.5;pegasus_book_bg.png]",
+        "size[16,10]",
+        "background[-0.7,-0.5;17.5,11.5;pegasus_book_bg.png]",
         "label[0.5,0.5;Book of Pegasus]",
     }
 
