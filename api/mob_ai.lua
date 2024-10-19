@@ -749,29 +749,13 @@ modding.register_utility("pegasus:die", function(self)
 	self:set_utility(func)
 end)
 
--- Basic --
 
-modding.register_utility("pegasus:basic_idle", function(self, timeout, anim)
-	local timer = timeout or 1
-	local init = false
-	local function func(mob)
-		if not init then
-			modding.action_idle(mob, timeout, anim)
-		end
-		timer = timer - mob.dtime
-		if timer <= 0 then
-			return true
-		end
-	end
-	self:set_utility(func)
-end)
 
 modding.register_utility("pegasus:basic_wander", function(self)
 	local idle_max = 4
 	local move_chance = 3
 	local graze_chance = 16
 
-	--local iter = 1
 	local range = self.tracking_range
 
 	local center
@@ -779,7 +763,6 @@ modding.register_utility("pegasus:basic_wander", function(self)
 		local pos = mob.stand_pos
 
 		if mob:timer(2) then
-			--iter = iter < 3 and iter + 1 or 1 -- Iterate to 3, then reset to 1
 
 			-- Grazing Behavior
 			if mob.is_grazing_mob
@@ -826,91 +809,6 @@ modding.register_utility("pegasus:basic_wander", function(self)
 			else
 				modding.action_idle(mob, random(idle_max), "stand")
 			end
-		end
-	end
-	self:set_utility(func)
-end)
-
-modding.register_utility("pegasus:basic_seek_pos", function(self, pos2, timeout)
-	timeout = timeout or 3
-	local function func(mob)
-		local pos = mob.object:get_pos()
-		if not pos or not pos2 then return true end
-
-		if not mob:get_action() then
-			local anim = (mob.animations["run"] and "run") or "walk"
-			pegasus.action_walk(mob, 1, 1, anim, pos2)
-		end
-
-		timeout = timeout - mob.dtime
-		if timeout <= 0 then
-			return true
-		end
-	end
-	self:set_utility(func)
-end)
-
-modding.register_utility("pegasus:basic_seek_food", function(self)
-	local timeout = 3
-
-	local food = pegasus.get_dropped_food(self)
-	local food_reached = false
-	local function func(mob)
-		local pos = mob.object:get_pos()
-		local food_pos = food and food:get_pos()
-		if not pos or not food_pos then return true, 10 end
-
-		local dist = vec_dist(pos, food_pos)
-		if dist < mob.width + 0.5
-			and not food_reached then
-			food_reached = true
-
-			local anim = (mob.animations["eat"] and "eat") or "stand"
-			modding.action_idle(mob, 1, anim)
-			pegasus.eat_dropped_item(mob, food)
-		end
-
-		if not mob:get_action() then
-			if food_reached then return true, 10 end
-			local anim = (mob.animations["run"] and "run") or "walk"
-			pegasus.action_walk(mob, 1, 1, anim, food_pos)
-		end
-
-		timeout = timeout - mob.dtime
-		if timeout <= 0 then
-			return true
-		end
-	end
-	self:set_utility(func)
-end)
-
-modding.register_utility("pegasus:basic_seek_crop", function(self)
-	local timeout = 12
-
-	local crop = pegasus.find_crop(self)
-	local crop_reached = false
-	local function func(mob)
-		local pos = mob.object:get_pos()
-		if not pos or not crop then return true, 30 end
-
-		local dist = vec_dist(pos, crop)
-		if dist < mob.width + 0.5
-			and not crop_reached then
-			crop_reached = true
-
-			local anim = (mob.animations["eat"] and "eat") or "stand"
-			modding.action_idle(mob, 1, anim)
-			pegasus.eat_crop(mob, crop)
-		end
-
-		if not mob:get_action() then
-			if crop_reached then return true, 10 end
-			pegasus.action_walk(mob, 2, 0.5, "walk", crop)
-		end
-
-		timeout = timeout - mob.dtime
-		if timeout <= 0 then
-			return true
 		end
 	end
 	self:set_utility(func)
@@ -1525,86 +1423,6 @@ modding.register_utility("pegasus:eagle_attack", function(self, target)
 	self:set_utility(func)
 end)
 
-
--- Opossum
-
-local function grow_crop(crop)
-	local crop_name = minetest.get_node(crop).name
-	local growth_stage = tonumber(crop_name:sub(-1)) or 1
-	local new_name = crop_name:sub(1, #crop_name - 1) .. (growth_stage + 1)
-	local new_def = minetest.registered_nodes[new_name]
-
-	if new_def then
-		local p2 = new_def.place_param2 or 1
-		minetest.set_node(crop, { name = new_name, param2 = p2 })
-	end
-end
-
-modding.register_utility("pegasus:opossum_seek_crop", function(self)
-	local timeout = 12
-
-	local crop = pegasus.find_crop(self)
-	local crop_reached = false
-	local function func(mob)
-		local pos = mob.object:get_pos()
-		if not pos or not crop then return true, 30 end
-
-		local dist = vec_dist(pos, crop)
-		if dist < mob.width + 0.5
-			and not crop_reached then
-			crop_reached = true
-
-			modding.action_idle(mob, 1, "clean_crop")
-			grow_crop(crop)
-		end
-
-		if not mob:get_action() then
-			if crop_reached then return true, 10 end
-			pegasus.action_walk(mob, 2, 0.5, "walk", crop)
-		end
-
-		timeout = timeout - mob.dtime
-		if timeout <= 0 then
-			return true
-		end
-	end
-	self:set_utility(func)
-end)
-
--- Tamed --
-
-modding.register_utility("pegasus:tamed_idle", function(self)
-	local function func(mob)
-		if not mob.owner or mob.order ~= "stay" then return true end
-
-		if not mob:get_action() then
-			modding.action_idle(mob, 1)
-		end
-	end
-	self:set_utility(func)
-end)
-
-modding.register_utility("pegasus:tamed_follow_owner", function(self, player)
-	local function func(mob)
-		local owner = player or (mob.owner and minetest.get_player_by_name(mob.owner))
-		if not owner then return true end
-
-		local pos, target_pos = mob.object:get_pos(), owner:get_pos()
-		if not pos or not target_pos then return true end
-
-		if not mob:get_action() then
-			local dist = vec_dist(pos, target_pos)
-
-			if dist > mob.width + 1 then
-				pegasus.action_pursue(mob, owner)
-			else
-				modding.action_idle(mob, 1)
-			end
-		end
-	end
-	self:set_utility(func)
-end)
-
 ------------
 -- Mob AI --
 -------------
@@ -1647,27 +1465,6 @@ pegasus.mob_ai.basic_attack = {
 	utility = "pegasus:basic_attack",
 	get_score = function(self)
 		return pegasus.get_attack_score(self, self.attack_list)
-	end
-}
-
-pegasus.mob_ai.basic_seek_crop = {
-	utility = "pegasus:basic_seek_crop",
-	step_delay = 0.25,
-	get_score = function(self)
-		if random(8) < 2 then
-			return 0.2, { self }
-		end
-		return 0
-	end
-}
-
-pegasus.mob_ai.basic_seek_food = {
-	utility = "pegasus:basic_seek_food",
-	get_score = function(self)
-		if random(1) < 8 then
-			return 0.3, { self }
-		end
-		return 0
 	end
 }
 
@@ -1742,35 +1539,4 @@ pegasus.mob_ai.swim_wander = {
 	end
 }
 
--- Tamed
 
-pegasus.mob_ai.tamed_follow_owner = {
-	utility = "pegasus:tamed_follow_owner",
-	get_score = function(self)
-		if self.owner
-			and self.order == "follow" then
-			return 0.4, { self }
-		end
-
-		local lasso_holder = type(self._lassod_to) == "string" and minetest.get_player_by_name(self._lassod_to)
-		local player = lasso_holder or modding.get_nearby_player(self)
-
-		if lasso_holder
-			or self:follow_wielded_item(player) then
-			return 0.4, { self, player }
-		end
-		return 0
-	end
-}
-
-pegasus.mob_ai.tamed_stay = {
-	utility = "pegasus:basic_idle",
-	step_delay = 0.25,
-	get_score = function(self)
-		local order = self.order or "wander"
-		if order == "sit" then
-			return 0.5, { self }
-		end
-		return 0
-	end
-}

@@ -315,7 +315,6 @@ modding.register_mob("pegasus:pegasus", {
 	utility_stack = {
 		pegasus.mob_ai.basic_wander,
 		pegasus.mob_ai.swim_seek_land,
-		pegasus.mob_ai.tamed_follow_owner,
 		pegasus.mob_ai.basic_breed,
 		pegasus.mob_ai.basic_flee,
 		{
