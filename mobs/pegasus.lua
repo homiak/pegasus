@@ -384,37 +384,45 @@ modding.register_mob("pegasus:pegasus", {
 		pegasus.update_lasso_effects(self)
 		pegasus.random_sound(self)
 		pegasus.eat_dropped_item(self, item)
-		if self.mode == "follow" and self.owner then
-            local owner = minetest.get_player_by_name(self.owner)
-			local max_chase_distance = 20
-			
-            if owner then
-                local owner_pos = owner:get_pos()
-                local self_pos = self.object:get_pos()
-                if self_pos and owner_pos then
-                    local distance = vector.distance(self_pos, owner_pos)
-                    if distance > 3 then
-                        self:animate("run")
-                        self:move_to(owner_pos, "modding:obstacle_avoidance", 1)
-                    else
-                        self:animate("stand")
-                        self.object:set_velocity({x=0, y=0, z=0})
-                    end
-                end
-            end
-        elseif self.mode == "stay" then
-            self:animate("stand")
-            self.object:set_velocity({x=0, y=0, z=0})
-            if self:get_utility() then
-                self:set_utility(nil)
-            end
-            -- Prevent rotation in stay mode
-            self.object:set_yaw(self.object:get_yaw())
-        elseif self.mode == "wander" then
-            if not self:get_utility() then
-                self:initiate_utility("pegasus:basic_wander", self)
-            end
-        end
+		if self.rider then
+			-- If there's a rider, prioritize the riding utility
+			if self:get_utility() ~= "pegasus:pegasus_ride" then
+				self:initiate_utility("pegasus:pegasus_ride", self, self.rider)
+			end
+		else
+			-- If there's no rider, execute mode-specific behavior
+			if self.mode == "follow" and self.owner then
+				local owner = minetest.get_player_by_name(self.owner)
+				local max_chase_distance = 20
+				
+				if owner then
+					local owner_pos = owner:get_pos()
+					local self_pos = self.object:get_pos()
+					if self_pos and owner_pos then
+						local distance = vector.distance(self_pos, owner_pos)
+						if distance > 3 then
+							self:animate("run")
+							self:move_to(owner_pos, "modding:obstacle_avoidance", 1)
+						else
+							self:animate("stand")
+							self.object:set_velocity({x=0, y=0, z=0})
+						end
+					end
+				end
+			elseif self.mode == "stay" then
+				self:animate("stand")
+				self.object:set_velocity({x=0, y=0, z=0})
+				if self:get_utility() then
+					self:set_utility(nil)
+				end
+				self.object:set_yaw(self.object:get_yaw())
+			elseif self.mode == "wander" then
+				if not self:get_utility() then
+					self:initiate_utility("pegasus:basic_wander", self)
+				end
+			end
+		end
+		-- Danger
 		local danger = check_for_danger(self)
     if danger and not self.fire_breathing and self:timer(1) then
         local danger_pos = danger:get_pos()
