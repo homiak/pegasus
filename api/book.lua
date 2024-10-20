@@ -63,24 +63,27 @@ local function get_book_formspec()
         "label[0.5,0.5;Book of Pegasus]",
     }
     
-    if current_page == 1 then
-        -- Content for the first page
-        for _, element in ipairs(text_elements) do
+    -- Iterate over the text elements and only render the ones for the current page
+    for _, element in ipairs(text_elements) do
+        if element.page == current_page then  -- Check if this text element is for the current page
             local content = load_text(element.filename)
             table.insert(formspec, string.format(
                 "textarea[%f,%f;%f,%f;;%s;]",
                 element.x, element.y, element.w, element.h, minetest.formspec_escape(content)
             ))
         end
-        
-        for _, element in ipairs(image_elements) do
-            table.insert(formspec, string.format(
-                "image[%f,%f;%f,%f;%s]",
-                element.x, element.y, element.w, element.h, element.filename
-            ))
-        end
+    end
+    
+    -- Iterate over image elements (no page filtering necessary since they are not linked to specific pages)
+    for _, element in ipairs(image_elements) do
+        table.insert(formspec, string.format(
+            "image[%f,%f;%f,%f;%s]",
+            element.x, element.y, element.w, element.h, element.filename
+        ))
+    end
 
-        -- Add Pegasus model with current animation
+    -- Add Pegasus model with current animation on page 1
+    if current_page == 1 then
         local texture = "pegasus.png"
         local anim = animations[current_animation]
         local frame_loop = anim.range.x .. "," .. anim.range.y
@@ -94,16 +97,17 @@ local function get_book_formspec()
             "label[8,0.5;Current Animation: %s]", anim.name
         ))
     elseif current_page == 2 then
-            local waterdragon_texture = "waterdragon_rare_water_dragon.png^waterdragon_baked_in_shading.png"
-            local waterdragon_anim = waterdragon_animations[current_waterdragon_animation]
-            local waterdragon_frame_loop = waterdragon_anim.range.x .. "," .. waterdragon_anim.range.y
-            table.insert(formspec, string.format(
-                "model[8,1.75;7,6.5;mob_mesh;waterdragon_water_dragon.b3d;%s;-10,-130;false;true;%s;%d]",
-                waterdragon_texture, waterdragon_frame_loop, waterdragon_anim.speed
-            ))
-            table.insert(formspec, string.format(
-                "label[8,0.5;Water Dragon Animation: %s]", waterdragon_anim.name
-            ))
+        -- Water Dragon model and animation for page 2
+        local waterdragon_texture = "waterdragon_rare_water_dragon.png^waterdragon_baked_in_shading.png"
+        local waterdragon_anim = waterdragon_animations[current_waterdragon_animation]
+        local waterdragon_frame_loop = waterdragon_anim.range.x .. "," .. waterdragon_anim.range.y
+        table.insert(formspec, string.format(
+            "model[8,1.75;7,6.5;mob_mesh;waterdragon_water_dragon.b3d;%s;-10,-130;false;true;%s;%d]",
+            waterdragon_texture, waterdragon_frame_loop, waterdragon_anim.speed
+        ))
+        table.insert(formspec, string.format(
+            "label[8,0.5;Water Dragon Animation: %s]", waterdragon_anim.name
+        ))
     end
     
     -- Add navigation buttons
@@ -120,6 +124,7 @@ local function get_book_formspec()
     
     return table.concat(formspec, "")
 end
+
 
 local animation_timer = 0
 minetest.register_globalstep(function(dtime)
