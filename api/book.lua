@@ -10,11 +10,6 @@ local function load_text(filename)
     return content
 end
 
-local function update_animations()
-    current_pegasus_animation = current_pegasus_animation % #animations + 1
-    current_waterdragon_animation = current_waterdragon_animation % #waterdragon_animations + 1
-end
-
 -- Define text elements with positions and sizes
 local text_elements = {
     {filename = "pegasus_intro.txt", x = 0.5, y = 1, w = 11, h = 20, page = 1},

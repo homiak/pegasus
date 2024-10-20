@@ -439,7 +439,13 @@ modding.register_mob("pegasus:pegasus", {
 			grow_nearby_crops(self)
 		end
 		set_glowing_eyes(self)
-		if self.rider then
+		if self.rider and not self.owner then
+			-- If there's a rider, prioritize the riding utility
+			if self:get_utility() ~= "pegasus:tame" then
+				self:initiate_utility("pegasus:tame", self, self.rider)
+			end
+		end
+		if self.rider and self.owner then
 			-- If there's a rider, prioritize the riding utility
 			if self:get_utility() ~= "pegasus:pegasus_ride" then
 				self:initiate_utility("pegasus:pegasus_ride", self, self.rider)
@@ -448,8 +454,6 @@ modding.register_mob("pegasus:pegasus", {
 			-- If there's no rider, execute mode-specific behavior
 			if self.mode == "follow" and self.owner then
 				local owner = minetest.get_player_by_name(self.owner)
-				local max_chase_distance = 20
-				
 				if owner then
 					local owner_pos = owner:get_pos()
 					local self_pos = self.object:get_pos()
@@ -475,6 +479,12 @@ modding.register_mob("pegasus:pegasus", {
 				if not self:get_utility() then
 					self:initiate_utility("pegasus:basic_wander", self)
 				end
+			end
+		end
+		if self.rider and not self.owner then
+			-- If there's a rider, prioritize the riding utility
+			if self:get_utility() ~= "pegasus:tame" then
+				self:initiate_utility("pegasus:tame", self, self.rider)
 			end
 		end
 		-- Danger
