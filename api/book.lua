@@ -61,6 +61,7 @@ local function get_book_formspec()
         "size[16,10]",
         "background[-0.7,-0.5;17.5,11.5;pegasus_book_bg.png]",
         "label[0.5,0.5;Book of Pegasus]",
+        "style_type[label,textarea;textcolor=#34495e]",
     }
     
     -- Iterate over the text elements and only render the ones for the current page
@@ -94,7 +95,7 @@ local function get_book_formspec()
 
         -- Add label to show current animation name at the top
         table.insert(formspec, string.format(
-            "label[8,0.5;Current Animation: %s]", anim.name
+            "label[8,0.7;Current Animation: %s]", anim.name
         ))
     elseif current_page == 2 then
         -- Water Dragon model and animation for page 2
@@ -106,7 +107,7 @@ local function get_book_formspec()
             waterdragon_texture, waterdragon_frame_loop, waterdragon_anim.speed
         ))
         table.insert(formspec, string.format(
-            "label[8,0.5;Water Dragon Animation: %s]", waterdragon_anim.name
+            "label[7,0.7;Water Dragon Animation: %s]", waterdragon_anim.name
         ))
     end
     
@@ -215,4 +216,5 @@ end)
 
 minetest.register_on_leaveplayer(function(player)
     book_open[player:get_player_name()] = nil
-end)
+end)        
+
