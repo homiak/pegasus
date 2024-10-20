@@ -95,7 +95,7 @@ local function get_book_formspec()
 
         -- Add label to show current animation name at the top
         table.insert(formspec, string.format(
-            "label[8,0.7;Current Animation: %s]", anim.name
+            "label[10.5,0.7;Current Animation: %s]", anim.name
         ))
     elseif current_page == 2 then
         -- Water Dragon model and animation for page 2
@@ -107,7 +107,7 @@ local function get_book_formspec()
             waterdragon_texture, waterdragon_frame_loop, waterdragon_anim.speed
         ))
         table.insert(formspec, string.format(
-            "label[7,0.7;Water Dragon Animation: %s]", waterdragon_anim.name
+            "label[10,0.7;Water Dragon Animation: %s]", waterdragon_anim.name
         ))
     end
     
@@ -119,7 +119,7 @@ local function get_book_formspec()
     end
     if current_page > 1 then
         table.insert(formspec, string.format(
-            "image_button[0,9;1,1;pegasus_book_icon_prev.png;btn_prev;;true;false;]"
+            "image_button[0,9;1,1;pegasus_book_icon_last.png;btn_prev;;true;false;]"
         ))
     end
     
@@ -130,7 +130,7 @@ end
 local animation_timer = 0
 minetest.register_globalstep(function(dtime)
     animation_timer = animation_timer + dtime
-    if animation_timer >= 3 then  -- Change animation every 3 seconds
+    if animation_timer >= 5 then  -- Change animation every 5 seconds
         animation_timer = 0
         if current_page == 1 then
             current_animation = current_animation % #animations + 1
@@ -164,7 +164,7 @@ end
 
 minetest.register_globalstep(function(dtime)
     animation_timer = animation_timer + dtime
-    if animation_timer >= 3 then
+    if animation_timer >= 5 then
         animation_timer = 0
         update_animations()
         for _, player in ipairs(minetest.get_connected_players()) do
