@@ -576,7 +576,7 @@ modding.register_mob("pegasus:pegasus", {
         self.needs_rescue = true
 
         local pos = self.object:get_pos()
-        local nearby_objects = minetest.get_objects_inside_radius(pos, 20)
+        local nearby_objects = minetest.get_objects_inside_radius(pos, 50)
 
         for _, obj in ipairs(nearby_objects) do
             if is_waterdragon_entity(obj) then
