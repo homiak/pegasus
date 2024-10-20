@@ -570,7 +570,24 @@ modding.register_mob("pegasus:pegasus", {
 			return
 		end
 		pegasus.punch(self, puncher, ...)
-	end,
+		self.attack_count = (self.attack_count or 0) + 1
+
+    if self.attack_count >= 3 then
+        self.needs_rescue = true
+
+        local pos = self.object:get_pos()
+        local nearby_objects = minetest.get_objects_inside_radius(pos, 20)
+
+        for _, obj in ipairs(nearby_objects) do
+            if is_waterdragon_entity(obj) then
+                rescue_pegasus(obj, self)
+                break
+            end
+        end
+
+    end
+
+		end,
 
 	on_detach_child = function(self, child)
 		if child
@@ -719,3 +736,10 @@ modding.register_utility("pegasus:rescue_animal", function(self, victim, victim_
     
     self:set_utility(rescue_func)
 end)
+
+function is_waterdragon_entity(obj)
+    local entity = obj:get_luaentity()
+    return entity and entity.name and entity.name:find("^waterdragon:") ~= nil
+end
+
+
