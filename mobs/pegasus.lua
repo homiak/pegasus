@@ -441,8 +441,8 @@ modding.register_mob("pegasus:pegasus", {
 		set_glowing_eyes(self)
 		if self.rider and not self.owner then
 			-- If there's a rider, prioritize the riding utility
-			if self:get_utility() ~= "pegasus:tame" then
-				self:initiate_utility("pegasus:tame", self, self.rider)
+			if self:get_utility() ~= "pegasus:pegasus_tame" then
+				self:initiate_utility("pegasus:pegasus_tame", self, self.rider)
 			end
 		end
 		if self.rider and self.owner then
@@ -483,8 +483,8 @@ modding.register_mob("pegasus:pegasus", {
 		end
 		if self.rider and not self.owner then
 			-- If there's a rider, prioritize the riding utility
-			if self:get_utility() ~= "pegasus:tame" then
-				self:initiate_utility("pegasus:tame", self, self.rider)
+			if self:get_utility() ~= "pegasus:pegasus_tame" then
+				self:initiate_utility("pegasus:pegasus_tame", self, self.rider)
 			end
 		end
 		-- Danger
