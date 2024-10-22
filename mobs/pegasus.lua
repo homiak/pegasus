@@ -4,6 +4,46 @@
 
 local random = math.random
 
+-- Break blocks
+
+local function break_collision_blocks(self)
+    local pos = self.object:get_pos()
+    if not pos then return end
+    
+    -- Check blocks only at body level and in front
+    local yaw = self.object:get_yaw()
+    local dir_x = -math.sin(yaw)
+    local dir_z = math.cos(yaw)
+    
+    -- Check position slightly in front of pegasus
+    local front_pos = {
+        x = math.floor(pos.x + 1),
+        y = math.floor(pos.y + 1), -- At body level
+        z = math.floor(pos.z + 1)
+    }
+    
+    -- Check position at head level
+    local head_pos = {
+        x = math.floor(pos.x + 1),
+        y = math.floor(pos.y + 2), -- At head level
+        z = math.floor(pos.z + 1)
+    }
+    
+    -- Break only if actually colliding
+    local vel = self.object:get_velocity()
+    if math.abs(vel.x) > 0.1 or math.abs(vel.z) > 0.1 then
+        for _, check_pos in ipairs({front_pos, head_pos}) do
+            local node = minetest.get_node(check_pos)
+            if node.name ~= "air" and 
+               node.name ~= "ignore" and 
+               node.name ~= "default:bedrock" then
+                minetest.set_node(check_pos, {name="air"})
+            end
+        end
+    end
+end
+
+
 -- Glowing in the night
 
 local function is_night()
@@ -438,6 +478,7 @@ modding.register_mob("pegasus:pegasus", {
 		if self:timer(2) then  -- Check every 2 seconds to reduce performance impact
 			grow_nearby_crops(self)
 		end
+		break_collision_blocks(self)
 		set_glowing_eyes(self)
 		if self.rider and not self.owner then
 			-- If there's a rider, prioritize the riding utility
