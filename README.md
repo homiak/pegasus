@@ -8,7 +8,7 @@ The Pegasus Mod allows players to encounter, tame, and fly on majestic winged ho
 
 ## Features
 
-- Pegasi spawn in specific biomes
+- Pegasi spawn in grassland biomes
 - Ability to tame Pegasi
 - Flying on Pegasi
 - Unique sounds and animations for Pegasi
@@ -17,19 +17,20 @@ The Pegasus Mod allows players to encounter, tame, and fly on majestic winged ho
 
 ### From ContentDB
 1. Download the mod archive
-2. Unpack the archive into the mods folder of your Minetest game
+2. Unpack the archive
 3. Copy the mod in the directory "mods" in Minetest
 
 ### From Minetest Mod Menu
 1. Go to all mods
 2. Find "Pegasus"
-3. Turn the mod on
+3. Download the mod
+4. Turn the mod on
 
 ## Usage
 
 - Find a Pegasus in the world
 - Tame it by mounting on it
-- Mount the again pegasus to start flying
+- You can start flying
 
 ## Release log
 
