@@ -154,7 +154,8 @@ local function get_form(self, player_name)
 		"button[1,4.5;2.5,0.8;follow;Follow]",
         "button[3.75,4.5;2.5,0.8;stay;Stay]",
         "button[6.5,4.5;2.5,0.8;wander;Wander]",
-        "button[9.25,4.5;1.75,0.8;fire;Fire]"
+        "button[9.25,4.5;1.75,0.8;fire;Fire]",
+		"button[1,3.5;3.5,0.8;follow_on_dragon;Ride Water Dragon]"
 	}
 
 	return table.concat(form, "")
@@ -707,7 +708,13 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                 minetest.chat_send_player(name, "Pegasus stopped breathing fire.")
             end
         end
+		local ent = obj:get_luaentity()
 
+        if fields.follow_on_dragon then
+            set_pegasus_mode(ent, "follow_on_dragon")
+            ent:initiate_utility("pegasus:follow_rider_on_dragon", ent)
+            minetest.chat_send_player(name, "Pegasus will mount a Water Dragon and follow you")
+        end
 		if fields.quit or fields.key_enter then
 			form_obj[name] = nil
 			serialize_pegasus_inventory(ent)
@@ -793,4 +800,95 @@ function is_waterdragon_entity(obj)
     return entity and entity.name and entity.name:find("^waterdragon:") ~= nil
 end
 
+modding.register_utility("pegasus:follow_rider_on_dragon", function(self)
+    local function find_nearest_dragon(_self)
+        local pos = _self.object:get_pos()
+        if not pos or not _self.owner then return nil end
+        
+        local nearest_dragon = nil
+        local min_distance = 100
+        
+        for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 100)) do
+            local ent = obj:get_luaentity()
+            if ent and ent.name and ent.name:find("waterdragon:") == 1 and not ent.rider then
+                local dragon_pos = obj:get_pos()
+                local distance = vector.distance(pos, dragon_pos)
+                if distance < min_distance then
+                    min_distance = distance
+                    nearest_dragon = obj
+                end
+            end
+        end
+        
+        return nearest_dragon
+    end
 
+    local function follow_owner_on_dragon(_self)
+        if not _self.owner then return true end
+        local owner = minetest.get_player_by_name(_self.owner)
+        if not owner then return true end
+        
+        local target_dragon = find_nearest_dragon(_self)
+        if target_dragon then
+            local dragon_ent = target_dragon:get_luaentity()
+            if dragon_ent then
+                _self.object:set_attach(target_dragon, "", 
+                    {x = 0, y = 25, z = 0},    -- Position offset
+                    {x = 0, y = 0, z = 0}      -- Rotation
+                )
+                
+                dragon_ent.following = owner
+                dragon_ent:initiate_utility("pegasus:follow_with_pegasus", dragon_ent)
+                
+                minetest.chat_send_player(_self.owner, "Your Pegasus mounted the Water Dragon!")
+                return true
+            end
+        else
+            minetest.chat_send_player(_self.owner, "No available Water Dragon found nearby!")
+            return true
+        end
+        
+        return false
+    end
+    
+    self:set_utility(follow_owner_on_dragon)
+end)
+
+modding.register_utility("pegasus:follow_with_pegasus", function(self)
+    local function follow_func(_self)
+        if not _self.following then return true end
+        
+        -- Enable flying capabilities
+        _self.fly_allowed = true
+        _self.is_flying = true
+        _self:set_gravity(0)  -- Убираем гравитацию для полета
+        
+        -- Get owner position
+        local owner_pos = _self.following:get_pos()
+        if not owner_pos then return true end
+        
+        -- Get own position
+        local pos = _self.object:get_pos()
+        if not pos then return true end
+        
+        -- Calculate distance
+        local distance = vector.distance(pos, owner_pos)
+        
+            if distance > 3 then
+                -- Поднимаем цель немного выше для лучшего полета
+                local target_pos = {
+                    x = owner_pos.x,
+                    y = owner_pos.y + 2,
+                    z = owner_pos.z
+                }
+                
+                modding.action_move(_self, target_pos, 2, "waterdragon:fly_simple", 1, "fly")
+            else
+                waterdragon.action_hover(_self, 2, "hover")
+        end
+        
+        return false
+    end
+    
+    self:set_utility(follow_func)
+end)
