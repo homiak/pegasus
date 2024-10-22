@@ -3,3 +3,10 @@ Pegasus interaction with Water Dragons
 Pegasi and Water Dragons are nearly friends -
 a Pegasus can ride a Dragon, for instance.
 And a Water Dragon can rescue a Pegasus.
+You should never attack a Pegasus if there
+is a Water Dragon nearby, because if you 
+attack it, the Water Dragon will rescue the 
+Pegasus and attack you. And believe me, you
+don't want to be attacked by such a strong
+and massive creature. It will kill you in 
+one moment.
