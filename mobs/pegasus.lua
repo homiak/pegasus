@@ -2,6 +2,106 @@
 -- Pegasus --
 -------------
 
+modding.register_utility("waterdragon:dance_together", function(self)
+    local dance_timer = 0
+    local current_move = 1
+    local moves = {
+        -- Move 1: Circle around each other
+        function(_self, partner_pos)
+            local angle = dance_timer * math.pi
+            local radius = 5
+            local target = {
+                x = partner_pos.x + math.cos(angle) * radius,
+                y = partner_pos.y + 3,
+                z = partner_pos.z + math.sin(angle) * radius
+            }
+            waterdragon.action_fly(_self, target, 1, "waterdragon:fly_simple", 1, "fly")
+        end,
+        
+        -- Move 2: Rise and fall together
+        function(_self, partner_pos)
+            local height = math.sin(dance_timer * math.pi) * 5
+            local target = {
+                x = partner_pos.x,
+                y = partner_pos.y + height,
+                z = partner_pos.z
+            }
+            waterdragon.action_fly(_self, target, 1, "waterdragon:fly_simple", 1, "hover")
+        end,
+        
+        -- Move 3: Mirrored movements
+        function(_self, partner_pos)
+            local offset = math.sin(dance_timer * math.pi) * 10
+            local target = {
+                x = partner_pos.x + offset,
+                y = partner_pos.y,
+                z = partner_pos.z
+            }
+            waterdragon.action_fly(_self, target, 1, "waterdragon:fly_simple", 1, "fly")
+        end
+    }
+    
+    local function follow_func(_self)
+        if not _self.dance_partner then return true end
+        
+        local partner_pos = _self.dance_partner:get_pos()
+        if not partner_pos then return true end
+        
+        dance_timer = dance_timer + _self.dtime
+        
+        -- Execute current dance move
+        moves[current_move](_self, partner_pos)
+        
+        -- Change move every 5 seconds
+        if dance_timer >= 5 then
+            dance_timer = 0
+            current_move = current_move + 1
+            if current_move > #moves then
+                current_move = 1
+            end
+        end
+        
+        return false
+    end
+    
+    self:set_utility(follow_func)
+end)
+
+minetest.register_chatcommand("dra", {
+    description = "Start synchronized dance between Dragon and Pegasus",
+    func = function(name, param)
+        local player = minetest.get_player_by_name(name)
+        if not player then return false, "Player not found" end
+        
+        local pos = player:get_pos()
+        local nearest_dragon = nil
+        local nearest_pegasus = nil
+        
+        -- Find nearest dragon and pegasus
+        for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 100)) do
+            local ent = obj:get_luaentity()
+            if ent then
+                if ent.name and ent.name:find("waterdragon:") == 1 then
+                    nearest_dragon = obj
+                elseif ent.name == "pegasus:pegasus" then
+                    nearest_pegasus = obj
+                end
+            end
+        end
+        
+        if nearest_dragon and nearest_pegasus then
+            local dragon_ent = nearest_dragon:get_luaentity()
+            if dragon_ent then
+                dragon_ent.dance_partner = nearest_pegasus
+                dragon_ent:initiate_utility("waterdragon:dance_together", dragon_ent)
+                return true, "Dance started!"
+            end
+        else
+            return false, "Need both Dragon and Pegasus nearby!"
+        end
+    end
+})
+
 local random = math.random
 
 -- Break blocks
@@ -82,12 +182,6 @@ local function grow_nearby_crops(self)
                     local new_stage = tonumber(node.name:sub(-1)) + 1
                     if new_stage > 8 then new_stage = 8 end
                     local new_node_name = "farming:wheat_" .. new_stage
-                    minetest.set_node(crop_pos, {name = new_node_name})
-				end
-				if node.name:find("farming:cotton_") and node.name ~= "farming:cotton_8" then
-                    local new_stage = tonumber(node.name:sub(-1)) + 1
-                    if new_stage > 8 then new_stage = 8 end
-                    local new_node_name = "farming:cotton_" .. new_stage
                     minetest.set_node(crop_pos, {name = new_node_name})
 				end
             end
