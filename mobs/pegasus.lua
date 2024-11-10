@@ -3,103 +3,103 @@
 -------------
 
 modding.register_utility("waterdragon:dance_together", function(self)
-    local dance_timer = 0
-    local current_move = 1
-    local moves = {
-        -- Move 1: Circle around each other
-        function(_self, partner_pos)
-            local angle = dance_timer * math.pi
-            local radius = 5
-            local target = {
-                x = partner_pos.x + math.cos(angle) * radius,
-                y = partner_pos.y + 3,
-                z = partner_pos.z + math.sin(angle) * radius
-            }
-            waterdragon.action_fly(_self, target, 1, "waterdragon:fly_simple", 1, "fly")
-        end,
-        
-        -- Move 2: Rise and fall together
-        function(_self, partner_pos)
-            local height = math.sin(dance_timer * math.pi) * 5
-            local target = {
-                x = partner_pos.x,
-                y = partner_pos.y + height,
-                z = partner_pos.z
-            }
-            waterdragon.action_fly(_self, target, 1, "waterdragon:fly_simple", 1, "hover")
-        end,
-        
-        -- Move 3: Mirrored movements
-        function(_self, partner_pos)
-            local offset = math.sin(dance_timer * math.pi) * 10
-            local target = {
-                x = partner_pos.x + offset,
-                y = partner_pos.y,
-                z = partner_pos.z
-            }
-            waterdragon.action_fly(_self, target, 1, "waterdragon:fly_simple", 1, "fly")
-        end
-    }
-    
-    local function follow_func(_self)
-        if not _self.dance_partner then return true end
-        
-        local partner_pos = _self.dance_partner:get_pos()
-        if not partner_pos then return true end
-        
-        dance_timer = dance_timer + _self.dtime
-        
-        -- Execute current dance move
-        moves[current_move](_self, partner_pos)
-        
-        -- Change move every 5 seconds
-        if dance_timer >= 5 then
-            dance_timer = 0
-            current_move = current_move + 1
-            if current_move > #moves then
-                current_move = 1
-            end
-        end
-        
-        return false
-    end
-    
-    self:set_utility(follow_func)
+	local dance_timer = 0
+	local current_move = 1
+	local moves = {
+		-- Move 1: Circle around each other
+		function(_self, partner_pos)
+			local angle = dance_timer * math.pi
+			local radius = 5
+			local target = {
+				x = partner_pos.x + math.cos(angle) * radius,
+				y = partner_pos.y + 3,
+				z = partner_pos.z + math.sin(angle) * radius
+			}
+			waterdragon.action_fly(_self, target, 1, "waterdragon:fly_simple", 1, "fly")
+		end,
+
+		-- Move 2: Rise and fall together
+		function(_self, partner_pos)
+			local height = math.sin(dance_timer * math.pi) * 5
+			local target = {
+				x = partner_pos.x,
+				y = partner_pos.y + height,
+				z = partner_pos.z
+			}
+			waterdragon.action_fly(_self, target, 1, "waterdragon:fly_simple", 1, "hover")
+		end,
+
+		-- Move 3: Mirrored movements
+		function(_self, partner_pos)
+			local offset = math.sin(dance_timer * math.pi) * 10
+			local target = {
+				x = partner_pos.x + offset,
+				y = partner_pos.y,
+				z = partner_pos.z
+			}
+			waterdragon.action_fly(_self, target, 1, "waterdragon:fly_simple", 1, "fly")
+		end
+	}
+
+	local function follow_func(_self)
+		if not _self.dance_partner then return true end
+
+		local partner_pos = _self.dance_partner:get_pos()
+		if not partner_pos then return true end
+
+		dance_timer = dance_timer + _self.dtime
+
+		-- Execute current dance move
+		moves[current_move](_self, partner_pos)
+
+		-- Change move every 5 seconds
+		if dance_timer >= 5 then
+			dance_timer = 0
+			current_move = current_move + 1
+			if current_move > #moves then
+				current_move = 1
+			end
+		end
+
+		return false
+	end
+
+	self:set_utility(follow_func)
 end)
 
 minetest.register_chatcommand("dra", {
-    description = "Start synchronized dance between Dragon and Pegasus",
-    func = function(name, param)
-        local player = minetest.get_player_by_name(name)
-        if not player then return false, "Player not found" end
-        
-        local pos = player:get_pos()
-        local nearest_dragon = nil
-        local nearest_pegasus = nil
-        
-        -- Find nearest dragon and pegasus
-        for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 100)) do
-            local ent = obj:get_luaentity()
-            if ent then
-                if ent.name and ent.name:find("waterdragon:") == 1 then
-                    nearest_dragon = obj
-                elseif ent.name == "pegasus:pegasus" then
-                    nearest_pegasus = obj
-                end
-            end
-        end
-        
-        if nearest_dragon and nearest_pegasus then
-            local dragon_ent = nearest_dragon:get_luaentity()
-            if dragon_ent then
-                dragon_ent.dance_partner = nearest_pegasus
-                dragon_ent:initiate_utility("waterdragon:dance_together", dragon_ent)
-                return true, "Dance started!"
-            end
-        else
-            return false, "Need both Dragon and Pegasus nearby!"
-        end
-    end
+	description = "Start synchronized dance between Dragon and Pegasus",
+	func = function(name, param)
+		local player = minetest.get_player_by_name(name)
+		if not player then return false, "Player not found" end
+
+		local pos = player:get_pos()
+		local nearest_dragon = nil
+		local nearest_pegasus = nil
+
+		-- Find nearest dragon and pegasus
+		for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 100)) do
+			local ent = obj:get_luaentity()
+			if ent then
+				if ent.name and ent.name:find("waterdragon:") == 1 then
+					nearest_dragon = obj
+				elseif ent.name == "pegasus:pegasus" then
+					nearest_pegasus = obj
+				end
+			end
+		end
+
+		if nearest_dragon and nearest_pegasus then
+			local dragon_ent = nearest_dragon:get_luaentity()
+			if dragon_ent then
+				dragon_ent.dance_partner = nearest_pegasus
+				dragon_ent:initiate_utility("waterdragon:dance_together", dragon_ent)
+				return true, "Dance started!"
+			end
+		else
+			return false, "Need both Dragon and Pegasus nearby!"
+		end
+	end
 })
 
 local random = math.random
@@ -107,86 +107,86 @@ local random = math.random
 -- Break blocks
 
 local function break_collision_blocks(self)
-    local pos = self.object:get_pos()
-    if not pos then return end
-    
-    -- Check blocks only at body level and in front
-    local yaw = self.object:get_yaw()
-    local dir_x = -math.sin(yaw)
-    local dir_z = math.cos(yaw)
-    
-    -- Check position slightly in front of pegasus
-    local front_pos = {
-        x = math.floor(pos.x + 1),
-        y = math.floor(pos.y + 1), -- At body level
-        z = math.floor(pos.z + 1)
-    }
-    
-    -- Check position at head level
-    local head_pos = {
-        x = math.floor(pos.x + 1),
-        y = math.floor(pos.y + 2), -- At head level
-        z = math.floor(pos.z + 1)
-    }
-    
-    -- Break only if actually colliding
-    local vel = self.object:get_velocity()
-    if math.abs(vel.x) > 0.1 or math.abs(vel.z) > 0.1 then
-        for _, check_pos in ipairs({front_pos, head_pos}) do
-            local node = minetest.get_node(check_pos)
-            if node.name ~= "air" and 
-               node.name ~= "ignore" and 
-               node.name ~= "default:bedrock" then
-                minetest.set_node(check_pos, {name="air"})
-            end
-        end
-    end
+	local pos = self.object:get_pos()
+	if not pos then return end
+
+	-- Check blocks only at body level and in front
+	local yaw = self.object:get_yaw()
+	local dir_x = -math.sin(yaw)
+	local dir_z = math.cos(yaw)
+
+	-- Check position slightly in front of pegasus
+	local front_pos = {
+		x = math.floor(pos.x + 1),
+		y = math.floor(pos.y + 1), -- At body level
+		z = math.floor(pos.z + 1)
+	}
+
+	-- Check position at head level
+	local head_pos = {
+		x = math.floor(pos.x + 1),
+		y = math.floor(pos.y + 2), -- At head level
+		z = math.floor(pos.z + 1)
+	}
+
+	-- Break only if actually colliding
+	local vel = self.object:get_velocity()
+	if math.abs(vel.x) > 0.1 or math.abs(vel.z) > 0.1 then
+		for _, check_pos in ipairs({ front_pos, head_pos }) do
+			local node = minetest.get_node(check_pos)
+			if node.name ~= "air" and
+				node.name ~= "ignore" and
+				node.name ~= "default:bedrock" then
+				minetest.set_node(check_pos, { name = "air" })
+			end
+		end
+	end
 end
 
 
 -- Glowing in the night
 
 local function is_night()
-    local time = minetest.get_timeofday()
-    return time < 0.2 or time > 0.8
+	local time = minetest.get_timeofday()
+	return time < 0.2 or time > 0.8
 end
 
 local function set_glowing_eyes(self)
-    local props = self.object:get_properties()
-    if is_night() then
-        props.glow = 14
-    else
-        props.glow = 0
-    end
-    self.object:set_properties(props)
+	local props = self.object:get_properties()
+	if is_night() then
+		props.glow = 14
+	else
+		props.glow = 0
+	end
+	self.object:set_properties(props)
 end
 
 -- Grow crops --
 
 local function grow_nearby_crops(self)
-    local pos = self.object:get_pos()
-    if not pos then
-        return
-    end
+	local pos = self.object:get_pos()
+	if not pos then
+		return
+	end
 
-    local radius = 10  -- Radius around the Pegasus to check for crops
-    for x = -radius, radius do
-        for y = -1, 1 do  -- Check one block below and above
-            for z = -radius, radius do
-                local crop_pos = vector.add(pos, {x=x, y=y, z=z})
-                local node = minetest.get_node(crop_pos)
-                
+	local radius = 10    -- Radius around the Pegasus to check for crops
+	for x = -radius, radius do
+		for y = -1, 1 do -- Check one block below and above
+			for z = -radius, radius do
+				local crop_pos = vector.add(pos, { x = x, y = y, z = z })
+				local node = minetest.get_node(crop_pos)
 
-                -- Simplified crop growth logic
-                if node.name:find("farming:wheat_") and node.name ~= "farming:wheat_8" then
-                    local new_stage = tonumber(node.name:sub(-1)) + 1
-                    if new_stage > 8 then new_stage = 8 end
-                    local new_node_name = "farming:wheat_" .. new_stage
-                    minetest.set_node(crop_pos, {name = new_node_name})
+
+				-- Simplified crop growth logic
+				if node.name:find("farming:wheat_") and node.name ~= "farming:wheat_8" then
+					local new_stage = tonumber(node.name:sub(-1)) + 1
+					if new_stage > 8 then new_stage = 8 end
+					local new_node_name = "farming:wheat_" .. new_stage
+					minetest.set_node(crop_pos, { name = new_node_name })
 				end
-            end
-        end
-    end
+			end
+		end
+	end
 end
 
 -- Pegasus Inventory
@@ -246,9 +246,9 @@ local function get_form(self, player_name)
 		"list[current_player;main;0.4,5.4;8,4;]",
 		"listring[current_player;main]",
 		"button[1,4.5;2.5,0.8;follow;Follow]",
-        "button[3.75,4.5;2.5,0.8;stay;Stay]",
-        "button[6.5,4.5;2.5,0.8;wander;Wander]",
-        "button[9.25,4.5;1.75,0.8;fire;Fire]",
+		"button[3.75,4.5;2.5,0.8;stay;Stay]",
+		"button[6.5,4.5;2.5,0.8;wander;Wander]",
+		"button[9.25,4.5;1.75,0.8;fire;Fire]",
 		"button[1,3.5;3.5,0.8;follow_on_dragon;Ride Water Dragon]"
 	}
 
@@ -449,22 +449,22 @@ modding.register_mob("pegasus:pegasus", {
 		},
 		{
 			utility = "pegasus:rescue_animal",
-    get_score = function(self)
-        local pos = self.object:get_pos()
-        if not pos then return 0 end
-        
-        for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 100)) do
-            local ent = obj:get_luaentity()
-            if ent and ent.name ~= self.name then  -- Ignore owned mobs
-                local health = ent.health or (ent.object and ent.object:get_hp())
-                local max_health = ent.max_health or (ent.object and ent.object:get_properties().hp_max)
-                if health and max_health and health < max_health * 0.5 then  -- Only rescue if health is below 50%
-                    return 0.9, {self, obj, ent}
-                end
-            end
-        end
-        return 0
-    end
+			get_score = function(self)
+				local pos = self.object:get_pos()
+				if not pos then return 0 end
+
+				for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 100)) do
+					local ent = obj:get_luaentity()
+					if ent and ent.name ~= self.name then -- Ignore owned mobs
+						local health = ent.health or (ent.object and ent.object:get_hp())
+						local max_health = ent.max_health or (ent.object and ent.object:get_properties().hp_max)
+						if health and max_health and health < max_health * 0.5 then -- Only rescue if health is below 50%
+							return 0.9, { self, obj, ent }
+						end
+					end
+				end
+				return 0
+			end
 		},
 	},
 
@@ -570,7 +570,7 @@ modding.register_mob("pegasus:pegasus", {
 		pegasus.update_lasso_effects(self)
 		pegasus.random_sound(self)
 		pegasus.eat_dropped_item(self, item)
-		if self:timer(2) then  -- Check every 2 seconds to reduce performance impact
+		if self:timer(2) then -- Check every 2 seconds to reduce performance impact
 			grow_nearby_crops(self)
 		end
 		break_collision_blocks(self)
@@ -600,13 +600,13 @@ modding.register_mob("pegasus:pegasus", {
 							self:move_to(owner_pos, "modding:obstacle_avoidance", 1)
 						else
 							self:animate("stand")
-							self.object:set_velocity({x=0, y=0, z=0})
+							self.object:set_velocity({ x = 0, y = 0, z = 0 })
 						end
 					end
 				end
 			elseif self.mode == "stay" then
 				self:animate("stand")
-				self.object:set_velocity({x=0, y=0, z=0})
+				self.object:set_velocity({ x = 0, y = 0, z = 0 })
 				if self:get_utility() then
 					self:set_utility(nil)
 				end
@@ -625,31 +625,34 @@ modding.register_mob("pegasus:pegasus", {
 		end
 		-- Danger
 		local danger = check_for_danger(self)
-    if danger and not self.fire_breathing and self:timer(1) then
-        local danger_pos = danger:get_pos()
-        local self_pos = self.object:get_pos()
-        local distance = vector.distance(self_pos, danger_pos)
-        local dir = vector.direction(self_pos, danger_pos)
-        
-        self.object:set_yaw(math.atan2(dir.z, dir.x) - math.pi/2)
-        
-        if distance > 8 then
-            self:animate("run")
-            self:move_to(danger_pos, "modding:obstacle_avoidance", 2)
-        else
-            if math.random() < 0.9 then
-                self.fire_breathing = true
-                pegasus_breathe_fire(self)
-                minetest.after(2, function()
-                    self.fire_breathing = false
-                end)
-            else
-                local retreat_pos = vector.subtract(self_pos, vector.multiply(dir, 5))
-                self:move_to(retreat_pos, "modding:obstacle_avoidance", 2)
-            end
-        end
-        return
-    end
+		if danger and not self.fire_breathing and self:timer(1) then
+			local danger_pos = danger:get_pos()
+			local self_pos = self.object:get_pos()
+			local distance = vector.distance(self_pos, danger_pos)
+			local dir = vector.direction(self_pos, danger_pos)
+
+			self.object:set_yaw(math.atan2(dir.z, dir.x) - math.pi / 2)
+
+			if distance > 8 then
+				self:animate("run")
+				self:move_to(danger_pos, "modding:obstacle_avoidance", 2)
+			else
+				if math.random() < 0.9 then
+					self.fire_breathing = true
+					pegasus_breathe_fire(self)
+					minetest.after(2, function()
+						self.fire_breathing = false
+					end)
+				else
+					local retreat_pos = vector.subtract(self_pos, vector.multiply(dir, 5))
+					self:move_to(retreat_pos, "modding:obstacle_avoidance", 2)
+				end
+			end
+			return
+		end
+		if self.owner then
+			check_owner_combat(self)
+		end
 	end,
 
 	death_func = function(self)
@@ -718,22 +721,20 @@ modding.register_mob("pegasus:pegasus", {
 		pegasus.punch(self, puncher, ...)
 		self.attack_count = (self.attack_count or 0) + 1
 
-    if self.attack_count >= 3 then
-        self.needs_rescue = true
+		if self.attack_count >= 3 then
+			self.needs_rescue = true
 
-        local pos = self.object:get_pos()
-        local nearby_objects = minetest.get_objects_inside_radius(pos, 50)
+			local pos = self.object:get_pos()
+			local nearby_objects = minetest.get_objects_inside_radius(pos, 50)
 
-        for _, obj in ipairs(nearby_objects) do
-            if is_waterdragon_entity(obj) then
-                rescue_pegasus(obj, self)
-                break
-            end
-        end
-
-    end
-
-		end,
+			for _, obj in ipairs(nearby_objects) do
+				if is_waterdragon_entity(obj) then
+					rescue_pegasus(obj, self)
+					break
+				end
+			end
+		end
+	end,
 
 	on_detach_child = function(self, child)
 		if child
@@ -785,30 +786,30 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		local ent = obj:get_luaentity()
 
 		if fields.follow then
-            set_pegasus_mode(ent, "follow")
-            minetest.chat_send_player(name, "Pegasus set to Follow mode")
-        elseif fields.stay then
-            set_pegasus_mode(ent, "stay")
-            minetest.chat_send_player(name, "Pegasus set to Stay mode")
-        elseif fields.wander then
-            set_pegasus_mode(ent, "wander")
-            minetest.chat_send_player(name, "Pegasus set to Wander mode")
-        elseif fields.fire then
-            ent.fire_breathing = not ent.fire_breathing
-            if ent.fire_breathing then
-                minetest.chat_send_player(name, "Pegasus is now breathing fire!")
-                pegasus_breathe_fire(ent)
-            else
-                minetest.chat_send_player(name, "Pegasus stopped breathing fire.")
-            end
-        end
+			set_pegasus_mode(ent, "follow")
+			minetest.chat_send_player(name, "Pegasus set to Follow mode")
+		elseif fields.stay then
+			set_pegasus_mode(ent, "stay")
+			minetest.chat_send_player(name, "Pegasus set to Stay mode")
+		elseif fields.wander then
+			set_pegasus_mode(ent, "wander")
+			minetest.chat_send_player(name, "Pegasus set to Wander mode")
+		elseif fields.fire then
+			ent.fire_breathing = not ent.fire_breathing
+			if ent.fire_breathing then
+				minetest.chat_send_player(name, "Pegasus is now breathing fire!")
+				pegasus_breathe_fire(ent)
+			else
+				minetest.chat_send_player(name, "Pegasus stopped breathing fire.")
+			end
+		end
 		local ent = obj:get_luaentity()
 
-        if fields.follow_on_dragon then
-            set_pegasus_mode(ent, "follow_on_dragon")
-            ent:initiate_utility("pegasus:follow_rider_on_dragon", ent)
-            minetest.chat_send_player(name, "Pegasus will mount a Water Dragon and follow you")
-        end
+		if fields.follow_on_dragon then
+			set_pegasus_mode(ent, "follow_on_dragon")
+			ent:initiate_utility("pegasus:follow_rider_on_dragon", ent)
+			minetest.chat_send_player(name, "Pegasus will mount a Water Dragon and follow you")
+		end
 		if fields.quit or fields.key_enter then
 			form_obj[name] = nil
 			serialize_pegasus_inventory(ent)
@@ -822,167 +823,221 @@ end)
 -- dangerous Entities
 
 function check_for_danger(self)
-    local pos = self.object:get_pos()
-    if not pos then return false end
+	local pos = self.object:get_pos()
+	if not pos then return false end
 
-    local objects = minetest.get_objects_inside_radius(pos, 100)
-    for _, obj in ipairs(objects) do
-        local ent = obj:get_luaentity()
-        if ent and ent.type == "monster" then
-            return obj
-        end
-    end
-    return false
+	local objects = minetest.get_objects_inside_radius(pos, 100)
+	for _, obj in ipairs(objects) do
+		local ent = obj:get_luaentity()
+		if ent and ent.type == "monster" then
+			return obj
+		end
+	end
+	return false
 end
 
 -- Rescue animals --
 
 modding.register_utility("pegasus:rescue_animal", function(self, victim, victim_ent)
-    local function rescue_func(_self)
-        if not victim or not victim:get_pos() then
-            return true
-        end
+	local function rescue_func(_self)
+		if not victim or not victim:get_pos() then
+			return true
+		end
 
-        local victim_pos = victim:get_pos()
-        local attacker = nil
 
-        for _, obj in ipairs(minetest.get_objects_inside_radius(victim_pos, 5)) do
-            if obj:is_player() and obj:get_player_name() ~= self.owner then
-                attacker = obj
-                break
-            end
-        end
+		local victim_pos = victim:get_pos()
+		local attacker = nil
 
-        if attacker then
-            _self:animate("rear")
-            
-            local function breathe_fire()
-                if _self.object:get_pos() and attacker:get_pos() then
-                    local attacker_pos = attacker:get_pos()
-                    if _self.breathe_fire then
-                        _self:breathe_fire(attacker_pos)
-                    elseif pegasus_breathe_fire then
-                        pegasus_breathe_fire(_self, attacker_pos)
-                    end
-                    
-                    if _self.fire_breath_count and _self.fire_breath_count < 5 then
-                        _self.fire_breath_count = _self.fire_breath_count + 1
-                        minetest.after(1, breathe_fire)
-                    else
-                        _self.fire_breath_count = nil
-                        minetest.after(1, function()
-                            _self:animate("stand")
-                            return true
-                        end)
-                    end
-                end
-            end
+		for _, obj in ipairs(minetest.get_objects_inside_radius(victim_pos, 5)) do
+			if obj:is_player() and obj:get_player_name() ~= self.owner then
+				attacker = obj
+				break
+			end
+		end
+		if attacker == self.owner then return end
+		if attacker then
+			_self:animate("rear")
 
-            _self.fire_breath_count = 1
-            minetest.after(1, breathe_fire)
-        else
-            _self:animate("stand")
-            return true
-        end
-    end
-    
-    self:set_utility(rescue_func)
+			local function breathe_fire()
+				if _self.object:get_pos() and attacker:get_pos() then
+					local attacker_pos = attacker:get_pos()
+					if _self.breathe_fire then
+						_self:breathe_fire(attacker_pos)
+					elseif pegasus_breathe_fire then
+						pegasus_breathe_fire(_self, attacker_pos)
+					end
+
+					if _self.fire_breath_count and _self.fire_breath_count < 5 then
+						_self.fire_breath_count = _self.fire_breath_count + 1
+						minetest.after(1, breathe_fire)
+					else
+						_self.fire_breath_count = nil
+						minetest.after(1, function()
+							_self:animate("stand")
+							return true
+						end)
+					end
+				end
+			end
+
+			_self.fire_breath_count = 1
+			minetest.after(1, breathe_fire)
+		else
+			_self:animate("stand")
+			return true
+		end
+	end
+
+	self:set_utility(rescue_func)
 end)
 
 function is_waterdragon_entity(obj)
-    local entity = obj:get_luaentity()
-    return entity and entity.name and entity.name:find("^waterdragon:") ~= nil
+	local entity = obj:get_luaentity()
+	return entity and entity.name and entity.name:find("^waterdragon:") ~= nil
 end
 
 modding.register_utility("pegasus:follow_rider_on_dragon", function(self)
-    local function find_nearest_dragon(_self)
-        local pos = _self.object:get_pos()
-        if not pos or not _self.owner then return nil end
-        
-        local nearest_dragon = nil
-        local min_distance = 100
-        
-        for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 100)) do
-            local ent = obj:get_luaentity()
-            if ent and ent.name and ent.name:find("waterdragon:") == 1 and not ent.rider then
-                local dragon_pos = obj:get_pos()
-                local distance = vector.distance(pos, dragon_pos)
-                if distance < min_distance then
-                    min_distance = distance
-                    nearest_dragon = obj
-                end
-            end
-        end
-        
-        return nearest_dragon
-    end
+	local function find_nearest_dragon(_self)
+		local pos = _self.object:get_pos()
+		if not pos or not _self.owner then return nil end
 
-    local function follow_owner_on_dragon(_self)
-        if not _self.owner then return true end
-        local owner = minetest.get_player_by_name(_self.owner)
-        if not owner then return true end
-        
-        local target_dragon = find_nearest_dragon(_self)
-        if target_dragon then
-            local dragon_ent = target_dragon:get_luaentity()
-            if dragon_ent then
-                _self.object:set_attach(target_dragon, "", 
-                    {x = 0, y = 25, z = 0},    -- Position offset
-                    {x = 0, y = 0, z = 0}      -- Rotation
-                )
-                
-                dragon_ent.following = owner
-                dragon_ent:initiate_utility("pegasus:follow_with_pegasus", dragon_ent)
-                
-                minetest.chat_send_player(_self.owner, "Your Pegasus mounted the Water Dragon!")
-                return true
-            end
-        else
-            minetest.chat_send_player(_self.owner, "No available Water Dragon found nearby!")
-            return true
-        end
-        
-        return false
-    end
-    
-    self:set_utility(follow_owner_on_dragon)
+		local nearest_dragon = nil
+		local min_distance = 100
+
+		for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 100)) do
+			local ent = obj:get_luaentity()
+			if ent and ent.name and ent.name:find("waterdragon:") == 1 and not ent.rider then
+				local dragon_pos = obj:get_pos()
+				local distance = vector.distance(pos, dragon_pos)
+				if distance < min_distance then
+					min_distance = distance
+					nearest_dragon = obj
+				end
+			end
+		end
+
+		return nearest_dragon
+	end
+
+	local function follow_owner_on_dragon(_self)
+		if not _self.owner then return true end
+		local owner = minetest.get_player_by_name(_self.owner)
+		if not owner then return true end
+
+		local target_dragon = find_nearest_dragon(_self)
+		if target_dragon then
+			local dragon_ent = target_dragon:get_luaentity()
+			if dragon_ent then
+				_self.object:set_attach(target_dragon, "",
+					{ x = 0, y = 3, z = 0 }, -- Position offset
+					{ x = 0, y = 0, z = 0 } -- Rotation
+				)
+				hitbox = {
+					width = 0.65,
+					height = 1.95
+				}
+				dragon_ent.following = owner
+				dragon_ent:initiate_utility("waterdragon:follow_owner", dragon_ent)
+
+				minetest.chat_send_player(_self.owner, "Your Pegasus mounted the Water Dragon!")
+				return true
+			end
+		else
+			minetest.chat_send_player(_self.owner, "No available Water Dragon found nearby!")
+			return true
+		end
+
+		return false
+	end
+
+	self:set_utility(follow_owner_on_dragon)
 end)
 
 modding.register_utility("pegasus:follow_with_pegasus", function(self)
-    local function follow_func(_self)
-        if not _self.following then return true end
-        
-        -- Enable flying capabilities
-        _self.fly_allowed = true
-        _self.is_flying = true
-        _self:set_gravity(0)  -- Убираем гравитацию для полета
-        
-        -- Get owner position
-        local owner_pos = _self.following:get_pos()
-        if not owner_pos then return true end
-        
-        -- Get own position
-        local pos = _self.object:get_pos()
-        if not pos then return true end
-        
-        -- Calculate distance
-        local distance = vector.distance(pos, owner_pos)
-        
-            if distance > 3 then
-                -- Поднимаем цель немного выше для лучшего полета
-                local target_pos = {
-                    x = owner_pos.x,
-                    y = owner_pos.y + 2,
-                    z = owner_pos.z
-                }
-                
-                modding.action_move(_self, target_pos, 2, "waterdragon:fly_simple", 1, "fly")
-            else
-                waterdragon.action_hover(_self, 2, "hover")
-        end
-        
-        return false
-    end
-    
-    self:set_utility(follow_func)
+	local function follow_func(_self)
+		if not _self.following then return true end
+
+		-- Enable flying capabilities
+		_self.fly_allowed = true
+		_self.is_flying = true
+		_self:set_gravity(0) -- Убираем гравитацию для полета
+
+		-- Get owner position
+		local owner_pos = _self.following:get_pos()
+		if not owner_pos then return true end
+
+		-- Get own position
+		local pos = _self.object:get_pos()
+		if not pos then return true end
+
+		-- Calculate distance
+		local distance = vector.distance(pos, owner_pos)
+
+		if distance > 3 then
+			-- Поднимаем цель немного выше для лучшего полета
+			local target_pos = {
+				x = owner_pos.x,
+				y = owner_pos.y + 2,
+				z = owner_pos.z
+			}
+
+			modding.action_move(_self, target_pos, 2, "waterdragon:fly_simple", 1, "fly")
+		else
+			waterdragon.action_hover(_self, 2, "hover")
+		end
+
+		return false
+	end
+
+	self:set_utility(follow_func)
 end)
+
+-- Help owner function
+
+-- Checks if owner is attacking someone and makes Pegasus help with fire breath
+function check_owner_combat(self)
+	if not self.owner then return end
+
+	local owner = minetest.get_player_by_name(self.owner)
+	if not owner then return end
+
+	local owner_pos = owner:get_pos()
+	if not owner_pos then return end
+
+	-- Get all objects in radius around owner
+	local objects = minetest.get_objects_inside_radius(owner_pos, 60)
+
+	for _, obj in ipairs(objects) do
+		-- Skip if object is the owner or the Pegasus itself
+		if obj ~= owner and obj ~= self.object then
+			-- Check if owner is punching this object
+			if owner:get_player_control().LMB then
+				local target_pos = obj:get_pos()
+				if target_pos then
+					-- Calculate distance to target
+					local self_pos = self.object:get_pos()
+					local distance = vector.distance(self_pos, target_pos)
+
+					if distance > 5 then
+						-- Run to target if too far
+						self:animate("run")
+						self:move_to(target_pos, "modding:obstacle_avoidance", 2)
+					else
+						-- Rear up and breathe fire when close enough
+						self:animate("rear")
+						self.fire_breathing = true
+						pegasus_breathe_fire(self)
+
+						-- Stop breathing fire after 2 seconds
+						minetest.after(2, function()
+							self.fire_breathing = false
+							self:animate("stand")
+						end)
+					end
+					return true
+				end
+			end
+		end
+	end
+	return false
+end
