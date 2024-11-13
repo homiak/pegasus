@@ -169,8 +169,8 @@ local function get_form(self, player_name)
 		"button[6.5,4.5;2.5,0.8;wander;Wander]",
 		"button[9.25,4.5;1.75,0.8;fire;Fire]",
 	}
-	
-	if minetest.get_modpath("waterdragon") then 
+
+	if minetest.get_modpath("waterdragon") then
 		table.insert(form, "button[1,3.5;3.5,0.8;follow_on_dragon;Ride Water Dragon]")
 	end
 
@@ -502,7 +502,6 @@ modding.register_mob("pegasus:pegasus", {
 			grow_nearby_crops(self)
 		end
 		if self.fire and self.fire > 0 then
-			
 			local pos = self.object:get_pos()
 			if pos then
 				local nearest_dragon = find_nearest_scottish_dragon(pos, 10)
@@ -589,21 +588,21 @@ modding.register_mob("pegasus:pegasus", {
 			return
 		end
 		if self.fire_timer then
-			self.fire_timer = self.fire_timer + self.dtime  -- Увеличиваем таймер
-			
-			if self.fire_timer >= 1 then  -- Каждую секунду
-				if not self.fire then 
-					self.fire = 0  -- Инициализируем если нет
+			self.fire_timer = self.fire_timer + self.dtime -- Увеличиваем таймер
+
+			if self.fire_timer >= 1 then          -- Каждую секунду
+				if not self.fire then
+					self.fire = 0                 -- Инициализируем если нет
 				end
-				
-				if self.fire < 10 then  -- Максимум 10 зарядов
+
+				if self.fire < 10 then -- Максимум 10 зарядов
 					self.fire = self.fire + 1
 				end
-				
-				self.fire_timer = 0  -- Сбрасываем таймер
+
+				self.fire_timer = 0 -- Сбрасываем таймер
 			end
 		else
-			self.fire_timer = 0  -- Инициализируем таймер если его нет
+			self.fire_timer = 0 -- Инициализируем таймер если его нет
 		end
 	end,
 
@@ -674,6 +673,10 @@ modding.register_mob("pegasus:pegasus", {
 	end,
 
 	on_punch = function(self, puncher, ...)
+		if not minetest.get_modpath("pegasus") then
+			self:initiate_utility("pegasus:basic_flee", self)
+			return
+		end
 		if self.rider and puncher == self.rider then return end
 		local name = puncher:is_player() and puncher:get_player_name()
 		if name
@@ -961,54 +964,53 @@ end)
 -- Function to transfer fire from Pegasus to Scottish Dragon
 function transfer_pegasus_fire(self)
 	if not minetest.get_modpath("waterdragon") then return end
-    local pos = self.object:get_pos()
-    if not pos then return end
-    
-    local nearest_dragon = find_nearest_scottish_dragon(pos, 10)
-    
-    if nearest_dragon then
-        -- Проверяем условия передачи огня
-        if self.fire and self.fire > 0 and  -- у Пегаса есть огонь
-           (not nearest_dragon.fire or nearest_dragon.fire < 10) then  -- у Дракона не максимум
-            
-            -- Инициализируем огонь дракона если его нет
-            nearest_dragon.fire = nearest_dragon.fire or 0
-            
-            -- Определяем сколько огня можно передать
-            local transfer_amount = math.min(
-                self.fire,  -- сколько есть у Пегаса
-                10 - nearest_dragon.fire  -- сколько может принять Дракон
-            )
-            
-            -- Передаем огонь
-            nearest_dragon.has_pegasus_fire = true
-            nearest_dragon.fire = nearest_dragon.fire + transfer_amount
-            self.fire = self.fire - transfer_amount
-            
-            -- Визуальный эффект передачи
-            local dragon_pos = nearest_dragon.object:get_pos()
-            if dragon_pos then
-                minetest.add_particlespawner({
-                    amount = 50,
-                    time = 1,
-                    minpos = pos,
-                    maxpos = dragon_pos,
-                    minvel = {x=0, y=0, z=0},
-                    maxvel = {x=0, y=1, z=0},
-                    minacc = {x=0, y=0, z=0},
-                    maxacc = {x=0, y=1, z=0},
-                    minsize = 1,
-                    maxsize = 2,
-                    collisiondetection = false,
-                    texture = "fire_basic_flame.png",
-                })
-            end
-            
-            -- Уведомления
-            if nearest_dragon.owner then
-                minetest.chat_send_player(nearest_dragon.owner,
-                    "Scottish Dragon received fire from Pegasus!")
-            end
-        end
-    end
+	local pos = self.object:get_pos()
+	if not pos then return end
+
+	local nearest_dragon = find_nearest_scottish_dragon(pos, 10)
+
+	if nearest_dragon then
+		-- Проверяем условия передачи огня
+		if self.fire and self.fire > 0 and                            -- у Пегаса есть огонь
+			(not nearest_dragon.fire or nearest_dragon.fire < 10) then -- у Дракона не максимум
+			-- Инициализируем огонь дракона если его нет
+			nearest_dragon.fire = nearest_dragon.fire or 0
+
+			-- Определяем сколько огня можно передать
+			local transfer_amount = math.min(
+				self.fire,               -- сколько есть у Пегаса
+				10 - nearest_dragon.fire -- сколько может принять Дракон
+			)
+
+			-- Передаем огонь
+			nearest_dragon.has_pegasus_fire = true
+			nearest_dragon.fire = nearest_dragon.fire + transfer_amount
+			self.fire = self.fire - transfer_amount
+
+			-- Визуальный эффект передачи
+			local dragon_pos = nearest_dragon.object:get_pos()
+			if dragon_pos then
+				minetest.add_particlespawner({
+					amount = 50,
+					time = 1,
+					minpos = pos,
+					maxpos = dragon_pos,
+					minvel = { x = 0, y = 0, z = 0 },
+					maxvel = { x = 0, y = 1, z = 0 },
+					minacc = { x = 0, y = 0, z = 0 },
+					maxacc = { x = 0, y = 1, z = 0 },
+					minsize = 1,
+					maxsize = 2,
+					collisiondetection = false,
+					texture = "fire_basic_flame.png",
+				})
+			end
+
+			-- Уведомления
+			if nearest_dragon.owner then
+				minetest.chat_send_player(nearest_dragon.owner,
+					"Scottish Dragon received fire from Pegasus!")
+			end
+		end
+	end
 end

@@ -16,4 +16,4 @@ After you tamed a Pegasus, you can ride
 it, order it, saddle it... and so much more.
 Keep in mind: you must be respectfull to this
 creature, because if you don't do it, it can
-attack you and run away.
+attack you or run away.
