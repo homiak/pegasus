@@ -9,7 +9,6 @@ local atan2 = math.atan2
 local cos = math.cos
 local min = math.min
 local max = math.max
-local floor = math.floor
 local pi = math.pi
 local pi2 = pi * 2
 local sin = math.sin

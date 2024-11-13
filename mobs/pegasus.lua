@@ -488,6 +488,10 @@ modding.register_mob("pegasus:pegasus", {
 	end,
 
 	step_func = function(self)
+		if not self.owner and not self.rider then
+			set_pegasus_mode(self, "pegasus:wander")
+			self:initiate_utility("pegasus:basic_wander", self)
+		end
 		pegasus.step_timers(self)
 		pegasus.head_tracking(self)
 		pegasus.do_growth(self, 60)
@@ -498,6 +502,7 @@ modding.register_mob("pegasus:pegasus", {
 			grow_nearby_crops(self)
 		end
 		if self.fire and self.fire > 0 then
+			
 			local pos = self.object:get_pos()
 			if pos then
 				local nearest_dragon = find_nearest_scottish_dragon(pos, 10)
@@ -731,7 +736,7 @@ modding.register_spawn_item("pegasus:pegasus", {
 
 -- Pegasus Orders
 
-local function set_pegasus_mode(self, mode)
+function set_pegasus_mode(self, mode)
 	self.mode = mode
 	self:memorize("mode", mode)
 end
