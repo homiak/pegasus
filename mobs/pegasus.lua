@@ -2,105 +2,24 @@
 -- Pegasus --
 -------------
 
-modding.register_utility("waterdragon:dance_together", function(self)
-	local dance_timer = 0
-	local current_move = 1
-	local moves = {
-		-- Move 1: Circle around each other
-		function(_self, partner_pos)
-			local angle = dance_timer * math.pi
-			local radius = 5
-			local target = {
-				x = partner_pos.x + math.cos(angle) * radius,
-				y = partner_pos.y + 3,
-				z = partner_pos.z + math.sin(angle) * radius
-			}
-			waterdragon.action_fly(_self, target, 1, "waterdragon:fly_simple", 1, "fly")
-		end,
+function find_nearest_scottish_dragon(pos, radius)
+	if not minetest.get_modpath("waterdragon") then return end
+	local nearest_dragon = nil
+	local min_distance = radius
 
-		-- Move 2: Rise and fall together
-		function(_self, partner_pos)
-			local height = math.sin(dance_timer * math.pi) * 5
-			local target = {
-				x = partner_pos.x,
-				y = partner_pos.y + height,
-				z = partner_pos.z
-			}
-			waterdragon.action_fly(_self, target, 1, "waterdragon:fly_simple", 1, "hover")
-		end,
-
-		-- Move 3: Mirrored movements
-		function(_self, partner_pos)
-			local offset = math.sin(dance_timer * math.pi) * 10
-			local target = {
-				x = partner_pos.x + offset,
-				y = partner_pos.y,
-				z = partner_pos.z
-			}
-			waterdragon.action_fly(_self, target, 1, "waterdragon:fly_simple", 1, "fly")
-		end
-	}
-
-	local function follow_func(_self)
-		if not _self.dance_partner then return true end
-
-		local partner_pos = _self.dance_partner:get_pos()
-		if not partner_pos then return true end
-
-		dance_timer = dance_timer + _self.dtime
-
-		-- Execute current dance move
-		moves[current_move](_self, partner_pos)
-
-		-- Change move every 5 seconds
-		if dance_timer >= 5 then
-			dance_timer = 0
-			current_move = current_move + 1
-			if current_move > #moves then
-				current_move = 1
+	for _, obj in ipairs(minetest.get_objects_inside_radius(pos, radius)) do
+		local ent = obj:get_luaentity()
+		if ent and ent.name == "waterdragon:scottish_dragon" then
+			local dragon_pos = obj:get_pos()
+			local distance = vector.distance(pos, dragon_pos)
+			if distance < min_distance then
+				min_distance = distance
+				nearest_dragon = ent
 			end
-		end
-
-		return false
-	end
-
-	self:set_utility(follow_func)
-end)
-
-minetest.register_chatcommand("dra", {
-	description = "Start synchronized dance between Dragon and Pegasus",
-	func = function(name, param)
-		local player = minetest.get_player_by_name(name)
-		if not player then return false, "Player not found" end
-
-		local pos = player:get_pos()
-		local nearest_dragon = nil
-		local nearest_pegasus = nil
-
-		-- Find nearest dragon and pegasus
-		for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 100)) do
-			local ent = obj:get_luaentity()
-			if ent then
-				if ent.name and ent.name:find("waterdragon:") == 1 then
-					nearest_dragon = obj
-				elseif ent.name == "pegasus:pegasus" then
-					nearest_pegasus = obj
-				end
-			end
-		end
-
-		if nearest_dragon and nearest_pegasus then
-			local dragon_ent = nearest_dragon:get_luaentity()
-			if dragon_ent then
-				dragon_ent.dance_partner = nearest_pegasus
-				dragon_ent:initiate_utility("waterdragon:dance_together", dragon_ent)
-				return true, "Dance started!"
-			end
-		else
-			return false, "Need both Dragon and Pegasus nearby!"
 		end
 	end
-})
+	return nearest_dragon
+end
 
 local random = math.random
 
@@ -169,7 +88,7 @@ local function grow_nearby_crops(self)
 		return
 	end
 
-	local radius = 10    -- Radius around the Pegasus to check for crops
+	local radius = 10 -- Radius around the Pegasus to check for crops
 	for x = -radius, radius do
 		for y = -1, 1 do -- Check one block below and above
 			for z = -radius, radius do
@@ -249,8 +168,11 @@ local function get_form(self, player_name)
 		"button[3.75,4.5;2.5,0.8;stay;Stay]",
 		"button[6.5,4.5;2.5,0.8;wander;Wander]",
 		"button[9.25,4.5;1.75,0.8;fire;Fire]",
-		"button[1,3.5;3.5,0.8;follow_on_dragon;Ride Water Dragon]"
 	}
+	
+	if minetest.get_modpath("waterdragon") then 
+		table.insert(form, "button[1,3.5;3.5,0.8;follow_on_dragon;Ride Water Dragon]")
+	end
 
 	return table.concat(form, "")
 end
@@ -496,6 +418,7 @@ modding.register_mob("pegasus:pegasus", {
 	custom_name = "", -- Use a custom attribute to store the name
 
 	on_activate = function(self, staticdata)
+		self.fire = 10           -- Initial fire charges
 		if staticdata and staticdata ~= "" then
 			self.custom_name = staticdata -- Load the name from staticdata
 			self.object:set_nametag_attributes({
@@ -537,6 +460,7 @@ modding.register_mob("pegasus:pegasus", {
 	end,
 
 	activate_func = function(self)
+		self.fire = 10 -- Initial fire charges
 		pegasus.initialize_api(self)
 		pegasus.initialize_lasso(self)
 		pegasus.eat_dropped_item(self, item)
@@ -572,6 +496,15 @@ modding.register_mob("pegasus:pegasus", {
 		pegasus.eat_dropped_item(self, item)
 		if self:timer(2) then -- Check every 2 seconds to reduce performance impact
 			grow_nearby_crops(self)
+		end
+		if self.fire and self.fire > 0 then
+			local pos = self.object:get_pos()
+			if pos then
+				local nearest_dragon = find_nearest_scottish_dragon(pos, 10)
+				if nearest_dragon then
+					transfer_pegasus_fire(self)
+				end
+			end
 		end
 		break_collision_blocks(self)
 		set_glowing_eyes(self)
@@ -650,8 +583,22 @@ modding.register_mob("pegasus:pegasus", {
 			end
 			return
 		end
-		if self.owner then
-			check_owner_combat(self)
+		if self.fire_timer then
+			self.fire_timer = self.fire_timer + self.dtime  -- Увеличиваем таймер
+			
+			if self.fire_timer >= 1 then  -- Каждую секунду
+				if not self.fire then 
+					self.fire = 0  -- Инициализируем если нет
+				end
+				
+				if self.fire < 10 then  -- Максимум 10 зарядов
+					self.fire = self.fire + 1
+				end
+				
+				self.fire_timer = 0  -- Сбрасываем таймер
+			end
+		else
+			self.fire_timer = 0  -- Инициализируем таймер если его нет
 		end
 	end,
 
@@ -696,7 +643,19 @@ modding.register_mob("pegasus:pegasus", {
 			self:set_saddle(true)
 			return
 		end
-
+		if self.owner then
+			local pos = self.object:get_pos()
+			if pos then
+				-- Check for nearby Scottish Dragon
+				for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 5)) do
+					local ent = obj:get_luaentity()
+					if ent and ent.name == "waterdragon:scottish_dragon" then
+						transfer_pegasus_fire(self, ent)
+						break
+					end
+				end
+			end
+		end
 		if clicker:get_player_control().sneak
 			and owner then
 			minetest.show_formspec(name, "pegasus:pegasus_forms", get_form(self, name))
@@ -799,8 +758,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			if ent.fire_breathing then
 				minetest.chat_send_player(name, "Pegasus is now breathing fire!")
 				pegasus_breathe_fire(ent)
-			else
+			elseif not ent.breathing_fire then
 				minetest.chat_send_player(name, "Pegasus stopped breathing fire.")
+			elseif ent.fire == 0 then
+				minetest.chat_send_player(name, "No fire available")
 			end
 		end
 		local ent = obj:get_luaentity()
@@ -808,7 +769,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if fields.follow_on_dragon then
 			set_pegasus_mode(ent, "follow_on_dragon")
 			ent:initiate_utility("pegasus:follow_rider_on_dragon", ent)
-			minetest.chat_send_player(name, "Pegasus will mount a Water Dragon and follow you")
+			minetest.chat_send_player(name, "Pegasus will mount a Water Dragon")
 		end
 		if fields.quit or fields.key_enter then
 			form_obj[name] = nil
@@ -992,52 +953,57 @@ modding.register_utility("pegasus:follow_with_pegasus", function(self)
 	self:set_utility(follow_func)
 end)
 
--- Help owner function
-
--- Checks if owner is attacking someone and makes Pegasus help with fire breath
-function check_owner_combat(self)
-	if not self.owner then return end
-
-	local owner = minetest.get_player_by_name(self.owner)
-	if not owner then return end
-
-	local owner_pos = owner:get_pos()
-	if not owner_pos then return end
-
-	-- Get all objects in radius around owner
-	local objects = minetest.get_objects_inside_radius(owner_pos, 60)
-
-	for _, obj in ipairs(objects) do
-		-- Skip if object is the owner or the Pegasus itself
-		if obj ~= owner and obj ~= self.object then
-			-- Check if owner is punching this object
-			if owner:get_player_control().LMB then
-				local target_pos = obj:get_pos()
-				if target_pos then
-					-- Calculate distance to target
-					local self_pos = self.object:get_pos()
-					local distance = vector.distance(self_pos, target_pos)
-
-					if distance > 5 then
-						-- Run to target if too far
-						self:animate("run")
-						self:move_to(target_pos, "modding:obstacle_avoidance", 2)
-					else
-						-- Rear up and breathe fire when close enough
-						self:animate("rear")
-						self.fire_breathing = true
-						pegasus_breathe_fire(self)
-
-						-- Stop breathing fire after 2 seconds
-						minetest.after(2, function()
-							self.fire_breathing = false
-							self:animate("stand")
-						end)
-					end
-					return true
-				end
-			end
-		end
-	end
-	return false
+-- Function to transfer fire from Pegasus to Scottish Dragon
+function transfer_pegasus_fire(self)
+	if not minetest.get_modpath("waterdragon") then return end
+    local pos = self.object:get_pos()
+    if not pos then return end
+    
+    local nearest_dragon = find_nearest_scottish_dragon(pos, 10)
+    
+    if nearest_dragon then
+        -- Проверяем условия передачи огня
+        if self.fire and self.fire > 0 and  -- у Пегаса есть огонь
+           (not nearest_dragon.fire or nearest_dragon.fire < 10) then  -- у Дракона не максимум
+            
+            -- Инициализируем огонь дракона если его нет
+            nearest_dragon.fire = nearest_dragon.fire or 0
+            
+            -- Определяем сколько огня можно передать
+            local transfer_amount = math.min(
+                self.fire,  -- сколько есть у Пегаса
+                10 - nearest_dragon.fire  -- сколько может принять Дракон
+            )
+            
+            -- Передаем огонь
+            nearest_dragon.has_pegasus_fire = true
+            nearest_dragon.fire = nearest_dragon.fire + transfer_amount
+            self.fire = self.fire - transfer_amount
+            
+            -- Визуальный эффект передачи
+            local dragon_pos = nearest_dragon.object:get_pos()
+            if dragon_pos then
+                minetest.add_particlespawner({
+                    amount = 50,
+                    time = 1,
+                    minpos = pos,
+                    maxpos = dragon_pos,
+                    minvel = {x=0, y=0, z=0},
+                    maxvel = {x=0, y=1, z=0},
+                    minacc = {x=0, y=0, z=0},
+                    maxacc = {x=0, y=1, z=0},
+                    minsize = 1,
+                    maxsize = 2,
+                    collisiondetection = false,
+                    texture = "fire_basic_flame.png",
+                })
+            end
+            
+            -- Уведомления
+            if nearest_dragon.owner then
+                minetest.chat_send_player(nearest_dragon.owner,
+                    "Scottish Dragon received fire from Pegasus!")
+            end
+        end
+    end
 end

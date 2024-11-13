@@ -973,106 +973,7 @@ modding.register_utility("pegasus:swim_seek_land", function(self)
 	self:set_utility(func)
 end)
 
--- Fly --
-
-modding.register_utility("pegasus:fly_wander", function(self, turn_rate)
-	local move_chance = 2
-	local idle_max = 4
-
-	local function func(mob)
-		if not mob:get_action() then
-			if not mob.idle_while_flying
-				or random(move_chance) < 2 then
-				pegasus.action_fly(mob, 1, 0.5, "fly", nil, turn_rate)
-			else
-				pegasus.action_hover(mob, random(idle_max), "hover")
-			end
-		end
-	end
-	self:set_utility(func)
-end)
-
-modding.register_utility("pegasus:fly_seek_home", function(self)
-	local home = self.home_position
-	local roost = self.roost_action or modding.action_idle
-	local is_home = self.is_roost or function(pos, home_pos)
-		if abs(pos.x - home_pos.x) < 0.5
-			and abs(pos.z - home_pos.z) < 0.5
-			and abs(pos.y - home_pos.y) < 0.75 then
-			return true
-		end
-		return false
-	end
-	local function func(mob)
-		local pos = mob.object:get_pos()
-		if not pos or not home then return true end
-
-		if not mob:get_action() then
-			if is_home(pos, home) then
-				roost(mob, 1)
-				return
-			end
-			modding.action_move(mob, home, 3, "pegasus:steer_no_gravity", 1, "fly")
-		end
-	end
-	self:set_utility(func)
-end)
-
-modding.register_utility("pegasus:fly_seek_land", function(self)
-	local landed = false
-	local function func(_self)
-		if not _self:get_action() then
-			if landed then return true end
-			if _self.touching_ground then
-				modding.action_idle(_self, 0.5, "stand")
-				landed = true
-			else
-				local pos2 = _self:get_wander_pos_3d(3, 6)
-				if pos2 then
-					local dist2floor = modding.sensor_floor(_self, 10, true)
-					pos2.y = pos2.y - dist2floor
-					modding.action_move(_self, pos2, 3, "pegasus:move_no_gravity", 0.6, "fly")
-				end
-			end
-		end
-	end
-	self:set_utility(func)
-end)
-
-modding.register_utility("pegasus:fly_seek_food", function(self)
-	local timeout = 3
-
-	local food = pegasus.get_dropped_food(self)
-	local food_reached = false
-	local function func(mob)
-		local pos = mob.object:get_pos()
-		local food_pos = food and food:get_pos()
-		if not pos or not food_pos then return true, 5 end
-
-		local dist = vec_dist(pos, food_pos)
-		if dist < mob.width + 0.5
-			and not food_reached then
-			food_reached = true
-
-			local anim = (mob.animations["eat"] and "eat") or "stand"
-			modding.action_idle(mob, 1, anim)
-			pegasus.eat_dropped_item(mob, food)
-		end
-
-		if not mob:get_action() then
-			if food_reached then return true, 10 end
-			pegasus.action_fly(mob, 1, 1, "fly", food_pos, 3)
-		end
-
-		timeout = timeout - mob.dtime
-		if timeout <= 0 then
-			return true
-		end
-	end
-	self:set_utility(func)
-end)
-
--- pegasus --
+-- Pegasus --
 
 modding.register_utility("pegasus:pegasus_tame", function(self)
 	local trust = 5
@@ -1187,10 +1088,14 @@ minetest.register_node("pegasus:fire_animated", {
 
 function pegasus_breathe_fire(self)
     if not self.fire_breathing then return end
-
+    if not self.fire or self.fire <= 0 then
+        self.fire_breathing = false
+        return
+    end
+    
     local pos = self.object:get_pos()
     if not pos then return end
-
+    
     local yaw = self.object:get_yaw()
     local dir = vector.new(
         -math.sin(yaw),
@@ -1199,7 +1104,7 @@ function pegasus_breathe_fire(self)
     )
     local start_pos = vector.add(pos, vector.new(0, 1.2, 0))
     local end_pos = vector.add(start_pos, vector.multiply(dir, 20))
-
+    
     local particle_types = {
         {
             texture = "pegasus_fire_1.png",
@@ -1226,11 +1131,11 @@ function pegasus_breathe_fire(self)
             glow = 14
         },
     }
-
+    
     -- Spawn particles
     for i = 1, 50 do
         local particle = particle_types[math.random(#particle_types)]
-
+        
         minetest.add_particle({
             pos = vector.add(start_pos, vector.new(
                 math.random(-5, 5) / 10,
@@ -1252,7 +1157,7 @@ function pegasus_breathe_fire(self)
             glow = particle.glow
         })
     end
-
+    
     -- Check for block collisions and ignite blocks
     local step = 1
     for i = 0, 20, step do
@@ -1261,7 +1166,7 @@ function pegasus_breathe_fire(self)
         if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
             minetest.set_node(check_pos, { name = "pegasus:fire_animated" })
         end
-
+        
         -- Check for entities at each step
         local objects = minetest.get_objects_inside_radius(check_pos, 2)
         for _, obj in ipairs(objects) do
@@ -1275,13 +1180,24 @@ function pegasus_breathe_fire(self)
                 end
             end
         end
-
+        
         -- Stop if we hit a non-air block
         if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
             break
         end
     end
-
+    
+    -- Decrease fire charge every second
+    self.fire_timer = (self.fire_timer or 0) + 0.1
+    if self.fire_timer >= 1 then
+        self.fire = self.fire - 1
+        self.fire_timer = 0
+        if self.fire <= 0 then
+            self.fire_breathing = false
+            return
+        end
+    end
+    
     -- Schedule the next fire breath
     minetest.after(0.1, function()
         pegasus_breathe_fire(self)
