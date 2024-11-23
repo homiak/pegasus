@@ -171,7 +171,7 @@ local function get_form(self, player_name)
 	}
 
 	if minetest.get_modpath("waterdragon") then
-		table.insert(form, "button[1,3.5;3.5,0.8;follow_on_dragon;Ride Water Dragon]")
+		table.insert(form, "button[1,3.5;3.5,0.8;follow_on_dragon;Follow on Water Dragon]")
 	end
 
 	return table.concat(form, "")
@@ -887,7 +887,27 @@ modding.register_utility("pegasus:follow_rider_on_dragon", function(self)
 
 		return nearest_dragon
 	end
-
+	minetest.register_chatcommand("detach", {
+		description = "Detach pegasus from dragon",
+		func = function(name, param)
+			local player = minetest.get_player_by_name(name)
+			if not player then return false, "Player not found" end
+			
+			local pos = player:get_pos()
+			for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 100)) do
+				local ent = obj:get_luaentity()
+				if ent and ent.name == "pegasus:pegasus" and ent.owner == name then
+					obj:set_detach()
+					obj:set_properties({
+						visual_size = { x = 10, y = 10 },  -- Уменьшенный размер
+						collisionbox = { -0.65, 0, -0.65, 0.65, 1.95, 0.65 }
+					})
+					return true, "Pegasus detached!"
+				end
+			end
+			return false, "No pegasus found!"
+		end
+	 })
 	local function follow_owner_on_dragon(_self)
 		if not _self.owner then return true end
 		local owner = minetest.get_player_by_name(_self.owner)
@@ -896,21 +916,23 @@ modding.register_utility("pegasus:follow_rider_on_dragon", function(self)
 		local target_dragon = find_nearest_dragon(_self)
 		if target_dragon then
 			local dragon_ent = target_dragon:get_luaentity()
+			if not dragon_ent.owner then return true end
 			if dragon_ent then
+				_self.object:set_properties({
+					visual_size = { x = 0.5, y = 0.5 },
+					collisionbox = { -0.65, 0, -0.65, 0.65, 1.95, 0.65 }
+				})
 				_self.object:set_attach(target_dragon, "",
-					{ x = 0, y = 3, z = 0 }, -- Position offset
-					{ x = 0, y = 0, z = 0 } -- Rotation
+					{ x = 0, y = 2, z = 0 } -- Position offset
 				)
-				hitbox = {
-					width = 0.65,
-					height = 1.95
-				}
 				dragon_ent.following = owner
-				dragon_ent:initiate_utility("waterdragon:follow_owner", dragon_ent)
+				dragon_ent:initiate_utility("waterdragon:follow_player", dragon_ent)
+				dragon_ent.order = "follow"
 
-				minetest.chat_send_player(_self.owner, "Your Pegasus mounted the Water Dragon!")
+				minetest.chat_send_player(_self.owner, "Your Pegasus mounted the Water Dragon and will follow you!")
 				return true
 			end
+			
 		else
 			minetest.chat_send_player(_self.owner, "No available Water Dragon found nearby!")
 			return true
@@ -924,6 +946,9 @@ end)
 
 modding.register_utility("pegasus:follow_with_pegasus", function(self)
 	local function follow_func(_self)
+		if _self.rider then 
+			return
+		end
 		if not _self.following then return true end
 
 		-- Enable flying capabilities

@@ -120,9 +120,6 @@ local function add_lasso(self, origin)
 	-- Attachment point of entity
 	ent._attached = origin
 	if type(origin) ~= "string" then
-		--local player = minetest.get_player_by_name(origin)
-		--object:set_attach(player)
-	--else
 		object:set_pos(origin)
 	end
 	self._lassod_to = origin

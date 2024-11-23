@@ -995,7 +995,7 @@ modding.register_utility("pegasus:pegasus_tame", function(self)
 		if not pos then return end
 		if not player or not modding.is_alive(player) then return true end
 
-		-- Increase Taming progress while Players view is aligned with the pegasi
+		-- Increase Taming progress while Players view is aligned with the Pegasi
 		local yaw, plyr_yaw = _self.object:get_yaw(), player:get_look_horizontal()
 		local yaw_diff = abs(diff(yaw, plyr_yaw))
 
@@ -1061,7 +1061,7 @@ minetest.register_node("pegasus:fire_animated", {
 		local objects = minetest.get_objects_inside_radius(pos, 1.5)
 		for _, obj in ipairs(objects) do
 			local ent = obj:get_luaentity()
-			if obj:is_player() or (ent and ent.name ~= "pegasus:pegasus") then
+			if obj:is_player() or (ent and ent.name ~= "waterdragon:scottish_dragon" and ent.name ~= "pegasus:pegasus"and ent.name ~= "waterdragon:rare_water_dragon" and ent.name ~= "waterdragon:pure_water_dragon") then
 				obj:punch(obj, 1.0, {
 					full_punch_interval = 1.0,
 					damage_groups = { fleshy = 4 },
