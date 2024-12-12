@@ -489,7 +489,6 @@ modding.register_mob("pegasus:pegasus", {
 
 	step_func = function(self)
 		if not self.owner and not self.rider then
-			set_pegasus_mode(self, "pegasus:wander")
 			self:initiate_utility("pegasus:basic_wander", self)
 		end
 		pegasus.step_timers(self)
@@ -673,7 +672,7 @@ modding.register_mob("pegasus:pegasus", {
 	end,
 
 	on_punch = function(self, puncher, ...)
-		if not minetest.get_modpath("pegasus") then
+		if not minetest.get_modpath("pegasus") and puncher then
 			self:initiate_utility("pegasus:basic_flee", self)
 			return
 		end
@@ -892,14 +891,14 @@ modding.register_utility("pegasus:follow_rider_on_dragon", function(self)
 		func = function(name, param)
 			local player = minetest.get_player_by_name(name)
 			if not player then return false, "Player not found" end
-			
+
 			local pos = player:get_pos()
 			for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 100)) do
 				local ent = obj:get_luaentity()
 				if ent and ent.name == "pegasus:pegasus" and ent.owner == name then
 					obj:set_detach()
 					obj:set_properties({
-						visual_size = { x = 10, y = 10 },  -- Уменьшенный размер
+						visual_size = { x = 10, y = 10 }, -- Уменьшенный размер
 						collisionbox = { -0.65, 0, -0.65, 0.65, 1.95, 0.65 }
 					})
 					return true, "Pegasus detached!"
@@ -907,7 +906,7 @@ modding.register_utility("pegasus:follow_rider_on_dragon", function(self)
 			end
 			return false, "No pegasus found!"
 		end
-	 })
+	})
 	local function follow_owner_on_dragon(_self)
 		if not _self.owner then return true end
 		local owner = minetest.get_player_by_name(_self.owner)
@@ -932,7 +931,6 @@ modding.register_utility("pegasus:follow_rider_on_dragon", function(self)
 				minetest.chat_send_player(_self.owner, "Your Pegasus mounted the Water Dragon and will follow you!")
 				return true
 			end
-			
 		else
 			minetest.chat_send_player(_self.owner, "No available Water Dragon found nearby!")
 			return true
@@ -946,7 +944,7 @@ end)
 
 modding.register_utility("pegasus:follow_with_pegasus", function(self)
 	local function follow_func(_self)
-		if _self.rider then 
+		if _self.rider then
 			return
 		end
 		if not _self.following then return true end
@@ -996,14 +994,14 @@ function transfer_pegasus_fire(self)
 
 	if nearest_dragon then
 		-- Проверяем условия передачи огня
-		if self.fire and self.fire > 0 and                            -- у Пегаса есть огонь
+		if self.fire and self.fire > 0 and                    -- у Пегаса есть огонь
 			(not nearest_dragon.fire or nearest_dragon.fire < 10) then -- у Дракона не максимум
 			-- Инициализируем огонь дракона если его нет
 			nearest_dragon.fire = nearest_dragon.fire or 0
 
 			-- Определяем сколько огня можно передать
 			local transfer_amount = math.min(
-				self.fire,               -- сколько есть у Пегаса
+				self.fire,   -- сколько есть у Пегаса
 				10 - nearest_dragon.fire -- сколько может принять Дракон
 			)
 
