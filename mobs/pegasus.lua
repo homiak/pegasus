@@ -672,7 +672,7 @@ modding.register_mob("pegasus:pegasus", {
 	end,
 
 	on_punch = function(self, puncher, ...)
-		if not minetest.get_modpath("pegasus") and puncher then
+		if not minetest.get_modpath("waterdragon") and puncher then
 			self:initiate_utility("pegasus:basic_flee", self)
 			return
 		end
@@ -688,14 +688,16 @@ modding.register_mob("pegasus:pegasus", {
 		self.attack_count = (self.attack_count or 0) + 1
 
 		if self.attack_count >= 3 then
-			self.needs_rescue = true
-
 			local pos = self.object:get_pos()
 			local nearby_objects = minetest.get_objects_inside_radius(pos, 50)
-
+		
 			for _, obj in ipairs(nearby_objects) do
-				if is_waterdragon_entity(obj) then
-					rescue_pegasus(obj, self)
+				local ent = obj:get_luaentity()
+				if ent and (ent.name == "waterdragon:pure_water_dragon" or 
+						   ent.name == "waterdragon:rare_water_dragon" or
+						   ent.name == "waterdragon:scottish_dragon") then
+					-- Make Dragon attack the puncher
+					ent._target = puncher
 					break
 				end
 			end
