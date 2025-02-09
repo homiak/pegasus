@@ -266,7 +266,7 @@ end
 
 -- Definition
 
-modding.register_mob("pegasus:pegasus", {
+mobforge.register_mob("pegasus:pegasus", {
 	-- Engine Props
 	visual_size = { x = 10, y = 10 },
 	mesh = "pegasus_pegasus.b3d",
@@ -275,7 +275,7 @@ modding.register_mob("pegasus:pegasus", {
 	},
 	makes_footstep_sound = true,
 
-	-- modding Props
+	-- mobforge Props
 	max_health = 200,
 	armor_groups = { fleshy = 100 },
 	damage = 40,
@@ -533,7 +533,7 @@ modding.register_mob("pegasus:pegasus", {
 						local distance = vector.distance(self_pos, owner_pos)
 						if distance > 3 then
 							self:animate("run")
-							self:move_to(owner_pos, "modding:obstacle_avoidance", 1)
+							self:move_to(owner_pos, "mobforge:obstacle_avoidance", 1)
 						else
 							self:animate("stand")
 							self.object:set_velocity({ x = 0, y = 0, z = 0 })
@@ -571,7 +571,7 @@ modding.register_mob("pegasus:pegasus", {
 
 			if distance > 8 then
 				self:animate("run")
-				self:move_to(danger_pos, "modding:obstacle_avoidance", 2)
+				self:move_to(danger_pos, "mobforge:obstacle_avoidance", 2)
 			else
 				if math.random() < 0.9 then
 					self.fire_breathing = true
@@ -581,7 +581,7 @@ modding.register_mob("pegasus:pegasus", {
 					end)
 				else
 					local retreat_pos = vector.subtract(self_pos, vector.multiply(dir, 5))
-					self:move_to(retreat_pos, "modding:obstacle_avoidance", 2)
+					self:move_to(retreat_pos, "mobforge:obstacle_avoidance", 2)
 				end
 			end
 			return
@@ -733,7 +733,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 end)
 
-modding.register_spawn_item("pegasus:pegasus", {
+mobforge.register_spawn_item("pegasus:pegasus", {
 	col1 = "ebdfd8",
 	col2 = "653818"
 })
@@ -808,7 +808,7 @@ end
 
 -- Rescue animals --
 
-modding.register_utility("pegasus:rescue_animal", function(self, victim, victim_ent)
+mobforge.register_utility("pegasus:rescue_animal", function(self, victim, victim_ent)
 	local function rescue_func(_self)
 		if not victim or not victim:get_pos() then
 			return true
@@ -866,7 +866,7 @@ function is_waterdragon_entity(obj)
 	return entity and entity.name and entity.name:find("^waterdragon:") ~= nil
 end
 
-modding.register_utility("pegasus:follow_rider_on_dragon", function(self)
+mobforge.register_utility("pegasus:follow_rider_on_dragon", function(self)
 	local function find_nearest_dragon(_self)
 		local pos = _self.object:get_pos()
 		if not pos or not _self.owner then return nil end
@@ -944,7 +944,7 @@ modding.register_utility("pegasus:follow_rider_on_dragon", function(self)
 	self:set_utility(follow_owner_on_dragon)
 end)
 
-modding.register_utility("pegasus:follow_with_pegasus", function(self)
+mobforge.register_utility("pegasus:follow_with_pegasus", function(self)
 	local function follow_func(_self)
 		if _self.rider then
 			return
@@ -975,7 +975,7 @@ modding.register_utility("pegasus:follow_with_pegasus", function(self)
 				z = owner_pos.z
 			}
 
-			modding.action_move(_self, target_pos, 2, "waterdragon:fly_simple", 1, "fly")
+			mobforge.action_move(_self, target_pos, 2, "waterdragon:fly_simple", 1, "fly")
 		else
 			waterdragon.action_hover(_self, 2, "hover")
 		end
