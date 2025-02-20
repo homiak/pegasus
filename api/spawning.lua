@@ -23,7 +23,7 @@ local predator_spawn_chance = tonumber(minetest.settings:get("pegasus_predator_c
 
 -- Get Biomes --
 
-mobforge.register_abm_spawn("pegasus:pegasus", {
+pegasus.register_abm_spawn("pegasus:pegasus", {
 	chance = common_spawn_chance,
 	spawn_active = true,
 	min_height = 0,
@@ -60,7 +60,7 @@ minetest.register_decoration({
 local function do_on_spawn(pos, obj)
 	local name = obj and obj:get_luaentity().name
 	if not name then return end
-	local spawn_functions = mobforge.registered_on_spawns[name] or {}
+	local spawn_functions = pegasus.registered_on_spawns[name] or {}
 
 	if #spawn_functions > 0 then
 		for _, func in ipairs(spawn_functions) do
@@ -85,7 +85,7 @@ minetest.register_abm({
 
 		local current_biome = minetest.get_biome_name(minetest.get_biome_data(pos).biome)
 
-		local spawn_definitions = mobforge.registered_mob_spawns
+		local spawn_definitions = pegasus.registered_mob_spawns
 
 		for mob, def in pairs(spawn_definitions) do
 			if mob:match("^pegasus:")
@@ -97,7 +97,7 @@ minetest.register_abm({
 
 		if #spawnable_mobs > 0 then
 			local mob_to_spawn = spawnable_mobs[math.random(#spawnable_mobs)]
-			local spawn_definition = mobforge.registered_mob_spawns[mob_to_spawn]
+			local spawn_definition = pegasus.registered_mob_spawns[mob_to_spawn]
 
 			local group_size = random(spawn_definition.min_group or 1, spawn_definition.max_group or 1)
 			local obj
@@ -107,13 +107,13 @@ minetest.register_abm({
 				local spawn_pos
 				for _ = 1, group_size do
 					offset = group_size * 0.5
-					spawn_pos = mobforge.get_ground_level({
+					spawn_pos = pegasus.get_ground_level({
 						x = pos.x + random(-offset, offset),
 						y = pos.y,
 						z = pos.z + random(-offset, offset)
 					}, 3)
 
-					if not mobforge.is_pos_moveable(spawn_pos, 0.5, 0.5) then
+					if not pegasus.is_pos_moveable(spawn_pos, 0.5, 0.5) then
 						spawn_pos = pos
 					end
 

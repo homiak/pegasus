@@ -77,7 +77,7 @@ local function remove_from_fence(self)
 	}
 	for i = 1, 6 do
 		local i_pos = vec_add(pos, dirs[i])
-		if not mobforge.get_node_def(i_pos).walkable then
+		if not pegasus.get_node_def(i_pos).walkable then
 			minetest.add_item(i_pos, "pegasus:lasso")
 			break
 		end
@@ -154,7 +154,7 @@ end
 
 function pegasus.update_lasso_effects(self)
 	local pos = self.object:get_pos()
-	if not mobforge.is_alive(self) then return end
+	if not pegasus.is_alive(self) then return end
 	if self._lassod_to then
 		local lasso = self._lassod_to
 		self._lasso_ent = self._lasso_ent or add_lasso(self, lasso)

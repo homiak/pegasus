@@ -68,7 +68,7 @@ elseif minetest.get_modpath("mcl_player") then
 end
 
 local function get_group_positions(self)
-	local objects = mobforge.get_nearby_objects(self, self.name)
+	local objects = pegasus.get_nearby_objects(self, self.name)
 	local group = {}
 	for _, object in ipairs(objects) do
 		local obj_pos = object and object:get_pos()
@@ -98,27 +98,27 @@ local function calc_altitude(self, pos2)
 end
 
 --[[local function calc_steering_and_lift(self, pos, pos2, dir, steer_method)
-	local steer_to = mobforge.calc_steering(self, pos2, steer_method or mobforge.get_context_small)
+	local steer_to = pegasus.calc_steering(self, pos2, steer_method or pegasus.get_context_small)
 	pos2 = vec_add(pos, steer_to)
-	local lift = mobforge.get_avoidance_lift(self, pos2, 2)
+	local lift = pegasus.get_avoidance_lift(self, pos2, 2)
 	steer_to.y = (lift ~= 0 and lift) or dir.y
 	return steer_to
 end
 
 local function calc_steering_and_lift_aquatic(self, pos, pos2, dir, steer_method)
-	local steer_to = mobforge.calc_steering(self, pos2, steer_method or mobforge.get_context_small_aquatic)
-	local lift = mobforge.get_avoidance_lift_aquatic(self, vec_add(pos, steer_to), 2)
+	local steer_to = pegasus.calc_steering(self, pos2, steer_method or pegasus.get_context_small_aquatic)
+	local lift = pegasus.get_avoidance_lift_aquatic(self, vec_add(pos, steer_to), 2)
 	steer_to.y = (lift ~= 0 and lift) or dir.y
 	return steer_to
 end]]
 
 local function get_obstacle(pos, water)
 	local pos2 = { x = pos.x, y = pos.y, z = pos.z }
-	local n_def = mobforge.get_node_def(pos2)
+	local n_def = pegasus.get_node_def(pos2)
 	if n_def.walkable
 		or (water and (n_def.groups.liquid or 0) > 0) then
 		pos2.y = pos.y + 1
-		n_def = mobforge.get_node_def(pos2)
+		n_def = pegasus.get_node_def(pos2)
 		local col_max = n_def.walkable or (water and (n_def.groups.liquid or 0) > 0)
 		pos2.y = pos.y - 1
 		local col_min = col_max and (n_def.walkable or (water and (n_def.groups.liquid or 0) > 0))
@@ -161,10 +161,10 @@ end
 -- Obstacle Avoidance
 
 function pegasus.obstacle_avoidance(self, goal, water)
-	local steer_method = water and mobforge.get_context_small_aquatic or pegasus.get_steering_context
-	local dir = mobforge.calc_steering(self, goal, steer_method)
+	local steer_method = water and pegasus.get_context_small_aquatic or pegasus.get_steering_context
+	local dir = pegasus.calc_steering(self, goal, steer_method)
 
-	local lift_method = water and mobforge.get_avoidance_lift_aquatic or mobforge.get_avoidance_lift
+	local lift_method = water and pegasus.get_avoidance_lift_aquatic or pegasus.get_avoidance_lift
 	local lift = lift_method(self, vec_add(self.stand_pos, dir), 2)
 	dir.y = (lift ~= 0 and lift) or dir.y
 
@@ -173,7 +173,7 @@ end
 
 -- Methods
 
-mobforge.register_movement_method("pegasus:fly_wide", function(self)
+pegasus.register_movement_method("pegasus:fly_wide", function(self)
 	local steer_to
 	local steer_int = 0
 	self:set_gravity(0)
@@ -188,7 +188,7 @@ mobforge.register_movement_method("pegasus:fly_wide", function(self)
 		local turn_rate = 26
 		local speed = abs(_self.speed or 20) * speed_factor or 5
 		steer_int = (steer_int > 0 and steer_int - _self.dtime) or 1 / max(speed, 1)
-		steer_to = (steer_int <= 0 and mobforge.calc_steering(_self, goal)) or steer_to
+		steer_to = (steer_int <= 0 and pegasus.calc_steering(_self, goal)) or steer_to
 		local dir = steer_to or vec_dir(pos, goal)
 		local altitude = calc_altitude(self, vec_add(pos, dir))
 		dir.y = (altitude ~= 0 and altitude) or dir.y
@@ -206,7 +206,7 @@ end)
 
 -- Steering Methods
 
-mobforge.register_movement_method("pegasus:steer", function(self)
+pegasus.register_movement_method("pegasus:steer", function(self)
 	local steer_to
 	local steer_int = 0
 
@@ -238,7 +238,7 @@ mobforge.register_movement_method("pegasus:steer", function(self)
 	return func
 end)
 
-mobforge.register_movement_method("pegasus:steer_no_gravity", function(self)
+pegasus.register_movement_method("pegasus:steer_no_gravity", function(self)
 	local steer_to
 	local steer_int = 0
 
@@ -273,7 +273,7 @@ end)
 
 -- Simple Methods
 
-mobforge.register_movement_method("pegasus:move", function(self)
+pegasus.register_movement_method("pegasus:move", function(self)
 	local radius = 2 -- Arrival Radius
 
 	self:set_gravity(-9.8)
@@ -298,7 +298,7 @@ mobforge.register_movement_method("pegasus:move", function(self)
 	return func
 end)
 
-mobforge.register_movement_method("pegasus:move_no_gravity", function(self)
+pegasus.register_movement_method("pegasus:move_no_gravity", function(self)
 	local radius = 2 -- Arrival Radius
 
 	self:set_gravity(0)
@@ -397,7 +397,7 @@ function pegasus.action_swim(self, time, speed, animation, pos2)
 		end
 
 		-- Boids
-		local boid_dir = mob.uses_boids and mobforge.get_boid_dir(mob)
+		local boid_dir = mob.uses_boids and pegasus.get_boid_dir(mob)
 		if boid_dir then
 			steer_direction = {
 				x = (steer_direction.x + boid_dir.x) / 2,
@@ -452,7 +452,7 @@ function pegasus.action_fly(self, time, speed, animation, pos2, turn)
 		end
 
 		-- Boids
-		local boid_dir = mob.uses_boids and mobforge.get_boid_dir(mob)
+		local boid_dir = mob.uses_boids and pegasus.get_boid_dir(mob)
 		if boid_dir then
 			steer_direction = {
 				x = (steer_direction.x + boid_dir.x) / 2,
@@ -498,7 +498,7 @@ function pegasus.action_latch(self)
 	if self.animations["latch_ceiling"] then
 		ceiling = vec_add(pos, latch_ceil_offset)
 
-		if not mobforge.get_node_def(ceiling).walkable then
+		if not pegasus.get_node_def(ceiling).walkable then
 			ceiling = nil
 		end
 	end
@@ -508,7 +508,7 @@ function pegasus.action_latch(self)
 		for n = 1, 4 do
 			wall = vec_add(self.stand_pos, latch_wall_offset[n])
 
-			if mobforge.get_node_def(wall).walkable then
+			if pegasus.get_node_def(wall).walkable then
 				break
 			else
 				wall = nil
@@ -559,7 +559,7 @@ function pegasus.action_pursue(self, target, timeout, method, speed_factor, anim
 		end
 		if timer <= 0
 			or not safe
-			or _self:move_to(goal, method or "mobforge:obstacle_avoidance", speed_factor or 0.5) then
+			or _self:move_to(goal, method or "pegasus:obstacle_avoidance", speed_factor or 0.5) then
 			return true
 		end
 	end
@@ -706,13 +706,13 @@ end
 
 -- Behaviors
 
-mobforge.register_utility("pegasus:die", function(self)
+pegasus.register_utility("pegasus:die", function(self)
 	local timer = 1.5
 	local init = false
 	local function func(_self)
 		if not init then
 			_self:play_sound("death")
-			mobforge.action_fallover(_self)
+			pegasus.action_fallover(_self)
 			init = true
 		end
 		timer = timer - _self.dtime
@@ -732,7 +732,7 @@ mobforge.register_utility("pegasus:die", function(self)
 				maxexptime = 1,
 				minsize = 4,
 				maxsize = 4,
-				texture = "mobforge_smoke_particle.png",
+				texture = "pegasus_smoke_particle.png",
 				animation = {
 					type = 'vertical_frames',
 					aspect_w = 4,
@@ -741,7 +741,7 @@ mobforge.register_utility("pegasus:die", function(self)
 				},
 				glow = 1
 			})
-			mobforge.drop_items(_self)
+			pegasus.drop_items(_self)
 			_self.object:remove()
 		end
 	end
@@ -750,7 +750,7 @@ end)
 
 
 
-mobforge.register_utility("pegasus:basic_wander", function(self)
+pegasus.register_utility("pegasus:basic_wander", function(self)
 	local idle_max = 4
 	local move_chance = 3
 	local graze_chance = 16
@@ -777,7 +777,7 @@ mobforge.register_utility("pegasus:basic_wander", function(self)
 
 				if pegasus.eat_turf(mob, turf_pos) then
 					pegasus.add_break_particle(turf_pos)
-					mobforge.action_idle(mob, 1, "eat")
+					pegasus.action_idle(mob, 1, "eat")
 				end
 			end
 
@@ -792,7 +792,7 @@ mobforge.register_utility("pegasus:basic_wander", function(self)
 
 			-- Skittish Behavior
 			if mob.is_skittish_mob then
-				local plyr = mobforge.get_nearby_player(mob)
+				local plyr = pegasus.get_nearby_player(mob)
 				local plyr_alive, los, plyr_pos = mob:get_target(plyr)
 				if plyr_alive
 					and los then
@@ -806,14 +806,14 @@ mobforge.register_utility("pegasus:basic_wander", function(self)
 				pegasus.action_walk(mob, 3, 0.2, "walk", center)
 				center = false
 			else
-				mobforge.action_idle(mob, random(idle_max), "stand")
+				pegasus.action_idle(mob, random(idle_max), "stand")
 			end
 		end
 	end
 	self:set_utility(func)
 end)
 
-mobforge.register_utility("pegasus:basic_flee", function(self, target)
+pegasus.register_utility("pegasus:basic_flee", function(self, target)
 	local function func(mob)
 		local pos, target_pos = mob.object:get_pos(), target:get_pos()
 		if not pos or not target_pos then return true end
@@ -825,7 +825,7 @@ mobforge.register_utility("pegasus:basic_flee", function(self, target)
 	self:set_utility(func)
 end)
 
-mobforge.register_utility("pegasus:basic_attack", function(self, target)
+pegasus.register_utility("pegasus:basic_attack", function(self, target)
 	local has_attacked = false
 	local has_warned = not self.warn_before_attack
 	local function func(mob)
@@ -849,7 +849,7 @@ mobforge.register_utility("pegasus:basic_attack", function(self, target)
 					if abs(diff(yaw, yaw_to_target)) > pi / 2 then
 						pegasus.action_pursue(mob, target)
 					else
-						mobforge.action_idle(mob, 0.5, "warn")
+						pegasus.action_idle(mob, 0.5, "warn")
 					end
 					return
 				else
@@ -864,7 +864,7 @@ mobforge.register_utility("pegasus:basic_attack", function(self, target)
 	self:set_utility(func)
 end)
 
-mobforge.register_utility("pegasus:basic_breed", function(self)
+pegasus.register_utility("pegasus:basic_breed", function(self)
 	local mate = pegasus.get_nearby_mate(self, self.name)
 
 	local timer = 0
@@ -910,14 +910,14 @@ end)
 
 -- Swim --
 
-mobforge.register_utility("pegasus:swim_wander", function(self)
+pegasus.register_utility("pegasus:swim_wander", function(self)
 	local move_chance = 2
 	local idle_max = 4
 
 	local function func(mob)
 		if not mob:get_action() then
 			if not mob.in_liquid then
-				mobforge.action_idle(mob, 1, "flop")
+				pegasus.action_idle(mob, 1, "flop")
 				return
 			end
 
@@ -932,7 +932,7 @@ mobforge.register_utility("pegasus:swim_wander", function(self)
 	self:set_utility(func)
 end)
 
-mobforge.register_utility("pegasus:swim_seek_land", function(self)
+pegasus.register_utility("pegasus:swim_seek_land", function(self)
 	local land_pos
 
 	self:set_gravity(-9.8)
@@ -974,7 +974,7 @@ end)
 
 -- Pegasus --
 
-mobforge.register_utility("pegasus:pegasus_tame", function(self)
+pegasus.register_utility("pegasus:pegasus_tame", function(self)
 	local trust = 5
 	local player = self.rider
 	local player_props = player and player:get_properties()
@@ -993,7 +993,7 @@ mobforge.register_utility("pegasus:pegasus_tame", function(self)
 	local function func(_self)
 		local pos = _self.object:get_pos()
 		if not pos then return end
-		if not player or not mobforge.is_alive(player) then return true end
+		if not player or not pegasus.is_alive(player) then return true end
 
 		-- Increase Taming progress while Players view is aligned with the Pegasi
 		local yaw, plyr_yaw = _self.object:get_yaw(), player:get_look_horizontal()
@@ -1005,16 +1005,16 @@ mobforge.register_utility("pegasus:pegasus_tame", function(self)
 			_self.owner = _self:memorize("owner", player:get_player_name())
 			pegasus.protect_from_despawn(_self)
 			pegasus.mount(_self, player)
-			pegasus.particle_spawner(pos, "mobforge_particle_green.png", "float")
+			pegasus.particle_spawner(pos, "pegasus_particle_green.png", "float")
 		elseif trust <= 0 then -- Fail
 			pegasus.mount(_self, player)
-			pegasus.particle_spawner(pos, "mobforge_particle_blue.png", "float")
+			pegasus.particle_spawner(pos, "pegasus_particle_blue.png", "float")
 		end
 
 		-- Actions
 		if not _self:get_action() then
 			if random(3) < 2 then
-				mobforge.action_idle(_self, 0.5, "punch_aoe")
+				pegasus.action_idle(_self, 0.5, "punch_aoe")
 			else
 				pegasus.action_walk(_self, 2, 0.75, "run")
 			end
@@ -1203,7 +1203,7 @@ function pegasus_breathe_fire(self)
     end)
 end
 
-mobforge.register_utility("pegasus:pegasus_ride", function(self, player)
+pegasus.register_utility("pegasus:pegasus_ride", function(self, player)
     -- Initialize player size adjustment
     local player_props = player and player:get_properties()
     if not player_props then return end
@@ -1224,7 +1224,7 @@ mobforge.register_utility("pegasus:pegasus_ride", function(self, player)
 
     local function func(_self)
         -- Basic checks
-        if not mobforge.is_alive(player) then
+        if not pegasus.is_alive(player) then
             return true
         end
 
@@ -1307,7 +1307,7 @@ end)
 
 -- Eagle --
 
-mobforge.register_utility("pegasus:eagle_attack", function(self, target)
+pegasus.register_utility("pegasus:eagle_attack", function(self, target)
 	local function func(mob)
 		local pos = mob.object:get_pos()
 		local _, is_visible, target_pos = mob:get_target(target)
@@ -1393,7 +1393,7 @@ pegasus.mob_ai.fly_landing_wander = {
 	utility = "pegasus:fly_wander",
 	get_score = function(self)
 		if self.is_landed then
-			local player = mobforge.get_nearby_player(self)
+			local player = pegasus.get_nearby_player(self)
 			if player then
 				self.is_landed = self:memorize("is_landed", false)
 			end
@@ -1422,7 +1422,7 @@ pegasus.mob_ai.fly_seek_land = {
 		if self.is_landed
 			and not self.touching_ground
 			and not self.in_liquid
-			and mobforge.sensor_floor(self, 3, true) > 2 then
+			and pegasus.sensor_floor(self, 3, true) > 2 then
 			return 0.3, { self }
 		end
 		return 0

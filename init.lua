@@ -104,6 +104,14 @@ local function load_file(filepath, filename)
     end
 end
 
+dofile(path.."/library/mob_meta.lua")
+dofile(path.."/library/api.lua") 
+dofile(path.."/library/methods.lua")
+
+dofile(path.."/library/pathfinding.lua")
+dofile(path.."/library/boids.lua")
+dofile(path.."/library/spawning.lua")
+
 dofile(path.."/api/api.lua")
 dofile(path.."/api/mob_ai.lua")
 dofile(path.."/api/lasso.lua")
