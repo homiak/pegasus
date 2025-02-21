@@ -1204,105 +1204,130 @@ function pegasus_breathe_fire(self)
 end
 
 pegasus.register_utility("pegasus:pegasus_ride", function(self, player)
-    -- Initialize player size adjustment
-    local player_props = player and player:get_properties()
-    if not player_props then return end
-    local player_size = player_props.visual_size
-    local mob_size = self.visual_size
-    local adj_size = {
-        x = player_size.x / mob_size.x,
-        y = player_size.y / mob_size.y
-    }
-    if player_size.x ~= adj_size.x then
-        player:set_properties({
-            visual_size = adj_size
-        })
-    end
+	-- Initialize player size adjustment
+	local player_props = player and player:get_properties()
+	if not player_props then return end
+	local player_size = player_props.visual_size
+	local mob_size = self.visual_size
+	local adj_size = {
+		x = player_size.x / mob_size.x,
+		y = player_size.y / mob_size.y
+	}
+	if player_size.x ~= adj_size.x then
+		player:set_properties({
+			visual_size = adj_size
+		})
+	end
 
-    -- Initialize state variables
-    local fire_breath_cooldown = 0
+	-- Initialize state variables
+	local fire_breath_cooldown = 0
+	local is_flying = false
+	local jump_height_multiplier = 50
+	local run_speed_multiplier = 50
 
-    local function func(_self)
-        -- Basic checks
-        if not pegasus.is_alive(player) then
-            return true
-        end
+	local function func(_self)
+		if not pegasus.is_alive(player) then return true end
 
-        -- Initialize movement variables
-        local anim = "stand"
-        local speed_x = 0
-        local tyaw = player:get_look_horizontal()
-        local control = player:get_player_control()
-        local vel = _self.object:get_velocity()
-        if not tyaw then return true end
+		local anim = "stand"
+		local speed_x = 0
+		local tyaw = player:get_look_horizontal()
+		local control = player:get_player_control()
+		local vel = _self.object:get_velocity()
+		if not tyaw then return true end
 
-        -- Increased base multipliers
-        local jump_height_multiplier = 50  -- Increased from 50
-        local run_speed_multiplier = 50    -- Increased from 50
+		-- Dismount check
+		if control.sneak or not _self.rider then
+			pegasus.mount(_self, player)
+			return true
+		end
 
-        -- Dismount check
-        if control.sneak or not _self.rider then
-            pegasus.mount(_self, player)
-            return true
-        end
+		-- Update player animation
+		animate_player(player, "sit", 30)
 
-        -- Update player animation
-        animate_player(player, "sit", 30)
+		-- Update player size periodically
+		if _self:timer(1) then
+			player_props = player and player:get_properties()
+			if player_props.visual_size.x ~= adj_size.x then
+				player:set_properties({
+					visual_size = adj_size
+				})
+			end
+		end
 
-        -- Update player size periodically
-        if _self:timer(1) then
-            player_props = player and player:get_properties()
-            if player_props.visual_size.x ~= adj_size.x then
-                player:set_properties({
-                    visual_size = adj_size
-                })
-            end
-        end
+		-- Fire breathing
+		fire_breath_cooldown = math.max(0, fire_breath_cooldown - _self.dtime)
+		if control.RMB and fire_breath_cooldown == 0 then
+			pegasus_breathe_fire(_self, player)
+			fire_breath_cooldown = 0.5
+			anim = "punch_aoe"
+		end
 
-        -- Fire breathing ability
-        fire_breath_cooldown = math.max(0, fire_breath_cooldown - _self.dtime)
-        if control.RMB and fire_breath_cooldown == 0 then
-            pegasus_breathe_fire(_self, player)
-            fire_breath_cooldown = 0.5
-            anim = "punch_aoe"
-        end
+		if control.up and control.jump and _self.touching_ground then
+			_self.is_flying = true
+			_self.object:set_acceleration({ x = 0, y = 0, z = 0 })
+			_self:set_gravity(0)
+		end
+		local look_dir = player:get_look_dir()
+		if _self.is_flying then
+			anim = "walk"
+			-- Flying controls
+			if control.up then
+				_self.object:set_acceleration(look_dir * 30)
+			elseif control.aux1 then
+				_self:set_forward_velocity(0)
+			end
 
-        -- Movement controls with increased speed
-        if control.up then
-            speed_x = run_speed_multiplier / 25  -- Doubled base speed
-            anim = "walk"
+			if control.jump then
+				vel.y = 6
+			elseif control.down then
+				vel.y = -6
+			else
+				vel.y = 0
+			end
+			_self.object:set_velocity(vel)
+			_self.object:set_yaw(tyaw)
 
-            if control.aux1 then
-                speed_x = 8 * run_speed_multiplier / 25  -- Doubled sprint speed
-                anim = "run"
-            end
-        end
+			-- Land if touching ground or pressing sneak
 
-        -- Faster turning towards player look direction
-        if math.abs(_self.object:get_yaw() - tyaw) > 0.01 then  -- Smaller threshold
-            _self:turn_to(tyaw, 5.5)  -- Increased turn rate from 0.3 to 1.0
-        end
+			if _self.touching_ground and not control.jump then
+				_self.is_flying = false
+				_self:set_gravity(-9.8)
+			end
 
-        -- Enhanced jumping
-        if control.jump and vel.y < 1 then
-            _self.object:add_velocity({
-                x = 0,
-                y = _self.jump_power * 12 * jump_height_multiplier / 50,  -- Doubled jump power
-                z = 0
-            })
-        end
+			if control.sneak then
+				_self.is_flying = false
+				_self:set_gravity(-9.8)
+				pegasus.mount(_self, player)
+				return true
+			end
+		else
+			-- Original ground movement
+			if control.up then
+				speed_x = run_speed_multiplier / 25
+				anim = "walk"
 
-        -- Flying animation
-        if not _self.touching_ground and not _self.in_liquid and vel.y > 0 then
-            anim = "rear"
-        end
+				if control.aux1 then
+					speed_x = 6 * run_speed_multiplier / 25
+					anim = "run"
+				end
+			end
 
-        -- Apply movement and animation
-        _self:set_forward_velocity(_self.speed * speed_x)
-        _self:animate(anim)
-    end
+			if control.jump and vel.y < 1 and not is_flying and _self.touching_ground then
+				_self.object:add_velocity({
+					x = 0,
+					y = _self.jump_power * 9 * jump_height_multiplier / 50,
+					z = 0
+				})
+			end
 
-    self:set_utility(func)
+			_self:set_forward_velocity(_self.speed * speed_x)
+			_self.object:set_yaw(tyaw)
+		end
+
+		_self:animate(anim)
+	end
+
+	self:set_utility(func)
 end)
 
 -- Eagle --

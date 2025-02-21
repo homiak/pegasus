@@ -460,6 +460,7 @@ pegasus.register_mob("pegasus:pegasus", {
 	end,
 
 	activate_func = function(self)
+		self.is_flying = self.is_flying or false
 		self.fire = 10 -- Initial fire charges
 		pegasus.initialize_api(self)
 		pegasus.initialize_lasso(self)
