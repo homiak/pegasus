@@ -37,6 +37,6 @@ The Pegasus Mod allows players to encounter, tame, and fly on majestic winged ho
 Initial release
 
 ## optional dependency "waterdragon"
-The mod has an optional dependency on Draigh-Uisge (waterdragon) mod. When both mods are installed, Dragons and Pegasi will recognize each other in the world. Pegasi can use Dragon-like flight mechanics, and Dragons may respond differently to Pegasi. The interaction between these magnificent creatures adds depth to your mythical creature experience.
+The mod has an optional dependency on Draigh-uisge mod. When both mods are installed, Dragons and Pegasi will recognize each other in the world. Water Dragons can carry Pegasi on their backs during flight. When Scottish Dragons are in proximity (within 10 blocks) of Pegasi, it has the improved ability to breathe fire. 
 
 The mod is created by Scottii and based on "Animalia" by ElCeejo, "Draigh-Uisge (waterdragon)" by Scottii and on "Creatura" by ElCeejo.
