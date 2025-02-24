@@ -11,7 +11,6 @@ The Pegasus Mod allows players to encounter, tame, and fly on majestic winged ho
 - Pegasi spawn in grassland biomes
 - Ability to tame Pegasi
 - Flying on Pegasi
-- Unique sounds and animations for Pegasi
 
 ## Installation
 
