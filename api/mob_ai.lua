@@ -1262,7 +1262,7 @@ pegasus.register_utility("pegasus:pegasus_ride", function(self, player)
 			anim = "punch_aoe"
 		end
 
-		if control.up and control.jump and _self.touching_ground then
+		if control.down and control.jump and _self.touching_ground then
 			_self.is_flying = true
 			_self.object:set_acceleration({ x = 0, y = 0, z = 0 })
 			_self:set_gravity(0)
@@ -1272,9 +1272,13 @@ pegasus.register_utility("pegasus:pegasus_ride", function(self, player)
 			anim = "walk"
 			-- Flying controls
 			if control.up then
-				_self.object:set_acceleration(look_dir * 30)
-			elseif control.aux1 then
-				_self:set_forward_velocity(0)
+				if control.aux1 then
+					-- Медленный полет
+					_self.object:set_acceleration(look_dir * 0.0001)
+				else
+					-- Нормальная скорость
+					_self.object:set_acceleration(look_dir * 30)
+				end
 			end
 
 			if control.jump then
@@ -1307,7 +1311,7 @@ pegasus.register_utility("pegasus:pegasus_ride", function(self, player)
 				anim = "walk"
 
 				if control.aux1 then
-					speed_x = 6 * run_speed_multiplier / 25
+					speed_x = 2 * run_speed_multiplier / 25
 					anim = "run"
 				end
 			end
@@ -1315,7 +1319,7 @@ pegasus.register_utility("pegasus:pegasus_ride", function(self, player)
 			if control.jump and vel.y < 1 and not is_flying and _self.touching_ground then
 				_self.object:add_velocity({
 					x = 0,
-					y = _self.jump_power * 9 * jump_height_multiplier / 50,
+					y = _self.jump_power * 2 * jump_height_multiplier / 50,
 					z = 0
 				})
 			end
