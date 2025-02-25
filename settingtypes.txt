@@ -1,9 +1,6 @@
 #    If true, Pegasi will spawn in the wild
 spawn_mobs (Spawn Pegasi) bool true
 
-#   If true, by riding a Pegasus it will be able to push off the air
-pegasus_air_jump (Pegasus Air Jump) bool true
-
 # Pegasus jump height multiplier (30 - 100)
 pegasus_jump_height (Pegasus Jump Height) int 50 30 100
 
