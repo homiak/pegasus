@@ -288,17 +288,17 @@ pegasus.register_mob("pegasus:pegasus", {
 	sounds = {
 		alter_child_pitch = true,
 		random = {
-			name = "pegasus_pegasus_idle",
+			name = "pegasus_idle",
 			gain = 1.0,
 			distance = 8
 		},
 		hurt = {
-			name = "pegasus_pegasus_hurt",
+			name = "pegasus_hurt",
 			gain = 1.0,
 			distance = 8
 		},
 		death = {
-			name = "pegasus_pegasus_death",
+			name = "pegasus_death",
 			gain = 1.0,
 			distance = 8
 		}
