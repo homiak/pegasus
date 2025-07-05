@@ -1,42 +1,40 @@
-# Pegasus Mod for Minetest
-
-This mod adds Pegasi to the Minetest game world.
+# Pegasus mod for Minetest/Luanti
+This mod adds magical Pegasi to the `Minetest game` world — winged horses you can tame, ride, and befriend.
 
 ## Description
-
-The Pegasus Mod allows players to encounter, tame, and fly on majestic winged horses - Pegasi. These mythical creatures will add new exploration possibilities to your Minetest world.
+`Pegasi` are legendary flying horses inspired by Greek mythology. In the game, they roam the world, can be tamed and ridden, and even fly through the skies. They are more than just mounts — they interact with `Water Dragons`, follow their own paths, and have their own lore, recorded in a special `in-game book`.
 
 ## Features
-
 - Pegasi spawn in grassland biomes
-- Ability to tame Pegasi
-- Flying on Pegasi
+- You can tame and ride them
+- Flight controls for flying and trotting
+- Pegasi follow custom roaming logic
+- Special interactions with Water Dragons
+- In-game book with more lore and info
+- Custom textures and sounds
 
 ## Installation
-
 ### From ContentDB
-1. Download the mod archive
-2. Unpack the archive
-3. Copy the mod in the directory "mods" in Minetest
+1. Download the archive
+2. Unpack it
+3. Place the folder in the "mods" directory
 
-### From Minetest Mod Menu
-1. Go to all mods
-2. Find "Pegasus"
-3. Download the mod
-4. Turn the mod on
+### From the Luanti Mod Menu
+1. Open the mod browser
+2. Search for “Pegasus”
+3. Download and enable it
 
 ## Usage
+1. Look for Pegasi in grasslands
+2. Right-click to try taming one
+3. Ride and use movement keys to fly:
 
-- Find a Pegasus in the world
-- Tame it by mounting on it
-- You can start flying
+- Forward = trot
+- Forward + Aux1 = canter
+- Double jump = take off
 
-## Release log
+This mod is created by **Scottii** and based on [Animalia](https://content.luanti.org/packages/ElCeejo/animalia/) and on [Dragan-uisge (Water Dragon)](https://content.luanti.org/packages/homiak/waterdragon/).
 
-# Release v. 1.0.0 
-Initial release
-
-## optional dependency "waterdragon"
-The mod has an optional dependency on Draigh-uisge mod. When both mods are installed, Dragons and Pegasi will recognize each other in the world. Water Dragons can carry Pegasi on their backs during flight. When Scottish Dragons are in proximity (within 10 blocks) of Pegasi, it has the improved ability to breathe fire. 
-
-The mod is created by Scottii and based on "Animalia" by ElCeejo, "Draigh-Uisge (waterdragon)" by Scottii and on "Creatura" by ElCeejo.
+## Release Log
+### v1.0.0
+- First public release

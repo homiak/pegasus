@@ -762,7 +762,6 @@ pegasus.register_utility("pegasus:basic_wander", function(self)
 		local pos = mob.stand_pos
 
 		if mob:timer(2) then
-
 			-- Grazing Behavior
 			if mob.is_grazing_mob
 				and random(graze_chance) < 2 then
@@ -1061,7 +1060,7 @@ minetest.register_node("pegasus:fire_animated", {
 		local objects = minetest.get_objects_inside_radius(pos, 1.5)
 		for _, obj in ipairs(objects) do
 			local ent = obj:get_luaentity()
-			if obj:is_player() or (ent and ent.name ~= "waterdragon:scottish_dragon" and ent.name ~= "pegasus:pegasus"and ent.name ~= "waterdragon:rare_water_dragon" and ent.name ~= "waterdragon:pure_water_dragon") then
+			if obj:is_player() or (ent and ent.name ~= "waterdragon:scottish_dragon" and ent.name ~= "pegasus:pegasus" and ent.name ~= "waterdragon:rare_water_dragon" and ent.name ~= "waterdragon:pure_water_dragon") then
 				obj:punch(obj, 1.0, {
 					full_punch_interval = 1.0,
 					damage_groups = { fleshy = 4 },
@@ -1086,254 +1085,258 @@ minetest.register_node("pegasus:fire_animated", {
 })
 
 function pegasus_breathe_fire(self)
-    if not self.fire_breathing then return end
-    if not self.fire or self.fire <= 0 then
-        self.fire_breathing = false
-        return
-    end
-    
-    local pos = self.object:get_pos()
-    if not pos then return end
-    
-    local yaw = self.object:get_yaw()
-    local dir = vector.new(
-        -math.sin(yaw),
-        0,
-        math.cos(yaw)
-    )
-    local start_pos = vector.add(pos, vector.new(0, 1.2, 0))
-    local end_pos = vector.add(start_pos, vector.multiply(dir, 20))
-    
-    local particle_types = {
-        {
-            texture = "pegasus_fire_1.png",
-            size = { min = 2, max = 4 },
-            velocity = { min = 15, max = 20 },
-            acceleration = { y = { min = 2, max = 4 } },
-            exptime = { min = 0.8, max = 1.2 },
-            glow = 14
-        },
-        {
-            texture = "pegasus_fire_2.png",
-            size = { min = 2, max = 4 },
-            velocity = { min = 15, max = 20 },
-            acceleration = { y = { min = 2, max = 4 } },
-            exptime = { min = 0.8, max = 1.2 },
-            glow = 14
-        },
-        {
-            texture = "pegasus_fire_3.png",
-            size = { min = 2, max = 4 },
-            velocity = { min = 15, max = 20 },
-            acceleration = { y = { min = 2, max = 4 } },
-            exptime = { min = 0.8, max = 1.2 },
-            glow = 14
-        },
-    }
-    
-    -- Spawn particles
-    for i = 1, 50 do
-        local particle = particle_types[math.random(#particle_types)]
-        
-        minetest.add_particle({
-            pos = vector.add(start_pos, vector.new(
-                math.random(-5, 5) / 10,
-                math.random(-5, 5) / 10,
-                math.random(-5, 5) / 10
-            )),
-            velocity = vector.multiply(vector.add(dir, vector.new(
-                math.random(-2, 2) / 10,
-                math.random(-2, 2) / 10,
-                math.random(-2, 2) / 10
-            )), math.random(particle.velocity.min, particle.velocity.max)),
-            acceleration = { x = 0, y = math.random(particle.acceleration.y.min, particle.acceleration.y.max), z = 0 },
-            expirationtime = math.random(particle.exptime.min, particle.exptime.max),
-            size = math.random(particle.size.min, particle.size.max),
-            collisiondetection = true,
-            collision_removal = true,
-            vertical = false,
-            texture = particle.texture,
-            glow = particle.glow
-        })
-    end
-    
-    -- Check for block collisions and ignite blocks
-    local step = 1
-    for i = 0, 20, step do
-        local check_pos = vector.add(start_pos, vector.multiply(dir, i))
-        local node = minetest.get_node(check_pos)
-        if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
-            minetest.set_node(check_pos, { name = "pegasus:fire_animated" })
-        end
-        
-        -- Check for entities at each step
-        local objects = minetest.get_objects_inside_radius(check_pos, 2)
-        for _, obj in ipairs(objects) do
-            if obj ~= self.object then
-                local ent = obj:get_luaentity()
-                if ent and ent.name ~= self.name then
-                    obj:punch(self.object, 1.0, {
-                        full_punch_interval = 1.0,
-                        damage_groups = { fleshy = 8 },
-                    }, nil)
-                end
-            end
-        end
-        
-        -- Stop if we hit a non-air block
-        if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
-            break
-        end
-    end
-    
-    -- Decrease fire charge every second
-    self.fire_timer = (self.fire_timer or 0) + 0.1
-    if self.fire_timer >= 1 then
-        self.fire = self.fire - 1
-        self.fire_timer = 0
-        if self.fire <= 0 then
-            self.fire_breathing = false
-            return
-        end
-    end
-    
-    -- Schedule the next fire breath
-    minetest.after(0.1, function()
-        pegasus_breathe_fire(self)
-    end)
+	if not self.fire_breathing then return end
+	if not self.fire or self.fire <= 0 then
+		self.fire_breathing = false
+		return
+	end
+
+	local pos = self.object:get_pos()
+	if not pos then return end
+
+	local yaw = self.object:get_yaw()
+	local dir = vector.new(
+		-math.sin(yaw),
+		0,
+		math.cos(yaw)
+	)
+	local start_pos = vector.add(pos, vector.new(0, 1.2, 0))
+	local end_pos = vector.add(start_pos, vector.multiply(dir, 20))
+
+	local particle_types = {
+		{
+			texture = "pegasus_fire_1.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+		{
+			texture = "pegasus_fire_2.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+		{
+			texture = "pegasus_fire_3.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+	}
+
+	-- Spawn particles
+	for i = 1, 50 do
+		local particle = particle_types[math.random(#particle_types)]
+
+		minetest.add_particle({
+			pos = vector.add(start_pos, vector.new(
+				math.random(-5, 5) / 10,
+				math.random(-5, 5) / 10,
+				math.random(-5, 5) / 10
+			)),
+			velocity = vector.multiply(vector.add(dir, vector.new(
+				math.random(-2, 2) / 10,
+				math.random(-2, 2) / 10,
+				math.random(-2, 2) / 10
+			)), math.random(particle.velocity.min, particle.velocity.max)),
+			acceleration = { x = 0, y = math.random(particle.acceleration.y.min, particle.acceleration.y.max), z = 0 },
+			expirationtime = math.random(particle.exptime.min, particle.exptime.max),
+			size = math.random(particle.size.min, particle.size.max),
+			collisiondetection = true,
+			collision_removal = true,
+			vertical = false,
+			texture = particle.texture,
+			glow = particle.glow
+		})
+	end
+
+	-- Check for block collisions and ignite blocks
+	local step = 1
+	for i = 0, 20, step do
+		local check_pos = vector.add(start_pos, vector.multiply(dir, i))
+		local node = minetest.get_node(check_pos)
+		if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
+			minetest.set_node(check_pos, { name = "pegasus:fire_animated" })
+		end
+
+		-- Check for entities at each step
+		local objects = minetest.get_objects_inside_radius(check_pos, 2)
+		for _, obj in ipairs(objects) do
+			if obj ~= self.object then
+				local ent = obj:get_luaentity()
+				if ent and ent.name ~= self.name then
+					obj:punch(self.object, 1.0, {
+						full_punch_interval = 1.0,
+						damage_groups = { fleshy = 8 },
+					}, nil)
+				end
+			end
+		end
+
+		-- Stop if we hit a non-air block
+		if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
+			break
+		end
+	end
+
+	-- Decrease fire charge every second
+	self.fire_timer = (self.fire_timer or 0) + 0.1
+	if self.fire_timer >= 1 then
+		self.fire = self.fire - 1
+		self.fire_timer = 0
+		if self.fire <= 0 then
+			self.fire_breathing = false
+			return
+		end
+	end
+
+	-- Schedule the next fire breath
+	minetest.after(0.1, function()
+		pegasus_breathe_fire(self)
+	end)
 end
 
 pegasus.register_utility("pegasus:pegasus_ride", function(self, player)
-    -- Initialize player size adjustment
-    local player_props = player and player:get_properties()
-    if not player_props then return true end
-    local player_size = player_props.visual_size
-    local mob_size = self.visual_size
-    local adj_size = {
-        x = player_size.x / mob_size.x,
-        y = player_size.y / mob_size.y
-    }
-    if player_size.x ~= adj_size.x then
-        player:set_properties({
-            visual_size = adj_size
-        })
-    end
+	-- Initialize player size adjustment
+	local player_props = player and player:get_properties()
+	if not player_props then return true end
+	local player_size = player_props.visual_size
+	local mob_size = self.visual_size
+	local adj_size = {
+		x = player_size.x / mob_size.x,
+		y = player_size.y / mob_size.y
+	}
+	if player_size.x ~= adj_size.x then
+		player:set_properties({
+			visual_size = adj_size
+		})
+	end
 
-    -- Initialize state variables
-    local fire_breath_cooldown = 0
-    local is_flying = self:recall("is_flying") or false
-    local fly_speed = 12 -- Base speed for flying
-    local run_speed = 8  -- Base speed for running on the ground
+	-- Initialize state variables
+	local fire_breath_cooldown = 0
+	local is_flying = self:recall("is_flying") or false
+	local fly_speed = 12 -- Base speed for flying
+	local run_speed = 8 -- Base speed for running on the ground
 
-    local function func(_self)
-        if not pegasus.is_alive(player) then return true end
+	-- Get player-specific settings
+	local player_name = player:get_player_name()
 
-        local anim = "stand"
-        local tyaw = player:get_look_horizontal()
-        local control = player:get_player_control()
-        if not tyaw then return true end
+	local function func(_self)
+		if not pegasus.is_alive(player) then return true end
 
-        -- Dismount check
-        if control.sneak or not _self.rider then
-            pegasus.mount(_self, player)
-            _self.is_flying = _self:memorize("is_flying", false) -- Ensure flying stops on dismount
-            _self:set_gravity(-9.8)
-            return true
-        end
+		local anim = "stand"
+		local tyaw = player:get_look_horizontal()
+		local control = player:get_player_control()
+		if not tyaw then return true end
 
-        -- Update player animation and size
-        animate_player(player, "sit", 30)
-        if _self:timer(1) then
-            player_props = player and player:get_properties()
-            if player_props and player_props.visual_size.x ~= adj_size.x then
-                player:set_properties({ visual_size = adj_size })
-            end
-        end
+		-- Dismount check
+		if control.sneak or not _self.rider then
+			pegasus.mount(_self, player)
+			_self.is_flying = _self:memorize("is_flying", false) -- Ensure flying stops on dismount
+			_self:set_gravity(-9.8)
+			return true
+		end
 
-        -- Fire breathing
-        fire_breath_cooldown = math.max(0, fire_breath_cooldown - _self.dtime)
-        if control.RMB and fire_breath_cooldown == 0 then
-            pegasus_breathe_fire(_self, player)
-            fire_breath_cooldown = 0.5
-            anim = "punch_aoe"
-        end
+		-- Update player animation and size
+		animate_player(player, "sit", 30)
+		if _self:timer(1) then
+			player_props = player and player:get_properties()
+			if player_props and player_props.visual_size.x ~= adj_size.x then
+				player:set_properties({ visual_size = adj_size })
+			end
+		end
 
-        -- Toggle flying mode
-        if control.jump and _self.touching_ground and not is_flying then
-            -- Double-tap jump to take off
-            if _self.jump_timer and _self.jump_timer > 0 then
-                is_flying = _self:memorize("is_flying", true)
-                _self:set_gravity(0)
-                _self.object:add_velocity({x=0, y=3, z=0}) -- Initial jump boost
-            end
-            _self.jump_timer = 1 -- You have 1s to press jump again
-        end
-        if _self.jump_timer then
-            _self.jump_timer = _self.jump_timer - _self.dtime
-        end
+		-- Fire breathing
+		fire_breath_cooldown = math.max(0, fire_breath_cooldown - _self.dtime)
+		if control.RMB and fire_breath_cooldown == 0 then
+			pegasus_breathe_fire(_self, player)
+			fire_breath_cooldown = 0.5
+			anim = "punch_aoe"
+		end
 
-        if is_flying then
-            anim = "walk"
-            local look_dir = player:get_look_dir()
-            local target_velocity = {x = 0, y = 0, z = 0}
-            local current_speed = fly_speed
+		-- Toggle flying mode
+		if control.jump and _self.touching_ground and not is_flying then
+			-- Double-tap jump to take off
+			if _self.jump_timer and _self.jump_timer > 0 then
+				is_flying = _self:memorize("is_flying", true)
+				_self:set_gravity(0)
+				_self.object:add_velocity({ x = 0, y = 3, z = 0 }) -- Initial jump boost
+			end
+			_self.jump_timer = 1                       -- You have 1s to press jump again
+		end
+		if _self.jump_timer then
+			_self.jump_timer = _self.jump_timer - _self.dtime
+		end
 
-            -- Sprinting in the air
-            if control.aux1 then
-                current_speed = fly_speed * 2
+		if is_flying then
+			anim = "walk"
+			local look_dir = player:get_look_dir()
+			local target_velocity = { x = 0, y = 0, z = 0 }
+			local current_speed = fly_speed
+			local is_moving = false
+
+			-- Sprinting in the air
+			if control.aux1 then
+				current_speed = fly_speed * 2
 				anim = "run"
-            end
+			end
 
-            -- Forward movement
-            if control.up then
-                target_velocity = vector.multiply(look_dir, current_speed)
-            end
-            
-            -- Vertical movement (independent of forward)
-            if control.jump then
-                target_velocity.y = 6
-            elseif control.down then
-                target_velocity.y = -6
-            else
-                -- If not moving up or down, inherit the forward look direction's y-component
-                if not control.up then
-                    target_velocity.y = 0
-                end
-            end
+			-- Forward movement
+			if control.up then
+				is_moving = true
+				target_velocity = vector.multiply(player:get_look_dir(), current_speed)
+				-- If vertical lock is on, ignore the Y component of the look direction
+				
+			end
 
-            _self.object:set_velocity(target_velocity)
-            _self.object:set_acceleration({x=0, y=0, z=0}) -- Ensure no residual acceleration
-            _self.object:set_yaw(tyaw)
+			-- Vertical movement (independent of forward)
+			if control.jump then
+				is_moving = true
+				target_velocity.y = 6
+			elseif control.down then
+				is_moving = true
+				target_velocity.y = -6
+			end
 
-            -- Landing
-            if _self.touching_ground and control.down then
-                is_flying = _self:memorize("is_flying", false)
-                _self:set_gravity(-9.8)
-            end
-        else
-            -- Original ground movement
-            local speed_x = 0
-            if control.up then
-                speed_x = run_speed
-                anim = "walk"
-                if control.aux1 then
-                    speed_x = run_speed * 1.75
-                    anim = "run"
-                end
-            end
+			_self.object:set_velocity(target_velocity)
+			_self.object:set_acceleration({ x = 0, y = 0, z = 0 }) -- Ensure no residual acceleration
+			_self.object:set_yaw(tyaw)
 
-            if control.jump and _self.touching_ground then
-                _self.object:add_velocity({ x=0, y=_self.jump_power * 2, z=0 })
-            end
+			-- Landing
+			if _self.touching_ground and control.down then
+				is_flying = _self:memorize("is_flying", false)
+				_self:set_gravity(-9.8)
+			end
+		else
+			-- Original ground movement
+			local speed_x = 0
+			if control.up then
+				speed_x = run_speed
+				anim = "walk"
+				if control.aux1 then
+					speed_x = run_speed * 1.75
+					anim = "run"
+				end
+			end
 
-            _self:set_forward_velocity(speed_x)
-            _self.object:set_yaw(tyaw)
-        end
+			if control.jump and _self.touching_ground then
+				_self.object:add_velocity({ x = 0, y = _self.jump_power * 2, z = 0 })
+			end
 
-        _self:animate(anim)
-    end
+			_self:set_forward_velocity(speed_x)
+			_self.object:set_yaw(tyaw)
+		end
 
-    self:set_utility(func)
+		_self:animate(anim)
+	end
+
+	self:set_utility(func)
 end)
 
 -- Eagle --
@@ -1480,5 +1483,3 @@ pegasus.mob_ai.swim_wander = {
 		return 0.1, { self }
 	end
 }
-
-
