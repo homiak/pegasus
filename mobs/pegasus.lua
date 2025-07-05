@@ -227,41 +227,51 @@ local patterns = {
 
 local avlbl_colors = {
 	[1] = {
-		"pegasus.png"
+		"pegasus_1.png"
 	},
 	[2] = {
-		"pegasus.png",
+		"pegasus_2.png",
 	},
-	[3] = {
-		"pegasus.png"
-	},
-	[4] = {
-		"pegasus.png"
-	},
-	[5] = {
-		"pegasus.png"
-	}
 }
 
 local function set_pattern(self)
-	local pattern_no = self:recall("pattern_no")
-	if pattern_no and pattern_no < 1 then return end
-	if not pattern_no then
-		if random(3) < 2 then
-			pattern_no = self:memorize("pattern_no", random(#patterns))
-		else
-			self:memorize("pattern_no", 0)
-			return
-		end
-	end
-	local colors = avlbl_colors[self.texture_no]
-	local color_no = self:recall("color_no") or self:memorize("color_no", random(#colors))
-	if not colors[color_no] then return end
-	local pattern = "(" .. patterns[pattern_no] .. "^[mask:" .. colors[color_no] .. ")"
-	local texture = self.textures[self.texture_no]
-	self.object:set_properties({
-		textures = { texture .. "^" .. pattern }
-	})
+    local pattern_no = self:recall("pattern_no")
+    if pattern_no and pattern_no < 1 then return end -- A value of 0 means no pattern
+    if not pattern_no then
+        if random(3) < 2 then
+            pattern_no = self:memorize("pattern_no", random(#patterns))
+        else
+            self:memorize("pattern_no", 0)
+            return
+        end
+    end
+
+    -- If there's no pattern to apply, exit early.
+    if not pattern_no or pattern_no == 0 then
+        return
+    end
+
+    local colors = avlbl_colors[self.texture_no]
+    if not colors then return end -- Safety check if texture_no is invalid
+
+    local color_no = self:recall("color_no") or self:memorize("color_no", random(#colors))
+    if not colors[color_no] then return end
+
+    -- This is the core fix: Get the CURRENT base texture from the object's properties.
+    local props = self.object:get_properties()
+    local base_texture = props.textures[1]
+
+    -- Remove any existing overlays (like a saddle) before applying the new one.
+    if base_texture:find("%^") then
+        base_texture = base_texture:split("%^")[1]
+    end
+
+    local pattern_overlay = "(" .. patterns[pattern_no] .. "^[mask:" .. colors[color_no] .. ")"
+    
+    -- Apply the base texture with the new pattern overlay.
+    self.object:set_properties({
+        textures = { base_texture .. "^" .. pattern_overlay }
+    })
 end
 
 -- Definition
@@ -271,7 +281,8 @@ pegasus.register_mob("pegasus:pegasus", {
 	visual_size = { x = 10, y = 10 },
 	mesh = "pegasus_pegasus.b3d",
 	textures = {
-		"pegasus.png",
+		"pegasus_1.png",
+		"pegasus_2.png",
 	},
 	makes_footstep_sound = true,
 
@@ -621,17 +632,6 @@ pegasus.register_mob("pegasus:pegasus", {
 		end
 		pegasus.eat_dropped_item(self, item)
 		if not clicker or not clicker:is_player() then return end
-
-		local itemstack = clicker:get_wielded_item()
-
-		if itemstack:get_name() == "pegasus:nametag" then
-			minetest.show_formspec(clicker:get_player_name(), "name_pegasus_form",
-				"field[name;Enter the name for your Pegasus:;]" ..
-				"button_exit[1,2;2,1;submit;Submit]")
-
-			self.last_clicked_by = clicker:get_player_name() -- Store the player name
-			return
-		end
 
 		local owner = self.owner
 		local name = clicker and clicker:get_player_name()

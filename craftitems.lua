@@ -91,54 +91,67 @@ minetest.register_craft({
 -----------
 
 
-local nametag = {}
-
-local function get_rename_formspec(meta)
-	local tag = meta:get_string("name") or ""
-	local form = {
-		"size[8,4]",
-		"field[0.5,1;7.5,0;name;" .. minetest.formspec_escape("Enter name:") .. ";" .. tag .. "]",
-		"button_exit[2.5,3.5;3,1;set_name;" .. minetest.formspec_escape("Set Name") .. "]"
-	}
-	return table.concat(form, "")
-end
-
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-	if formname == "pegasus:set_name" and fields.name then
-		local name = player:get_player_name()
-		if not nametag[name] then
-			return
-		end
-		local itemstack = nametag[name]
-		if string.len(fields.name) > 64 then
-			fields.name = string.sub(fields.name, 1, 64)
-		end
-		local meta = itemstack:get_meta()
-		meta:set_string("name", fields.name)
-		meta:set_string("description", fields.name)
-		player:set_wielded_item(itemstack)
-		if fields.quit or fields.key_enter then
-			nametag[name] = nil
-		end
-	end
+    if formname == "pegasus:set_nametag_form" and fields.name then
+        local itemstack = player:get_wielded_item()
+        if itemstack:get_name() ~= "pegasus:nametag" then
+            return
+        end
+        
+        local name_to_set = fields.name
+        if string.len(name_to_set) > 64 then
+            name_to_set = string.sub(name_to_set, 1, 64)
+        end
+
+        local meta = itemstack:get_meta()
+        meta:set_string("pegasus_name", name_to_set)
+        -- Update the item's description to show the name it holds
+        meta:set_string("description", "Nametag: " .. name_to_set)
+        player:set_wielded_item(itemstack)
+    end
 end)
 
-local function nametag_rightclick(itemstack, player, pointed_thing)
-	if pointed_thing
-	and pointed_thing.type == "object" then
-		return
-	end
-	local name = player:get_player_name()
-	nametag[name] = itemstack
-	local meta = itemstack:get_meta()
-	minetest.show_formspec(name, "pegasus:set_name", get_rename_formspec(meta))
-end
-
 minetest.register_craftitem("pegasus:nametag", {
-	description = S("Nametag"),
-	inventory_image = "pegasus_nametag.png",
-	on_rightclick = nametag_rightclick,
-	on_secondary_use = nametag_rightclick
+    description = S("Nametag"),
+    inventory_image = "pegasus_nametag.png",
+    on_secondary_use = function(itemstack, user, pointed_thing)
+        -- If pointing at a pegasus, apply the name from the item's metadata
+        if pointed_thing.type == "object" then
+            local entity = pointed_thing.ref:get_luaentity()
+            if entity and entity.name and entity.name:match("^pegasus:") then
+                local meta = itemstack:get_meta()
+                local stored_name = meta:get_string("pegasus_name")
+
+                if stored_name and stored_name ~= "" then
+                    -- Apply the name to the entity
+                    entity.nametag = stored_name
+                    entity.object:set_properties({ nametag = stored_name, nametag_color = "#d1fff7" })
+                    entity:memorize("nametag", stored_name)
+
+                    -- Protect from despawn
+                    if pegasus.protect_from_despawn then
+                        pegasus.protect_from_despawn(entity)
+                    else
+                        entity:memorize("despawn_after", false)
+                    end
+                    
+                    -- Consume the item
+                    itemstack:take_item()
+                    return itemstack
+                end
+            end
+        end
+
+        -- If not pointing at a pegasus (or if the tag has no name), open the form to set a name
+        local meta = itemstack:get_meta()
+        local tag = meta:get_string("pegasus_name") or ""
+        minetest.show_formspec(user:get_player_name(), "pegasus:set_nametag_form", 
+            "size[8,4]" ..
+            "field[0.5,1;7.5,0;name;" .. minetest.formspec_escape("Enter name:") .. ";" .. tag .. "]" ..
+            "button_exit[2.5,3.5;3,1;set_name;" .. minetest.formspec_escape("Set Name") .. "]"
+        )
+        return itemstack
+    end,
 })
 
 -- Pegasus Parade --

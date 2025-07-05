@@ -71,12 +71,12 @@ end
 ---------------------
 
 local function activate_nametag(self)
-	self.nametag = self:recall("nametag") or nil
-	if not self.nametag then return end
-	self.object:set_properties({
-		nametag = self.nametag,
-		nametag_color = "#FFFFFF"
-	})
+    self.nametag = self:recall("nametag") or nil
+    if not self.nametag then return end
+    self.object:set_properties({
+        nametag = self.nametag,
+        nametag_color = "#d1fff7"
+    })
 end
 
 pegasus.animate_player = {}
@@ -470,26 +470,16 @@ function pegasus.despawn_inactive_mob(self)
 end
 
 function pegasus.set_nametag(self, clicker)
-	local plyr_name = clicker and clicker:get_player_name()
-	if not plyr_name then return end
-	local item = clicker:get_wielded_item()
-	if item
-	and item:get_name() ~= "pegasus:nametag" then
-		return
-	end
-	local name = item:get_meta():get_string("name")
-	if not name
-	or name == "" then
-		return
-	end
-	self.nametag = self:memorize("nametag", name)
-	self.despawn_after = self:memorize("despawn_after", false)
-	activate_nametag(self)
-	if not minetest.is_creative_enabled(plyr_name) then
-		item:take_item()
-		clicker:set_wielded_item(item)
-	end
-	return true
+    local item = clicker and clicker:get_wielded_item()
+    if not item or item:get_name() ~= "pegasus:nametag" then
+        return -- Not holding a nametag, do nothing.
+    end
+
+    -- By returning true here, we tell the game:
+    -- "Yes, we handled the right-click for the nametag."
+    -- This prevents the player from trying to mount the pegasus,
+    -- and allows the item's on_secondary_use to fire correctly.
+    return true
 end
 
 function pegasus.initialize_api(self)
@@ -509,7 +499,6 @@ function pegasus.initialize_api(self)
 	self.breeding_cooldown = self:recall("breeding_cooldown") or 0
 
 	-- Textures/Scale
-	activate_nametag(self)
 	if self.growth_scale then
 		self:memorize("growth_scale", self.growth_scale) -- This is for spawning children
 	end
@@ -535,6 +524,7 @@ function pegasus.initialize_api(self)
 			mesh = self.child_mesh
 		})
 	end
+	activate_nametag(self)
 end
 
 function pegasus.step_timers(self)
