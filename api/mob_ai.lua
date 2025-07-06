@@ -974,59 +974,83 @@ end)
 -- Pegasus --
 
 pegasus.register_utility("pegasus:pegasus_tame", function(self)
-	local trust = 5
-	local player = self.rider
-	local player_props = player and player:get_properties()
-	if not player_props then return end
-	local player_size = player_props.visual_size
-	local mob_size = self.visual_size
-	local adj_size = {
-		x = player_size.x / mob_size.x,
-		y = player_size.y / mob_size.y
-	}
-	if player_size.x ~= adj_size.x then
-		player:set_properties({
-			visual_size = adj_size
-		})
-	end
-	local function func(_self)
-		local pos = _self.object:get_pos()
-		if not pos then return end
-		if not player or not pegasus.is_alive(player) then return true end
+    -- Get the player who is riding. This is the candidate for taming.
+    local player = self.rider
+    if not player or not player:is_player() then return true end
 
-		-- Increase Taming progress while Players view is aligned with the Pegasi
-		local yaw, plyr_yaw = _self.object:get_yaw(), player:get_look_horizontal()
-		local yaw_diff = abs(diff(yaw, plyr_yaw))
+    -- Initialize taming trust ON THE MOB ITSELF if it doesn't exist.
+    if not self.taming_trust then
+        self.taming_trust = self.taming_trust or 5 -- Starting trust value
+    end
 
-		trust = yaw_diff < pi / 3 and trust + _self.dtime or trust - _self.dtime * 0.5
+    -- Adjust player size (this part is correct)
+    local player_props = player:get_properties()
+    if not player_props then return true end
+    local player_size = player_props.visual_size
+    local mob_size = self.visual_size
+    local adj_size = {
+        x = player_size.x / mob_size.x,
+        y = player_size.y / mob_size.y
+    }
+    if player_size.x ~= adj_size.x then
+        player:set_properties({
+            visual_size = adj_size
+        })
+    end
 
-		if trust >= 10 then -- Tame
-			_self.owner = _self:memorize("owner", player:get_player_name())
-			pegasus.protect_from_despawn(_self)
-			pegasus.mount(_self, player)
-			pegasus.particle_spawner(pos, "pegasus_particle_green.png", "float")
-		elseif trust <= 0 then -- Fail
-			pegasus.mount(_self, player)
-			pegasus.particle_spawner(pos, "pegasus_particle_blue.png", "float")
-		end
+    local function func(_self)
+        -- Check if the player is still online and riding
+        if not player or not pegasus.is_alive(player) or not _self.rider then
+            _self.taming_trust = nil -- Reset trust if player disconnects or dismounts
+            return true
+        end
 
-		-- Actions
-		if not _self:get_action() then
-			if random(3) < 2 then
-				pegasus.action_idle(_self, 0.5, "punch_aoe")
-			else
-				pegasus.action_walk(_self, 2, 0.75, "run")
-			end
-		end
+        local pos = _self.object:get_pos()
+        if not pos then return true end
 
-		-- Dismount
-		if not player
-			or player:get_player_control().sneak then
-			pegasus.mount(_self, player)
-			return true
-		end
-	end
-	self:set_utility(func)
+        -- Increase/Decrease Taming progress based on view alignment
+        local yaw, plyr_yaw = _self.object:get_yaw(), player:get_look_horizontal()
+        local yaw_diff = abs(diff(yaw, plyr_yaw))
+
+        -- Update the trust value that is stored ON THE MOB
+        if yaw_diff < pi / 3 then
+            _self.taming_trust = _self.taming_trust + _self.dtime
+        else
+            _self.taming_trust = _self.taming_trust - _self.dtime * 0.5
+        end
+
+        -- Check for success or failure
+        if _self.taming_trust >= 10 then -- Tame successful
+            _self.owner = _self:memorize("owner", player:get_player_name())
+            pegasus.protect_from_despawn(_self)
+            pegasus.mount(_self, player) -- Dismount the player
+            pegasus.particle_spawner(pos, "pegasus_particle_green.png", "float")
+            _self.taming_trust = nil -- Reset for the future
+            return true -- End the utility
+        elseif _self.taming_trust <= 0 then -- Tame failed
+            pegasus.mount(_self, player) -- Dismount the player
+            pegasus.particle_spawner(pos, "pegasus_particle_blue.png", "float")
+            _self.taming_trust = nil -- Reset for the future
+            return true -- End the utility
+        end
+
+        -- Bucking actions while taming
+        if not _self:get_action() then
+            if random(3) < 2 then
+                pegasus.action_idle(_self, 0.5, "punch_aoe")
+            else
+                pegasus.action_walk(_self, 2, 0.75, "run")
+            end
+        end
+
+        -- Player can dismount to cancel
+        if player:get_player_control().sneak then
+            pegasus.mount(_self, player)
+            _self.taming_trust = nil -- Reset trust
+            return true
+        end
+    end
+    self:set_utility(func)
 end)
 
 -- Modified fire block definition

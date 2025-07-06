@@ -785,24 +785,6 @@ minetest.register_on_mods_loaded(function()
 	end
 end)
 
-pegasus.register_biome_group("temperate", {
-	name_kw = "",
-	turf_kw = "grass",
-	min_heat = 45,
-	max_heat = 70,
-	min_humidity = 0,
-	max_humidity = 50
-})
-
-pegasus.register_biome_group("urban", {
-	name_kw = "",
-	turf_kw = "grass",
-	min_heat = 0,
-	max_heat = 100,
-	min_humidity = 0,
-	max_humidity = 100
-})
-
 pegasus.register_biome_group("grassland", {
 	name_kw = "",
 	turf_kw = "grass",
@@ -812,61 +794,3 @@ pegasus.register_biome_group("grassland", {
 	max_humidity = 80
 })
 
-pegasus.register_biome_group("boreal", {
-	name_kw = "",
-	turf_kw = "litter",
-	min_heat = 10,
-	max_heat = 55,
-	min_humidity = 0,
-	max_humidity = 80
-})
-
-pegasus.register_biome_group("ocean", {
-	name_kw = "ocean",
-	turf_kw = "",
-	min_heat = 0,
-	max_heat = 100,
-	min_humidity = 0,
-	max_humidity = 100,
-	max_height = 0
-})
-
-pegasus.register_biome_group("swamp", {
-	name_kw = "",
-	turf_kw = "",
-	min_heat = 55,
-	max_heat = 90,
-	min_humidity = 55,
-	max_humidity = 90,
-	max_height = 10,
-	min_height = -20
-})
-
-pegasus.register_biome_group("tropical", {
-	name_kw = "",
-	turf_kw = "litter",
-	min_heat = 70,
-	max_heat = 90,
-	min_humidity = 65,
-	max_humidity = 90
-})
-
-pegasus.register_biome_group("cave", {
-	name_kw = "under",
-	turf_kw = "",
-	min_heat = 0,
-	max_heat = 100,
-	min_humidity = 0,
-	max_humidity = 100,
-	max_height = 5
-})
-
-pegasus.register_biome_group("common", {
-	name_kw = "",
-	turf_kw = "",
-	min_heat = 25,
-	max_heat = 75,
-	min_humidity = 20,
-	max_humidity = 80,
-	min_height = 1
-})
