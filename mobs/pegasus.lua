@@ -581,7 +581,7 @@ pegasus.register_mob("pegasus:pegasus", {
 
 			self.object:set_yaw(math.atan2(dir.z, dir.x) - math.pi / 2)
 
-			if distance > 8 then
+			if distance > 8 and not self.rider then
 				self:animate("run")
 				self:move_to(danger_pos, "pegasus:obstacle_avoidance", 2)
 			else
@@ -599,21 +599,21 @@ pegasus.register_mob("pegasus:pegasus", {
 			return
 		end
 		if self.fire_timer then
-			self.fire_timer = self.fire_timer + self.dtime -- Увеличиваем таймер
+			self.fire_timer = self.fire_timer + self.dtime
 
-			if self.fire_timer >= 1 then          -- Каждую секунду
+			if self.fire_timer >= 1 then
 				if not self.fire then
-					self.fire = 0                 -- Инициализируем если нет
+					self.fire = 0 
 				end
 
-				if self.fire < 10 then -- Максимум 10 зарядов
+				if self.fire < 10 then
 					self.fire = self.fire + 1
 				end
 
-				self.fire_timer = 0 -- Сбрасываем таймер
+				self.fire_timer = 0
 			end
 		else
-			self.fire_timer = 0 -- Инициализируем таймер если его нет
+			self.fire_timer = 0 -- Initialize the timer if it doesn't exist
 		end
 	end,
 

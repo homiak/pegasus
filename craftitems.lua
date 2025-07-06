@@ -36,11 +36,12 @@ local function mob_storage_use(itemstack, player, pointed)
 			meta:set_string("mob", ent.name)
 			meta:set_string("staticdata", ent:get_staticdata())
 			local ent_name = correct_name(ent.name)
+			local ent_nametag = correct_name(ent.nametag) or ""
 			local ent_gender = correct_name(ent.gender)
-			desc = desc .. " \n" .. color("#a9a9a9", ent_name) .. "\n" .. color("#a9a9a9", ent_gender)
+			desc = desc .. " \n" .. color("#d1fff7", ent_name) .. "\n" .. color("#d1fff7", ent_nametag) .. " \n" .. color("#d1fff7", ent_gender)
 			if ent.trust
 			and ent.trust[plyr_name] then
-				desc = desc .. "\n Trust: " .. color("#a9a9a9", ent.trust[plyr_name])
+				desc = desc .. "\n Trust: " .. color("#d1fff7", ent.trust[plyr_name])
 			end
 			meta:set_string("description", desc)
 			player:set_wielded_item(itemstack)
