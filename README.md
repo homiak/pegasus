@@ -38,3 +38,7 @@ This mod is created by **Scottii** and based on [Animalia](https://content.luant
 ## Release Log
 ### v1.0.0
 - First public release
+
+### v1.1.0
+- Minor tweaks
+- Added new page to the Pegasus book: parade wand and nametag usage explained
