@@ -10,52 +10,66 @@ local function load_text(filename)
     return content
 end
 
--- Define text elements with positions and sizes
-local text_elements = {
-    {filename = "pegasus_intro.txt", x = 0.5, y = 1, w = 11, h = 20, page = 1},
-    {filename = "pegasus_wtd_interaction.txt", x = 0.5, y = 1, w = 11, h = 20, page = 2},
-}
-
-local image_elements = {
-}
-
 -- Define all animations
 local animations = {
-    { name = "stand",     range = { x = 1, y = 59 } },
-    { name = "walk",      range = { x = 70, y = 89 } },
-    { name = "run",       range = { x = 101, y = 119 } },
-    { name = "punch_aoe", range = { x = 170, y = 205 } },
-    { name = "rear",      range = { x = 130, y = 160 } },
-    { name = "eat",       range = { x = 210, y = 240 } }
+    { name = "stand",     range = { x = 1, y = 59 },    speed = 10 },
+    { name = "walk",      range = { x = 70, y = 89 },   speed = 20 },
+    { name = "run",       range = { x = 101, y = 119 }, speed = 40 },
+    { name = "punch_aoe", range = { x = 170, y = 205 }, speed = 30 },
+    { name = "rear",      range = { x = 130, y = 160 }, speed = 20 },
+    { name = "eat",       range = { x = 210, y = 240 }, speed = 30 }
 }
-
 
 local waterdragon_animations = {
-    {name = "stand", range = {x = 1, y = 59}, speed = 8},
-    {name = "stand_water", range = {x = 61, y = 119}, speed = 20},
-    {name = "slam", range = {x = 121, y = 159}, speed = 30},
-    {name = "repel", range = {x = 161, y = 209}, speed = 30},
-    {name = "walk", range = {x = 211, y = 249}, speed = 40},
-    {name = "walk_slow", range = {x = 211, y = 249}, speed = 15},
-    {name = "walk_water", range = {x = 251, y = 289}, speed = 30},
-    {name = "takeoff", range = {x = 291, y = 319}, speed = 30},
-    {name = "hover", range = {x = 321, y = 359}, speed = 30},
-    {name = "hover_water", range = {x = 361, y = 399}, speed = 30},
-    {name = "fly", range = {x = 401, y = 439}, speed = 30},
-    {name = "fly_water", range = {x = 441, y = 479}, speed = 30},
-    {name = "land", range = {x = 481, y = 509}, speed = 30},
-    {name = "sleep", range = {x = 511, y = 569.5}, speed = 6},
-    {name = "death", range = {x = 571, y = 579}, speed = 30},
-    {name = "shoulder_idle", range = {x = 581, y = 639}, speed = 30}
+    { name = "stand",         range = { x = 1, y = 59 },    speed = 8 },
+    { name = "slam",          range = { x = 121, y = 159 }, speed = 30 },
+    { name = "repel",         range = { x = 161, y = 209 }, speed = 30 },
+    { name = "walk",          range = { x = 211, y = 249 }, speed = 40 },
+    { name = "hover",         range = { x = 321, y = 359 }, speed = 30 },
+    { name = "fly",           range = { x = 401, y = 439 }, speed = 30 },
+    { name = "death",         range = { x = 571, y = 579 }, speed = 30 },
+    { name = "shoulder_idle", range = { x = 581, y = 639 }, speed = 30, }
 }
 
-local current_animation = 1
-local current_waterdragon_animation = 1
+-- Dynamic Page Management
+local page_map = {}
+local total_pages = 0
 
-local current_page = 1
-local total_pages = 2
+local function build_page_map()
+    page_map = {} -- Reset
+    table.insert(page_map, { type = "pegasus", text_file = "pegasus_intro.txt" })
+    if minetest.get_modpath("waterdragon") then
+        table.insert(page_map, { type = "waterdragon", text_file = "pegasus_wtd_interaction.txt" })
+    end
+    -- The new tools page is always added last
+    table.insert(page_map, { type = "tool_usage", text_file = "pegasus_tool_usage.txt" })
+    total_pages = #page_map
+end
 
-local function get_book_formspec()
+-- Build the map on load
+build_page_map()
+
+-- Player-specific book state
+local book_states = {}
+
+local function get_player_state(player_name)
+    if not book_states[player_name] then
+        book_states[player_name] = {
+            page = 1,
+            anim_pegasus = 1,
+            anim_waterdragon = 1,
+            timer = 0,
+            is_open = false
+        }
+    end
+    return book_states[player_name]
+end
+
+local function get_book_formspec(player_name)
+    local state = get_player_state(player_name)
+    local page_info = page_map[state.page]
+    if not page_info then return "" end
+
     local formspec = {
         "formspec_version[4]",
         "size[16,10]",
@@ -63,113 +77,80 @@ local function get_book_formspec()
         "label[0.5,0.5;Book of Pegasus]",
         "style_type[label,textarea;textcolor=#34495e]",
     }
-    
-    -- Iterate over the text elements and only render the ones for the current page
-    for _, element in ipairs(text_elements) do
-        if element.page == current_page then  -- Check if this text element is for the current page
-            local content = load_text(element.filename)
-            table.insert(formspec, string.format(
-                "textarea[%f,%f;%f,%f;;%s;]",
-                element.x, element.y, element.w, element.h, minetest.formspec_escape(content)
-            ))
-        end
-    end
-    
-    -- Iterate over image elements (no page filtering necessary since they are not linked to specific pages)
-    for _, element in ipairs(image_elements) do
-        table.insert(formspec, string.format(
-            "image[%f,%f;%f,%f;%s]",
-            element.x, element.y, element.w, element.h, element.filename
-        ))
+
+    -- Render text for the current page
+    local content = load_text(page_info.text_file)
+    table.insert(formspec, string.format(
+        "textarea[0.5,1;7,8.5;;%s;]",
+        minetest.formspec_escape(content)
+    ))
+
+    -- Render model/images based on page type
+    if page_info.type == "pegasus" then
+        local anim = animations[state.anim_pegasus]
+        table.insert(formspec,
+            string.format("model[8,1.75;8,6.5;mob_mesh;pegasus_pegasus.b3d;pegasus_1.png;-10,-120;false;true;%s,%s;30]",
+                anim.range.x, anim.range.y))
+        table.insert(formspec, string.format("label[10.5,0.7;Animation: %s]", anim.name))
+    elseif page_info.type == "waterdragon" then
+        local anim = waterdragon_animations[state.anim_waterdragon]
+        local texture =
+        "pegasus_rare_water_dragon.png^pegasus_baked_in_shading.png^pegasus_rare_water_eyes_orange.png^pegasus_wing_fade.png"
+        table.insert(formspec,
+            string.format("model[8,1.75;7,6.5;mob_mesh;waterdragon_water_dragon.b3d;%s;-10,-130;false;true;%s,%s;%d]",
+                texture, anim.range.x, anim.range.y, anim.speed))
+        table.insert(formspec, string.format("label[10,0.7;Animation: %s]", anim.name))
+    elseif page_info.type == "tool_usage" then
+        -- Swapped layout: Tools on the left, Pegasus on the right.
+        -- Pegasus image is now using its correct aspect ratio (532x377 -> ~4.2x3).
+
+        -- Tools on the left side of the page
+        table.insert(formspec, "label[9.3, 2.5;Nametag]")
+        table.insert(formspec, "image[9, 3; 2.5, 2.5;pegasus_nametag.png]")
+
+        table.insert(formspec, "label[9, 6;Parade Wand]")
+        table.insert(formspec, "image[8.7, 6.5; 2.5, 2.5;pegasus_parade_wand.png]")
+
+        -- Pegasus on the right, looking left at the tools
+        table.insert(formspec, "image[11.5, 3.5; 4.2, 3;pegasus_book_peg_scr.png]")
     end
 
-    -- Add Pegasus model with current animation on page 1
-    if current_page == 1 then
-        local texture = "pegasus_1.png"
-        local anim = animations[current_animation]
-        local frame_loop = anim.range.x .. "," .. anim.range.y
-        table.insert(formspec, string.format(
-            "model[8,1.75;8,6.5;mob_mesh;pegasus_pegasus.b3d;%s;-10,-120;false;true;%s;30]",
-            texture, frame_loop
-        ))
+    -- Navigation buttons
+    if state.page < total_pages then
+        table.insert(formspec, "image_button[15,9;1,1;pegasus_book_icon_next.png;btn_next;;true;false;]")
+    end
+    if state.page > 1 then
+        -- Moved the button slightly to the right
+        table.insert(formspec, "image_button[0.5,9;1,1;pegasus_book_icon_last.png;btn_prev;;true;false;]")
+    end
 
-        -- Add label to show current animation name at the top
-        table.insert(formspec, string.format(
-            "label[10.5,0.7;Current Animation: %s]", anim.name
-        ))
-    elseif current_page == 2 and minetest.get_modpath("waterdragon") then
-        -- Water Dragon model and animation for page 2
-        local waterdragon_texture = "pegasus_rare_water_dragon.png^pegasus_baked_in_shading.png^pegasus_rare_water_eyes_orange.png^pegasus_wing_fade.png"
-        local waterdragon_anim = waterdragon_animations[current_waterdragon_animation]
-        local waterdragon_frame_loop = waterdragon_anim.range.x .. "," .. waterdragon_anim.range.y
-        table.insert(formspec, string.format(
-            "model[8,1.75;7,6.5;mob_mesh;pegasus_water_dragon.b3d;%s;-10,-130;false;true;%s;%d]",
-            waterdragon_texture, waterdragon_frame_loop, waterdragon_anim.speed
-        ))
-        table.insert(formspec, string.format(
-            "label[10,0.7;Water Dragon Animation: %s]", waterdragon_anim.name
-        ))
-    end
-    
-    -- Add navigation buttons
-    if current_page < total_pages then
-        table.insert(formspec, string.format(
-            "image_button[15,9;1,1;pegasus_book_icon_next.png;btn_next;;true;false;]"
-        ))
-    end
-    if current_page > 1 then
-        table.insert(formspec, string.format(
-            "image_button[0,9;1,1;pegasus_book_icon_last.png;btn_prev;;true;false;]"
-        ))
-    end
-    
     return table.concat(formspec, "")
-end
-
-
-local animation_timer = 0
-minetest.register_globalstep(function(dtime)
-    animation_timer = animation_timer + dtime
-    if animation_timer >= 5 then  -- Change animation every 5 seconds
-        animation_timer = 0
-        if current_page == 1 then
-            current_animation = current_animation % #animations + 1
-        else
-            current_waterdragon_animation = current_waterdragon_animation % #waterdragon_animations + 1
-        end
-        for _, player in ipairs(minetest.get_connected_players()) do
-            if player:get_inventory():contains_item("main", "pegasus:book_pegasus") then
-                show_book_formspec(player)
-            end
-        end
-    end
-end)
-
-local book_open = {}
-
-local function update_animations()
-    if current_page == 1 then
-        current_animation = current_animation % #animations + 1
-    else
-        current_waterdragon_animation = current_waterdragon_animation % #waterdragon_animations + 1
-    end
 end
 
 function show_book_formspec(player)
     local player_name = player:get_player_name()
-    if book_open[player_name] then
-        minetest.show_formspec(player_name, "pegasus:book", get_book_formspec())
+    local state = get_player_state(player_name)
+    if state.is_open then
+        minetest.show_formspec(player_name, "pegasus:book", get_book_formspec(player_name))
     end
 end
 
 minetest.register_globalstep(function(dtime)
-    animation_timer = animation_timer + dtime
-    if animation_timer >= 5 then
-        animation_timer = 0
-        update_animations()
-        for _, player in ipairs(minetest.get_connected_players()) do
-            if book_open[player:get_player_name()] then
-                show_book_formspec(player)
+    for player_name, state in pairs(book_states) do
+        if state.is_open then
+            state.timer = state.timer + dtime
+            if state.timer >= 5 then
+                state.timer = 0
+                local page_info = page_map[state.page]
+                if page_info.type == "pegasus" then
+                    state.anim_pegasus = state.anim_pegasus % #animations + 1
+                elseif page_info.type == "waterdragon" then
+                    state.anim_waterdragon = state.anim_waterdragon % #waterdragon_animations + 1
+                end
+                local player = minetest.get_player_by_name(player_name)
+                if player then
+                    show_book_formspec(player)
+                end
             end
         end
     end
@@ -181,9 +162,11 @@ minetest.register_craftitem("pegasus:book_pegasus", {
     stack_max = 1,
     on_use = function(itemstack, user, pointed_thing)
         local player_name = user:get_player_name()
-        book_open[player_name] = true
-        current_animation = 1
-        current_waterdragon_animation = 1
+        local state = get_player_state(player_name)
+        state.is_open = true
+        state.page = 1
+        state.anim_pegasus = 1
+        state.anim_waterdragon = 1
         show_book_formspec(user)
         return itemstack
     end
@@ -192,29 +175,22 @@ minetest.register_craftitem("pegasus:book_pegasus", {
 minetest.register_on_player_receive_fields(function(player, formname, fields)
     if formname == "pegasus:book" then
         local player_name = player:get_player_name()
+        local state = get_player_state(player_name)
         if fields.quit then
-            book_open[player_name] = nil
+            state.is_open = false
         elseif fields.btn_next then
-            current_page = math.min(current_page + 1, total_pages)
-            if current_page == 1 then
-                current_animation = 1
-            else
-                current_waterdragon_animation = 1
-            end
+            state.page = math.min(state.page + 1, total_pages)
             show_book_formspec(player)
         elseif fields.btn_prev then
-            current_page = math.max(current_page - 1, 1)
-            if current_page == 1 then
-                current_animation = 1
-            else
-                current_waterdragon_animation = 1
-            end
+            state.page = math.max(state.page - 1, 1)
             show_book_formspec(player)
         end
     end
 end)
 
 minetest.register_on_leaveplayer(function(player)
-    book_open[player:get_player_name()] = nil
-end)        
-
+    local player_name = player:get_player_name()
+    if book_states[player_name] then
+        book_states[player_name].is_open = false
+    end
+end)
