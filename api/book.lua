@@ -85,7 +85,7 @@ local function get_book_formspec()
 
     -- Add Pegasus model with current animation on page 1
     if current_page == 1 then
-        local texture = "pegasus.png"
+        local texture = "pegasus_1.png"
         local anim = animations[current_animation]
         local frame_loop = anim.range.x .. "," .. anim.range.y
         table.insert(formspec, string.format(
@@ -97,13 +97,13 @@ local function get_book_formspec()
         table.insert(formspec, string.format(
             "label[10.5,0.7;Current Animation: %s]", anim.name
         ))
-    elseif current_page == 2 then
+    elseif current_page == 2 and minetest.get_modpath("waterdragon") then
         -- Water Dragon model and animation for page 2
-        local waterdragon_texture = "waterdragon_rare_water_dragon.png^waterdragon_baked_in_shading.png"
+        local waterdragon_texture = "pegasus_rare_water_dragon.png^pegasus_baked_in_shading.png^pegasus_rare_water_eyes_orange.png^pegasus_wing_fade.png"
         local waterdragon_anim = waterdragon_animations[current_waterdragon_animation]
         local waterdragon_frame_loop = waterdragon_anim.range.x .. "," .. waterdragon_anim.range.y
         table.insert(formspec, string.format(
-            "model[8,1.75;7,6.5;mob_mesh;waterdragon_water_dragon.b3d;%s;-10,-130;false;true;%s;%d]",
+            "model[8,1.75;7,6.5;mob_mesh;pegasus_water_dragon.b3d;%s;-10,-130;false;true;%s;%d]",
             waterdragon_texture, waterdragon_frame_loop, waterdragon_anim.speed
         ))
         table.insert(formspec, string.format(
