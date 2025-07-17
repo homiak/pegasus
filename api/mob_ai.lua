@@ -1634,6 +1634,12 @@ pegasus.register_utility("pegasus:pegasus_ride", function(self, player)
                 pegasus_breathe_wind(_self) -- Call the function
                 anim = "stand"
             end
+        else
+            -- If the player releases the button, stop all breathing attacks.
+            _self.fire_breathing = false
+            _self.ice_breathing = false
+            _self.water_breathing = false
+            _self.wind_breathing = false
         end
 
 		-- Toggle flying mode
