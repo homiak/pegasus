@@ -14,6 +14,8 @@ local pi2 = pi * 2
 local sin = math.sin
 local rad = math.rad
 local random = math.random
+pegasus.ice_cooldown = {}
+
 
 local function diff(a, b) -- Get difference between 2 angles
 	return atan2(sin(b - a), cos(b - a))
@@ -1023,15 +1025,15 @@ pegasus.register_utility("pegasus:pegasus_tame", function(self)
 		if _self.taming_trust >= 10 then -- Tame successful
 			_self.owner = _self:memorize("owner", player:get_player_name())
 			pegasus.protect_from_despawn(_self)
-			pegasus.mount(_self, player)    -- Dismount the player
+			pegasus.mount(_self, player) -- Dismount the player
 			pegasus.particle_spawner(pos, "pegasus_particle_green.png", "float")
-			_self.taming_trust = nil        -- Reset for the future
-			return true                     -- End the utility
+			_self.taming_trust = nil  -- Reset for the future
+			return true               -- End the utility
 		elseif _self.taming_trust <= 0 then -- Tame failed
-			pegasus.mount(_self, player)    -- Dismount the player
+			pegasus.mount(_self, player) -- Dismount the player
 			pegasus.particle_spawner(pos, "pegasus_particle_blue.png", "float")
-			_self.taming_trust = nil        -- Reset for the future
-			return true                     -- End the utility
+			_self.taming_trust = nil  -- Reset for the future
+			return true               -- End the utility
 		end
 
 		-- Bucking actions while taming
@@ -1353,6 +1355,53 @@ end
 
 -- Ice --
 
+--[[
+    Ice Trap Entity
+    This entity is spawned by the Ice Pegasus's breath. It traps a target mob/player
+    for a few seconds, then releases them and removes itself.
+]]
+minetest.register_entity("pegasus:freeze_ent", {
+	initial_properties = {
+		collisionbox = { 0, 0, 0, 0, 0, 0 },
+		visual = "cube",
+		-- FIX: Explicitly define the texture for all 6 faces of the cube
+		textures = {
+			"pegasus_frozen_ent.png", -- top
+			"pegasus_frozen_ent.png", -- bottom
+			"pegasus_frozen_ent.png", -- front
+			"pegasus_frozen_ent.png", -- back
+			"pegasus_frozen_ent.png", -- right
+			"pegasus_frozen_ent.png", -- left
+		},
+		visual_size = { x = 1, y = 1 },
+		physical = false,
+		glow = 10,
+		use_texture_alpha = true,
+		backface_culling = false,
+	},
+
+	child = nil,
+	mob_scale = nil,
+	timer = 0,
+
+	on_activate = function(self)
+		self.object:set_armor_groups({ immortal = 1 })
+	end,
+
+	on_step = function(self, dtime)
+		self.timer = self.timer + dtime
+		if self.timer > 4 then
+			if self.child and self.child:get_luaentity() then
+				self.child:set_detach()
+				self.child:set_properties({
+					visual_size = self.mob_scale,
+				})
+			end
+			self.object:remove()
+		end
+	end,
+})
+
 function pegasus_breathe_ice(self)
 	if not self.ice_breathing then return end
 	if not self.ice_breath or self.ice_breath <= 0 then
@@ -1424,33 +1473,81 @@ function pegasus_breathe_ice(self)
 			glow = particle.glow
 		})
 	end
-
-	-- Check for block collisions and ignite blocks
 	local step = 1
+
 	for i = 0, 20, step do
 		local check_pos = vector.add(start_pos, vector.multiply(dir, i))
-		local node = minetest.get_node(check_pos)
-		if node.name ~= "air" and node.name ~= "default:ice" then
-			minetest.set_node(check_pos, { name = "default:ice" })
-		end
 
-		-- Check for entities at each step
-		local objects = minetest.get_objects_inside_radius(check_pos, 2)
-		for _, obj in ipairs(objects) do
-			if obj ~= self.object then
-				local ent = obj:get_luaentity()
-				if ent and ent.name ~= self.name then
-					obj:punch(self.object, 1.0, {
-						full_punch_interval = 1.0,
-						damage_groups = { fleshy = 8 },
-					}, nil)
+		-- Check for entities and apply the CORRECT freeze trap effect
+		local rider = self.rider
+		local owner_name = self.owner
+		local step = 1
+		local hit_this_tick = {} -- Prevents hitting the same mob multiple times in one breath
+
+		for i = 0, 20, step do
+			local check_pos = vector.add(start_pos, vector.multiply(dir, i))
+
+			-- FIX: Removed the nested (duplicate) loop that was causing multiple traps to spawn.
+			for i = 0, 20, step do
+				local check_pos = vector.add(start_pos, vector.multiply(dir, i))
+
+				for _, obj in ipairs(minetest.get_objects_inside_radius(check_pos, 2)) do
+					local ent_name = obj:is_player() and obj:get_player_name()
+					if obj ~= self.object and obj ~= rider and ent_name ~= owner_name then
+						if not obj:get_attach() and not pegasus.ice_cooldown[obj] and not hit_this_tick[obj] then
+							hit_this_tick[obj] = true -- Mark as hit for this tick
+
+							-- High damage
+							obj:punch(self.object, 1.0, { damage_groups = { fleshy = 8 } }, nil)
+
+							-- Apply Freeze Trap
+							local target_pos = obj:get_pos()
+							local box = obj:get_properties().collisionbox
+							local ice_obj = minetest.add_entity(target_pos, "pegasus:freeze_ent")
+
+							if ice_obj then
+								obj:set_attach(ice_obj, "", { x = 0, y = math.abs(box[2]), z = 0 }, { x = 0, y = 0, z = 0 })
+
+								local obj_scale = obj:get_properties().visual_size
+								local ice_scale = (box[4] or 0.5) * 2.5
+
+								local ice_ent = ice_obj:get_luaentity()
+								ice_ent.mob_scale = obj_scale
+								ice_ent.child = obj
+
+								ice_obj:set_properties({ visual_size = { x = ice_scale, y = ice_scale } })
+
+								local obj_yaw = obj:get_yaw() or obj:get_look_horizontal() or 0
+								ice_obj:set_yaw(obj_yaw)
+
+								obj:set_properties({
+									visual_size = { x = obj_scale.x / ice_scale, y = obj_scale.y / ice_scale }
+								})
+
+								pegasus.ice_cooldown[obj] = 40
+							end
+						end
+					end
 				end
+			end
+
+			local node = minetest.get_node(check_pos)
+			if node.name ~= "air" and node.name ~= "default:ice" then
+				break
 			end
 		end
 
-		-- Stop if we hit a non-air block
+		local node = minetest.get_node(check_pos)
 		if node.name ~= "air" and node.name ~= "default:ice" then
 			break
+		end
+	end
+
+	-- Decrease cooldowns
+	for obj, time in pairs(pegasus.ice_cooldown) do
+		pegasus.ice_cooldown[obj] = time - 1
+		if pegasus.ice_cooldown[obj] <= 0 then
+			pegasus.ice_cooldown[obj] = nil
 		end
 	end
 
@@ -1545,6 +1642,28 @@ function pegasus_breathe_wind(self)
 		})
 	end
 
+
+	-- Check for entities and apply wind effect (knockback)
+	local rider = self.rider
+	local owner_name = self.owner
+	local hit_this_tick = {}
+	local step = 1
+
+	for i = 0, 25, step do -- Increased range for wind
+		local check_pos = vector.add(start_pos, vector.multiply(dir, i))
+
+		for _, obj in ipairs(minetest.get_objects_inside_radius(check_pos, 2.5)) do
+			if (obj:is_player() or obj:get_luaentity()) and not hit_this_tick[obj] then
+				local ent_name = obj:is_player() and obj:get_player_name()
+				if obj ~= self.object and obj ~= rider and ent_name ~= owner_name then
+					hit_this_tick[obj] = true
+					-- No damage, but strong knockback
+					obj:add_velocity(vector.multiply(dir, 12))
+				end
+			end
+		end
+	end
+
 	-- Decrease wind charge every second
 	self.wind_timer = (self.wind_timer or 0) + 0.1
 	if self.wind_timer >= 1 then
@@ -1615,32 +1734,32 @@ pegasus.register_utility("pegasus:pegasus_ride", function(self, player)
 		end
 
 		-- Breath Attacks by Player
-        if control.LMB then
-            -- We check if the breathing is already active to avoid re-triggering it every tick.
-            if _self.texture_no == 1 and not _self.fire_breathing then
-                _self.fire_breathing = true
-                pegasus_breathe_fire(_self) -- Call the function to start the attack
-                anim = "stand"
-            elseif _self.texture_no == 2 and not _self.ice_breathing then
-                _self.ice_breathing = true
-                pegasus_breathe_ice(_self) -- Call the function
-                anim = "stand"
-            elseif _self.texture_no == 3 and not _self.water_breathing then
-                _self.water_breathing = true
-                pegasus_breathe_water(_self) -- Call the function
-                anim = "stand"
-            elseif _self.texture_no == 4 and not _self.wind_breathing then
-                _self.wind_breathing = true
-                pegasus_breathe_wind(_self) -- Call the function
-                anim = "stand"
-            end
-        else
-            -- If the player releases the button, stop all breathing attacks.
-            _self.fire_breathing = false
-            _self.ice_breathing = false
-            _self.water_breathing = false
-            _self.wind_breathing = false
-        end
+		if control.LMB then
+			-- We check if the breathing is already active to avoid re-triggering it every tick.
+			if _self.texture_no == 1 and not _self.fire_breathing then
+				_self.fire_breathing = true
+				pegasus_breathe_fire(_self) -- Call the function to start the attack
+				anim = "stand"
+			elseif _self.texture_no == 2 and not _self.ice_breathing then
+				_self.ice_breathing = true
+				pegasus_breathe_ice(_self) -- Call the function
+				anim = "stand"
+			elseif _self.texture_no == 3 and not _self.water_breathing then
+				_self.water_breathing = true
+				pegasus_breathe_water(_self) -- Call the function
+				anim = "stand"
+			elseif _self.texture_no == 4 and not _self.wind_breathing then
+				_self.wind_breathing = true
+				pegasus_breathe_wind(_self) -- Call the function
+				anim = "stand"
+			end
+		else
+			-- If the player releases the button, stop all breathing attacks.
+			_self.fire_breathing = false
+			_self.ice_breathing = false
+			_self.water_breathing = false
+			_self.wind_breathing = false
+		end
 
 		-- Toggle flying mode
 		if control.jump and _self.touching_ground and not is_flying then

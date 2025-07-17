@@ -495,7 +495,7 @@ pegasus.register_mob("pegasus:pegasus", {
 		elseif self.texture_no == 4 then
 			self.wind_breath = 30 -- Wind breath
 		end
-		
+
 		self.fire_breathing = false
 		self.ice_breathing = false
 		self.water_breathing = false
@@ -602,11 +602,23 @@ pegasus.register_mob("pegasus:pegasus", {
 				self:move_to(danger_pos, "pegasus:obstacle_avoidance", 2)
 			else
 				if math.random() < 0.9 then
-					self.fire_breathing = true
-					pegasus_breathe_fire(self)
-					minetest.after(2, function()
-						self.fire_breathing = false
-					end)
+					if self.texture_no == 1 and self.fire_breath > 0 then
+						self.fire_breathing = true
+						pegasus_breathe_fire(self)
+						if not danger then self.fire_breathing = false end
+					elseif self.texture_no == 2 and self.ice_breath > 0 then
+						self.ice_breathing = true
+						pegasus_breathe_ice(self)
+						if not danger then self.ice_breathing = false end
+					elseif self.texture_no == 3 and self.water_breath > 0 then
+						self.water_breathing = true
+						pegasus_breathe_water(self)
+						if not danger then self.water_breathing = false end
+					elseif self.texture_no == 4 and self.wind_breath > 0 then
+						self.wind_breathing = true
+						pegasus_breathe_wind(self)
+						if not danger then self.wind_breathing = false end
+					end
 				else
 					local retreat_pos = vector.subtract(self_pos, vector.multiply(dir, 5))
 					self:move_to(retreat_pos, "pegasus:obstacle_avoidance", 2)
