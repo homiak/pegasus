@@ -283,6 +283,8 @@ pegasus.register_mob("pegasus:pegasus", {
 	textures = {
 		"pegasus_1.png",
 		"pegasus_2.png",
+		"pegasus_3.png",
+		"pegasus_4.png",
 	},
 	makes_footstep_sound = true,
 
@@ -296,6 +298,7 @@ pegasus.register_mob("pegasus:pegasus", {
 	despawn_after = false,
 	max_fall = 0,
 	stepheight = 1.2,
+	fire_resistance = true,
 	sounds = {
 		alter_child_pitch = true,
 		random = {
@@ -429,7 +432,6 @@ pegasus.register_mob("pegasus:pegasus", {
 	custom_name = "", -- Use a custom attribute to store the name
 
 	on_activate = function(self, staticdata)
-		self.fire = 10           -- Initial fire charges
 		if staticdata and staticdata ~= "" then
 			self.custom_name = staticdata -- Load the name from staticdata
 			self.object:set_nametag_attributes({
@@ -472,7 +474,7 @@ pegasus.register_mob("pegasus:pegasus", {
 
 	activate_func = function(self)
 		self.is_flying = self.is_flying or false
-		self.fire = 10 -- Initial fire charges
+		
 		pegasus.initialize_api(self)
 		pegasus.initialize_lasso(self)
 		pegasus.eat_dropped_item(self, item)
@@ -484,6 +486,20 @@ pegasus.register_mob("pegasus:pegasus", {
 		if self.owner then
 			self._inventory = self:recall("_inventory")
 		end
+		if self.texture_no == 1 then
+			self.fire_breath = 10 -- Fire breath
+		elseif self.texture_no == 2 then
+			self.ice_breath = 10 -- Ice breath
+		elseif self.texture_no == 3 then
+			self.water_breath = 20 -- Water breath
+		elseif self.texture_no == 4 then
+			self.wind_breath = 30 -- Wind breath
+		end
+		
+		self.fire_breathing = false
+		self.ice_breathing = false
+		self.water_breathing = false
+		self.wind_breathing = false
 
 		self.rider = nil
 		self.saddled = self:recall("saddled") or false

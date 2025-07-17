@@ -974,88 +974,93 @@ end)
 -- Pegasus --
 
 pegasus.register_utility("pegasus:pegasus_tame", function(self)
-    -- Get the player who is riding. This is the candidate for taming.
-    local player = self.rider
-    if not player or not player:is_player() then return true end
+	-- Get the player who is riding. This is the candidate for taming.
+	local player = self.rider
+	if not player or not player:is_player() then return true end
 
-    -- Initialize taming trust ON THE MOB ITSELF if it doesn't exist.
-    if not self.taming_trust then
-        self.taming_trust = self.taming_trust or 5 -- Starting trust value
-    end
+	-- Initialize taming trust ON THE MOB ITSELF if it doesn't exist.
+	if not self.taming_trust then
+		self.taming_trust = self.taming_trust or 5 -- Starting trust value
+	end
 
-    -- Adjust player size (this part is correct)
-    local player_props = player:get_properties()
-    if not player_props then return true end
-    local player_size = player_props.visual_size
-    local mob_size = self.visual_size
-    local adj_size = {
-        x = player_size.x / mob_size.x,
-        y = player_size.y / mob_size.y
-    }
-    if player_size.x ~= adj_size.x then
-        player:set_properties({
-            visual_size = adj_size
-        })
-    end
+	-- Adjust player size (this part is correct)
+	local player_props = player:get_properties()
+	if not player_props then return true end
+	local player_size = player_props.visual_size
+	local mob_size = self.visual_size
+	local adj_size = {
+		x = player_size.x / mob_size.x,
+		y = player_size.y / mob_size.y
+	}
+	if player_size.x ~= adj_size.x then
+		player:set_properties({
+			visual_size = adj_size
+		})
+	end
 
-    local function func(_self)
-        -- Check if the player is still online and riding
-        if not player or not pegasus.is_alive(player) or not _self.rider then
-            _self.taming_trust = nil -- Reset trust if player disconnects or dismounts
-            return true
-        end
+	local function func(_self)
+		-- Check if the player is still online and riding
+		if not player or not pegasus.is_alive(player) or not _self.rider then
+			_self.taming_trust = nil -- Reset trust if player disconnects or dismounts
+			return true
+		end
 
-        local pos = _self.object:get_pos()
-        if not pos then return true end
+		local pos = _self.object:get_pos()
+		if not pos then return true end
 
-        -- Increase/Decrease Taming progress based on view alignment
-        local yaw, plyr_yaw = _self.object:get_yaw(), player:get_look_horizontal()
-        local yaw_diff = abs(diff(yaw, plyr_yaw))
+		-- Increase/Decrease Taming progress based on view alignment
+		local yaw, plyr_yaw = _self.object:get_yaw(), player:get_look_horizontal()
+		local yaw_diff = abs(diff(yaw, plyr_yaw))
 
-        -- Update the trust value that is stored ON THE MOB
-        if yaw_diff < pi / 3 then
-            _self.taming_trust = _self.taming_trust + _self.dtime
-        else
-            _self.taming_trust = _self.taming_trust - _self.dtime * 0.5
-        end
+		-- Update the trust value that is stored ON THE MOB
+		if yaw_diff < pi / 3 then
+			_self.taming_trust = _self.taming_trust + _self.dtime
+		else
+			_self.taming_trust = _self.taming_trust - _self.dtime * 0.5
+		end
 
-        -- Check for success or failure
-        if _self.taming_trust >= 10 then -- Tame successful
-            _self.owner = _self:memorize("owner", player:get_player_name())
-            pegasus.protect_from_despawn(_self)
-            pegasus.mount(_self, player) -- Dismount the player
-            pegasus.particle_spawner(pos, "pegasus_particle_green.png", "float")
-            _self.taming_trust = nil -- Reset for the future
-            return true -- End the utility
-        elseif _self.taming_trust <= 0 then -- Tame failed
-            pegasus.mount(_self, player) -- Dismount the player
-            pegasus.particle_spawner(pos, "pegasus_particle_blue.png", "float")
-            _self.taming_trust = nil -- Reset for the future
-            return true -- End the utility
-        end
+		-- Check for success or failure
+		if _self.taming_trust >= 10 then -- Tame successful
+			_self.owner = _self:memorize("owner", player:get_player_name())
+			pegasus.protect_from_despawn(_self)
+			pegasus.mount(_self, player)    -- Dismount the player
+			pegasus.particle_spawner(pos, "pegasus_particle_green.png", "float")
+			_self.taming_trust = nil        -- Reset for the future
+			return true                     -- End the utility
+		elseif _self.taming_trust <= 0 then -- Tame failed
+			pegasus.mount(_self, player)    -- Dismount the player
+			pegasus.particle_spawner(pos, "pegasus_particle_blue.png", "float")
+			_self.taming_trust = nil        -- Reset for the future
+			return true                     -- End the utility
+		end
 
-        -- Bucking actions while taming
-        if not _self:get_action() then
-            if random(3) < 2 then
-                pegasus.action_idle(_self, 0.5, "punch_aoe")
-            else
-                pegasus.action_walk(_self, 2, 0.75, "run")
-            end
-        end
+		-- Bucking actions while taming
+		if not _self:get_action() then
+			if random(3) < 2 then
+				pegasus.action_idle(_self, 0.5, "punch_aoe")
+			else
+				pegasus.action_walk(_self, 2, 0.75, "run")
+			end
+		end
 
-        -- Player can dismount to cancel
-        if player:get_player_control().sneak then
-            pegasus.mount(_self, player)
-            _self.taming_trust = nil -- Reset trust
-            return true
-        end
-    end
-    self:set_utility(func)
+		-- Player can dismount to cancel
+		if player:get_player_control().sneak then
+			pegasus.mount(_self, player)
+			_self.taming_trust = nil -- Reset trust
+			return true
+		end
+	end
+	self:set_utility(func)
 end)
 
--- Modified fire block definition
+--------------------------------------
+-- Define the four breath functions --
+--------------------------------------
+
+-- Fire --
+
 minetest.register_node("pegasus:fire_animated", {
-	description = "Pegasi Fire",
+	description = "Pegasus Fire",
 	drawtype = "firelike",
 	tiles = {
 		{
@@ -1110,7 +1115,7 @@ minetest.register_node("pegasus:fire_animated", {
 
 function pegasus_breathe_fire(self)
 	if not self.fire_breathing then return end
-	if not self.fire or self.fire <= 0 then
+	if not self.fire_breath or self.fire_breath <= 0 then
 		self.fire_breathing = false
 		return
 	end
@@ -1212,19 +1217,352 @@ function pegasus_breathe_fire(self)
 	-- Decrease fire charge every second
 	self.fire_timer = (self.fire_timer or 0) + 0.1
 	if self.fire_timer >= 1 then
-		self.fire = self.fire - 1
+		self.fire_breath = self.fire_breath - 1
 		self.fire_timer = 0
-		if self.fire <= 0 then
+		if self.fire_breath <= 0 then
 			self.fire_breathing = false
 			return
 		end
 	end
 
-	-- Schedule the next fire breath
+	-- Schedule the next water breath
 	minetest.after(0.1, function()
 		pegasus_breathe_fire(self)
 	end)
 end
+
+-- Water --
+
+function pegasus_breathe_water(self)
+	if not self.water_breathing then return end
+	if not self.water_breath or self.water_breath <= 0 then
+		self.water_breathing = false
+		return
+	end
+
+	local pos = self.object:get_pos()
+	if not pos then return end
+
+	local yaw = self.object:get_yaw()
+	local dir = vector.new(
+		-math.sin(yaw),
+		0,
+		math.cos(yaw)
+	)
+	local start_pos = vector.add(pos, vector.new(0, 1.2, 0))
+	local end_pos = vector.add(start_pos, vector.multiply(dir, 20))
+
+	local particle_types = {
+		{
+			texture = "pegasus_water_1.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+		{
+			texture = "pegasus_water_2.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+		{
+			texture = "pegasus_water_3.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+	}
+
+	-- Spawn particles
+	for i = 1, 50 do
+		local particle = particle_types[math.random(#particle_types)]
+
+		minetest.add_particle({
+			pos = vector.add(start_pos, vector.new(
+				math.random(-5, 5) / 10,
+				math.random(-5, 5) / 10,
+				math.random(-5, 5) / 10
+			)),
+			velocity = vector.multiply(vector.add(dir, vector.new(
+				math.random(-2, 2) / 10,
+				math.random(-2, 2) / 10,
+				math.random(-2, 2) / 10
+			)), math.random(particle.velocity.min, particle.velocity.max)),
+			acceleration = { x = 0, y = math.random(particle.acceleration.y.min, particle.acceleration.y.max), z = 0 },
+			expirationtime = math.random(particle.exptime.min, particle.exptime.max),
+			size = math.random(particle.size.min, particle.size.max),
+			collisiondetection = true,
+			collision_removal = true,
+			vertical = false,
+			texture = particle.texture,
+			glow = particle.glow
+		})
+	end
+
+	-- Check for block collisions and ignite blocks
+	local step = 1
+	for i = 0, 20, step do
+		local check_pos = vector.add(start_pos, vector.multiply(dir, i))
+		local node = minetest.get_node(check_pos)
+		if node.name ~= "air" and node.name ~= "default:water_flowing" then
+			minetest.set_node(check_pos, { name = "default:water_flowing" })
+		end
+
+		-- Check for entities at each step
+		local objects = minetest.get_objects_inside_radius(check_pos, 2)
+		for _, obj in ipairs(objects) do
+			if obj ~= self.object then
+				local ent = obj:get_luaentity()
+				if ent and ent.name ~= self.name then
+					obj:punch(self.object, 1.0, {
+						full_punch_interval = 1.0,
+						damage_groups = { fleshy = 8 },
+					}, nil)
+				end
+			end
+		end
+
+		-- Stop if we hit a non-air block
+		if node.name ~= "air" and node.name ~= "default:water_flowing" then
+			break
+		end
+	end
+
+	-- Decrease fire charge every second
+	self.water_timer = (self.water_breath_timer or 0) + 0.1
+	if self.water_timer >= 1 then
+		self.water_breath = self.water_breath - 1
+		self.water_timer = 0
+		if self.water_breath <= 0 then
+			self.water_breathing = false
+			return
+		end
+	end
+
+	-- Schedule the next water breath
+	minetest.after(0.1, function()
+		pegasus_breathe_water(self)
+	end)
+end
+
+-- Ice --
+
+function pegasus_breathe_ice(self)
+	if not self.ice_breathing then return end
+	if not self.ice_breath or self.ice_breath <= 0 then
+		self.ice_breathing = false
+		return
+	end
+
+	local pos = self.object:get_pos()
+	if not pos then return end
+
+	local yaw = self.object:get_yaw()
+	local dir = vector.new(
+		-math.sin(yaw),
+		0,
+		math.cos(yaw)
+	)
+	local start_pos = vector.add(pos, vector.new(0, 1.2, 0))
+	local end_pos = vector.add(start_pos, vector.multiply(dir, 20))
+
+	local particle_types = {
+		{
+			texture = "pegasus_ice_1.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+		{
+			texture = "pegasus_ice_2.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+		{
+			texture = "pegasus_ice_3.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+	}
+
+	-- Spawn particles
+	for i = 1, 50 do
+		local particle = particle_types[math.random(#particle_types)]
+
+		minetest.add_particle({
+			pos = vector.add(start_pos, vector.new(
+				math.random(-5, 5) / 10,
+				math.random(-5, 5) / 10,
+				math.random(-5, 5) / 10
+			)),
+			velocity = vector.multiply(vector.add(dir, vector.new(
+				math.random(-2, 2) / 10,
+				math.random(-2, 2) / 10,
+				math.random(-2, 2) / 10
+			)), math.random(particle.velocity.min, particle.velocity.max)),
+			acceleration = { x = 0, y = math.random(particle.acceleration.y.min, particle.acceleration.y.max), z = 0 },
+			expirationtime = math.random(particle.exptime.min, particle.exptime.max),
+			size = math.random(particle.size.min, particle.size.max),
+			collisiondetection = true,
+			collision_removal = true,
+			vertical = false,
+			texture = particle.texture,
+			glow = particle.glow
+		})
+	end
+
+	-- Check for block collisions and ignite blocks
+	local step = 1
+	for i = 0, 20, step do
+		local check_pos = vector.add(start_pos, vector.multiply(dir, i))
+		local node = minetest.get_node(check_pos)
+		if node.name ~= "air" and node.name ~= "default:ice" then
+			minetest.set_node(check_pos, { name = "default:ice" })
+		end
+
+		-- Check for entities at each step
+		local objects = minetest.get_objects_inside_radius(check_pos, 2)
+		for _, obj in ipairs(objects) do
+			if obj ~= self.object then
+				local ent = obj:get_luaentity()
+				if ent and ent.name ~= self.name then
+					obj:punch(self.object, 1.0, {
+						full_punch_interval = 1.0,
+						damage_groups = { fleshy = 8 },
+					}, nil)
+				end
+			end
+		end
+
+		-- Stop if we hit a non-air block
+		if node.name ~= "air" and node.name ~= "default:ice" then
+			break
+		end
+	end
+
+	-- Decrease ice charge every second
+	self.ice_timer = (self.ice_timer or 0) + 0.1
+	if self.ice_timer >= 1 then
+		self.ice_breath = self.ice_breath - 1
+		self.ice_timer = 0
+		if self.ice_breath <= 0 then
+			self.ice_breathing = false
+			return
+		end
+	end
+
+	-- Schedule the next ice breath
+	minetest.after(0.1, function()
+		pegasus_breathe_ice(self)
+	end)
+end
+
+-- Wind --
+
+function pegasus_breathe_wind(self)
+	if not self.wind_breathing then return end
+	if not self.wind_breath or self.wind_breath <= 0 then
+		self.wind_breathing = false
+		return
+	end
+
+	local pos = self.object:get_pos()
+	if not pos then return end
+
+	local yaw = self.object:get_yaw()
+	local dir = vector.new(
+		-math.sin(yaw),
+		0,
+		math.cos(yaw)
+	)
+	local start_pos = vector.add(pos, vector.new(0, 1.2, 0))
+	local end_pos = vector.add(start_pos, vector.multiply(dir, 20))
+
+	local particle_types = {
+		{
+			texture = "pegasus_wind_1.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+		{
+			texture = "pegasus_wind_2.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+		{
+			texture = "pegasus_wind_3.png",
+			size = { min = 2, max = 4 },
+			velocity = { min = 15, max = 20 },
+			acceleration = { y = { min = 2, max = 4 } },
+			exptime = { min = 0.8, max = 1.2 },
+			glow = 14
+		},
+	}
+
+	-- Spawn particles
+	for i = 1, 50 do
+		local particle = particle_types[math.random(#particle_types)]
+
+		minetest.add_particle({
+			pos = vector.add(start_pos, vector.new(
+				math.random(-5, 5) / 10,
+				math.random(-5, 5) / 10,
+				math.random(-5, 5) / 10
+			)),
+			velocity = vector.multiply(vector.add(dir, vector.new(
+				math.random(-2, 2) / 10,
+				math.random(-2, 2) / 10,
+				math.random(-2, 2) / 10
+			)), math.random(particle.velocity.min, particle.velocity.max)),
+			acceleration = { x = 0, y = math.random(particle.acceleration.y.min, particle.acceleration.y.max), z = 0 },
+			expirationtime = math.random(particle.exptime.min, particle.exptime.max),
+			size = math.random(particle.size.min, particle.size.max),
+			collisiondetection = true,
+			collision_removal = true,
+			vertical = false,
+			texture = particle.texture,
+			glow = particle.glow
+		})
+	end
+
+	-- Decrease wind charge every second
+	self.wind_timer = (self.wind_timer or 0) + 0.1
+	if self.wind_timer >= 1 then
+		self.wind_breath = self.wind_breath - 1
+		self.wind_timer = 0
+		if self.wind_breath <= 0 then
+			self.wind_breathing = false
+			return
+		end
+	end
+
+	-- Schedule the next wind breath
+	minetest.after(0.1, function()
+		pegasus_breathe_wind(self)
+	end)
+end
+
+-- Pegasus Ride --
 
 pegasus.register_utility("pegasus:pegasus_ride", function(self, player)
 	-- Initialize player size adjustment
@@ -1276,13 +1614,27 @@ pegasus.register_utility("pegasus:pegasus_ride", function(self, player)
 			end
 		end
 
-		-- Fire breathing
-		fire_breath_cooldown = math.max(0, fire_breath_cooldown - _self.dtime)
-		if control.RMB and fire_breath_cooldown == 0 then
-			pegasus_breathe_fire(_self, player)
-			fire_breath_cooldown = 0.5
-			anim = "punch_aoe"
-		end
+		-- Breath Attacks by Player
+        if control.LMB then
+            -- We check if the breathing is already active to avoid re-triggering it every tick.
+            if _self.texture_no == 1 and not _self.fire_breathing then
+                _self.fire_breathing = true
+                pegasus_breathe_fire(_self) -- Call the function to start the attack
+                anim = "stand"
+            elseif _self.texture_no == 2 and not _self.ice_breathing then
+                _self.ice_breathing = true
+                pegasus_breathe_ice(_self) -- Call the function
+                anim = "stand"
+            elseif _self.texture_no == 3 and not _self.water_breathing then
+                _self.water_breathing = true
+                pegasus_breathe_water(_self) -- Call the function
+                anim = "stand"
+            elseif _self.texture_no == 4 and not _self.wind_breathing then
+                _self.wind_breathing = true
+                pegasus_breathe_wind(_self) -- Call the function
+                anim = "stand"
+            end
+        end
 
 		-- Toggle flying mode
 		if control.jump and _self.touching_ground and not is_flying then
@@ -1316,7 +1668,6 @@ pegasus.register_utility("pegasus:pegasus_ride", function(self, player)
 				is_moving = true
 				target_velocity = vector.multiply(player:get_look_dir(), current_speed)
 				-- If vertical lock is on, ignore the Y component of the look direction
-				
 			end
 
 			-- Vertical movement (independent of forward)
