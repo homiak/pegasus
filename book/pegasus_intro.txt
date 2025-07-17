@@ -7,7 +7,7 @@ good with Water Dragons and break blocks.
 Taming:
 To ride a Pegasus, you must tame it by
 mounting it and not get off until you see
-green particles flying around it. You
+green weird things flying around it. You
 can also use the Dragon Water Bucket from
 the Waterdragon mod.
 
@@ -15,5 +15,5 @@ Interaction:
 After you tamed a Pegasus, you can ride
 it, order it, saddle it... and so much more.
 Keep in mind: you must be respectfull to this
-creature, because if you don't do it, it can
+creature, because if you aren't, it can
 attack you or run away.
