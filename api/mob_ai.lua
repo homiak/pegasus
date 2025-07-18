@@ -1737,20 +1737,16 @@ pegasus.register_utility("pegasus:pegasus_ride", function(self, player)
 			-- We check if the breathing is already active to avoid re-triggering it every tick.
 			if _self.texture_no == 1 and not _self.fire_breathing then
 				_self.fire_breathing = true
-				pegasus_breathe_fire(_self) -- Call the function to start the attack
-				anim = "stand"
+				pegasus_breathe_fire(_self) -- Call the function to start the attack]
 			elseif _self.texture_no == 2 and not _self.ice_breathing then
 				_self.ice_breathing = true
 				pegasus_breathe_ice(_self) -- Call the function
-				anim = "stand"
 			elseif _self.texture_no == 3 and not _self.water_breathing then
 				_self.water_breathing = true
 				pegasus_breathe_water(_self) -- Call the function
-				anim = "stand"
 			elseif _self.texture_no == 4 and not _self.wind_breathing then
 				_self.wind_breathing = true
 				pegasus_breathe_wind(_self) -- Call the function
-				anim = "stand"
 			end
 		else
 			-- If the player releases the button, stop all breathing attacks.
