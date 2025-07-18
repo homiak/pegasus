@@ -42,3 +42,7 @@ This mod is created by **Scottii** and based on [Animalia](https://content.luant
 ### v1.1.0
 - Minor tweaks
 - Added new page to the Pegasus book: parade wand and nametag usage explained
+
+### v2.0.0
+- Added elements to the Pegasi: fire, ice, water and wind
+- Fix craft bug
