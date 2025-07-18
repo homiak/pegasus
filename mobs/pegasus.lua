@@ -21,6 +21,7 @@ function find_nearest_scottish_dragon(pos, radius)
 	return nearest_dragon
 end
 
+local S = pegasus.S
 local random = math.random
 
 -- Break blocks
@@ -859,55 +860,55 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if not obj or not obj:get_luaentity() then return end
 
 		local ent = obj:get_luaentity()
-		local ent_name = ent.nametag or "The Pegasus"
+		local ent_name = ent.nametag or S("The Pegasus")
 		if fields.follow then
 			set_pegasus_mode(ent, "follow")
-			minetest.chat_send_player(name, ent_name .. " set to Follow mode")
+			minetest.chat_send_player(name, ent_name .. " " .. S("set to Follow mode"))
 		elseif fields.stay then
 			set_pegasus_mode(ent, "stay")
-			minetest.chat_send_player(name, ent_name .. " set to Stay mode")
+			minetest.chat_send_player(name, ent_name .. " " .. S("set to Stay mode"))
 		elseif fields.wander then
 			set_pegasus_mode(ent, "wander")
-			minetest.chat_send_player(name, ent_name .. " set to Wander mode")
+			minetest.chat_send_player(name, ent_name .. " " .. S("set to Wander mode"))
 		elseif fields.fire_breath then
 			ent.fire_breathing = not ent.fire_breathing
 			if ent.fire_breathing then
-				minetest.chat_send_player(name, ent_name .. " is now breathing fire!")
+				minetest.chat_send_player(name, ent_name .. " " .. S("is now breathing fire!"))
 				pegasus_breathe_fire(ent)
 			elseif not ent.fire_breathing then
-				minetest.chat_send_player(name, ent_name .. " stopped breathing fire.")
+				minetest.chat_send_player(name, ent_name .. " " .. S("stopped breathing fire"))
 			elseif ent.fire == 0 then
-				minetest.chat_send_player(name, "No fire available")
+				minetest.chat_send_player(name, S("No fire available"))
 			end
 		elseif fields.ice_breath then
 			ent.ice_breathing = not ent.ice_breathing
 			if ent.ice_breathing then
-				minetest.chat_send_player(name, ent_name .. " is now breathing ice!")
+				minetest.chat_send_player(name, ent_name .. " " .. S("is now breathing ice!"))
 				pegasus_breathe_ice(ent)
 			elseif not ent.ice_breathing then
-				minetest.chat_send_player(name, ent_name .. " stopped breathing ice.")
+				minetest.chat_send_player(name, ent_name .. " " .. S("stopped breathing ice"))
 			elseif ent.ice_breath == 0 then
-				minetest.chat_send_player(name, "No ice available")
+				minetest.chat_send_player(name, S("No ice available"))
 			end
 		elseif fields.water_breath then
 			ent.water_breathing = not ent.water_breathing
 			if ent.water_breathing then
-				minetest.chat_send_player(name, ent_name .. " is now breathing water!")
+				minetest.chat_send_player(name, ent_name .. " " .. S("is now breathing water!"))
 				pegasus_breathe_water(ent)
 			elseif not ent.water_breathing then
-				minetest.chat_send_player(name, ent_name .. " stopped breathing water.")
+				minetest.chat_send_player(name, ent_name .. " " .. S("stopped breathing water"))
 			elseif ent.water_breath == 0 then
-				minetest.chat_send_player(name, "No water available")
+				minetest.chat_send_player(name, S("No water available"))
 			end
 		elseif fields.wind_breath then
 			ent.wind_breathing = not ent.wind_breathing
 			if ent.wind_breathing then
-				minetest.chat_send_player(name, ent_name .. " is now breathing wind!")
+				minetest.chat_send_player(name, ent_name .. " " .. S("is now breathing wind!"))
 				pegasus_breathe_wind(ent)
 			elseif not ent.wind_breathing then
-				minetest.chat_send_player(name, ent_name .. " stopped breathing wind.")
+				minetest.chat_send_player(name, ent_name .. " " .. S("stopped breathing wind"))
 			elseif ent.wind_breath == 0 then
-				minetest.chat_send_player(name, "No wind available")
+				minetest.chat_send_player(name, S("No wind available"))
 			end
 		end
 		local ent = obj:get_luaentity()
@@ -915,7 +916,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if fields.follow_on_dragon then
 			set_pegasus_mode(ent, "follow_on_dragon")
 			ent:initiate_utility("pegasus:follow_rider_on_dragon", ent)
-			minetest.chat_send_player(name, "Pegasus will mount a Water Dragon")
+			minetest.chat_send_player(name, ent_name .. " " .. S("will mount a Water Dragon"))
 		end
 		if fields.quit or fields.key_enter then
 			form_obj[name] = nil
@@ -1033,10 +1034,10 @@ pegasus.register_utility("pegasus:follow_rider_on_dragon", function(self)
 		return nearest_dragon
 	end
 	minetest.register_chatcommand("detach", {
-		description = "Detach pegasus from dragon",
+		description = S("Detach Pegasus from Dragon"),
 		func = function(name, param)
 			local player = minetest.get_player_by_name(name)
-			if not player then return false, "Player not found" end
+			if not player then return false, S("Player not found") end
 
 			local pos = player:get_pos()
 			for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 100)) do
@@ -1044,13 +1045,13 @@ pegasus.register_utility("pegasus:follow_rider_on_dragon", function(self)
 				if ent and ent.name == "pegasus:pegasus" and ent.owner == name then
 					obj:set_detach()
 					obj:set_properties({
-						visual_size = { x = 10, y = 10 }, -- Уменьшенный размер
+						visual_size = { x = 10, y = 10 },
 						collisionbox = { -0.65, 0, -0.65, 0.65, 1.95, 0.65 }
 					})
-					return true, "Pegasus detached!"
+					return true, S("Pegasus detached!")
 				end
 			end
-			return false, "No pegasus found!"
+			return false, S("No Pegasus found!")
 		end
 	})
 	local function follow_owner_on_dragon(_self)
@@ -1074,11 +1075,11 @@ pegasus.register_utility("pegasus:follow_rider_on_dragon", function(self)
 				dragon_ent:initiate_utility("waterdragon:follow_player", dragon_ent)
 				dragon_ent.order = "follow"
 
-				minetest.chat_send_player(_self.owner, "Your Pegasus mounted the Water Dragon and will follow you!")
+				minetest.chat_send_player(_self.owner, S("Your Pegasus mounted the Water Dragon and will follow you!"))
 				return true
 			end
 		else
-			minetest.chat_send_player(_self.owner, "No available Water Dragon found nearby!")
+			minetest.chat_send_player(_self.owner, S("No available Water Dragon found nearby!"))
 			return true
 		end
 
@@ -1098,7 +1099,7 @@ pegasus.register_utility("pegasus:follow_with_pegasus", function(self)
 		-- Enable flying capabilities
 		_self.fly_allowed = true
 		_self.is_flying = true
-		_self:set_gravity(0) -- Убираем гравитацию для полета
+		_self:set_gravity(0)
 
 		-- Get owner position
 		local owner_pos = _self.following:get_pos()
@@ -1112,7 +1113,6 @@ pegasus.register_utility("pegasus:follow_with_pegasus", function(self)
 		local distance = vector.distance(pos, owner_pos)
 
 		if distance > 3 then
-			-- Поднимаем цель немного выше для лучшего полета
 			local target_pos = {
 				x = owner_pos.x,
 				y = owner_pos.y + 2,

@@ -127,15 +127,14 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
             return
         end
 
-        local name_to_set = fields.name
+        local name_to_set = fields.name or ""
         if string.len(name_to_set) > 64 then
             name_to_set = string.sub(name_to_set, 1, 64)
         end
 
         local meta = itemstack:get_meta()
         meta:set_string("pegasus_name", name_to_set)
-        -- Update the item's description to show the name it holds
-        meta:set_string("description", "Nametag: " .. name_to_set)
+        meta:set_string("description", S("Nametag") .. ": " .. name_to_set)
         player:set_wielded_item(itemstack)
     end
 end)

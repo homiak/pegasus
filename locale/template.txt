@@ -19,3 +19,26 @@ Pegasus parade stopped=
 Position 1 set to:
 Region set. Sneak near a Pegasus, to begin the parade=
 Pegasus Parade Wand=
+The Pegasus=
+set to Follow mode=
+set to Stay mode=
+set to Wander mode=
+is now breathing fire!=
+stopped breathing fire=
+is now breathing ice!=
+stopped breathing ice=
+is now breathing water!=
+stopped breathing water=
+is now breathing wind!=
+stopped breathing wind=
+No fire available=
+No ice available=
+No water available=
+No wind available=
+will mount a Water Dragon=
+Detach Pegasus from Dragon=
+Pegasus detached!=
+No Pegasus found!=
+Your Pegasus mounted the Water Dragon and will follow you!=
+No available Water Dragon found nearby!=
+

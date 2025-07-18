@@ -19,6 +19,25 @@ Pegasus parade started=Parade des Pégases commencée
 Position 1 set to:=Position 1 définie à:
 Region set. Sneak near a Pegasus, to begin the parade=Région définie. Approchez-vous furtivement d'un Pégase pour commencer la parade
 Pegasus Parade Wand=Baguette de Parade des Pégases
-
-
-
+The Pegasus=Pégase
+set to Follow mode=défini en mode Suivre
+set to Stay mode=défini en mode Rester
+set to Wander mode=défini en mode Errer
+is now breathing fire!=crache maintenant du feu !
+stopped breathing fire=a arrêté de cracher du feu
+is now breathing ice!=crache maintenant de la glace !
+stopped breathing ice=a arrêté de cracher de la glace
+is now breathing water!=crache maintenant de l'eau !
+stopped breathing water=a arrêté de cracher de l'eau
+is now breathing wind!=crache maintenant du vent !
+stopped breathing wind=a arrêté de cracher du vent
+No fire available=Pas de feu disponible
+No ice available=Pas de glace disponible
+No water available=Pas d'eau disponible
+No wind available=Pas de vent disponible
+will mount a Water Dragon=va monter un Dragon d'Eau
+Detach Pegasus from Dragon=Détacher le Pégase du Dragon
+Pegasus detached!=Pégase détaché !
+No Pegasus found!=Aucun Pégase trouvé !
+Your Pegasus mounted the Water Dragon and will follow you!=Votre Pégase a monté le Dragon d'Eau et vous suivra !
+No available Water Dragon found nearby!=Aucun Dragon d'Eau disponible trouvé à proximité !
