@@ -1162,7 +1162,7 @@ function pegasus_breathe_fire(self)
 	}
 
 	-- Spawn particles
-	for i = 1, 50 do
+	for i = 1, 20 do
 		local particle = particle_types[math.random(#particle_types)]
 
 		minetest.add_particle({
@@ -1363,21 +1363,22 @@ end
 minetest.register_entity("pegasus:freeze_ent", {
 	initial_properties = {
 		collisionbox = { 0, 0, 0, 0, 0, 0 },
-		visual = "cube",
-		-- FIX: Explicitly define the texture for all 6 faces of the cube
-		textures = {
-			"pegasus_frozen_ent.png", -- top
-			"pegasus_frozen_ent.png", -- bottom
-			"pegasus_frozen_ent.png", -- front
-			"pegasus_frozen_ent.png", -- back
-			"pegasus_frozen_ent.png", -- right
-			"pegasus_frozen_ent.png", -- left
-		},
-		visual_size = { x = 1, y = 1 },
-		physical = false,
-		glow = 10,
-		use_texture_alpha = true,
-		backface_culling = false,
+        visual = "cube",
+        -- FIX: Apply a texture modifier to force opacity, similar to the draconis mod.
+        -- This should make the cube see-through for the trapped player.
+        textures = {
+            "pegasus_frozen_ent.png^[opacity:170", -- top
+            "pegasus_frozen_ent.png^[opacity:170", -- bottom
+            "pegasus_frozen_ent.png^[opacity:170", -- front
+            "pegasus_frozen_ent.png^[opacity:170", -- back
+            "pegasus_frozen_ent.png^[opacity:170", -- right
+            "pegasus_frozen_ent.png^[opacity:170", -- left
+        },
+        visual_size = { x = 1, y = 1 },
+        physical = false,
+        glow = 10,
+        use_texture_alpha = true, -- Keep this for good measure
+        backface_culling = false, -- Still needed for a cube
 	},
 
 	child = nil,
@@ -1449,7 +1450,7 @@ function pegasus_breathe_ice(self)
 	}
 
 	-- Spawn particles
-	for i = 1, 50 do
+	for i = 1, 20 do
 		local particle = particle_types[math.random(#particle_types)]
 
 		minetest.add_particle({
@@ -1617,7 +1618,7 @@ function pegasus_breathe_wind(self)
 	}
 
 	-- Spawn particles
-	for i = 1, 50 do
+	for i = 1, 30 do
 		local particle = particle_types[math.random(#particle_types)]
 
 		minetest.add_particle({

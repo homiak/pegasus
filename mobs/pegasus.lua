@@ -167,8 +167,16 @@ local function get_form(self, player_name)
 		"button[1,4.5;2.5,0.8;follow;Follow]",
 		"button[3.75,4.5;2.5,0.8;stay;Stay]",
 		"button[6.5,4.5;2.5,0.8;wander;Wander]",
-		"button[9.25,4.5;1.75,0.8;fire;Fire]",
 	}
+	if self.texture_no == 1 then
+		table.insert(form, "button[9.25,4.5;1.75,0.8;fire_breath;Fire Breath]")
+	elseif self.texture_no == 2 then
+		table.insert(form, "button[9.25,4.5;1.75,0.8;ice_breath;Ice Breath]")
+	elseif self.texture_no == 3 then
+		table.insert(form, "button[9.25,4.5;1.75,0.8;water_breath;Water Breath]")
+	elseif self.texture_no == 4 then
+		table.insert(form, "button[9.25,4.5;1.75,0.8;wind_breath;Wind Breath]")
+	end
 
 	if minetest.get_modpath("waterdragon") then
 		table.insert(form, "button[1,3.5;3.5,0.8;follow_on_dragon;Follow on Water Dragon]")
@@ -235,43 +243,43 @@ local avlbl_colors = {
 }
 
 local function set_pattern(self)
-    local pattern_no = self:recall("pattern_no")
-    if pattern_no and pattern_no < 1 then return end -- A value of 0 means no pattern
-    if not pattern_no then
-        if random(3) < 2 then
-            pattern_no = self:memorize("pattern_no", random(#patterns))
-        else
-            self:memorize("pattern_no", 0)
-            return
-        end
-    end
+	local pattern_no = self:recall("pattern_no")
+	if pattern_no and pattern_no < 1 then return end -- A value of 0 means no pattern
+	if not pattern_no then
+		if random(3) < 2 then
+			pattern_no = self:memorize("pattern_no", random(#patterns))
+		else
+			self:memorize("pattern_no", 0)
+			return
+		end
+	end
 
-    -- If there's no pattern to apply, exit early.
-    if not pattern_no or pattern_no == 0 then
-        return
-    end
+	-- If there's no pattern to apply, exit early.
+	if not pattern_no or pattern_no == 0 then
+		return
+	end
 
-    local colors = avlbl_colors[self.texture_no]
-    if not colors then return end -- Safety check if texture_no is invalid
+	local colors = avlbl_colors[self.texture_no]
+	if not colors then return end -- Safety check if texture_no is invalid
 
-    local color_no = self:recall("color_no") or self:memorize("color_no", random(#colors))
-    if not colors[color_no] then return end
+	local color_no = self:recall("color_no") or self:memorize("color_no", random(#colors))
+	if not colors[color_no] then return end
 
-    -- This is the core fix: Get the CURRENT base texture from the object's properties.
-    local props = self.object:get_properties()
-    local base_texture = props.textures[1]
+	-- This is the core fix: Get the CURRENT base texture from the object's properties.
+	local props = self.object:get_properties()
+	local base_texture = props.textures[1]
 
-    -- Remove any existing overlays (like a saddle) before applying the new one.
-    if base_texture:find("%^") then
-        base_texture = base_texture:split("%^")[1]
-    end
+	-- Remove any existing overlays (like a saddle) before applying the new one.
+	if base_texture:find("%^") then
+		base_texture = base_texture:split("%^")[1]
+	end
 
-    local pattern_overlay = "(" .. patterns[pattern_no] .. "^[mask:" .. colors[color_no] .. ")"
-    
-    -- Apply the base texture with the new pattern overlay.
-    self.object:set_properties({
-        textures = { base_texture .. "^" .. pattern_overlay }
-    })
+	local pattern_overlay = "(" .. patterns[pattern_no] .. "^[mask:" .. colors[color_no] .. ")"
+
+	-- Apply the base texture with the new pattern overlay.
+	self.object:set_properties({
+		textures = { base_texture .. "^" .. pattern_overlay }
+	})
 end
 
 -- Definition
@@ -474,7 +482,7 @@ pegasus.register_mob("pegasus:pegasus", {
 
 	activate_func = function(self)
 		self.is_flying = self.is_flying or false
-		
+
 		pegasus.initialize_api(self)
 		pegasus.initialize_lasso(self)
 		pegasus.eat_dropped_item(self, item)
@@ -528,7 +536,7 @@ pegasus.register_mob("pegasus:pegasus", {
 		if self:timer(2) then -- Check every 2 seconds to reduce performance impact
 			grow_nearby_crops(self)
 		end
-		if self.fire and self.fire > 0 then
+		if self.fire_breath and self.fire_breath > 0 then
 			local pos = self.object:get_pos()
 			if pos then
 				local nearest_dragon = find_nearest_scottish_dragon(pos, 10)
@@ -626,22 +634,76 @@ pegasus.register_mob("pegasus:pegasus", {
 			end
 			return
 		end
+
+		-- Handle breath timers
+
 		if self.fire_timer then
 			self.fire_timer = self.fire_timer + self.dtime
 
 			if self.fire_timer >= 1 then
-				if not self.fire then
-					self.fire = 0 
+				if not self.fire_breath then
+					self.fire_breath = 0
 				end
 
-				if self.fire < 10 then
-					self.fire = self.fire + 1
+				if self.fire_breath < 10 then
+					self.fire_breath = self.fire_breath + 1
 				end
 
 				self.fire_timer = 0
 			end
 		else
 			self.fire_timer = 0 -- Initialize the timer if it doesn't exist
+		end
+		if self.ice_timer then
+			self.ice_timer = self.ice_timer + self.dtime
+
+			if self.ice_timer >= 1 then
+				if not self.ice_breath then
+					self.ice_breath = 0
+				end
+
+				if self.ice_breath < 10 then
+					self.ice_breath = self.ice_breath + 1
+				end
+
+				self.ice_timer = 0
+			end
+		else
+			self.ice_timer = 0 -- Initialize the timer if it doesn't exist
+		end
+		if self.water_timer then
+			self.water_timer = self.water_timer + self.dtime
+
+			if self.water_timer >= 1 then
+				if not self.water_breath then
+					self.water_breath = 0
+				end
+
+				if self.water_breath < 10 then
+					self.water_breath = self.water_breath + 1
+				end
+
+				self.water_timer = 0
+			end
+		else
+			self.water_timer = 0 -- Initialize the timer if it doesn't exist
+		end
+		if self.wind_timer then
+			self.wind_timer = self.wind_timer + self.dtime
+
+			if self.wind_timer >= 1 then
+				if not self.wind_breath then
+					self.wind_breath = 0
+				end
+
+				if self.wind_breath < 10 then
+					self.wind_breath = self.wind_breath + 1
+				end
+
+				self.wind_timer = 0
+			end
+		else
+			self.wind_timer = 0 -- Initialize the timer if it doesn't exist
 		end
 	end,
 
@@ -719,12 +781,12 @@ pegasus.register_mob("pegasus:pegasus", {
 		if self.attack_count >= 3 then
 			local pos = self.object:get_pos()
 			local nearby_objects = minetest.get_objects_inside_radius(pos, 50)
-		
+
 			for _, obj in ipairs(nearby_objects) do
 				local ent = obj:get_luaentity()
-				if ent and (ent.name == "waterdragon:pure_water_dragon" or 
-						   ent.name == "waterdragon:rare_water_dragon" or
-						   ent.name == "waterdragon:scottish_dragon") then
+				if ent and (ent.name == "waterdragon:pure_water_dragon" or
+						ent.name == "waterdragon:rare_water_dragon" or
+						ent.name == "waterdragon:scottish_dragon") then
 					-- Make Dragon attack the puncher
 					ent._target = puncher
 					break
@@ -791,15 +853,45 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		elseif fields.wander then
 			set_pegasus_mode(ent, "wander")
 			minetest.chat_send_player(name, "Pegasus set to Wander mode")
-		elseif fields.fire then
+		elseif fields.fire_breath then
 			ent.fire_breathing = not ent.fire_breathing
 			if ent.fire_breathing then
 				minetest.chat_send_player(name, "Pegasus is now breathing fire!")
 				pegasus_breathe_fire(ent)
-			elseif not ent.breathing_fire then
+			elseif not ent.fire_breathing then
 				minetest.chat_send_player(name, "Pegasus stopped breathing fire.")
 			elseif ent.fire == 0 then
 				minetest.chat_send_player(name, "No fire available")
+			end
+		elseif fields.ice_breath then
+			ent.ice_breathing = not ent.ice_breathing
+			if ent.ice_breathing then
+				minetest.chat_send_player(name, "Pegasus is now breathing ice!")
+				pegasus_breathe_ice(ent)
+			elseif not ent.ice_breathing then
+				minetest.chat_send_player(name, "Pegasus stopped breathing ice.")
+			elseif ent.ice_breath == 0 then
+				minetest.chat_send_player(name, "No ice available")
+			end
+		elseif fields.water_breath then
+			ent.water_breathing = not ent.water_breathing
+			if ent.water_breathing then
+				minetest.chat_send_player(name, "Pegasus is now breathing water!")
+				pegasus_breathe_water(ent)
+			elseif not ent.water_breathing then
+				minetest.chat_send_player(name, "Pegasus stopped breathing water.")
+			elseif ent.water_breath == 0 then
+				minetest.chat_send_player(name, "No water available")
+			end
+		elseif fields.wind_breath then
+			ent.wind_breathing = not ent.wind_breathing
+			if ent.wind_breathing then
+				minetest.chat_send_player(name, "Pegasus is now breathing wind!")
+				pegasus_breathe_wind(ent)
+			elseif not ent.wind_breathing then
+				minetest.chat_send_player(name, "Pegasus stopped breathing wind.")
+			elseif ent.wind_breath == 0 then
+				minetest.chat_send_player(name, "No wind available")
 			end
 		end
 		local ent = obj:get_luaentity()
@@ -860,10 +952,17 @@ pegasus.register_utility("pegasus:rescue_animal", function(self, victim, victim_
 			local function breathe_fire()
 				if _self.object:get_pos() and attacker:get_pos() then
 					local attacker_pos = attacker:get_pos()
-					if _self.breathe_fire then
-						_self:breathe_fire(attacker_pos)
-					elseif pegasus_breathe_fire then
+					if pegasus_breathe_fire and self.texture_no == 1 then
 						pegasus_breathe_fire(_self, attacker_pos)
+					end
+					if pegasus_breathe_ice and self.texture_no == 2 then
+						pegasus_breathe_ice(_self, attacker_pos)
+					end
+					if pegasus_breathe_water and self.texture_no == 3 then
+						pegasus_breathe_water(_self, attacker_pos)
+					end
+					if pegasus_breathe_wind and self.texture_no == 4 then
+						pegasus_breathe_wind(_self, attacker_pos)
 					end
 
 					if _self.fire_breath_count and _self.fire_breath_count < 5 then
@@ -1025,7 +1124,7 @@ function transfer_pegasus_fire(self)
 
 	if nearest_dragon then
 		-- Проверяем условия передачи огня
-		if self.fire and self.fire > 0 and                    -- у Пегаса есть огонь
+		if self.fire_breath and self.fire_breath > 0 and      -- у Пегаса есть огонь
 			(not nearest_dragon.fire or nearest_dragon.fire < 10) then -- у Дракона не максимум
 			-- Инициализируем огонь дракона если его нет
 			nearest_dragon.fire = nearest_dragon.fire or 0
@@ -1039,7 +1138,7 @@ function transfer_pegasus_fire(self)
 			-- Передаем огонь
 			nearest_dragon.has_pegasus_fire = true
 			nearest_dragon.fire = nearest_dragon.fire + transfer_amount
-			self.fire = self.fire - transfer_amount
+			self.fire_breath = self.fire_breath - transfer_amount
 
 			-- Визуальный эффект передачи
 			local dragon_pos = nearest_dragon.object:get_pos()
