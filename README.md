@@ -33,7 +33,7 @@ This mod adds magical Pegasi to the `Minetest game` world — winged horses you 
 - Forward + Aux1 = canter
 - Double jump = take off
 
-This mod is created by **Scottii** and based on [Animalia](https://content.luanti.org/packages/ElCeejo/animalia/) and on [Dragan-uisge (Water Dragon)](https://content.luanti.org/packages/homiak/waterdragon/).
+This mod is created by **Scottii** and based on [Animalia](https://github.com/ElCeejo/animalia) and on [Dragan-uisge (Water Dragon)](https://github.com/homiak/waterdragon).
 
 ## Release Log
 ### v1.0.0
