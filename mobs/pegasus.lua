@@ -533,17 +533,46 @@ pegasus.register_mob("pegasus:pegasus", {
 		pegasus.update_lasso_effects(self)
 		pegasus.random_sound(self)
 		pegasus.eat_dropped_item(self, item)
-		if self:timer(2) then -- Check every 2 seconds to reduce performance impact
-			grow_nearby_crops(self)
-		end
-		if self.fire_breath and self.fire_breath > 0 then
+
+		-- Add Ice Pegasus water-walking ability
+		if self.texture_no == 2 and self:timer(0.1) then
 			local pos = self.object:get_pos()
 			if pos then
-				local nearest_dragon = find_nearest_scottish_dragon(pos, 10)
-				if nearest_dragon then
-					transfer_pegasus_fire(self)
+				-- Check the block directly under the pegasus's feet
+				local pos_below = { x = pos.x, y = pos.y - 0.1, z = pos.z }
+				local node_below = minetest.get_node(pos_below)
+
+				-- Check if the node is water using its group
+				local node_def = minetest.registered_nodes[node_below.name]
+				if node_def and node_def.groups and node_def.groups.water then
+					-- Replace water with ice
+					minetest.set_node(pos_below, { name = "default:ice" })
+					-- Add a subtle sound effect
+					minetest.sound_play("default_cool_lava", {
+						pos = pos_below,
+						gain = 0.5,
+						max_hear_distance = 8,
+					})
 				end
 			end
+		end
+		-- Add Wind Pegasus speed boost ability
+		if self.texture_no == 4 and self:timer(0.1) then
+			local vel = self.object:get_velocity()
+			-- Only apply boost and particles if the pegasus is actually moving
+			if vector.length(vel) > 1 then
+				-- Apply a forward acceleration to boost speed
+				local yaw = self.object:get_yaw()
+				local dir = vector.new(-math.sin(yaw) * 2, 0, math.cos(yaw) * 2)
+				self.object:set_acceleration(dir)
+			else
+				-- If standing still, remove any acceleration
+				self.object:set_acceleration({ x = 0, y = 0, z = 0 })
+			end
+		end
+
+		if self:timer(2) then -- Check every 2 seconds to reduce performance impact
+			grow_nearby_crops(self)
 		end
 		break_collision_blocks(self)
 		set_glowing_eyes(self)
@@ -736,19 +765,6 @@ pegasus.register_mob("pegasus:pegasus", {
 		if wielded_name == "pegasus:saddle" then
 			self:set_saddle(true)
 			return
-		end
-		if self.owner then
-			local pos = self.object:get_pos()
-			if pos then
-				-- Check for nearby Scottish Dragon
-				for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 5)) do
-					local ent = obj:get_luaentity()
-					if ent and ent.name == "waterdragon:scottish_dragon" then
-						transfer_pegasus_fire(self, ent)
-						break
-					end
-				end
-			end
 		end
 		if clicker:get_player_control().sneak
 			and owner then
@@ -1113,57 +1129,3 @@ pegasus.register_utility("pegasus:follow_with_pegasus", function(self)
 
 	self:set_utility(follow_func)
 end)
-
--- Function to transfer fire from Pegasus to Scottish Dragon
-function transfer_pegasus_fire(self)
-	if not minetest.get_modpath("waterdragon") then return end
-	local pos = self.object:get_pos()
-	if not pos then return end
-
-	local nearest_dragon = find_nearest_scottish_dragon(pos, 10)
-
-	if nearest_dragon then
-		-- Проверяем условия передачи огня
-		if self.fire_breath and self.fire_breath > 0 and      -- у Пегаса есть огонь
-			(not nearest_dragon.fire or nearest_dragon.fire < 10) then -- у Дракона не максимум
-			-- Инициализируем огонь дракона если его нет
-			nearest_dragon.fire = nearest_dragon.fire or 0
-
-			-- Определяем сколько огня можно передать
-			local transfer_amount = math.min(
-				self.fire,   -- сколько есть у Пегаса
-				10 - nearest_dragon.fire -- сколько может принять Дракон
-			)
-
-			-- Передаем огонь
-			nearest_dragon.has_pegasus_fire = true
-			nearest_dragon.fire = nearest_dragon.fire + transfer_amount
-			self.fire_breath = self.fire_breath - transfer_amount
-
-			-- Визуальный эффект передачи
-			local dragon_pos = nearest_dragon.object:get_pos()
-			if dragon_pos then
-				minetest.add_particlespawner({
-					amount = 50,
-					time = 1,
-					minpos = pos,
-					maxpos = dragon_pos,
-					minvel = { x = 0, y = 0, z = 0 },
-					maxvel = { x = 0, y = 1, z = 0 },
-					minacc = { x = 0, y = 0, z = 0 },
-					maxacc = { x = 0, y = 1, z = 0 },
-					minsize = 1,
-					maxsize = 2,
-					collisiondetection = false,
-					texture = "fire_basic_flame.png",
-				})
-			end
-
-			-- Уведомления
-			if nearest_dragon.owner then
-				minetest.chat_send_player(nearest_dragon.owner,
-					"Scottish Dragon received fire from Pegasus!")
-			end
-		end
-	end
-end

@@ -1091,7 +1091,7 @@ minetest.register_node("pegasus:fire_animated", {
 		local objects = minetest.get_objects_inside_radius(pos, 1.5)
 		for _, obj in ipairs(objects) do
 			local ent = obj:get_luaentity()
-			if obj:is_player() or (ent and ent.name ~= "waterdragon:scottish_dragon" and ent.name ~= "pegasus:pegasus" and ent.name ~= "waterdragon:rare_water_dragon" and ent.name ~= "waterdragon:pure_water_dragon") then
+			if obj:is_player() or (ent and ent.name ~= "waterdragon:scottish_dragon" and ent.name ~= "pegasus:pegasus" and ent.name ~= "waterdragon:rare_water_dragon" and ent.name ~= "waterdragon:pure_water_dragon" and ent.name ~= "winddragon:winddragon") then
 				obj:punch(obj, 1.0, {
 					full_punch_interval = 1.0,
 					damage_groups = { fleshy = 4 },
@@ -1227,7 +1227,7 @@ function pegasus_breathe_fire(self)
 		end
 	end
 
-	-- Schedule the next water breath
+	-- Schedule the next fire breath
 	minetest.after(0.1, function()
 		pegasus_breathe_fire(self)
 	end)
@@ -1261,7 +1261,7 @@ function pegasus_breathe_water(self)
 			velocity = { min = 15, max = 20 },
 			acceleration = { y = { min = 2, max = 4 } },
 			exptime = { min = 0.8, max = 1.2 },
-			glow = 14
+			glow = 5
 		},
 		{
 			texture = "pegasus_water_2.png",
@@ -1269,7 +1269,7 @@ function pegasus_breathe_water(self)
 			velocity = { min = 15, max = 20 },
 			acceleration = { y = { min = 2, max = 4 } },
 			exptime = { min = 0.8, max = 1.2 },
-			glow = 14
+			glow = 6
 		},
 		{
 			texture = "pegasus_water_3.png",
@@ -1277,7 +1277,7 @@ function pegasus_breathe_water(self)
 			velocity = { min = 15, max = 20 },
 			acceleration = { y = { min = 2, max = 4 } },
 			exptime = { min = 0.8, max = 1.2 },
-			glow = 14
+			glow = 7
 		},
 	}
 
@@ -1336,7 +1336,7 @@ function pegasus_breathe_water(self)
 		end
 	end
 
-	-- Decrease fire charge every second
+	-- Decrease water charge every second
 	self.water_timer = (self.water_breath_timer or 0) + 0.1
 	if self.water_timer >= 1 then
 		self.water_breath = self.water_breath - 1
@@ -1429,7 +1429,7 @@ function pegasus_breathe_ice(self)
 			velocity = { min = 15, max = 20 },
 			acceleration = { y = { min = 2, max = 4 } },
 			exptime = { min = 0.8, max = 1.2 },
-			glow = 14
+			glow = 1
 		},
 		{
 			texture = "pegasus_ice_2.png",
@@ -1437,7 +1437,7 @@ function pegasus_breathe_ice(self)
 			velocity = { min = 15, max = 20 },
 			acceleration = { y = { min = 2, max = 4 } },
 			exptime = { min = 0.8, max = 1.2 },
-			glow = 14
+			glow = 3
 		},
 		{
 			texture = "pegasus_ice_3.png",
@@ -1445,7 +1445,7 @@ function pegasus_breathe_ice(self)
 			velocity = { min = 15, max = 20 },
 			acceleration = { y = { min = 2, max = 4 } },
 			exptime = { min = 0.8, max = 1.2 },
-			glow = 14
+			glow = 2
 		},
 	}
 
@@ -1495,9 +1495,7 @@ function pegasus_breathe_ice(self)
 				for _, obj in ipairs(minetest.get_objects_inside_radius(check_pos, 2)) do
 					local ent_name = obj:is_player() and obj:get_player_name()
 					if obj ~= self.object and obj ~= rider and ent_name ~= owner_name then
-						if not obj:get_attach() and not pegasus.ice_cooldown[obj] and not hit_this_tick[obj] then
-							hit_this_tick[obj] = true -- Mark as hit for this tick
-
+						if not obj:get_attach() and not pegasus.ice_cooldown[obj] then
 							-- High damage
 							obj:punch(self.object, 1.0, { damage_groups = { fleshy = 8 } }, nil)
 
@@ -1597,7 +1595,7 @@ function pegasus_breathe_wind(self)
 			velocity = { min = 15, max = 20 },
 			acceleration = { y = { min = 2, max = 4 } },
 			exptime = { min = 0.8, max = 1.2 },
-			glow = 14
+			glow = 6
 		},
 		{
 			texture = "pegasus_wind_2.png",
@@ -1605,7 +1603,7 @@ function pegasus_breathe_wind(self)
 			velocity = { min = 15, max = 20 },
 			acceleration = { y = { min = 2, max = 4 } },
 			exptime = { min = 0.8, max = 1.2 },
-			glow = 14
+			glow = 10
 		},
 		{
 			texture = "pegasus_wind_3.png",
@@ -1613,7 +1611,7 @@ function pegasus_breathe_wind(self)
 			velocity = { min = 15, max = 20 },
 			acceleration = { y = { min = 2, max = 4 } },
 			exptime = { min = 0.8, max = 1.2 },
-			glow = 14
+			glow = 7
 		},
 	}
 

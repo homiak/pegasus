@@ -518,25 +518,34 @@ if minetest.get_modpath("3d_armor") then
         end
     end)
 
-
+    -- Lasso
     minetest.register_craft({
         output = "pegasus:lasso",
         recipe = {
-            { "",             "group:thread",  "group:thread" },
-            { "",             "group:leather", "group:thread" },
-            { "group:thread", "",              "" }
+            { "",              "group:leeather", "group:leather" },
+            { "",              "group:leather",  "group:leather" },
+            { "group:leather", "",               "" }
         }
     })
 
     minetest.register_craft({
         output = "pegasus:lasso",
         recipe = {
-            { "",               "farming:string", "farming:string" },
-            { "",               "group:leather",  "farming:string" },
-            { "farming:string", "",               "" }
+            { "",                                     "waterdragon:scales_pure_water_dragon", "waterdragon:scales_pure_water_dragon" },
+            { "",                                     "waterdragon:scales_pure_water_dragon", "waterdragon:scales_pure_water_dragon" },
+            { "waterdragon:scales_pure_water_dragon", "",                                     "" }
         }
     })
 
+    minetest.register_craft({
+        output = "pegasus:lasso",
+        recipe = {
+            { "",                                     "waterdragon:scales_rare_water_dragon", "waterdragon:scales_rare_water_dragon" },
+            { "",                                     "waterdragon:scales_rare_water_dragon", "waterdragon:scales_rare_water_dragon" },
+            { "waterdragon:scales_rare_water_dragon", "",                                     "" }
+        }
+    })
+    -- Net
     minetest.register_craft({
         output = "pegasus:net",
         recipe = {
@@ -554,16 +563,17 @@ if minetest.get_modpath("3d_armor") then
             { "group:stick",    "farming:string", "" }
         }
     })
-
+    -- crate
     minetest.register_craft({
         output = "pegasus:crate",
         recipe = {
-            { "group:wood", "group:wood",  "group:wood" },
-            { "group:wood", "pegasus:net", "group:wood" },
-            { "group:wood", "group:wood",  "group:wood" }
+            { "group:wood", "group:wood",     "group:wood" },
+            { "group:wood", "farming:string", "group:wood" },
+            { "group:wood", "group:wood",     "group:wood" }
         }
     })
 
+    -- saddle
     minetest.register_craft({
         output = "pegasus:saddle",
         recipe = {
@@ -573,7 +583,7 @@ if minetest.get_modpath("3d_armor") then
         }
     })
 
-
+    -- book
 
     minetest.register_craft({
         output = "pegasus:book_pegasus",
