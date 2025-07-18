@@ -859,53 +859,53 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if not obj or not obj:get_luaentity() then return end
 
 		local ent = obj:get_luaentity()
-
+		local ent_name = ent.nametag or "The Pegasus"
 		if fields.follow then
 			set_pegasus_mode(ent, "follow")
-			minetest.chat_send_player(name, "Pegasus set to Follow mode")
+			minetest.chat_send_player(name, ent_name .. " set to Follow mode")
 		elseif fields.stay then
 			set_pegasus_mode(ent, "stay")
-			minetest.chat_send_player(name, "Pegasus set to Stay mode")
+			minetest.chat_send_player(name, ent_name .. " set to Stay mode")
 		elseif fields.wander then
 			set_pegasus_mode(ent, "wander")
-			minetest.chat_send_player(name, "Pegasus set to Wander mode")
+			minetest.chat_send_player(name, ent_name .. " set to Wander mode")
 		elseif fields.fire_breath then
 			ent.fire_breathing = not ent.fire_breathing
 			if ent.fire_breathing then
-				minetest.chat_send_player(name, "Pegasus is now breathing fire!")
+				minetest.chat_send_player(name, ent_name .. " is now breathing fire!")
 				pegasus_breathe_fire(ent)
 			elseif not ent.fire_breathing then
-				minetest.chat_send_player(name, "Pegasus stopped breathing fire.")
+				minetest.chat_send_player(name, ent_name .. " stopped breathing fire.")
 			elseif ent.fire == 0 then
 				minetest.chat_send_player(name, "No fire available")
 			end
 		elseif fields.ice_breath then
 			ent.ice_breathing = not ent.ice_breathing
 			if ent.ice_breathing then
-				minetest.chat_send_player(name, "Pegasus is now breathing ice!")
+				minetest.chat_send_player(name, ent_name .. " is now breathing ice!")
 				pegasus_breathe_ice(ent)
 			elseif not ent.ice_breathing then
-				minetest.chat_send_player(name, "Pegasus stopped breathing ice.")
+				minetest.chat_send_player(name, ent_name .. " stopped breathing ice.")
 			elseif ent.ice_breath == 0 then
 				minetest.chat_send_player(name, "No ice available")
 			end
 		elseif fields.water_breath then
 			ent.water_breathing = not ent.water_breathing
 			if ent.water_breathing then
-				minetest.chat_send_player(name, "Pegasus is now breathing water!")
+				minetest.chat_send_player(name, ent_name .. " is now breathing water!")
 				pegasus_breathe_water(ent)
 			elseif not ent.water_breathing then
-				minetest.chat_send_player(name, "Pegasus stopped breathing water.")
+				minetest.chat_send_player(name, ent_name .. " stopped breathing water.")
 			elseif ent.water_breath == 0 then
 				minetest.chat_send_player(name, "No water available")
 			end
 		elseif fields.wind_breath then
 			ent.wind_breathing = not ent.wind_breathing
 			if ent.wind_breathing then
-				minetest.chat_send_player(name, "Pegasus is now breathing wind!")
+				minetest.chat_send_player(name, ent_name .. " is now breathing wind!")
 				pegasus_breathe_wind(ent)
 			elseif not ent.wind_breathing then
-				minetest.chat_send_player(name, "Pegasus stopped breathing wind.")
+				minetest.chat_send_player(name, ent_name .. " stopped breathing wind.")
 			elseif ent.wind_breath == 0 then
 				minetest.chat_send_player(name, "No wind available")
 			end
