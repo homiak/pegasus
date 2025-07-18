@@ -36,14 +36,15 @@ This mod adds magical Pegasi to the `Minetest game` world — winged horses you 
 This mod is created by **Scottii** and based on [Animalia](https://github.com/ElCeejo/animalia) and on [Dragan-uisge (Water Dragon)](https://github.com/homiak/waterdragon).
 
 ## Release Log
-### v1.0.0
-- First public release
-
-### v1.1.0
-- Minor tweaks
-- Added new page to the Pegasus book: parade wand and nametag usage explained
 
 ### v2.0.0
 - Added elements to the Pegasi: fire, ice, water and wind
 - Fix craft bug
 - translation improvement
+
+### v1.1.0
+- Minor tweaks
+- Added new page to the Pegasus book: parade wand and nametag usage explained
+- 
+### v1.0.0
+- First public release
