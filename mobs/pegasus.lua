@@ -297,7 +297,7 @@ pegasus.register_mob("pegasus:pegasus", {
 	},
 	makes_footstep_sound = true,
 
-	-- pegasus Props
+	-- Pegasus Props
 	max_health = 200,
 	armor_groups = { fleshy = 100 },
 	damage = 40,
@@ -392,25 +392,6 @@ pegasus.register_mob("pegasus:pegasus", {
 				return 0
 			end
 		},
-		{
-			utility = "pegasus:rescue_animal",
-			get_score = function(self)
-				local pos = self.object:get_pos()
-				if not pos then return 0 end
-
-				for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 100)) do
-					local ent = obj:get_luaentity()
-					if ent and ent.name ~= self.name then -- Ignore owned mobs
-						local health = ent.health or (ent.object and ent.object:get_hp())
-						local max_health = ent.max_health or (ent.object and ent.object:get_properties().hp_max)
-						if health and max_health and health < max_health * 0.5 then -- Only rescue if health is below 50%
-							return 0.9, { self, obj, ent }
-						end
-					end
-				end
-				return 0
-			end
-		},
 	},
 
 	-- Functions
@@ -437,20 +418,6 @@ pegasus.register_mob("pegasus:pegasus", {
 			}
 			minetest.add_item(pos, "pegasus:saddle")
 		end
-	end,
-	custom_name = "", -- Use a custom attribute to store the name
-
-	on_activate = function(self, staticdata)
-		if staticdata and staticdata ~= "" then
-			self.custom_name = staticdata -- Load the name from staticdata
-			self.object:set_nametag_attributes({
-				text = self.custom_name,
-				color = "#00FFFF"
-			})
-		end
-	end,
-	get_staticdata = function(self)
-		return self.custom_name -- Save the name as staticdata
 	end,
 	add_child = function(self, mate)
 		local pos = self.object:get_pos()
@@ -551,7 +518,7 @@ pegasus.register_mob("pegasus:pegasus", {
 					-- Add a subtle sound effect
 					minetest.sound_play("default_cool_lava", {
 						pos = pos_below,
-						gain = 0.5,
+						gain = 0.2,
 						max_hear_distance = 8,
 					})
 				end
@@ -576,7 +543,6 @@ pegasus.register_mob("pegasus:pegasus", {
 			grow_nearby_crops(self)
 		end
 		break_collision_blocks(self)
-		set_glowing_eyes(self)
 		if self.rider and not self.owner then
 			-- If there's a rider, prioritize the riding utility
 			if self:get_utility() ~= "pegasus:pegasus_tame" then
@@ -841,11 +807,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 end)
 
-pegasus.register_spawn_item("pegasus:pegasus", {
-	col1 = "ebdfd8",
-	col2 = "653818"
-})
-
 -- Pegasus Orders
 
 function set_pegasus_mode(self, mode)
@@ -944,67 +905,7 @@ function check_for_danger(self)
 	return false
 end
 
--- Rescue animals --
-
-pegasus.register_utility("pegasus:rescue_animal", function(self, victim, victim_ent)
-	local function rescue_func(_self)
-		if not victim or not victim:get_pos() then
-			return true
-		end
-
-
-		local victim_pos = victim:get_pos()
-		local attacker = nil
-
-		for _, obj in ipairs(minetest.get_objects_inside_radius(victim_pos, 5)) do
-			if obj:is_player() and obj:get_player_name() ~= self.owner then
-				attacker = obj
-				break
-			end
-		end
-		if attacker == self.owner then return end
-		if attacker then
-			_self:animate("rear")
-
-			local function breathe_fire()
-				if _self.object:get_pos() and attacker:get_pos() then
-					local attacker_pos = attacker:get_pos()
-					if pegasus_breathe_fire and self.texture_no == 1 then
-						pegasus_breathe_fire(_self, attacker_pos)
-					end
-					if pegasus_breathe_ice and self.texture_no == 2 then
-						pegasus_breathe_ice(_self, attacker_pos)
-					end
-					if pegasus_breathe_water and self.texture_no == 3 then
-						pegasus_breathe_water(_self, attacker_pos)
-					end
-					if pegasus_breathe_wind and self.texture_no == 4 then
-						pegasus_breathe_wind(_self, attacker_pos)
-					end
-
-					if _self.fire_breath_count and _self.fire_breath_count < 5 then
-						_self.fire_breath_count = _self.fire_breath_count + 1
-						minetest.after(1, breathe_fire)
-					else
-						_self.fire_breath_count = nil
-						minetest.after(1, function()
-							_self:animate("stand")
-							return true
-						end)
-					end
-				end
-			end
-
-			_self.fire_breath_count = 1
-			minetest.after(1, breathe_fire)
-		else
-			_self:animate("stand")
-			return true
-		end
-	end
-
-	self:set_utility(rescue_func)
-end)
+-- Riding on Water Dragons
 
 function is_waterdragon_entity(obj)
 	local entity = obj:get_luaentity()
@@ -1129,3 +1030,10 @@ pegasus.register_utility("pegasus:follow_with_pegasus", function(self)
 
 	self:set_utility(follow_func)
 end)
+
+-- The spawn egg --
+
+pegasus.register_spawn_item("pegasus:pegasus", {
+	col1 = "ebdfd8",
+	col2 = "adfff1"
+})
