@@ -1187,21 +1187,27 @@ function pegasus_breathe_fire(self)
 		})
 	end
 
-	-- Check for block collisions and ignite blocks
+	-- FIX: Replaced the entire target-checking logic with a more robust version.
 	local step = 1
+	local hit_this_tick = {} -- Prevents hitting the same mob multiple times
+
 	for i = 0, 20, step do
 		local check_pos = vector.add(start_pos, vector.multiply(dir, i))
 		local node = minetest.get_node(check_pos)
+
+		-- Set blocks on fire
 		if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
 			minetest.set_node(check_pos, { name = "pegasus:fire_animated" })
 		end
 
 		-- Check for entities at each step
-		local objects = minetest.get_objects_inside_radius(check_pos, 2)
-		for _, obj in ipairs(objects) do
-			if obj ~= self.object then
-				local ent = obj:get_luaentity()
-				if ent and ent.name ~= self.name then
+		for _, obj in ipairs(minetest.get_objects_inside_radius(check_pos, 2)) do
+			if not hit_this_tick[obj] then
+				local ent_name = obj:is_player() and obj:get_player_name()
+				local rider = self.rider
+				-- Correctly check if the target is not self
+				if obj ~= self.object and obj ~= rider then
+					hit_this_tick[obj] = true -- Mark as hit
 					obj:punch(self.object, 1.0, {
 						full_punch_interval = 1.0,
 						damage_groups = { fleshy = 8 },
@@ -1210,7 +1216,7 @@ function pegasus_breathe_fire(self)
 			end
 		end
 
-		-- Stop if we hit a non-air block
+		-- Stop if we hit a solid block
 		if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
 			break
 		end
@@ -1307,31 +1313,39 @@ function pegasus_breathe_water(self)
 		})
 	end
 
-	-- Check for block collisions and ignite blocks
 	local step = 1
+	local hit_this_tick = {} -- Prevents hitting the same mob multiple times
+
 	for i = 0, 20, step do
 		local check_pos = vector.add(start_pos, vector.multiply(dir, i))
 		local node = minetest.get_node(check_pos)
+
+		-- Make blocks wet
 		if node.name ~= "air" and node.name ~= "default:water_flowing" then
 			minetest.set_node(check_pos, { name = "default:water_flowing" })
 		end
-
+		-- Disable fire blocks
+		if node.name == "pegasus:fire_animated" then
+			minetest.remove_node(check_pos)
+		end
+		local rider = self.rider
 		-- Check for entities at each step
-		local objects = minetest.get_objects_inside_radius(check_pos, 2)
-		for _, obj in ipairs(objects) do
-			if obj ~= self.object then
-				local ent = obj:get_luaentity()
-				if ent and ent.name ~= self.name then
+		for _, obj in ipairs(minetest.get_objects_inside_radius(check_pos, 2)) do
+			if not hit_this_tick[obj] then
+				-- Correctly check if the target is not self
+				if obj ~= self.object and obj ~= rider then
+					hit_this_tick[obj] = true -- Mark as hit
 					obj:punch(self.object, 1.0, {
 						full_punch_interval = 1.0,
-						damage_groups = { fleshy = 8 },
+						damage_groups = { fleshy = 4 },
 					}, nil)
+					obj:add_velocity(vector.multiply(dir, 5))
 				end
 			end
 		end
 
-		-- Stop if we hit a non-air block
-		if node.name ~= "air" and node.name ~= "default:water_flowing" then
+		-- Stop if we hit a solid block
+		if node.name ~= "air" and node.name ~= "pegasus:fire_animated" then
 			break
 		end
 	end
@@ -1363,22 +1377,22 @@ end
 minetest.register_entity("pegasus:freeze_ent", {
 	initial_properties = {
 		collisionbox = { 0, 0, 0, 0, 0, 0 },
-        visual = "cube",
-        -- FIX: Apply a texture modifier to force opacity, similar to the draconis mod.
-        -- This should make the cube see-through for the trapped player.
-        textures = {
-            "pegasus_frozen_ent.png^[opacity:170", -- top
-            "pegasus_frozen_ent.png^[opacity:170", -- bottom
-            "pegasus_frozen_ent.png^[opacity:170", -- front
-            "pegasus_frozen_ent.png^[opacity:170", -- back
-            "pegasus_frozen_ent.png^[opacity:170", -- right
-            "pegasus_frozen_ent.png^[opacity:170", -- left
-        },
-        visual_size = { x = 1, y = 1 },
-        physical = false,
-        glow = 10,
-        use_texture_alpha = true, -- Keep this for good measure
-        backface_culling = false, -- Still needed for a cube
+		visual = "cube",
+		-- FIX: Apply a texture modifier to force opacity, similar to the draconis mod.
+		-- This should make the cube see-through for the trapped player.
+		textures = {
+			"pegasus_frozen_ent.png^[opacity:170", -- top
+			"pegasus_frozen_ent.png^[opacity:170", -- bottom
+			"pegasus_frozen_ent.png^[opacity:170", -- front
+			"pegasus_frozen_ent.png^[opacity:170", -- back
+			"pegasus_frozen_ent.png^[opacity:170", -- right
+			"pegasus_frozen_ent.png^[opacity:170", -- left
+		},
+		visual_size = { x = 1, y = 1 },
+		physical = false,
+		glow = 10,
+		use_texture_alpha = true, -- Keep this for good measure
+		backface_culling = false, -- Still needed for a cube
 	},
 
 	child = nil,
@@ -1478,34 +1492,36 @@ function pegasus_breathe_ice(self)
 
 	for i = 0, 20, step do
 		local check_pos = vector.add(start_pos, vector.multiply(dir, i))
+		local hit_this_tick = {} -- Track hits in this tick
+		for _, obj in ipairs(minetest.get_objects_inside_radius(check_pos, 2)) do
+			-- Check if we already hit this object in this breath attack
+			if not hit_this_tick[obj] then
+				local rider = self.rider
+				if obj ~= self.object and obj ~= rider then
+					if not obj:get_attach() and not pegasus.ice_cooldown[obj] then
+						hit_this_tick[obj] = true -- Mark as hit to avoid hitting again
 
-		-- Check for entities and apply the CORRECT freeze trap effect
-		local rider = self.rider
-		local owner_name = self.owner
-		local step = 1
-		local hit_this_tick = {} -- Prevents hitting the same mob multiple times in one breath
+						-- High damage
+						obj:punch(self.object, 1.0, { damage_groups = { fleshy = 8 } }, nil)
 
-		for i = 0, 20, step do
-			local check_pos = vector.add(start_pos, vector.multiply(dir, i))
+						-- Apply Freeze Trap
+						local target_pos = obj:get_pos()
 
-			-- FIX: Removed the nested (duplicate) loop that was causing multiple traps to spawn.
-			for i = 0, 20, step do
-				local check_pos = vector.add(start_pos, vector.multiply(dir, i))
-
-				for _, obj in ipairs(minetest.get_objects_inside_radius(check_pos, 2)) do
-					local ent_name = obj:is_player() and obj:get_player_name()
-					if obj ~= self.object and obj ~= rider and ent_name ~= owner_name then
-						if not obj:get_attach() and not pegasus.ice_cooldown[obj] then
-							-- High damage
-							obj:punch(self.object, 1.0, { damage_groups = { fleshy = 8 } }, nil)
-
-							-- Apply Freeze Trap
-							local target_pos = obj:get_pos()
-							local box = obj:get_properties().collisionbox
+						-- FIX: Add a safety check to ensure target_pos is not nil before proceeding.
+						if target_pos then
 							local ice_obj = minetest.add_entity(target_pos, "pegasus:freeze_ent")
 
+							-- Get collisionbox safely
+							local box
+							local ent = obj:get_luaentity()
+							if ent and ent.name and minetest.registered_entities[ent.name] then
+								box = minetest.registered_entities[ent.name].collisionbox
+							end
+							if not box then box = { -0.5, -1, -0.5, 0.5, 1, 0.5 } end -- Default box
+
 							if ice_obj then
-								obj:set_attach(ice_obj, "", { x = 0, y = math.abs(box[2]), z = 0 }, { x = 0, y = 0, z = 0 })
+								obj:set_attach(ice_obj, "", { x = 0, y = math.abs(box[2]), z = 0 },
+									{ x = 0, y = 0, z = 0 })
 
 								local obj_scale = obj:get_properties().visual_size
 								local ice_scale = (box[4] or 0.5) * 2.5
@@ -1522,17 +1538,10 @@ function pegasus_breathe_ice(self)
 								obj:set_properties({
 									visual_size = { x = obj_scale.x / ice_scale, y = obj_scale.y / ice_scale }
 								})
-
-								pegasus.ice_cooldown[obj] = 40
 							end
 						end
 					end
 				end
-			end
-
-			local node = minetest.get_node(check_pos)
-			if node.name ~= "air" and node.name ~= "default:ice" then
-				break
 			end
 		end
 
@@ -1644,7 +1653,6 @@ function pegasus_breathe_wind(self)
 
 	-- Check for entities and apply wind effect (knockback)
 	local rider = self.rider
-	local owner_name = self.owner
 	local hit_this_tick = {}
 	local step = 1
 
@@ -1653,8 +1661,7 @@ function pegasus_breathe_wind(self)
 
 		for _, obj in ipairs(minetest.get_objects_inside_radius(check_pos, 2.5)) do
 			if (obj:is_player() or obj:get_luaentity()) and not hit_this_tick[obj] then
-				local ent_name = obj:is_player() and obj:get_player_name()
-				if obj ~= self.object and obj ~= rider and ent_name ~= owner_name then
+				if obj ~= self.object and obj ~= rider then
 					hit_this_tick[obj] = true
 					-- No damage, but strong knockback
 					obj:add_velocity(vector.multiply(dir, 12))

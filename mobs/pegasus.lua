@@ -63,23 +63,11 @@ local function break_collision_blocks(self)
 	end
 end
 
+-- Eyes glow
 
--- Glowing in the night
+local available_eye_colours = { "orange", "blue", "red", "yellow", "purple" }
 
-local function is_night()
-	local time = minetest.get_timeofday()
-	return time < 0.2 or time > 0.8
-end
 
-local function set_glowing_eyes(self)
-	local props = self.object:get_properties()
-	if is_night() then
-		props.glow = 14
-	else
-		props.glow = 0
-	end
-	self.object:set_properties(props)
-end
 
 -- Grow crops --
 
@@ -182,8 +170,7 @@ local function get_form(self, player_name)
 	if minetest.get_modpath("waterdragon") then
 		table.insert(form, "button[1,3.5;3.5,0.8;follow_on_dragon;Follow on Water Dragon]")
 	end
-
-	return table.concat(form, "")
+    return table.concat(form, "")
 end
 
 local function close_form(player)
@@ -220,8 +207,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			form_obj[name] = nil
 			serialize_pegasus_inventory(ent)
 			minetest.remove_detached_inventory("pegasus:pegasus_" .. name)
-		end
-	end
+        end
+    end
 end)
 
 minetest.register_on_leaveplayer(close_form)
@@ -234,13 +221,19 @@ local patterns = {
 	"pegasus_pegasus_pattern_3.png"
 }
 
-local avlbl_colors = {
+local avlbl_colours = {
 	[1] = {
 		"pegasus_1.png"
 	},
 	[2] = {
 		"pegasus_2.png",
 	},
+	[3] = {
+		"pegasus_3.png",
+	},
+	[4] = {
+		"pegasus_4.png",
+	}
 }
 
 local function set_pattern(self)
@@ -260,11 +253,11 @@ local function set_pattern(self)
 		return
 	end
 
-	local colors = avlbl_colors[self.texture_no]
-	if not colors then return end -- Safety check if texture_no is invalid
+	local colours = avlbl_colours[self.texture_no]
+	if not colours then return end -- Safety check if texture_no is invalid
 
-	local color_no = self:recall("color_no") or self:memorize("color_no", random(#colors))
-	if not colors[color_no] then return end
+	local colour_no = self:recall("colour_no") or self:memorize("colour_no", random(#colours))
+	if not colours[colour_no] then return end
 
 	-- This is the core fix: Get the CURRENT base texture from the object's properties.
 	local props = self.object:get_properties()
@@ -275,7 +268,7 @@ local function set_pattern(self)
 		base_texture = base_texture:split("%^")[1]
 	end
 
-	local pattern_overlay = "(" .. patterns[pattern_no] .. "^[mask:" .. colors[color_no] .. ")"
+	local pattern_overlay = "(" .. patterns[pattern_no] .. "^[mask:" .. colours[colour_no] .. ")"
 
 	-- Apply the base texture with the new pattern overlay.
 	self.object:set_properties({
@@ -296,6 +289,7 @@ pegasus.register_mob("pegasus:pegasus", {
 		"pegasus_4.png",
 	},
 	makes_footstep_sound = true,
+	glow = 14,
 
 	-- Pegasus Props
 	max_health = 200,
@@ -455,7 +449,7 @@ pegasus.register_mob("pegasus:pegasus", {
 		pegasus.initialize_lasso(self)
 		pegasus.eat_dropped_item(self, item)
 		set_pattern(self)
-		set_glowing_eyes(self)
+
 
 		self.owner = self:recall("owner") or nil
 

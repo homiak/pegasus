@@ -75,7 +75,7 @@ local function activate_nametag(self)
     if not self.nametag then return end
     self.object:set_properties({
         nametag = self.nametag,
-        nametag_color = "#d1fff7"
+        nametag_color = "#d9f9ff"
     })
 end
 

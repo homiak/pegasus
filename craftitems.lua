@@ -4,7 +4,7 @@
 
 local S = pegasus.S
 
-local color = minetest.colorize
+local colour = minetest.colorize
 
 local function correct_name(str)
     if str then
@@ -39,24 +39,24 @@ local function mob_storage_use(itemstack, player, pointed)
             local ent_nametag = correct_name(ent.nametag) or "None"
             local ent_gender = correct_name(ent.gender) or "Unknown"
 
-            -- Determine element and corresponding color
+            -- Determine element and corresponding colour
             local element_string = "Unknown"
-            local element_color = "#FFFFFF" -- Default to white
+            local element_colour = "#FFFFFF" -- Default to white
             if ent.texture_no == 1 then
                 element_string = "Fire"
-                element_color = "#ffad29"
+                element_colour = "#ffad29"
             elseif ent.texture_no == 2 then
                 element_string = "Ice"
-                element_color = "#baefff"
+                element_colour = "#baefff"
             elseif ent.texture_no == 3 then
                 element_string = "Water"
-                element_color = "#a6d7ff"
+                element_colour = "#a6d7ff"
             elseif ent.texture_no == 4 then
                 element_string = "Wind"
-                element_color = "#baffee"
+                element_colour = "#baffee"
             end
 
-            -- Build the info text block without color
+            -- Build the info text block without colour
             local info_text = "\n" ..
                 "Contains " .. ent_name .. "\n" ..
                 "Name: " .. ent_nametag .. "\n" ..
@@ -67,8 +67,8 @@ local function mob_storage_use(itemstack, player, pointed)
                 info_text = info_text .. "\nTrust: " .. ent.trust[plyr_name]
             end
 
-            -- Create the final description, coloring the entire info block
-            local new_desc = desc .. color(element_color, info_text)
+            -- Create the final description, colouring the entire info block
+            local new_desc = desc .. colour(element_colour, info_text)
 
             -- FIX: Use the 'new_desc' variable, not the old 'desc'.
             meta:set_string("description", new_desc)
@@ -153,7 +153,7 @@ minetest.register_craftitem("pegasus:nametag", {
                 if stored_name and stored_name ~= "" then
                     -- Apply the name to the entity
                     entity.nametag = stored_name
-                    entity.object:set_properties({ nametag = stored_name, nametag_color = "#d1fff7" })
+                    entity.object:set_properties({ nametag = stored_name, nametag_color = "#d9f9ff" })
                     entity:memorize("nametag", stored_name)
 
                     -- Protect from despawn
