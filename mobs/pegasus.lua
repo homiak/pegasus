@@ -63,12 +63,6 @@ local function break_collision_blocks(self)
 	end
 end
 
--- Eyes glow
-
-local available_eye_colours = { "orange", "blue", "red", "yellow", "purple" }
-
-
-
 -- Grow crops --
 
 local function grow_nearby_crops(self)
@@ -170,7 +164,7 @@ local function get_form(self, player_name)
 	if minetest.get_modpath("waterdragon") then
 		table.insert(form, "button[1,3.5;3.5,0.8;follow_on_dragon;Follow on Water Dragon]")
 	end
-    return table.concat(form, "")
+	return table.concat(form, "")
 end
 
 local function close_form(player)
@@ -207,8 +201,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			form_obj[name] = nil
 			serialize_pegasus_inventory(ent)
 			minetest.remove_detached_inventory("pegasus:pegasus_" .. name)
-        end
-    end
+		end
+	end
 end)
 
 minetest.register_on_leaveplayer(close_form)
@@ -414,33 +408,41 @@ pegasus.register_mob("pegasus:pegasus", {
 		end
 	end,
 	add_child = function(self, mate)
-		local pos = self.object:get_pos()
-		if not pos then return end
-		local obj = minetest.add_entity(pos, self.name)
-		local ent = obj and obj:get_luaentity()
-		if not ent then return end
-		ent.growth_scale = 0.7
-		local tex_no = self.texture_no
-		local mate_ent = mate and mate:get_luaentity()
-		if mate_ent
-			or not mate_ent.speed
-			or not mate_ent.jump_power
-			or not mate_ent.max_health then
-			return
-		end
-		if random(2) < 2 then
-			tex_no = mate_ent.texture_no
-		end
-		ent:memorize("texture_no", tex_no)
-		ent:memorize("speed", random(mate_ent.speed, self.speed))
-		ent:memorize("jump_power", random(mate_ent.jump_power, self.jump_power))
-		ent:memorize("max_health", random(mate_ent.max_health, self.max_health))
-		ent.speed = ent:recall("speed")
-		ent.jump_power = ent:recall("jump_power")
-		ent.max_health = ent:recall("max_health")
-		pegasus.initialize_api(ent)
-		pegasus.protect_from_despawn(ent)
-	end,
+        local pos = self.object:get_pos()
+        if not pos then return end
+
+        local child_obj = minetest.add_entity(pos, self.name)
+        local child_ent = child_obj and child_obj:get_luaentity()
+
+        child_ent.growth_scale = 0.7
+
+        local mother_tex = self.texture_no
+        local mother_speed = self.speed
+        local mother_jump = self.jump_power
+        local mother_hp = self.max_health
+
+        local mate_ent = mate and mate:get_luaentity()
+        local father_tex, father_speed, father_jump, father_hp
+
+            father_tex = mate_ent:recall("texture_no")
+            father_speed = mate_ent:recall("speed")
+            father_jump = mate_ent:recall("jump_power")
+            father_hp = mate_ent:recall("max_health")
+
+        local child_tex = random(2) < 2 and (father_tex or mother_tex) or mother_tex
+        local child_speed = random(father_speed or mother_speed, mother_speed)
+        local child_jump = random(father_jump or mother_jump, mother_jump)
+        local child_hp = random(father_hp or mother_hp, mother_hp)
+
+        child_ent:memorize("texture_no", child_tex)
+        child_ent:memorize("speed", child_speed)
+        child_ent:memorize("jump_power", child_jump)
+        child_ent:memorize("max_health", child_hp)
+
+        pegasus.initialize_api(child_ent)
+        pegasus.protect_from_despawn(child_ent)
+    end,
+
 
 	activate_func = function(self)
 		self.is_flying = self.is_flying or false
@@ -740,10 +742,8 @@ pegasus.register_mob("pegasus:pegasus", {
 	end,
 
 	on_punch = function(self, puncher, ...)
-		if not minetest.get_modpath("waterdragon") and puncher then
-			self:initiate_utility("pegasus:basic_flee", self)
-			return
-		end
+		self._puncher = puncher
+		self:initiate_utility("pegasus:basic_flee", self)
 		if self.rider and puncher == self.rider then return end
 		local name = puncher:is_player() and puncher:get_player_name()
 		if name
@@ -960,21 +960,23 @@ pegasus.register_utility("pegasus:follow_rider_on_dragon", function(self)
 			if not dragon_ent.owner then return true end
 			if dragon_ent then
 				_self.object:set_properties({
-					visual_size = { x = 0.5, y = 0.5 },
+					visual_size = _self.object.visual_size or { x = 0.5, y = 0.5 },
 					collisionbox = { -0.65, 0, -0.65, 0.65, 1.95, 0.65 }
 				})
 				_self.object:set_attach(target_dragon, "",
-					{ x = 0, y = 2, z = 0 } -- Position offset
+					{ x = 0, y = 2.1, z = 0 } -- Position offset
 				)
 				dragon_ent.following = owner
 				dragon_ent:initiate_utility("waterdragon:follow_player", dragon_ent)
 				dragon_ent.order = "follow"
+				local name = _self.nametag or S("The Pegasus")
+				_self:animate("stand")
 
-				minetest.chat_send_player(_self.owner, S("Your Pegasus mounted the Water Dragon and will follow you!"))
+				minetest.chat_send_player(_self.owner, name .. " " .. S("mounted the Water Dragon and will follow you!"))
 				return true
 			end
 		else
-			minetest.chat_send_player(_self.owner, S("No available Water Dragon found nearby!"))
+			minetest.chat_send_player(_self.owner, S("No Water Dragons found nearby!"))
 			return true
 		end
 
@@ -1014,7 +1016,7 @@ pegasus.register_utility("pegasus:follow_with_pegasus", function(self)
 				z = owner_pos.z
 			}
 
-			pegasus.action_move(_self, target_pos, 2, "waterdragon:fly_simple", 1, "fly")
+			waterdragon.action_move(_self, target_pos, 2, "waterdragon:fly_simple", 1, "fly")
 		else
 			waterdragon.action_hover(_self, 2, "hover")
 		end

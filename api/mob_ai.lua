@@ -337,18 +337,30 @@ function pegasus.action_walk(self, time, speed, animation, pos2)
 
 	local wander_radius = 2
 
-	local dir = pos2 and vec_dir(self.stand_pos, pos2)
 	local function func(mob)
-		local pos, yaw = mob.object:get_pos(), mob.object:get_yaw()
-		if not pos or not yaw then return true end
+		local pos = mob.object:get_pos()
+		if not pos then return true end
 
-		dir = pos2 and vec_dir(pos, pos2) or minetest.yaw_to_dir(yaw)
+		local goal
 
-		local wander_point = vec_add(pos, vec_multi(dir, wander_radius + 0.5))
-		local goal = vec_add(wander_point, vec_multi(minetest.yaw_to_dir(random(pi2)), wander_radius))
+		-- If a specific destination (pos2) is provided, use it as the goal.
+		if pos2 then
+			goal = pos2
+			-- If we've reached the destination, stop.
+			if vector.distance(pos, goal) < 2 then
+				mob:halt()
+				return true
+			end
+		else
+			-- Otherwise, calculate a random wander point.
+			local yaw = mob.object:get_yaw()
+			if not yaw then return true end
+			local dir = minetest.yaw_to_dir(yaw)
+			local wander_point = vector.add(pos, vector.multiply(dir, wander_radius + 0.5))
+			goal = vector.add(wander_point, vector.multiply(minetest.yaw_to_dir(random(math.pi * 2)), wander_radius))
+		end
 
 		local safe = true
-
 		if mob.max_fall then
 			safe = mob:is_pos_safe(goal)
 		end
@@ -815,13 +827,26 @@ pegasus.register_utility("pegasus:basic_wander", function(self)
 end)
 
 pegasus.register_utility("pegasus:basic_flee", function(self, target)
-	local function func(mob)
-		local pos, target_pos = mob.object:get_pos(), target:get_pos()
-		if not pos or not target_pos then return true end
-
-		if not mob:get_action() then
-			pegasus.action_walk(mob, 0.5, 1, "run", vec_add(pos, vec_dir(target_pos, pos)))
+	local function func(_self)
+		if not target then
+			return true -- End the utility immediately if there is no target.
 		end
+
+		local pos = _self.object:get_pos()
+		local target_pos = target:get_pos()
+
+		-- Safety check: if there's no position for self or target, we can't flee.
+		if not pos or not target_pos then
+			return true
+		end
+
+		_self:clear_action() -- Clear any existing action before fleeing.
+		_self:clear_utility() -- Clear any existing action before fleeing.
+		-- Calculate the direction away from the target
+		local flee_direction = vector.direction(target_pos, pos)
+		-- Calculate a destination 10-15 meters away
+		local flee_destination = vector.add(pos, vector.multiply(flee_direction, 10 + random(5)))
+		pegasus.action_walk(_self, 10, 1, "run", flee_destination)
 	end
 	self:set_utility(func)
 end)
@@ -1208,10 +1233,17 @@ function pegasus_breathe_fire(self)
 				-- Correctly check if the target is not self
 				if obj ~= self.object and obj ~= rider then
 					hit_this_tick[obj] = true -- Mark as hit
-					obj:punch(self.object, 1.0, {
-						full_punch_interval = 1.0,
-						damage_groups = { fleshy = 8 },
-					}, nil)
+					local ent = obj:get_luaentity()
+					local name = ent and ent.name or ""
+					if name ~= "waterdragon:rare_water_dragon"
+						and name ~= "waterdragon:pure_water_dragon"
+						and name ~= "waterdragon:scottish_dragon"
+						and name ~= "winddragon:winddragon" then
+						obj:punch(self.object, 1.0, {
+							full_punch_interval = 1.0,
+							damage_groups = { fleshy = 8 },
+						}, nil)
+					end
 				end
 			end
 		end
@@ -1335,11 +1367,18 @@ function pegasus_breathe_water(self)
 				-- Correctly check if the target is not self
 				if obj ~= self.object and obj ~= rider then
 					hit_this_tick[obj] = true -- Mark as hit
-					obj:punch(self.object, 1.0, {
-						full_punch_interval = 1.0,
-						damage_groups = { fleshy = 4 },
-					}, nil)
-					obj:add_velocity(vector.multiply(dir, 5))
+					local ent = obj:get_luaentity()
+					local name = ent and ent.name or ""
+					if name ~= "waterdragon:rare_water_dragon"
+						and name ~= "waterdragon:pure_water_dragon"
+						and name ~= "waterdragon:scottish_dragon"
+						and name ~= "winddragon:winddragon" then
+						obj:punch(self.object, 1.0, {
+							full_punch_interval = 1.0,
+							damage_groups = { fleshy = 4 },
+						}, nil)
+						obj:add_velocity(vector.multiply(dir, 5))
+					end
 				end
 			end
 		end
@@ -1501,8 +1540,17 @@ function pegasus_breathe_ice(self)
 					if not obj:get_attach() and not pegasus.ice_cooldown[obj] then
 						hit_this_tick[obj] = true -- Mark as hit to avoid hitting again
 
-						-- High damage
-						obj:punch(self.object, 1.0, { damage_groups = { fleshy = 8 } }, nil)
+						local ent = obj:get_luaentity()
+						local name = ent and ent.name or ""
+						if name ~= "waterdragon:rare_water_dragon"
+							and name ~= "waterdragon:pure_water_dragon"
+							and name ~= "waterdragon:scottish_dragon"
+							and name ~= "winddragon:winddragon" then
+							obj:punch(self.object, 1.0, {
+								full_punch_interval = 1.0,
+								damage_groups = { fleshy = 8 },
+							}, nil)
+						end
 
 						-- Apply Freeze Trap
 						local target_pos = obj:get_pos()
@@ -1663,8 +1711,15 @@ function pegasus_breathe_wind(self)
 			if (obj:is_player() or obj:get_luaentity()) and not hit_this_tick[obj] then
 				if obj ~= self.object and obj ~= rider then
 					hit_this_tick[obj] = true
-					-- No damage, but strong knockback
-					obj:add_velocity(vector.multiply(dir, 12))
+					local ent = obj:get_luaentity()
+					local name = ent and ent.name or ""
+					if name ~= "waterdragon:rare_water_dragon"
+						and name ~= "waterdragon:pure_water_dragon"
+						and name ~= "waterdragon:scottish_dragon"
+						and name ~= "winddragon:winddragon" then
+						-- No damage, but strong knockback
+						obj:add_velocity(vector.multiply(dir, 12))
+					end
 				end
 			end
 		end
@@ -1908,63 +1963,6 @@ pegasus.mob_ai.basic_breed = {
 	end
 }
 
-pegasus.mob_ai.basic_attack = {
-	utility = "pegasus:basic_attack",
-	get_score = function(self)
-		return pegasus.get_attack_score(self, self.attack_list)
-	end
-}
-
--- Fly
-
-pegasus.mob_ai.fly_wander = {
-	utility = "pegasus:fly_wander",
-	step_delay = 0.25,
-	get_score = function(self)
-		return 0.1, { self }
-	end
-}
-
-pegasus.mob_ai.fly_landing_wander = {
-	utility = "pegasus:fly_wander",
-	get_score = function(self)
-		if self.is_landed then
-			local player = pegasus.get_nearby_player(self)
-			if player then
-				self.is_landed = self:memorize("is_landed", false)
-			end
-		end
-		if not self.is_landed
-			or self.in_liquid then
-			return 0.2, { self }
-		end
-		return 0
-	end
-}
-
-pegasus.mob_ai.fly_seek_food = {
-	utility = "pegasus:fly_seek_food",
-	get_score = function(self)
-		if random(8) < 2 then
-			return 0.3, { self }
-		end
-		return 0
-	end
-}
-
-pegasus.mob_ai.fly_seek_land = {
-	utility = "pegasus:fly_seek_land",
-	get_score = function(self)
-		if self.is_landed
-			and not self.touching_ground
-			and not self.in_liquid
-			and pegasus.sensor_floor(self, 3, true) > 2 then
-			return 0.3, { self }
-		end
-		return 0
-	end
-}
-
 -- Swim
 
 pegasus.mob_ai.swim_seek_land = {
@@ -1975,13 +1973,5 @@ pegasus.mob_ai.swim_seek_land = {
 			return 0.3, { self }
 		end
 		return 0
-	end
-}
-
-pegasus.mob_ai.swim_wander = {
-	utility = "pegasus:swim_wander",
-	step_delay = 0.25,
-	get_score = function(self)
-		return 0.1, { self }
 	end
 }
